@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Bahçelievler Forum </title>
+    <title>Bahçelievler Forum</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -20,21 +20,23 @@
 <body>
     <div class="content-area">
         <section id="home" class="page active">
- <div class="slider-container cyber-border">
-    <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider1.jpg');">
-        <h2>BAHÇELİEVLER FORUM</h2>
-    </div>
-    <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider2.png');">
-        <h2>YEREL TAVSİYELER</h2>
-    </div>
-    <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider3.png');">
-        <h2>İLAN SİSTEMİ</h2>
-    </div>
-	
-	<div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider3.png');">
-        <h2>GÜNDEM</h2>
-    </div>
-</div>
+            <div class="slider-container cyber-border">
+                <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider1.jpg');">
+                    <h2>BAHÇELİEVLER FORUM</h2>
+                </div>
+                <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider2.png');">
+                    <h2>YEREL TAVSİYELER & MEKAN & İŞLETMELER </h2>
+                </div>
+                <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider3.png');">
+                    <h2>İLAN SİSTEMİ & ELİNDEKİLERİ DEĞERLENDİR</h2>
+                </div>
+                <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider4.jpg');">
+                    <h2>GÜNDEM & DUYURULAR </h2>
+                </div>
+				<div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider5.jpg');">
+                    <h2>GÜNDEM & DUYURULAR </h2>
+                </div>
+            </div>
 
             <div id="info-bar" class="cyber-card" style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 20px; padding: 10px; border-left: 5px solid #00d2ff; background: #fff;">
                 <div id="weather-widget" style="display: flex; align-items: center; gap: 8px;">
@@ -51,7 +53,7 @@
             <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.1.5</span></h1>
             <div id="home-dashboard">
                 <div class="home-widget cyber-card" data-target="duyurular" style="border-left: 5px solid #ff007f;">
-                    <h4><i class="fas fa-bolt"></i> TÜM DUYURULAR </h4>
+                    <h4><i class="fas fa-bolt"></i> TÜM DUYURULAR</h4>
                     <p id="preview-duyuru">YÜKLENİYOR...</p>
                 </div>
                 <div class="home-widget cyber-card" data-target="ilanlar" style="border-left: 5px solid #00d2ff;">
@@ -75,25 +77,25 @@
 
         <section id="ilanlar" class="page">
             <h1 class="cyber-header">📣 İLAN_PANOSU</h1>
-			<div class="category-filter-container">
-    <button class="filter-btn active" onclick="filterAds('all')">TÜMÜ</button>
-    <button class="filter-btn" onclick="filterAds('Ürün-Eşya')">EŞYA</button>
-    <button class="filter-btn" onclick="filterAds('İş&İnsan')">İŞ</button>
-    <button class="filter-btn" onclick="filterAds('Araç')">VASITA</button>
-    <button class="filter-btn" onclick="filterAds('Gayrimenkul')">EMLAK</button>
-</div>
+            <div class="category-filter-container">
+                <button class="filter-btn active" onclick="filterAds('all')">TÜMÜ</button>
+                <button class="filter-btn" onclick="filterAds('Ürün-Eşya')">EŞYA</button>
+                <button class="filter-btn" onclick="filterAds('İş&İnsan')">İŞ</button>
+                <button class="filter-btn" onclick="filterAds('Araç')">VASITA</button>
+                <button class="filter-btn" onclick="filterAds('Gayrimenkul')">EMLAK</button>
+            </div>
             <form id="new-ad-form" class="cyber-form">
                 <input type="text" id="ad-title" maxlength="25" pattern="^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$" placeholder="İlan Başlığı (Max 25 Karakter)" required>
-                <input type="number" id="ad-price" placeholder="Fiyat (Örn: 1500)" min="0" step="1" inputmode="numeric" required>
+                <input type="number" id="ad-price" placeholder="Fiyat (TL)" min="0" step="1" inputmode="numeric" required>
                 <select id="ad-category" required>
                     <option value="" disabled selected>Kategori Seçiniz</option>
                     <option value="Ürün-Eşya">Ürün & Eşya</option>
                     <option value="İş&İnsan">İş & İnsan</option>
-                    <option value="Araç">Araç & Oto </option>
-                    <option value="Gayrimenkul">Ev & İşyeri </option>
+                    <option value="Araç">Araç & Oto</option>
+                    <option value="Gayrimenkul">Ev & İşyeri</option>
                     <option value="Diğer">Diğer</option>
                 </select>
-                <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması (Max 350 Karakter)" required></textarea>
+                <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması" required></textarea>
                 <input type="file" id="ads-files" multiple accept="image/*">
                 <input type="password" id="ad-delete-password" maxlength="4" placeholder="4 Haneli Silme Şifresi" required>
                 <button type="submit" id="ad-submit-button" class="cyber-submit">YAYINLA</button>
@@ -116,43 +118,28 @@
         <section id="oyunlar" class="page">
             <h1 class="cyber-header">🎮 BAHÇELİEVLER_GAMING</h1>
             <div style="padding: 10px; margin-bottom: 20px;">
-                <a href="http://hizlivbilgili.com.tr/" target="_blank" class="cyber-btn-block" 
-                   style="background: linear-gradient(45deg, #6f42c1, #00d2ff); color: white; border: none; font-weight: bold; justify-content: center; text-decoration: none; box-shadow: 0 4px 15px rgba(111, 66, 193, 0.3);">
-                    <i class="fas fa-rocket"></i> HIZLI VE BİLGİLİ (HARİCİ OYUN)
+                <a href="http://hizlivbilgili.com.tr/" target="_blank" class="cyber-btn-block" style="background: linear-gradient(45deg, #6f42c1, #00d2ff); color: white; text-decoration: none; justify-content: center;">
+                    <i class="fas fa-rocket"></i> HIZLI VE BİLGİLİ (HARİCİ)
                 </a>
             </div>
             <div class="cyber-card" style="text-align: center; padding: 15px; margin-bottom: 15px;">
-                <h3 style="font-size: 0.9rem; margin-bottom: 10px;">Cyber Jump</h3>
+                <h3>Cyber Jump</h3>
                 <div id="game-container" style="width: 100%; height: 180px; background: #eee; position: relative; overflow: hidden; border-radius: 8px; display: none;">
                     <div id="player" style="width: 30px; height: 30px; background: #6f42c1; position: absolute; bottom: 0; left: 30px;"></div>
                     <div id="obstacle" style="width: 20px; height: 30px; background: #ff4d4d; position: absolute; bottom: 0; right: -30px;"></div>
                     <div id="live-score" style="position: absolute; top: 5px; left: 5px; font-weight: bold;">Skor: 0</div>
                 </div>
                 <div id="start-screen">
-                    <button onclick="startGame()" class="cyber-submit" style="background: #28a745 !important;">JUMP BAŞLAT</button>
+                    <button onclick="startGame()" class="cyber-submit" style="background: #28a745 !important;">BAŞLAT</button>
                 </div>
             </div>
-            <div class="cyber-card" style="text-align: center; padding: 15px;">
-                <h3>Sayı Tahmin</h3>
-                <div id="game-input-area">
-                    <input type="number" id="guess-input" placeholder="Sayı..." style="width: 60%; padding: 8px; text-align: center;">
-                    <button onclick="makeGuess()" class="cyber-submit" style="margin-top: 10px; background: #00d2ff !important;">TAHMİN ET</button>
-                </div>
-                <div id="game-result-area" style="display:none;">
-                    <p><b id="attempt-count">0</b> denemede buldun!</p>
-                    <input type="text" id="player-name" placeholder="Adınız" maxlength="15" style="padding: 5px; width: 70%; margin-bottom: 5px;">
-                    <button onclick="saveScore()" class="cyber-submit" style="background: #28a745 !important;">KAYDET</button>
-                </div>
-            </div>
-            <div id="high-scores-list" style="padding: 10px;"></div>
         </section>
 
         <section id="kesinti-bildir" class="page">
             <h1 class="cyber-header">⚡ KESİNTİ_BİLDİR</h1>
             <div style="padding: 10px; margin-bottom: 10px;">
-                <a href="https://ispdownmap-tr.web.app/" target="_blank" class="cyber-btn-block" 
-                   style="background: linear-gradient(45deg, #ff4d4d, #ffc107); color: white; border: none; font-weight: bold; justify-content: center; text-decoration: none;">
-                    <i class="fas fa-map-marked-alt"></i> CANLI ISP KESİNTİ HARİTASI
+                <a href="https://ispdownmap-tr.web.app/" target="_blank" class="cyber-btn-block" style="background: linear-gradient(45deg, #ff4d4d, #ffc107); color: white; text-decoration: none; justify-content: center;">
+                    <i class="fas fa-map-marked-alt"></i> CANLI KESİNTİ HARİTASI
                 </a>
             </div>
             <form id="kesinti-form" class="cyber-form">
@@ -162,10 +149,9 @@
                     <option value="Su">Su</option>
                     <option value="İnternet">İnternet</option>
                     <option value="Doğalgaz">Doğalgaz</option>
-                    <option value="Diğer">Diğer</option>
                 </select>
                 <input type="text" id="kes-location" placeholder="Mahalle / Sokak" required>
-                <textarea id="kes-desc" maxlength="200" placeholder="Detay yazın..." rows="2" required></textarea>
+                <textarea id="kes-desc" maxlength="200" placeholder="Detaylar..." rows="2" required></textarea>
                 <input type="password" id="kes-pass" maxlength="4" placeholder="Şifre" required>
                 <button type="submit" id="kes-submit-btn" class="cyber-submit" style="background: #ffc107 !important; color: black !important;">BİLDİR</button>
             </form>
@@ -176,12 +162,12 @@
             <h1 class="cyber-header">🎓 ÖĞRENCİ_PLATFORMU</h1>
             <form id="student-form" class="cyber-form">
                 <select id="stu-category" required>
-                    <option value="" disabled selected>Kategori Seçin</option>
+                    <option value="" disabled selected>Kategori</option>
                     <option value="Ders Notu / Kitap">Ders Notu / Kitap</option>
                     <option value="Ücretsiz Eşya">Ücretsiz Eşya</option>
                     <option value="Online Oyun">Online Oyun</option>
                 </select>
-                <input type="text" id="stu-title" maxlength="35" placeholder="İlan Başlığı" required>
+                <input type="text" id="stu-title" maxlength="35" placeholder="Başlık" required>
                 <textarea id="stu-content" maxlength="400" placeholder="İlan detayları..." rows="3" required></textarea>
                 <input type="file" id="stu-file" accept="image/*">
                 <input type="password" id="stu-pass" maxlength="4" placeholder="Şifre" required>
@@ -195,12 +181,12 @@
             <form id="recommend-form" class="cyber-form">
                 <input type="text" id="rec-title" placeholder="Mekan Adı" required>
                 <select id="rec-rating" required>
-                    <option value="" disabled selected>-- Puan Seçin --</option>
-                        <option value="5">⭐⭐⭐⭐⭐ (Harika)</option>
-                        <option value="4">⭐⭐⭐⭐ (İyi)</option>
-                        <option value="3">⭐⭐⭐ (Orta)</option>
-                        <option value="2">⭐⭐ (Kötü)</option>
-                        <option value="1">⭐ (Çok Kötü)</option>
+                    <option value="" disabled selected>Puan Seçin</option>
+                    <option value="5">⭐⭐⭐⭐⭐ (Harika)</option>
+                    <option value="4">⭐⭐⭐⭐ (İyi)</option>
+                    <option value="3">⭐⭐⭐ (Orta)</option>
+                    <option value="2">⭐⭐ (Kötü)</option>
+                    <option value="1">⭐ (Çok Kötü)</option>
                 </select>
                 <textarea id="rec-content" placeholder="Yorumunuz..." required></textarea>
                 <input type="password" id="rec-pass" placeholder="Şifre" maxlength="4" required>
@@ -245,19 +231,19 @@
         <section id="iletisim" class="page">
             <h1 class="cyber-header">⚖️ KURUMSAL_&_YASAL</h1>
             <div style="padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button onclick="showLegal('about')" class="cyber-btn-block" style="font-size: 0.8rem; padding: 10px;"><i class="fas fa-info-circle"></i> Hakkımızda</button>
-                <button onclick="showLegal('disclaimer')" class="cyber-btn-block" style="font-size: 0.8rem; padding: 10px;"><i class="fas fa-gavel"></i> Yasal Uyarı</button>
-                <button onclick="showLegal('kvkk')" class="cyber-btn-block" style="font-size: 0.8rem; padding: 10px;"><i class="fas fa-shield-alt"></i> KVKK Metni</button>
-                <button onclick="showLegal('contact-info')" class="cyber-btn-block" style="font-size: 0.8rem; padding: 10px;"><i class="fas fa-envelope"></i> Bize Yazın</button>
+                <button onclick="showLegal('about')" class="cyber-btn-block" style="font-size: 0.8rem;"><i class="fas fa-info-circle"></i> Hakkımızda</button>
+                <button onclick="showLegal('disclaimer')" class="cyber-btn-block" style="font-size: 0.8rem;"><i class="fas fa-gavel"></i> Yasal Uyarı</button>
+                <button onclick="showLegal('kvkk')" class="cyber-btn-block" style="font-size: 0.8rem;"><i class="fas fa-shield-alt"></i> KVKK Metni</button>
+                <button onclick="showLegal('contact-info')" class="cyber-btn-block" style="font-size: 0.8rem;"><i class="fas fa-envelope"></i> Bize Yazın</button>
             </div>
-            <div id="legal-content-area" class="cyber-card" style="margin: 15px; min-height: 200px; font-size: 0.85rem; line-height: 1.5; color: #444;">
-                <p style="text-align:center;">Lütfen incelemek istediğiniz başlığı seçiniz.</p>
+            <div id="legal-content-area" class="cyber-card" style="margin: 15px; min-height: 200px; font-size: 0.85rem;">
+                <p style="text-align:center;">İncelemek istediğiniz başlığı seçiniz.</p>
             </div>
         </section>
 
         <section id="hizmetler" class="page">
             <h1 class="cyber-header" style="text-align: left; margin-left: 10px;"><i class="fas fa-tools"></i> Yerel Hizmetler</h1>
-            <p style="padding: 0 15px; font-size: 0.9rem; color: #555;">Teklif Al, Tamir Et veya Hizmet Ver alt kategorilerine buradan erişebilirsiniz.</p>
+            <p style="padding: 0 15px; font-size: 0.9rem; color: #555;">Hizmet kategorilerine buradan erişebilirsiniz.</p>
             <div style="padding: 10px;">
                 <a href="#" class="cyber-btn-block" data-target="teklif-al-form"><i class="fas fa-file-invoice-dollar" style="color: #007bff;"></i> Teklif Al</a>
                 <a href="#" class="cyber-btn-block" data-target="usta-bul"><i class="fas fa-wrench" style="color: #007bff;"></i> Tamir Et (Usta Çağır)</a>
@@ -269,7 +255,7 @@
             <h1 class="cyber-header">📄 TEKLİF_AL</h1>
             <div class="cyber-card" style="margin: 10px; border-top: 4px solid #007bff; border-left: none;">
                 <form id="quote-request-form" class="cyber-form">
-                    <label style="font-weight: bold;">Hizmet Kategorisi</label>
+                    <label>Hizmet Kategorisi</label>
                     <select id="quote-category" required>
                         <option value="" disabled selected>Seçiniz...</option>
                         <option value="Ürün & Eşya Onarımı">Ürün & Eşya Onarımı</option>
@@ -281,76 +267,59 @@
                         <option value="Özel Ders / Eğitim">Özel Ders / Eğitim</option>
                         <option value="Diğer">Diğer</option>
                     </select>
-                    <label style="font-weight: bold; margin-top: 10px; display: block;">Görsel (Opsiyonel)</label>
+                    <label style="margin-top: 10px; display: block;">Görsel (Opsiyonel)</label>
                     <input type="file" id="quote-file" accept="image/*">
-                    <label style="font-weight: bold; margin-top: 10px; display: block;">Talep Detayı</label>
+                    <label style="margin-top: 10px; display: block;">Talep Detayı</label>
                     <textarea id="quote-text" maxlength="500" placeholder="İşin detaylarını yazınız..." rows="5" required></textarea>
-                    <label style="font-weight: bold; margin-top: 10px; display: block;">E-posta Adresiniz</label>
+                    <label style="margin-top: 10px; display: block;">E-posta Adresiniz</label>
                     <input type="email" id="quote-email" placeholder="örnek@mail.com" required>
                     <button type="submit" id="quote-submit-btn" class="cyber-submit" style="background: #007bff !important; margin-top: 10px;">GÖNDER</button>
                 </form>
             </div>
         </section>
 
+        <section id="usta-bul" class="page">
+            <h1 class="cyber-header">🔧 BAHÇELİEVLER_USTA_REHBERİ</h1>
+            <div class="map-search-container cyber-card" style="margin: 10px; padding: 15px; background: #f8f9fa;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="map-search-input" placeholder="Usta Ara (Örn: Elektrikçi)" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #00d2ff;">
+                    <button onclick="searchOnMap()" class="cyber-submit" style="width: auto; padding: 0 20px; background: #00d2ff !important;">ARA</button>
+                </div>
+            </div>
+            <div class="map-wrapper cyber-border" style="margin: 10px; border-radius: 12px; overflow: hidden; height: 450px;">
+                <iframe id="target-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12044.246416805844!2d28.8415!3d40.9926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa37072a2977f%3A0x28636402ec04e0e2!2zQmFow6dlbGlldmxlci9UxZBya2l5ZQ!5e0!3m2!1str!2str!4v1700000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </section>
+
+        <section id="hizmet-ver" class="page">
+            <h1 class="cyber-header">💼 ESNAF_HİZMET_TANITIMI</h1>
+            <p style="padding: 0 15px; font-size: 0.85rem; color: #666;">İşinizi Bahçelievler sakinlerine tanıtın.</p>
+            <form id="hizmet-form" class="cyber-form">
+                <select id="hizmet-category" required>
+                    <option value="" disabled selected>Kategori Seçin</option>
+                    <option value="Tadilat & Dekorasyon">Tadilat & Dekorasyon</option>
+                    <option value="Temizlik Hizmetleri">Temizlik Hizmetleri</option>
+                    <option value="Nakliye & Lojistik">Nakliye & Lojistik</option>
+                    <option value="Eğitim & Özel Ders">Eğitim & Özel Ders</option>
+                    <option value="Sağlık & Bakım">Sağlık & Bakım</option>
+                    <option value="Teknoloji & Tamir">Teknoloji & Tamir</option>
+                </select>
+                <input type="text" id="hizmet-firma" placeholder="Firma veya Usta Adı" maxlength="40" required>
+                <textarea id="hizmet-desc" maxlength="500" placeholder="Hizmet detayı..." rows="4" required></textarea>
+                <label style="font-size: 0.8rem; display: block; margin-top: 10px;">Görsel (Opsiyonel)</label>
+                <input type="file" id="hizmet-file" accept="image/*">
+                <input type="password" id="hizmet-pass" maxlength="4" placeholder="Şifre" required>
+                <button type="submit" id="hizmet-submit-btn" class="cyber-submit" style="background: #28a745 !important;">YAYINLA</button>
+            </form>
+            <div id="hizmet-list" style="padding: 10px;"></div>
+        </section>
+
         <section id="para-kazan" class="page"><h1>💰 PARA_KAZAN</h1><p style="text-align:center;">Yakında...</p></section>
-        <section id="duyurular" class="page"><h1>📢 SİSTEM_DUYURU</h1><div id="notifications-list" style="padding: 10px;"></div></section>
-      <section id="usta-bul" class="page">
-    <h1 class="cyber-header">🔧 BAHÇELİEVLER_USTA_REHBERİ</h1>
-    
-    <div class="map-search-container cyber-card" style="margin: 10px; padding: 15px; background: #f8f9fa;">
-        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-            <input type="text" id="map-search-input" placeholder="Usta Ara (Örn: Elektrikçi)" 
-                   style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #00d2ff;">
-            <button onclick="searchOnMap()" class="cyber-submit" style="width: auto; padding: 0 20px; background: #00d2ff !important;">
-                ARA
-            </button>
-        </div>
-    </div>
-
-    <div class="map-wrapper cyber-border" style="margin: 10px; border-radius: 12px; overflow: hidden; height: 450px;">
-        <iframe id="target-map" 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d48174.45339247192!2d28.825633!3d40.992646!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa347e8e50f5f%3A0x53966023221e065c!2zQmFow6dlbGlvdmxlci_EsHN0YW5idWw!5e0!3m2!1str!2str!4v1705160000000!5m2!1str!2str" 
-                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
-        </iframe>
-    </div>
-</section>
-       <section id="hizmet-ver" class="page">
-    <h1 class="cyber-header">💼 ESNAF_HİZMET_TANIITIM</h1>
-    <p style="padding: 0 15px; font-size: 0.85rem; color: #666;">İşletmenizi veya verdiğiniz hizmeti Bahçelievler sakinlerine tanıtın.</p>
-    
-    <form id="hizmet-form" class="cyber-form">
-        <select id="hizmet-category" required>
-            <option value="" disabled selected>Hizmet Kategorisi Seçin</option>
-            <option value="Tadilat & Dekorasyon">Tadilat & Dekorasyon</option>
-            <option value="Temizlik Hizmetleri">Temizlik Hizmetleri</option>
-            <option value="Nakliye & Lojistik">Nakliye & Lojistik</option>
-            <option value="Eğitim & Özel Ders">Eğitim & Özel Ders</option>
-            <option value="Sağlık & Bakım">Sağlık & Bakım</option>
-            <option value="Teknoloji & Tamir">Teknoloji & Tamir</option>
-            <option value="Diğer">Diğer</option>
-        </select>
-        
-        <input type="text" id="hizmet-firma" placeholder="Firma veya Usta Adı" maxlength="40" required>
-        
-        <textarea id="hizmet-desc" maxlength="500" placeholder="Verdiğiniz hizmeti detaylandırın (Max 500 Karakter)" rows="4" required></textarea>
-        
-        <label style="font-size: 0.8rem; font-weight: bold;">Hizmet Görseli (Opsiyonel)</label>
-        <input type="file" id="hizmet-file" accept="image/*">
-        
-        <input type="password" id="hizmet-pass" maxlength="4" placeholder="4 Haneli Silme Şifresi" required>
-        
-        <button type="submit" id="hizmet-submit-btn" class="cyber-submit" style="background: #28a745 !important;">HİZMETİ YAYINLA</button>
-    </form>
-
-    <div id="hizmet-list" style="padding: 10px;">
-        </div>
-</section>
-
     </div>
 
     <div id="ad-detail-modal" class="modal" style="display:none;">
         <div class="modal-content cyber-card">
-            <span class="close-detail">&times;</span>
+            <span class="close-detail">×</span>
             <div id="modal-image-gallery"></div>
             <div style="padding: 20px;">
                 <h2 id="modal-title"></h2>

@@ -786,6 +786,27 @@ async function fetchLiveInfo() {
         document.getElementById("eur-rate").textContent = eurToTry + " ₺";
     } catch (e) { console.error("Kur çekilemedi"); }
 }
+window.filterAds = function(category) {
+    // Buton aktiflik durumu
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if(btn.textContent.includes(category === 'all' ? 'TÜMÜ' : '')) btn.classList.add('active');
+    });
+
+    const list = document.getElementById("ads-list");
+    const filtered = category === 'all' ? allAds : allAds.filter(ad => ad.category === category);
+    
+    list.innerHTML = filtered.map(ad => `
+        <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')">
+            <img src="${ad.image_url || 'https://via.placeholder.com/60'}">
+            <div style="flex:1;">
+                <h4>${ad.title}</h4>
+                <b class="neon-text">${ad.price} TL</b>
+                <div style="font-size:0.6rem; color:#999;">${ad.category}</div>
+            </div>
+            <i class="fas fa-chevron-right"></i>
+        </div>`).join('');
+};
 
 // DOMContentLoaded içine ekle:
 // fetchLiveInfo();

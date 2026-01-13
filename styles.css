@@ -192,3 +192,48 @@ body {
     from { opacity: .4 } 
     to { opacity: 1 }
 }
+
+/* Kategori Filtre Tasarımı */
+.category-filter-container {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 10px 0;
+    margin-bottom: 15px;
+}
+
+.filter-btn {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    white-space: nowrap;
+    transition: 0.3s;
+}
+
+.filter-btn.active {
+    background: #00d2ff;
+    color: white;
+    border-color: #00d2ff;
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+}
+
+/* Modern İlan Kartları */
+.ad-card.cyber-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid transparent;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.ad-card.cyber-card:hover {
+    transform: translateY(-5px);
+    border-color: #00d2ff;
+    box-shadow: 0 8px 20px rgba(0, 210, 255, 0.15);
+}
+
+.ad-card img {
+    border-radius: 12px !important; /* Daha yumuşak köşeler */
+}

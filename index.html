@@ -65,6 +65,13 @@
 
         <section id="ilanlar" class="page">
             <h1 class="cyber-header">📣 İLAN_PANOSU</h1>
+			<div class="category-filter-container">
+    <button class="filter-btn active" onclick="filterAds('all')">TÜMÜ</button>
+    <button class="filter-btn" onclick="filterAds('Ürün-Eşya')">EŞYA</button>
+    <button class="filter-btn" onclick="filterAds('İş&İnsan')">İŞ</button>
+    <button class="filter-btn" onclick="filterAds('Araç')">VASITA</button>
+    <button class="filter-btn" onclick="filterAds('Gayrimenkul')">EMLAK</button>
+</div>
             <form id="new-ad-form" class="cyber-form">
                 <input type="text" id="ad-title" maxlength="25" pattern="^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$" placeholder="İlan Başlığı (Max 25 Karakter)" required>
                 <input type="number" id="ad-price" placeholder="Fiyat (Örn: 1500)" min="0" step="1" inputmode="numeric" required>

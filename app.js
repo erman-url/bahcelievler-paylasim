@@ -6,18 +6,17 @@ let isProcessing = false;
 document.addEventListener("DOMContentLoaded", () => {
     setupNavigation();
     setupForms();
-    setupContactForm();
+    setupContactForm(); // Sadece bir kez çağrılmalı
     setupQuoteForm(); 
     setupFirsatForm();
     setupStudentForm(); 
     setupKesintiForm(); 
+    setupHizmetForm();  // YENİ EKLENDİ
+    renderHizmetler();  // YENİ EKLENDİ
     loadPortalData();
+    fetchLiveInfo();
+    setInterval(fetchLiveInfo, 15 * 60 * 1000);
     
-    // --- CANLI BİLGİ MOTORU AKTİVASYONU ---
-    fetchLiveInfo(); // 1. Hemen çalıştır (Açılışta verileri getirir)
-    setInterval(fetchLiveInfo, 15 * 60 * 1000); // 2. Sonra her 15 dk'da bir tazele
-    
-    // Slider kontrolü
     if (document.getElementsByClassName("slider-item").length > 0) {
         showSlides();
     }
@@ -410,23 +409,6 @@ window.deleteSikayet = async (id, correctPass) => {
     } else if (userPass !== null) alert("Hatalı şifre!");
 };
 
-function setupContactForm() {
-    const contactForm = document.getElementById("contact-form");
-    if (!contactForm) return;
-    contactForm.addEventListener("submit", async e => {
-        e.preventDefault();
-        if (isProcessing) return;
-        const btn = document.getElementById("contact-submit-btn");
-        isProcessing = true;
-        btn.disabled = true;
-        btn.textContent = "GÖNDERİLİYOR...";
-        const params = { name: document.getElementById("contact-name").value, email: document.getElementById("contact-email").value, message: document.getElementById("contact-info").value, title: "Genel İletişim" };
-        emailjs.send('service_hdlldav', 'template_1qzuj7s', params)
-            .then(() => { alert("İletildi!"); contactForm.reset(); })
-            .finally(() => { isProcessing = false; btn.disabled = false; btn.textContent = "GÖNDER"; });
-    });
-}
-
 async function fetchAndRenderAds() {
     const list = document.getElementById("ads-list");
     if (!list) return;
@@ -685,26 +667,28 @@ window.showLegal = function(type) {
     const contents = {
         about: `
             <h3>🎓 Hakkımızda</h3>
-            <p><b>Bahçelievler Forum</b>, mahalle sakinlerinin yardımlaşması, yerel duyuruların paylaşılması ve komşuluk bağlarının dijital dünyada güçlenmesi amacıyla kurulmuş gönüllü bir platformdur.</p>
+            <p><b>Bahçelievler Forum</b>, semt sakinleri arasında dayanışmayı artırmak, yerel ticareti desteklemek ve güncel mahalle duyurularını tek merkezden toplamak amacıyla kurulmuş dijital bir mahalle platformudur.</p>
+            <p>Tamamen gönüllülük esasıyla çalışan bu yapı, semt kültürünü dijital dünyaya taşımayı hedefler.</p>
         `,
         disclaimer: `
-            <h3>⚖️ Yasal Uyarı</h3>
-            <p>1. Platformda paylaşılan ilanların, şikayetlerin ve yorumların sorumluluğu tamamen paylaşan kullanıcıya aittir.</p>
-            <p>2. Bahçelievler Forum, kullanıcılar arasındaki ticari veya şahsi uyuşmazlıklarda taraf değildir.</p>
-            <p>3. Yanıltıcı ilan veya yasadışı içerik paylaşımı yapan kullanıcıların verileri adli makamlarla paylaşılabilir.</p>
+            <h3>⚖️ Sorumluluk Reddi (Disclaimer)</h3>
+            <p>1. <b>İçerik Sorumluluğu:</b> Platformda paylaşılan ilanlar, yorumlar, tavsiyeler ve şikayetlerin içeriğinden doğrudan paylaşımı yapan kullanıcı sorumludur. Bahçelievler Forum, içeriğin doğruluğunu garanti etmez.</p>
+            <p>2. <b>Ticari İlişkiler:</b> Kullanıcılar arasında gerçekleşen alışveriş, hizmet alımı veya randevularda oluşabilecek maddi/manevi zararlardan platformumuz sorumlu tutulamaz.</p>
+            <p>3. <b>Dış Bağlantılar:</b> Sitede yer alan üçüncü taraf linkleri (Oyunlar, ISP haritaları vb.) harici servislerdir; bu sitelerin içeriklerinden ve veri politikalarından sorumlu değiliz.</p>
         `,
         kvkk: `
             <h3>🛡️ KVKK Aydınlatma Metni</h3>
-            <p>Kişisel verileriniz (E-posta, Görsel, IP adresi) şu amaçlarla işlenmektedir:</p>
+            <p>6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) uyarınca verileriniz şu kapsamda işlenmektedir:</p>
             <ul>
-                <li>İlan güvenliğinin sağlanması.</li>
-                <li>Küfür ve hakaretin önlenmesi için kimlik doğrulama.</li>
-                <li>Sistem optimizasyonu ve teknik hata takibi.</li>
+                <li><b>Toplanan Veriler:</b> İlan paylaşımı sırasında verdiğiniz e-posta adresi, paylaşılan görseller, IP adresi ve oluşturduğunuz 4 haneli silme şifresi.</li>
+                <li><b>İşleme Amacı:</b> İlan güvenliğinin sağlanması, kötü niyetli kullanımın (küfür, hakaret, dolandırıcılık) önlenmesi ve teknik hataların tespiti.</li>
+                <li><b>Veri Aktarımı:</b> Verileriniz, sadece adli makamların resmi talebi doğrultusunda ilgili mercilerle paylaşılır; üçüncü taraflara pazarlama amacıyla satılmaz.</li>
+                <li><b>Haklarınız:</b> İlanınızı şifrenizle silerek verinizi platformdan her an kaldırabilirsiniz. Veri silme talepleri için iletişim formunu kullanabilirsiniz.</li>
             </ul>
-            <p>Verileriniz, kullanıcının talebiyle (İlan silme) veya yasal saklama süreleri sonunda kalıcı olarak silinir.</p>
         `,
         'contact-info': `
             <h3>💬 Bize Yazın</h3>
+            <p>Soru, öneri veya veri silme talepleriniz için aşağıdaki formu doldurabilirsiniz:</p>
             <form id="contact-form" class="cyber-form">
                 <input type="text" id="contact-name" placeholder="Ad Soyad" required>
                 <input type="email" id="contact-email" placeholder="E-posta" required>
@@ -808,5 +792,94 @@ window.filterAds = function(category) {
         </div>`).join('');
 };
 
-// DOMContentLoaded içine ekle:
-// fetchLiveInfo();
+window.searchOnMap = function() {
+    const query = document.getElementById('map-search-input').value;
+    if (!query) return alert("Lütfen aramak istediğiniz usta türünü yazın.");
+    
+    const mapIframe = document.getElementById('target-map');
+    
+    // Süper Kontrol: $ işareti eklendi ve URL formatı stabilize edildi
+    const searchUrl = `https://www.google.com/maps/embed/v1/search?key=VARSA_API_KEYINIZ&q=${encodeURIComponent(query)}+Bahçelievler+İstanbul`;
+    
+    // Eğer API Key kullanmıyorsan en stabil çalışan "free embed" formatı şudur:
+    const freeSearchUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}+Bahçelievler+İstanbul&output=embed`;
+    
+    mapIframe.src = freeSearchUrl;
+};
+
+/* >> HİZMET TANITIM MOTORU << */
+async function setupHizmetForm() {
+    const form = document.getElementById("hizmet-form");
+    if (!form) return;
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (isProcessing) return;
+
+        const btn = document.getElementById("hizmet-submit-btn");
+        isProcessing = true;
+        btn.disabled = true;
+        btn.textContent = "YÜKLENİYOR...";
+
+        try {
+            const fileInput = document.getElementById("hizmet-file");
+            let uploadedUrl = null;
+
+            if (fileInput.files.length > 0) {
+                let urls = await handleMultipleUploads(fileInput.files);
+                uploadedUrl = urls[0];
+            }
+
+            const payload = {
+                category: document.getElementById("hizmet-category").value,
+                title: document.getElementById("hizmet-firma").value, // Veritabanı uyumu için title olarak kaydediyoruz
+                content: document.getElementById("hizmet-desc").value,
+                image_url: uploadedUrl,
+                delete_password: document.getElementById("hizmet-pass").value
+            };
+
+            // Not: Supabase üzerinde 'hizmetler' tablosu oluşturulmalıdır
+            const { error } = await window.supabase.from('hizmetler').insert([payload]);
+            if (error) throw error;
+
+            alert("Hizmet tanıtımınız başarıyla eklendi!");
+            form.reset();
+            renderHizmetler();
+        } catch (err) {
+            alert("Hata: " + err.message);
+        } finally {
+            isProcessing = false;
+            btn.disabled = false;
+            btn.textContent = "HİZMETİ YAYINLA";
+        }
+    });
+}
+
+async function renderHizmetler() {
+    const el = document.getElementById('hizmet-list');
+    if (!el) return;
+
+    const { data } = await window.supabase.from('hizmetler').select('*').order('created_at', { ascending: false });
+
+    el.innerHTML = data?.map(h => `
+        <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #28a745;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="student-badge" style="background:#e8f5e9; color:#2e7d32;">${h.category}</span>
+                <button onclick="deleteHizmet('${h.id}', '${h.delete_password}')" style="background:none; border:none; color:#ccc;"><i class="fas fa-trash"></i></button>
+            </div>
+            <h3 style="margin:10px 0 5px 0;">${h.title}</h3>
+            ${h.image_url ? `<img src="${h.image_url}" style="width:100%; border-radius:8px; margin:8px 0;">` : ''}
+            <p style="font-size:0.9rem; color:#444;">${h.content}</p>
+        </div>
+    `).join('') || "<p style='text-align:center;'>Henüz bir hizmet tanıtımı yok.</p>";
+}
+
+// Silme Fonksiyonu
+window.deleteHizmet = async (id, correctPass) => {
+    const userPass = prompt("Silmek için şifrenizi girin:");
+    if (userPass === correctPass) {
+        await window.supabase.from('hizmetler').delete().eq('id', id);
+        renderHizmetler();
+    } else if (userPass !== null) alert("Hatalı şifre!");
+};
+// Fazlalık olan parantezleri veya yorum satırlarını buradan temizle.

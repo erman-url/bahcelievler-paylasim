@@ -25,53 +25,68 @@
                     <h2>BAHÇELİEVLER FORUM</h2>
                 </div>
                 <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider2.png');">
-                    <h2>YEREL TAVSİYELER & MEKAN & İŞLETMELER </h2>
+                    <h2>YEREL TAVSİYELER & MEKAN & İŞLETMELER</h2>
                 </div>
                 <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider3.png');">
                     <h2>İLAN SİSTEMİ & ELİNDEKİLERİ DEĞERLENDİR</h2>
                 </div>
                 <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider4.jpg');">
-                    <h2>GÜNDEM & DUYURULAR </h2>
+                    <h2>GÜNDEM & DUYURULAR</h2>
                 </div>
-				<div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider5.jpg');">
-                    <h2>GÜNDEM & DUYURULAR </h2>
+                <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider5.jpg');">
+                    <h2>BAHÇELİEVLER_YAŞAM</h2>
                 </div>
             </div>
 
             <div id="info-bar" class="cyber-card" style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 20px; padding: 10px; border-left: 5px solid #00d2ff; background: #fff;">
                 <div id="weather-widget" style="display: flex; align-items: center; gap: 8px;">
                     <i class="fas fa-cloud-sun" style="color: #ffc107;"></i>
-                    <span id="weather-temp" style="font-weight: bold; font-size: 0.8rem;">YÜKLENİYOR...</span>
+                    <span id="weather-temp" style="font-weight: bold; font-size: 0.8rem;">...</span>
                 </div>
                 <div style="width: 1px; height: 20px; background: #eee;"></div>
                 <div id="currency-widget" style="display: flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: bold;">
                     <div style="color: #28a745;">USD: <span id="usd-rate">...</span></div>
                     <div style="color: #6f42c1;">EUR: <span id="eur-rate">...</span></div>
                 </div>
+                <div style="width: 1px; height: 20px; background: #eee;"></div>
+                <div id="pharmacy-widget" class="nav-item" style="display: flex; align-items: center; gap: 5px; cursor: pointer;" data-target="nobetci-eczaneler">
+                    <i class="fas fa-prescription-bottle-med" style="color: #ff4d4d;"></i>
+                    <span style="font-size: 0.75rem; font-weight: bold; color: #ff4d4d;">ECZANE</span>
+                </div>
             </div>
 
             <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.1.5</span></h1>
             <div id="home-dashboard">
-                <div class="home-widget cyber-card" data-target="duyurular" style="border-left: 5px solid #ff007f;">
-                    <h4><i class="fas fa-bolt"></i> TÜM DUYURULAR</h4>
-                    <p id="preview-duyuru">YÜKLENİYOR...</p>
-                </div>
-                <div class="home-widget cyber-card" data-target="ilanlar" style="border-left: 5px solid #00d2ff;">
-                    <h4><i class="fas fa-bullhorn"></i> SON İLANLAR</h4>
-                    <p id="preview-ad">YÜKLENİYOR...</p>
-                </div>
-                <div class="home-widget cyber-card" data-target="kesinti-bildir" style="border-left: 5px solid #ffc107;">
-                    <h4><i class="fas fa-plug"></i> SON KESİNTİLER</h4>
-                    <p id="preview-kesinti">VERİ_YOK...</p>
-                </div>
-                <div class="home-widget cyber-card" data-target="ogrenciler" style="border-left: 5px solid #6f42c1;">
-                    <h4><i class="fas fa-user-graduate"></i> ÖĞRENCİ_YARDIM</h4>
-                    <p id="preview-ogrenci">VERİ_YOK...</p>
-                </div>
-                <div class="home-widget cyber-card" data-target="firsat-indirim" style="border-left: 5px solid #28a745;">
-                    <h4><i class="fas fa-tags"></i> SON_FIRSAT</h4>
-                    <p id="preview-firsat">VERİ_YOK...</p>
-                </div>
+    <div class="home-widget cyber-card" data-target="duyurular" style="grid-column: span 2; border-left: 5px solid #ff007f;">
+        <h4><i class="fas fa-bolt"></i> SİSTEM_DUYURU</h4>
+        <p id="preview-duyuru" style="font-weight: bold; color: #ff007f;">YÜKLENİYOR...</p>
+    </div>
+
+    <div class="home-widget cyber-card" data-target="ilanlar" style="border-left: 5px solid #00d2ff;">
+        <h4><i class="fas fa-bullhorn"></i> İLANLAR</h4>
+        <p id="preview-ad" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
+    </div>
+    <div class="home-widget cyber-card" data-target="kesinti-bildir" style="border-left: 5px solid #ffc107;">
+        <h4><i class="fas fa-plug"></i> KESİNTİ</h4>
+        <p id="preview-kesinti" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
+    </div>
+
+    <div class="home-widget cyber-card" data-target="ogrenciler" style="border-left: 5px solid #6f42c1;">
+        <h4><i class="fas fa-user-graduate"></i> ÖĞRENCİ</h4>
+        <p id="preview-ogrenci" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
+    </div>
+    <div class="home-widget cyber-card" data-target="firsat-indirim" style="border-left: 5px solid #28a745;">
+        <h4><i class="fas fa-tags"></i> FIRSAT</h4>
+        <p id="preview-firsat" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
+    </div>
+</div>
+        </section>
+
+        <section id="nobetci-eczaneler" class="page">
+            <h1 class="cyber-header">💊 NÖBETÇİ_ECZANELER</h1>
+            <p style="padding: 0 15px; font-size: 0.8rem; color: #666; margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Bugün Bahçelievler'de nöbetçi olan eczaneler listelenmektedir.</p>
+            <div id="pharmacy-list" style="padding: 10px;">
+                <p style="text-align:center;">Eczaneler yükleniyor...</p>
             </div>
         </section>
 
@@ -85,8 +100,8 @@
                 <button class="filter-btn" onclick="filterAds('Gayrimenkul')">EMLAK</button>
             </div>
             <form id="new-ad-form" class="cyber-form">
-                <input type="text" id="ad-title" maxlength="25" pattern="^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$" placeholder="İlan Başlığı (Max 25 Karakter)" required>
-                <input type="number" id="ad-price" placeholder="Fiyat (TL)" min="0" step="1" inputmode="numeric" required>
+                <input type="text" id="ad-title" maxlength="25" pattern="^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$" placeholder="İlan Başlığı" required>
+                <input type="number" id="ad-price" placeholder="Fiyat (TL)" required>
                 <select id="ad-category" required>
                     <option value="" disabled selected>Kategori Seçiniz</option>
                     <option value="Ürün-Eşya">Ürün & Eşya</option>
@@ -139,7 +154,7 @@
             <h1 class="cyber-header">⚡ KESİNTİ_BİLDİR</h1>
             <div style="padding: 10px; margin-bottom: 10px;">
                 <a href="https://ispdownmap-tr.web.app/" target="_blank" class="cyber-btn-block" style="background: linear-gradient(45deg, #ff4d4d, #ffc107); color: white; text-decoration: none; justify-content: center;">
-                    <i class="fas fa-map-marked-alt"></i> CANLI KESİNTİ HARİTASI
+                    <i class="fas fa-map-marked-alt"></i> CANLI ISP KESİNTİ HARİTASI
                 </a>
             </div>
             <form id="kesinti-form" class="cyber-form">
@@ -237,7 +252,7 @@
                 <button onclick="showLegal('contact-info')" class="cyber-btn-block" style="font-size: 0.8rem;"><i class="fas fa-envelope"></i> Bize Yazın</button>
             </div>
             <div id="legal-content-area" class="cyber-card" style="margin: 15px; min-height: 200px; font-size: 0.85rem;">
-                <p style="text-align:center;">İncelemek istediğiniz başlığı seçiniz.</p>
+                <p style="text-align:center;">Lütfen incelemek istediğiniz başlığı seçiniz.</p>
             </div>
         </section>
 
@@ -267,13 +282,10 @@
                         <option value="Özel Ders / Eğitim">Özel Ders / Eğitim</option>
                         <option value="Diğer">Diğer</option>
                     </select>
-                    <label style="margin-top: 10px; display: block;">Görsel (Opsiyonel)</label>
                     <input type="file" id="quote-file" accept="image/*">
-                    <label style="margin-top: 10px; display: block;">Talep Detayı</label>
                     <textarea id="quote-text" maxlength="500" placeholder="İşin detaylarını yazınız..." rows="5" required></textarea>
-                    <label style="margin-top: 10px; display: block;">E-posta Adresiniz</label>
-                    <input type="email" id="quote-email" placeholder="örnek@mail.com" required>
-                    <button type="submit" id="quote-submit-btn" class="cyber-submit" style="background: #007bff !important; margin-top: 10px;">GÖNDER</button>
+                    <input type="email" id="quote-email" placeholder="E-posta Adresiniz" required>
+                    <button type="submit" id="quote-submit-btn" class="cyber-submit" style="background: #007bff !important;">GÖNDER</button>
                 </form>
             </div>
         </section>
@@ -287,7 +299,10 @@
                 </div>
             </div>
             <div class="map-wrapper cyber-border" style="margin: 10px; border-radius: 12px; overflow: hidden; height: 450px;">
-                <iframe id="target-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12044.246416805844!2d28.8415!3d40.9926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa37072a2977f%3A0x28636402ec04e0e2!2zQmFow6dlbGlldmxlci9UxZBya2l5ZQ!5e0!3m2!1str!2str!4v1700000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+               <iframe id="target-map" 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12042.8711317585!2d28.83!3d41.00!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa37077479869%3A0x67341369b626e256!2sBah%C3%A7elievler%2F%C4%B0stanbul!5e0!3m2!1str!2str!4v1700000000000" 
+        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+</iframe>
             </div>
         </section>
 
@@ -299,14 +314,10 @@
                     <option value="" disabled selected>Kategori Seçin</option>
                     <option value="Tadilat & Dekorasyon">Tadilat & Dekorasyon</option>
                     <option value="Temizlik Hizmetleri">Temizlik Hizmetleri</option>
-                    <option value="Nakliye & Lojistik">Nakliye & Lojistik</option>
-                    <option value="Eğitim & Özel Ders">Eğitim & Özel Ders</option>
-                    <option value="Sağlık & Bakım">Sağlık & Bakım</option>
                     <option value="Teknoloji & Tamir">Teknoloji & Tamir</option>
                 </select>
                 <input type="text" id="hizmet-firma" placeholder="Firma veya Usta Adı" maxlength="40" required>
                 <textarea id="hizmet-desc" maxlength="500" placeholder="Hizmet detayı..." rows="4" required></textarea>
-                <label style="font-size: 0.8rem; display: block; margin-top: 10px;">Görsel (Opsiyonel)</label>
                 <input type="file" id="hizmet-file" accept="image/*">
                 <input type="password" id="hizmet-pass" maxlength="4" placeholder="Şifre" required>
                 <button type="submit" id="hizmet-submit-btn" class="cyber-submit" style="background: #28a745 !important;">YAYINLA</button>

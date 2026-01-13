@@ -11,10 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
     setupFirsatForm();
     setupStudentForm(); 
     setupKesintiForm(); 
-    setupHizmetForm();  // YENİ EKLENDİ
-    renderHizmetler();  // YENİ EKLENDİ
+    setupHizmetForm();  
+    renderHizmetler();  
     loadPortalData();
     fetchLiveInfo();
+	fetchPharmacies(); // Eczaneleri yükle
     setInterval(fetchLiveInfo, 15 * 60 * 1000);
     
     if (document.getElementsByClassName("slider-item").length > 0) {
@@ -798,15 +799,11 @@ window.searchOnMap = function() {
     
     const mapIframe = document.getElementById('target-map');
     
-    // Süper Kontrol: $ işareti eklendi ve URL formatı stabilize edildi
-    const searchUrl = `https://www.google.com/maps/embed/v1/search?key=VARSA_API_KEYINIZ&q=${encodeURIComponent(query)}+Bahçelievler+İstanbul`;
-    
-    // Eğer API Key kullanmıyorsan en stabil çalışan "free embed" formatı şudur:
-    const freeSearchUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}+Bahçelievler+İstanbul&output=embed`;
+    // Google Maps Embed (Stabil ve ücretsiz format)
+    const freeSearchUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}+Bahçelievler+İstanbul&t=&z=14&ie=UTF8&iwloc=&output=embed`;
     
     mapIframe.src = freeSearchUrl;
 };
-
 /* >> HİZMET TANITIM MOTORU << */
 async function setupHizmetForm() {
     const form = document.getElementById("hizmet-form");
@@ -882,4 +879,53 @@ window.deleteHizmet = async (id, correctPass) => {
         renderHizmetler();
     } else if (userPass !== null) alert("Hatalı şifre!");
 };
+
+/* >> NÖBETÇİ ECZANE SİSTEMİ MOTORU << */
+window.searchOnMap = function() {
+    const query = document.getElementById('map-search-input').value;
+    if (!query) return alert("Lütfen aramak istediğiniz usta türünü yazın.");
+    
+    const mapIframe = document.getElementById('target-map');
+    
+    // Google Maps Embed (Stabil ve ücretsiz format)
+    const freeSearchUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}+Bahçelievler+İstanbul&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+    
+    mapIframe.src = freeSearchUrl;
+};
+
+async function fetchPharmacies() {
+    const el = document.getElementById('pharmacy-list');
+    if (!el) return;
+
+    try {
+        const res = await fetch("https://api.collectapi.com/health/dutyPharmacy?ilce=Bahcelievler&il=Istanbul", {
+            headers: { 
+                "content-type": "application/json",
+                "authorization": "apikey 5kUuIeH9E2K4Q5iI5M6h9o:0U2yD6fS8s3L7pP4j8oK" 
+            }
+        });
+        const result = await res.json();
+
+        if (result.success) {
+            el.innerHTML = result.result.map(e => `
+                <div class="cyber-card" style="margin-bottom:12px; border-left: 5px solid #ff4d4d;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong style="color:#d32f2f;">${e.name} Eczanesi</strong>
+                        <a href="tel:${e.phone}" style="color:#28a745; font-size:1.2rem;"><i class="fas fa-phone-alt"></i></a>
+                    </div>
+                    <p style="font-size:0.85rem; margin:5px 0; color:#444;">${e.address}</p>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.name + ' Eczanesi Bahçelievler')}" 
+                       target="_blank" class="cyber-btn-block" style="padding:5px; font-size:0.75rem; justify-content:center; background:#f8d7da; color:#721c24; border:none; text-decoration:none;">
+                       <i class="fas fa-map-marker-alt"></i> HARİTADA GÖSTER
+                    </a>
+                </div>
+            `).join('');
+        } else {
+            el.innerHTML = "<p style='text-align:center;'>API limiti doldu veya anahtar geçersiz.</p>";
+        }
+    } catch (err) {
+        el.innerHTML = "<p style='color:red; text-align:center;'>Bağlantı hatası.</p>";
+    }
+}
+
 // Fazlalık olan parantezleri veya yorum satırlarını buradan temizle.

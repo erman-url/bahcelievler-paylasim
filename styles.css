@@ -237,3 +237,54 @@ body {
 .ad-card img {
     border-radius: 12px !important; /* Daha yumuşak köşeler */
 }
+
+/* Ana Sayfa Widget Dinamizmi */
+#home-dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 10px;
+}
+
+.home-widget {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: linear-gradient(145deg, #ffffff, #f0f0f0) !important;
+    box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff !important;
+    border-radius: 15px !important;
+    overflow: hidden;
+    position: relative;
+}
+
+.home-widget:active {
+    transform: scale(0.95);
+    box-shadow: inset 5px 5px 10px #d1d1d1, inset -5px -5px 10px #ffffff !important;
+}
+
+.home-widget h4 {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+/* Cam Efekti Veri Çubuğu */
+#info-bar {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    position: sticky;
+    top: 10px;
+    z-index: 100;
+}
+
+/* Neon Animasyonlu Yazı */
+.neon-text {
+    animation: pulsate 1.5s infinite alternate;
+}
+
+@keyframes pulsate {
+    100% { text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #00d2ff, 0 0 40px #00d2ff; }
+    0% { text-shadow: 0 0 2px #fff, 0 0 4px #fff, 0 0 6px #00d2ff; }
+}

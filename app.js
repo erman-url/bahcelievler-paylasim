@@ -157,7 +157,6 @@ async function handleMultipleUploads(files) {
     }
     return urls;
 }
-
 function setupForms() {
     const adForm = document.getElementById("new-ad-form");
     if (adForm) {
@@ -168,6 +167,7 @@ function setupForms() {
             const titleVal = document.getElementById("ad-title").value;
             const priceVal = document.getElementById("ad-price").value;
             const contentVal = document.getElementById("ad-content").value;
+            const contactVal = document.getElementById("ad-contact").value; // İletişim bilgisini al
             
             const titleRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$/;
             if (titleVal.length > 25 || !titleRegex.test(titleVal)) {
@@ -189,6 +189,7 @@ function setupForms() {
                     price: priceVal,
                     category: document.getElementById("ad-category").value,
                     content: contentVal,
+                    contact: contactVal, // Veritabanına gönder
                     delete_password: document.getElementById("ad-delete-password").value,
                     image_url: urls[0] || null,
                     image_url_2: urls[1] || null,
@@ -207,7 +208,8 @@ function setupForms() {
                 btn.textContent = "YAYINLA";
             }
         });
-    }
+
+}
 
     document.getElementById("recommend-form")?.addEventListener("submit", async e => {
         e.preventDefault();
@@ -465,30 +467,55 @@ async function fetchAndRenderAds() {
     const { data } = await window.supabase.from('ilanlar').select('*').order('created_at', {ascending: false});
     allAds = data || [];
     
-    // Modern Letgo Tarzı Grid Tasarımı
-    list.innerHTML = allAds.map(ad => `
+    list.innerHTML = allAds.map(ad => {
+        const ilanNo = ad.id.toString().slice(-5).toUpperCase(); // İlan No
+        const tarih = new Date(ad.created_at).toLocaleDateString('tr-TR'); // Tarih
+
+        return `
         <div class="ad-card" onclick="openAdDetail('${ad.id}')">
             <div class="ad-badge">${ad.category}</div>
-            <img src="${ad.image_url || 'img/no-image.jpg'}" loading="lazy" alt="${ad.title}">
+            <img src="${ad.image_url || 'img/no-image.jpg'}" loading="lazy">
             <div class="ad-info">
+                <span style="font-size:0.65rem; color:#888; display:block; font-family:monospace; margin-bottom:2px;">#${ilanNo} | ${tarih}</span>
                 <span class="ad-price">${ad.price} TL</span>
                 <span class="ad-title">${ad.title}</span>
             </div>
-        </div>`).join('');
+        </div>`;
+    }).join('');
 }
 
 window.openAdDetail = function(id) {
     const ad = allAds.find(a => a.id == id);
     if (!ad) return;
-    document.getElementById("modal-title").textContent = ad.title;
+
+    const ilanNo = ad.id.toString().slice(-5).toUpperCase();
+    document.getElementById("modal-title").innerHTML = `<small style="display:block; color:#aaa; font-size:0.7rem;">İlan No: #${ilanNo}</small>` + ad.title;
     document.getElementById("modal-price").textContent = ad.price + " TL";
     document.getElementById("modal-description").textContent = ad.content;
+    
+    const buyBtn = document.getElementById("modal-buy-btn");
+    if (ad.contact) {
+        buyBtn.innerHTML = `<i class="fas fa-phone-alt"></i> İLETİŞİME GEÇ: ${ad.contact}`;
+        buyBtn.style.background = "#28a745"; 
+        buyBtn.onclick = () => { 
+            if (!isNaN(ad.contact.replace(/\s/g, ''))) {
+                window.location.href = `tel:${ad.contact}`;
+            } else {
+                alert("İletişim Bilgisi: " + ad.contact);
+            }
+        };
+    } else {
+        buyBtn.innerHTML = "SATIN ALMA TALEBİ";
+        buyBtn.style.background = "#00d2ff";
+    }
+
     const gallery = document.getElementById("modal-image-gallery");
     const images = [ad.image_url, ad.image_url_2, ad.image_url_3].filter(url => url);
     gallery.style.display = images.length ? "flex" : "none";
     gallery.innerHTML = images.map(url => `<img src="${url}">`).join('');
+    
     document.getElementById("modal-delete-btn-inner").onclick = async () => {
-        const pass = prompt("Şifre:");
+        const pass = prompt("Silme Şifresi:");
         if (pass === ad.delete_password) {
             await window.supabase.from('ilanlar').delete().eq('id', ad.id);
             document.getElementById("ad-detail-modal").style.display = "none";
@@ -497,8 +524,6 @@ window.openAdDetail = function(id) {
     };
     document.getElementById("ad-detail-modal").style.display = "block";
 };
-
-document.querySelector(".close-detail").onclick = () => { document.getElementById("ad-detail-modal").style.display = "none"; };
 
 /* >> GELİŞMİŞ DASHBOARD GÜNCELLEME MOTORU << */
 async function updateDashboard() {

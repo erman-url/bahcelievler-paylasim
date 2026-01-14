@@ -457,16 +457,23 @@ window.deleteSikayet = async (id, correctPass) => {
     } else if (userPass !== null) alert("Hatalı şifre!");
 };
 
+/* >> İLAN SİSTEMİ: MODERN GRID RENDER MOTORU << */
 async function fetchAndRenderAds() {
     const list = document.getElementById("ads-list");
     if (!list) return;
+    
     const { data } = await window.supabase.from('ilanlar').select('*').order('created_at', {ascending: false});
     allAds = data || [];
+    
+    // Modern Letgo Tarzı Grid Tasarımı
     list.innerHTML = allAds.map(ad => `
-        <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')" style="display:flex; gap:10px; align-items:center; cursor:pointer; margin-bottom:10px;">
-            <img src="${ad.image_url || 'https://via.placeholder.com/60'}" style="width:60px; height:60px; object-fit:cover; border-radius:8px;">
-            <div style="flex:1;"><h4>${ad.title}</h4><b class="neon-text">${ad.price} TL</b></div>
-            <i class="fas fa-chevron-right"></i>
+        <div class="ad-card" onclick="openAdDetail('${ad.id}')">
+            <div class="ad-badge">${ad.category}</div>
+            <img src="${ad.image_url || 'img/no-image.jpg'}" loading="lazy" alt="${ad.title}">
+            <div class="ad-info">
+                <span class="ad-price">${ad.price} TL</span>
+                <span class="ad-title">${ad.title}</span>
+            </div>
         </div>`).join('');
 }
 
@@ -817,24 +824,24 @@ async function fetchLiveInfo() {
 }
 
 window.filterAds = function(category) {
-    // Buton aktiflik durumu
+    // Buton aktiflik durumu yönetimi
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
-        if(btn.textContent.includes(category === 'all' ? 'TÜMÜ' : '')) btn.classList.add('active');
     });
+    event.currentTarget.classList.add('active');
 
     const list = document.getElementById("ads-list");
     const filtered = category === 'all' ? allAds : allAds.filter(ad => ad.category === category);
     
+    // Filtrelenmiş ilanları da kart yapısında göster
     list.innerHTML = filtered.map(ad => `
-        <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')">
-            <img src="${ad.image_url || 'https://via.placeholder.com/60'}">
-            <div style="flex:1;">
-                <h4>${ad.title}</h4>
-                <b class="neon-text">${ad.price} TL</b>
-                <div style="font-size:0.6rem; color:#999;">${ad.category}</div>
+        <div class="ad-card" onclick="openAdDetail('${ad.id}')">
+            <div class="ad-badge">${ad.category}</div>
+            <img src="${ad.image_url || 'img/no-image.jpg'}" loading="lazy">
+            <div class="ad-info">
+                <span class="ad-price">${ad.price} TL</span>
+                <span class="ad-title">${ad.title}</span>
             </div>
-            <i class="fas fa-chevron-right"></i>
         </div>`).join('');
 };
 

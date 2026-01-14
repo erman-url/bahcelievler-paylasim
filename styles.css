@@ -288,3 +288,166 @@ body {
     100% { text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #00d2ff, 0 0 40px #00d2ff; }
     0% { text-shadow: 0 0 2px #fff, 0 0 4px #fff, 0 0 6px #00d2ff; }
 }
+
+#ads-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Yan yana kartlar */
+    gap: 15px;
+    padding: 10px;
+}
+
+/* İlan Listesi Konteynırı */
+#ads-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Mobilde yan yana 2 ilan */
+    gap: 12px;
+    padding: 10px;
+}
+
+/* İlan Kartı */
+.ad-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.ad-card:active { transform: scale(0.97); }
+
+/* İlan Görseli */
+.ad-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Kare görseller (Letgo gibi) */
+    object-fit: cover;
+    background: #f8f9fa;
+}
+
+/* Kart İçeriği */
+.ad-info {
+    padding: 10px;
+}
+
+.ad-price {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #121212;
+    margin-bottom: 2px;
+}
+
+.ad-title {
+    font-size: 0.85rem;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Uzun başlıkları keser */
+}
+
+/* Kategori Rozeti (Görselin üzerinde) */
+.ad-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+}
+
+/* İlan Listesi Konteynırı */
+#ads-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Mobilde yan yana 2 ilan */
+    gap: 12px;
+    padding: 10px;
+}
+
+/* İlan Kartı */
+.ad-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.ad-card:active { transform: scale(0.97); }
+
+
+/* Kart İçeriği */
+.ad-info {
+    padding: 10px;
+}
+
+.ad-price {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #121212;
+    margin-bottom: 2px;
+}
+
+.ad-title {
+    font-size: 0.85rem;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Uzun başlıkları keser */
+}
+
+/* Kategori Rozeti (Görselin üzerinde) */
+.ad-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+}
+
+/* İlanların yan yana gelmesi için konteynır ayarı */
+#ads-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Mobilde yan yana 2 tane */
+    gap: 12px;
+}
+
+/* Kartın görsel tasarımı */
+.ad-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    overflow: hidden;
+    position: relative;
+}
+
+/* İLAN GÖRSELİ SABİTLEME - SADECE BU KISMI GÜNCELLE */
+.ad-card img {
+    width: 100% !important;
+    height: 180px !important; /* PC için yükseklik sınırı */
+    object-fit: cover !important; /* Resmi kutuya sığdırır, bozmaz */
+    background: #f8f9fa;
+    border-radius: 12px 12px 0 0 !important;
+    display: block;
+}
+
+/* iPhone (Mobil) için yükseklik ayarı */
+@media (max-width: 600px) {
+    .ad-card img {
+        height: 140px !important; /* Telefonlarda daha dengeli durur */
+    }
+}

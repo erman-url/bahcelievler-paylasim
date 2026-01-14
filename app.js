@@ -687,6 +687,22 @@ window.showLegal = function(type) {
                 <li><b>Haklarınız:</b> İlanınızı şifrenizle silerek verinizi platformdan her an kaldırabilirsiniz. Veri silme talepleri için iletişim formunu kullanabilirsiniz.</li>
             </ul>
         `,
+        sss: `
+            <h3>❓ Sıkça Sorulan Sorular</h3>
+            <div style="margin-top:10px; text-align:left;">
+                <p><b>1. Paylaştığım bir içeriği nasıl silebilirim?</b><br>
+                İçeriği eklerken belirlediğiniz 4 haneli şifreyi kullanarak, içeriğin altındaki "Sil" butonuna basıp işlemi tamamlayabilirsiniz.</p>
+                <hr style="opacity:0.1; margin:10px 0;">
+                <p><b>2. Şifremi unuttum, ne yapmalıyım?</b><br>
+                Güvenlik gereği şifreler sistemde korunmaktadır. Silme işlemleri için "Bize Yazın" kısmından ilgili başlığı belirterek destek isteyebilirsiniz.</p>
+                <hr style="opacity:0.1; margin:10px 0;">
+                <p><b>3. Hizmet tanıtımı veya ilan vermek ücretli mi?</b><br>
+                Hayır, Bahçelievler Forum üzerindeki tüm temel özellikler semt sakinlerimiz için tamamen ücretsizdir.</p>
+                <hr style="opacity:0.1; margin:10px 0;">
+                <p><b>4. Nöbetçi eczaneler güncel mi?</b><br>
+                Evet, veriler canlı çekilmektedir. Ancak gitmeden önce eczaneyi arayarak teyit etmeniz önerilir.</p>
+            </div>
+        `,
         'contact-info': `
             <h3>💬 Bize Yazın</h3>
             <p>Soru, öneri veya veri silme talepleriniz için aşağıdaki formu doldurabilirsiniz:</p>

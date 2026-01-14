@@ -107,6 +107,7 @@
                 </select>
                 <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması" required></textarea>
                 <input type="file" id="ads-files" multiple accept="image/*">
+                <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> İlanı daha sonra bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="ad-delete-password" maxlength="4" placeholder="4 Haneli Silme Şifresi" required>
                 <button type="submit" id="ad-submit-button" class="cyber-submit">YAYINLA</button>
             </form>
@@ -162,6 +163,7 @@
                 </select>
                 <input type="text" id="kes-location" placeholder="Mahalle / Sokak" required>
                 <textarea id="kes-desc" maxlength="200" placeholder="Detaylar..." rows="2" required></textarea>
+                <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> Bildirimi bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="kes-pass" maxlength="4" placeholder="Şifre" required>
                 <button type="submit" id="kes-submit-btn" class="cyber-submit" style="background: #ffc107 !important; color: black !important;">BİLDİR</button>
             </form>
@@ -180,6 +182,7 @@
                 <input type="text" id="stu-title" maxlength="35" placeholder="Başlık" required>
                 <textarea id="stu-content" maxlength="400" placeholder="İlan detayları..." rows="3" required></textarea>
                 <input type="file" id="stu-file" accept="image/*">
+                <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> İlanı bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="stu-pass" maxlength="4" placeholder="Şifre" required>
                 <button type="submit" id="stu-submit-btn" class="cyber-submit" style="background: #6f42c1 !important;">YAYINLA</button>
             </form>
@@ -199,6 +202,7 @@
                     <option value="1">⭐ (Çok Kötü)</option>
                 </select>
                 <textarea id="rec-content" placeholder="Yorumunuz..." required></textarea>
+                <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> Yorumu bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="rec-pass" placeholder="Şifre" maxlength="4" required>
                 <button type="submit" class="cyber-submit" style="background: #28a745 !important;">PAYLAŞ</button>
             </form>
@@ -215,6 +219,7 @@
                 </select>
                 <input type="text" id="comp-title" placeholder="Başlık" required>
                 <textarea id="comp-content" placeholder="Detay..." required></textarea>
+                <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> Şikayeti bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="comp-pass" maxlength="4" placeholder="Şifre" required>
                 <button type="submit" id="comp-submit-btn" class="cyber-submit">BİLDİR</button>
             </form>
@@ -232,6 +237,7 @@
                 <div id="online-only"><input type="url" id="firsat-link" placeholder="Ürün Linki"></div>
                 <div id="yerel-only" style="display:none;"><textarea id="firsat-desc" placeholder="Adres/Detay"></textarea></div>
                 <input type="file" id="firsat-files" multiple accept="image/*">
+                <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> Fırsatı bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="firsat-pass" maxlength="4" placeholder="Şifre" required>
                 <button type="submit" id="firsat-submit-btn" class="cyber-submit">GÖNDER</button>
             </form>
@@ -244,7 +250,8 @@
                 <button onclick="showLegal('about')" class="cyber-btn-block" style="font-size: 0.8rem;"><i class="fas fa-info-circle"></i> Hakkımızda</button>
                 <button onclick="showLegal('disclaimer')" class="cyber-btn-block" style="font-size: 0.8rem;"><i class="fas fa-gavel"></i> Yasal Uyarı</button>
                 <button onclick="showLegal('kvkk')" class="cyber-btn-block" style="font-size: 0.8rem;"><i class="fas fa-shield-alt"></i> KVKK Metni</button>
-                <button onclick="showLegal('contact-info')" class="cyber-btn-block" style="font-size: 0.8rem;"><i class="fas fa-envelope"></i> Bize Yazın</button>
+                <button onclick="showLegal('sss')" class="cyber-btn-block" style="font-size: 0.8rem;"><i class="fas fa-question-circle"></i> S.S.S.</button>
+                <button onclick="showLegal('contact-info')" class="cyber-btn-block" style="grid-column: span 2; font-size: 0.8rem;"><i class="fas fa-envelope"></i> Bize Yazın</button>
             </div>
             <div id="legal-content-area" class="cyber-card" style="margin: 15px; min-height: 200px; font-size: 0.85rem;">
                 <p style="text-align:center;">Lütfen incelemek istediğiniz başlığı seçiniz.</p>
@@ -274,8 +281,8 @@
                         <option value="Boya & Tadilat İşlemi">Boya & Tadilat İşlemi</option>
                         <option value="Bilgisayar Bakım & Onarım">Bilgisayar Bakım & Onarım</option>
                         <option value="Nakliye & Taşımacılık">Nakliye & Taşımacılık</option>
-                        <option value="Özel Ders / Eğitim">Özel Ders / Eğitim</option>
-                        <option value="Diğer">Diğer</option>
+                        <option value="Özel Ders / Eğitim">Özel Ders & Eğitim</option>
+                        <option value="Diğer">Diğer & Hizmet </option>
                     </select>
                     <input type="file" id="quote-file" accept="image/*">
                     <textarea id="quote-text" maxlength="500" placeholder="İşin detaylarını yazınız..." rows="5" required></textarea>
@@ -286,7 +293,7 @@
         </section>
 
         <section id="usta-bul" class="page">
-            <h1 class="cyber-header">🔧 BAHÇELİEVLER_USTA_REHBERİ</h1>
+            <h1 class="cyber-header">🔧 BAHÇELİEVLER USTA REHBERİ</h1>
             <div class="map-search-container cyber-card" style="margin: 10px; padding: 15px; background: #f8f9fa;">
                 <div style="display: flex; gap: 10px;">
                     <input type="text" id="map-search-input" placeholder="Usta Ara (Örn: Elektrikçi)" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #00d2ff;">
@@ -294,15 +301,12 @@
                 </div>
             </div>
             <div class="map-wrapper cyber-border" style="margin: 10px; border-radius: 12px; overflow: hidden; height: 450px;">
-               <iframe id="target-map" 
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12042.8711317585!2d28.83!3d41.00!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa37077479869%3A0x67341369b626e256!2sBah%C3%A7elievler%2F%C4%B0stanbul!5e0!3m2!1str!2str!4v1700000000000" 
-        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
-</iframe>
+               <iframe id="target-map" src="https://maps.google.com/maps?q=Bahcelievler+Istanbul&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
         </section>
 
         <section id="hizmet-ver" class="page">
-            <h1 class="cyber-header">💼 ESNAF_HİZMET_TANITIMI</h1>
+            <h1 class="cyber-header">💼 ESNAF HİZMET TANITIMI</h1>
             <p style="padding: 0 15px; font-size: 0.85rem; color: #666;">İşinizi Bahçelievler sakinlerine tanıtın.</p>
             <form id="hizmet-form" class="cyber-form">
                 <select id="hizmet-category" required>
@@ -310,10 +314,16 @@
                     <option value="Tadilat & Dekorasyon">Tadilat & Dekorasyon</option>
                     <option value="Temizlik Hizmetleri">Temizlik Hizmetleri</option>
                     <option value="Teknoloji & Tamir">Teknoloji & Tamir</option>
+                    <option value="Restoran & Cafe">Restoran & Cafe</option>
+                    <option value="Sağlık & Kişisel Bakım">Sağlık & Kişisel Bakım</option>
+                    <option value="Özel Ders & Eğitim">Özel Ders & Eğitim</option>
+                    <option value="Nakliye & Taşımacılık">Nakliye & Taşımacılık</option>
+                    <option value="Diğer & Hizmet">Diğer & Hizmet</option>
                 </select>
                 <input type="text" id="hizmet-firma" placeholder="Firma veya Usta Adı" maxlength="40" required>
                 <textarea id="hizmet-desc" maxlength="500" placeholder="Hizmet detayı..." rows="4" required></textarea>
                 <input type="file" id="hizmet-file" accept="image/*">
+                <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> Paylaşımı daha sonra bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="hizmet-pass" maxlength="4" placeholder="Şifre" required>
                 <button type="submit" id="hizmet-submit-btn" class="cyber-submit" style="background: #28a745 !important;">YAYINLA</button>
             </form>

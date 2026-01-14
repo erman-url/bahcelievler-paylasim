@@ -53,26 +53,38 @@
             <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.1.5</span></h1>
             <div id="home-dashboard">
     <div class="home-widget cyber-card" data-target="duyurular" style="grid-column: span 2; border-left: 5px solid #ff007f;">
-        <h4><i class="fas fa-bolt"></i> SİSTEM_DUYURU</h4>
+        <h4><i class="fas fa-bolt fa-beat"></i> SON EKLENEN DUYURULAR</h4>
         <p id="preview-duyuru" style="font-weight: bold; color: #ff007f;">YÜKLENİYOR...</p>
     </div>
 
     <div class="home-widget cyber-card" data-target="ilanlar" style="border-left: 5px solid #00d2ff;">
-        <h4><i class="fas fa-bullhorn"></i> İLANLAR</h4>
+        <h4><i class="fas fa-bullhorn fa-bounce"></i> SON EKLENEN İLANLAR</h4>
         <p id="preview-ad" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
     </div>
+
     <div class="home-widget cyber-card" data-target="kesinti-bildir" style="border-left: 5px solid #ffc107;">
-        <h4><i class="fas fa-plug"></i> KESİNTİ</h4>
+        <h4><i class="fas fa-plug fa-fade"></i> SON BİLDİRİLEN KESİNTİ</h4>
         <p id="preview-kesinti" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
     </div>
 
     <div class="home-widget cyber-card" data-target="ogrenciler" style="border-left: 5px solid #6f42c1;">
-        <h4><i class="fas fa-user-graduate"></i> ÖĞRENCİ</h4>
+        <h4><i class="fas fa-user-graduate fa-flip"></i> ÖĞRENCİ PORTALI</h4>
         <p id="preview-ogrenci" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
     </div>
+
     <div class="home-widget cyber-card" data-target="firsat-indirim" style="border-left: 5px solid #28a745;">
-        <h4><i class="fas fa-tags"></i> FIRSAT</h4>
+        <h4><i class="fas fa-tags fa-beat-fade"></i> SON EKLENEN FIRSAT</h4>
         <p id="preview-firsat" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
+    </div>
+
+    <div class="home-widget cyber-card" data-target="tavsiye-et" style="border-left: 5px solid #ffc107;">
+        <h4><i class="fas fa-star fa-spin-pulse"></i> SON EKLENEN TAVSİYE</h4>
+        <p id="preview-tavsiye" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
+    </div>
+
+    <div class="home-widget cyber-card" data-target="sikayet-et" style="border-left: 5px solid #ff4d4d;">
+        <h4><i class="fas fa-exclamation-triangle fa-shake"></i> SON EKLENEN ŞİKAYET</h4>
+        <p id="preview-sikayet" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
     </div>
 </div>
         </section>
@@ -155,11 +167,13 @@
             </div>
             <form id="kesinti-form" class="cyber-form">
                 <select id="kes-type" required>
-                    <option value="" disabled selected>Kesinti Türü</option>
-                    <option value="Elektrik">Elektrik</option>
-                    <option value="Su">Su</option>
-                    <option value="İnternet">İnternet</option>
-                    <option value="Doğalgaz">Doğalgaz</option>
+                    <select id="kes-type" required>
+    <option value="" disabled selected>Kesinti Türü</option>
+    <option value="Elektrik">Elektrik</option>
+    <option value="Su">Su</option>
+    <option value="İnternet">İnternet/TV</option>
+    <option value="Doğalgaz">Doğalgaz</option>
+    <option value="Diğer">Diğer & Hizmet</option> </select>
                 </select>
                 <input type="text" id="kes-location" placeholder="Mahalle / Sokak" required>
                 <textarea id="kes-desc" maxlength="200" placeholder="Detaylar..." rows="2" required></textarea>
@@ -190,7 +204,11 @@
         </section>
 
         <section id="tavsiye-et" class="page">
-            <h1 class="cyber-header">⭐ TAVSİYE_ET</h1>
+           
+    <h1 class="cyber-header">⭐ TAVSİYE_ET</h1>
+    <p style="padding: 0 15px; font-size: 0.85rem; color: #666; margin-bottom: 15px; line-height: 1.4;">
+        <i class="fas fa-thumbs-up"></i> Bahçelievler'de beğendiğiniz restoran, esnaf veya işletmeleri komşularınıza tavsiye edin, semt rehberimize katkıda bulunun.
+    </p>
             <form id="recommend-form" class="cyber-form">
                 <input type="text" id="rec-title" placeholder="Mekan Adı" required>
                 <select id="rec-rating" required>
@@ -202,29 +220,50 @@
                     <option value="1">⭐ (Çok Kötü)</option>
                 </select>
                 <textarea id="rec-content" placeholder="Yorumunuz..." required></textarea>
-                <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> Yorumu bu şifre ile silebilirsiniz:</p>
-                <input type="password" id="rec-pass" placeholder="Şifre" maxlength="4" required>
+                <label style="font-size: 0.8rem; display: block; margin-top: 10px;">Görsel (Opsiyonel - Max 5MB)</label>
+<input type="file" id="rec-file" accept="image/*">
+<p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;">
+    <i class="fas fa-key"></i> Yorumu bu şifre ile silebilirsiniz:</p>
+<input type="password" id="rec-pass" placeholder="Şifre" maxlength="4" required>
                 <button type="submit" class="cyber-submit" style="background: #28a745 !important;">PAYLAŞ</button>
             </form>
             <div id="recommend-list" style="padding: 10px;"></div>
         </section>
 
         <section id="sikayet-et" class="page">
-            <h1 class="cyber-header">✍️ ŞİKAYET_BİLDİR</h1>
-            <form id="complaint-form" class="cyber-form">
-                <select id="comp-category" required>
-                    <option value="Genel">Genel</option>
-                    <option value="Belediye">Belediye</option>
-                    <option value="İşletme">İşletme</option>
-                </select>
-                <input type="text" id="comp-title" placeholder="Başlık" required>
-                <textarea id="comp-content" placeholder="Detay..." required></textarea>
-                <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> Şikayeti bu şifre ile silebilirsiniz:</p>
-                <input type="password" id="comp-pass" maxlength="4" placeholder="Şifre" required>
-                <button type="submit" id="comp-submit-btn" class="cyber-submit">BİLDİR</button>
-            </form>
-            <div id="complaint-list" style="padding: 10px;"></div>
-        </section>
+    <h1 class="cyber-header">✍️ ŞİKAYET_VE_İHBAR_HATTI</h1>
+    
+    <p style="padding: 0 15px; font-size: 0.85rem; color: #666; margin-bottom: 15px; line-height: 1.4;">
+        <i class="fas fa-bullhorn" style="color:#ff4d4d;"></i> 
+        İlçemizdeki olumsuzlukları dile getirin, birlikte düzeltelim. Amacımız sadece işletme şikayeti değil; sokaktaki bir canın korunması, belediye hizmetleri veya toplumsal huzuru bozan her durumu <b>yapıcı bir dille</b> paylaşarak çözüm üretmektir.
+    </p>
+
+    <form id="complaint-form" class="cyber-form">
+        <select id="comp-category" required>
+            <option value="" disabled selected>Konu Kategorisi Seçiniz</option>
+            <option value="Belediye Hizmetleri">Belediye Hizmetleri (Çöp, Yol vb.)</option>
+            <option value="İşletme Şikayeti">İşletme & Esnaf (Davranış, Hizmet)</option>
+            <option value="Hayvan Hakları">Hayvan Hakları & Çevre</option>
+            <option value="Trafik & Park">Trafik & Park Sorunları</option>
+            <option value="Diğer">Diğer Olumsuzluklar</option>
+        </select>
+        
+        <input type="text" id="comp-title" placeholder="Kısa Başlık (Örn: Çöp Sorunu)" required>
+        <textarea id="comp-content" placeholder="Durumu detaylandırın ve çözüm önerinizi yazın..." rows="4" required></textarea>
+        
+        <label style="font-size: 0.75rem; color: #555; display: block; margin-top: 10px;">Görsel Ekle (Opsiyonel - Max 2 Adet, Her biri 5MB)</label>
+        <input type="file" id="comp-files" multiple accept="image/*">
+
+        <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold; margin-top:10px;">
+            <i class="fas fa-key"></i> Şikayeti daha sonra bu şifre ile silebilirsiniz:
+        </p>
+        <input type="password" id="comp-pass" maxlength="4" placeholder="4 Haneli Silme Şifresi" required>
+        
+        <button type="submit" id="comp-submit-btn" class="cyber-submit" style="background:#ff4d4d !important;">BİLDİRİ YAYINLA</button>
+    </form>
+    
+    <div id="complaint-list" style="padding: 10px;"></div>
+</section>
 
         <section id="firsat-indirim" class="page">
             <h1 class="cyber-header">🔥 FIRSAT_VE_İNDİRİM</h1>

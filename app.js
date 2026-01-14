@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderHizmetler();  
     loadPortalData();
     fetchLiveInfo();
-	fetchPharmacies(); // Eczaneleri yükle
+    fetchPharmacies(); // Eczaneleri yükle
     setInterval(fetchLiveInfo, 15 * 60 * 1000);
     
     if (document.getElementsByClassName("slider-item").length > 0) {
@@ -178,7 +178,7 @@ function setupForms() {
             const btn = document.getElementById("ad-submit-button");
             isProcessing = true;
             btn.disabled = true;
-            btn.textContent = "YAYINLANIYOR...";
+            btn.textContent = "YAYINLA...";
 
             try {
                 const fileInput = document.getElementById("ads-files");
@@ -215,42 +215,75 @@ function setupForms() {
         const btn = e.target.querySelector('button');
         isProcessing = true;
         btn.disabled = true;
+        btn.textContent = "YAYINLANIYOR...";
 
-        const payload = {
-            title: document.getElementById("rec-title").value,
-            comment: document.getElementById("rec-content").value,
-            rating: parseInt(document.getElementById("rec-rating").value),
-            delete_password: document.getElementById("rec-pass").value,
-            category: "Genel"
-        };
+        try {
+            const fileInput = document.getElementById("rec-file");
+            let uploadedUrl = null;
+            if (fileInput && fileInput.files.length > 0) {
+                let urls = await handleMultipleUploads(fileInput.files);
+                uploadedUrl = urls[0];
+            }
 
-        const { error } = await window.supabase.from('tavsiyeler').insert([payload]);
-        if (!error) { alert("Eklendi!"); e.target.reset(); loadPortalData(); }
-        isProcessing = false;
-        btn.disabled = false;
+            const payload = {
+                title: document.getElementById("rec-title").value,
+                comment: document.getElementById("rec-content").value,
+                rating: parseInt(document.getElementById("rec-rating").value),
+                delete_password: document.getElementById("rec-pass").value,
+                image_url: uploadedUrl,
+                category: "Genel"
+            };
+
+            const { error } = await window.supabase.from('tavsiyeler').insert([payload]);
+            if (!error) { 
+                alert("Tavsiyeniz eklendi!"); 
+                e.target.reset(); 
+                loadPortalData(); 
+            }
+        } catch (err) {
+            alert("Hata: " + err.message);
+        } finally {
+            isProcessing = false;
+            btn.disabled = false;
+            btn.textContent = "PAYLAŞ";
+        }
     });
 
     document.getElementById("complaint-form")?.addEventListener("submit", async e => {
         e.preventDefault();
         if (isProcessing) return;
         
-        const btn = e.target.querySelector('button');
+        const btn = document.getElementById("comp-submit-btn");
+        const fileInput = document.getElementById("comp-files");
+        
+        if (fileInput && fileInput.files.length > 2) {
+            alert("En fazla 2 adet görsel ekleyebilirsiniz.");
+            return;
+        }
+
         isProcessing = true;
         btn.disabled = true;
         btn.textContent = "İLETİLİYOR...";
 
         try {
+            let urls = [];
+            if (fileInput && fileInput.files.length > 0) {
+                urls = await handleMultipleUploads(fileInput.files);
+            }
+
             const payload = {
                 title: document.getElementById("comp-title").value,
                 content: document.getElementById("comp-content").value,
                 delete_password: document.getElementById("comp-pass").value,
-                category: document.getElementById("comp-category") ? document.getElementById("comp-category").value : "Genel"
+                category: document.getElementById("comp-category") ? document.getElementById("comp-category").value : "Genel",
+                image_url: urls[0] || null,
+                image_url_2: urls[1] || null
             };
 
             const { error } = await window.supabase.from('sikayetler').insert([payload]);
             if (error) throw error;
 
-            alert("Şikayetiniz başarıyla iletildi!");
+            alert("Şikayet ve iyileştirme talebiniz halka açık panoda yayınlandı!");
             e.target.reset();
             loadPortalData();
         } catch (err) {
@@ -258,7 +291,7 @@ function setupForms() {
         } finally {
             isProcessing = false;
             btn.disabled = false;
-            btn.textContent = "BİLDİR";
+            btn.textContent = "BİLDİRİ YAYINLA";
         }
     });
 }
@@ -329,7 +362,7 @@ async function setupFirsatForm() {
         } finally {
             isProcessing = false;
             btn.disabled = false;
-            btn.textContent = "FIRSAT GÖNDER";
+            btn.textContent = "GÖNDER";
         }
     });
 }
@@ -359,9 +392,18 @@ async function renderTavsiyeler() {
     if (!el) return;
     const { data } = await window.supabase.from('tavsiyeler').select('*').order('created_at', {ascending: false});
     el.innerHTML = data?.map(item => `
-        <div class="cyber-card" onclick="deleteTavsiye('${item.id}', '${item.delete_password}')" style="margin-bottom:15px; cursor:pointer; border-left:none; border-bottom:1px solid #eee;">
-            <div style="display:flex; justify-content:space-between;"><strong>${item.title}</strong><span>${"⭐".repeat(item.rating || 5)}</span></div>
+        <div class="cyber-card" style="margin-bottom:15px; border-bottom:1px solid #eee;">
+            <div style="display:flex; justify-content:space-between;">
+                <strong>${item.title}</strong>
+                <span>${"⭐".repeat(item.rating || 5)}</span>
+            </div>
+            ${item.image_url ? `<img src="${item.image_url}" style="width:100%; border-radius:8px; margin:10px 0; max-height:200px; object-fit:cover;">` : ''}
             <p style="margin:8px 0; font-style:italic;">"${item.comment}"</p>
+            <div style="text-align:right;">
+                <button onclick="deleteTavsiye('${item.id}', '${item.delete_password}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer; font-size:0.8rem;">
+                    <i class="fas fa-trash"></i> Sil
+                </button>
+            </div>
         </div>
     `).join('') || "";
 }
@@ -370,15 +412,20 @@ async function renderSikayetler() {
     const el = document.getElementById('complaint-list');
     if (!el) return;
     const { data } = await window.supabase.from('sikayetler').select('*').order('created_at', {ascending: false});
+    
     el.innerHTML = data?.map(i => `
-        <div class="cyber-card" onclick="deleteSikayet('${i.id}', '${i.delete_password}')" 
-             style="margin-bottom:10px; border-left: 5px solid #ff4d4d; cursor:pointer;">
-            <div style="display:flex; justify-content:space-between;">
-                <strong>${i.title}</strong>
-                <i class="fas fa-trash" style="font-size:0.7rem; color:#ff4d4d;"></i>
+        <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff4d4d;">
+            <div style="display:flex; justify-content:space-between; align-items:start;">
+                <span style="font-size:0.7rem; font-weight:bold; background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px;">${i.category}</span>
+                <button onclick="deleteSikayet('${i.id}', '${i.delete_password}')" style="background:none; border:none; color:#999; cursor:pointer;"><i class="fas fa-trash"></i></button>
             </div>
-            <p style="margin:5px 0 0; font-size:0.9rem;">${i.content}</p>
-            <span style="font-size:0.6rem; color:#999;">Kategori: ${i.category || 'Genel'}</span>
+            <h4 style="margin:10px 0 5px 0;">${i.title}</h4>
+            <p style="font-size:0.9rem; color:#444;">${i.content}</p>
+            <div style="display:flex; gap:5px; margin:10px 0;">
+                ${i.image_url ? `<img src="${i.image_url}" style="width:48%; height:120px; object-fit:cover; border-radius:8px;">` : ''}
+                ${i.image_url_2 ? `<img src="${i.image_url_2}" style="width:48%; height:120px; object-fit:cover; border-radius:8px;">` : ''}
+            </div>
+            <div style="text-align:right; font-size:0.6rem; color:#aaa;">${new Date(i.created_at).toLocaleDateString('tr-TR')}</div>
         </div>
     `).join('') || "";
 }
@@ -467,7 +514,6 @@ async function updateDashboard() {
         const { data: lastFirsat } = await window.supabase.from('firsatlar').select('title').order('created_at', {ascending: false}).limit(1);
         if (lastFirsat && lastFirsat[0]) document.getElementById("preview-firsat").textContent = lastFirsat[0].title;
 
-        // 5. Duyuru zaten renderDuyurular içinde güncelleniyor
     } catch (err) {
         console.error("Dashboard güncelleme hatası:", err.message);
     }
@@ -486,39 +532,28 @@ function showSlides() {
     setTimeout(showSlides, 4000);
 }
 
-/* >> ADMIN DUYURU MOTORU << */
+/* >> DUYURU RENDER MOTORU << */
 async function renderDuyurular() {
-    const el = document.getElementById('notifications-list');
     const previewEl = document.getElementById('preview-duyuru'); 
-    if (!el) return;
+    if (!previewEl) return;
 
     const { data, error } = await window.supabase
         .from('duyurular')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(1); // Sadece en son duyuruyu al
 
     if (error) {
         console.error("Duyuru çekme hatası:", error.message);
+        previewEl.textContent = "Duyuru yüklenemedi.";
         return;
     }
 
     if (data && data.length > 0) {
-        if (previewEl) previewEl.textContent = data[0].title;
-        el.innerHTML = data.map(item => `
-            <div class="cyber-card" style="margin-bottom:20px; border-left: 5px solid ${item.type === 'Kesinti' ? '#ff4d4d' : '#00d2ff'}; padding:0; overflow:hidden;">
-                ${item.image_url ? `<img src="${item.image_url}" style="width:100%; height:200px; object-fit:cover;">` : ''}
-                <div style="padding:15px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                        <span style="font-size:0.7rem; background:#eee; padding:3px 8px; border-radius:4px; font-weight:bold;">${item.type || 'Duyuru'}</span>
-                        <span style="font-size:0.7rem; color:#999;">${new Date(item.created_at).toLocaleDateString('tr-TR')}</span>
-                    </div>
-                    <h3 style="margin:0 0 10px 0; font-size:1.1rem;">${item.title}</h3>
-                    <p style="margin:0; font-size:0.9rem; color:#444; line-height:1.4;">${item.content}</p>
-                </div>
-            </div>
-        `).join('');
+        // Dashboard'daki pembe "YÜKLENİYOR..." yazısını günceller
+        previewEl.textContent = data[0].title;
     } else {
-        el.innerHTML = "<p style='text-align:center;'>Şu an aktif bir duyuru bulunmuyor.</p>";
+        previewEl.textContent = "Aktif duyuru bulunmuyor.";
     }
 }
 
@@ -737,13 +772,12 @@ function setupContactForm() {
         btn.disabled = true;
         btn.textContent = "GÖNDERİLİYOR...";
 
-const params = { 
-    name: document.getElementById("contact-name").value, 
-    email: document.getElementById("contact-email").value, 
-    // ID Buradaki gibi 'contact-info' ile eşleşmeli:
-    message: document.getElementById("contact-info").value, 
-    title: "Genel İletişim" 
-};
+        const params = { 
+            name: document.getElementById("contact-name").value, 
+            email: document.getElementById("contact-email").value, 
+            message: document.getElementById("contact-info-form").value, 
+            title: "Genel İletişim" 
+        };
 
         emailjs.send('service_hdlldav', 'template_1qzuj7s', params)
             .then(() => { 
@@ -760,7 +794,6 @@ const params = {
 }
 
 /* >> CANLI VERİ ÇEKİCİ MOTORU << */
-
 async function fetchLiveInfo() {
     // 1. Canlı Hava Durumu (Open-Meteo - API KEY Gerektirmez)
     try {
@@ -770,13 +803,8 @@ async function fetchLiveInfo() {
         document.getElementById("weather-temp").textContent = `Bahçelievler: ${temp}°C`;
     } catch (e) { document.getElementById("weather-temp").textContent = "Hava: --"; }
 
-    // 2. Canlı Kur Bilgisi (Yatırımım API üzerinden hızlı çekim)
+    // 2. Canlı Kur Bilgisi
     try {
-        const cRes = await fetch("https://api.collectapi.com/economy/allCurrency", {
-            headers: { "authorization": "apikey 5kUuIeH9E2K4Q5iI5M6h9o:0U2yD6fS8s3L7pP4j8oK" } // Geçici demo key
-        });
-        // Not: CollectAPI veya ücretsiz TCMB kaynakları kullanılabilir. 
-        // En stabil ücretsiz yöntem için basit bir kur çekici:
         const simpleRes = await fetch("https://open.er-api.com/v6/latest/USD");
         const sData = await simpleRes.json();
         
@@ -787,6 +815,7 @@ async function fetchLiveInfo() {
         document.getElementById("eur-rate").textContent = eurToTry + " ₺";
     } catch (e) { console.error("Kur çekilemedi"); }
 }
+
 window.filterAds = function(category) {
     // Buton aktiflik durumu
     document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -816,10 +845,11 @@ window.searchOnMap = function() {
     const mapIframe = document.getElementById('target-map');
     
     // Google Maps Embed (Stabil ve ücretsiz format)
-    const freeSearchUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}+Bahçelievler+İstanbul&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+    const freeSearchUrl = `https://www.google.com/search?q=https://maps.google.com/maps%3Fq%3D${encodeURIComponent(query)}+Bahçelievler+İstanbul&t=&z=14&ie=UTF8&iwloc=&output=embed`;
     
     mapIframe.src = freeSearchUrl;
 };
+
 /* >> HİZMET TANITIM MOTORU << */
 async function setupHizmetForm() {
     const form = document.getElementById("hizmet-form");
@@ -845,13 +875,12 @@ async function setupHizmetForm() {
 
             const payload = {
                 category: document.getElementById("hizmet-category").value,
-                title: document.getElementById("hizmet-firma").value, // Veritabanı uyumu için title olarak kaydediyoruz
+                title: document.getElementById("hizmet-firma").value, 
                 content: document.getElementById("hizmet-desc").value,
                 image_url: uploadedUrl,
                 delete_password: document.getElementById("hizmet-pass").value
             };
 
-            // Not: Supabase üzerinde 'hizmetler' tablosu oluşturulmalıdır
             const { error } = await window.supabase.from('hizmetler').insert([payload]);
             if (error) throw error;
 
@@ -887,7 +916,6 @@ async function renderHizmetler() {
     `).join('') || "<p style='text-align:center;'>Henüz bir hizmet tanıtımı yok.</p>";
 }
 
-// Silme Fonksiyonu
 window.deleteHizmet = async (id, correctPass) => {
     const userPass = prompt("Silmek için şifrenizi girin:");
     if (userPass === correctPass) {
@@ -896,19 +924,7 @@ window.deleteHizmet = async (id, correctPass) => {
     } else if (userPass !== null) alert("Hatalı şifre!");
 };
 
-/* >> NÖBETÇİ ECZANE SİSTEMİ MOTORU << */
-window.searchOnMap = function() {
-    const query = document.getElementById('map-search-input').value;
-    if (!query) return alert("Lütfen aramak istediğiniz usta türünü yazın.");
-    
-    const mapIframe = document.getElementById('target-map');
-    
-    // Google Maps Embed (Stabil ve ücretsiz format)
-    const freeSearchUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}+Bahçelievler+İstanbul&t=&z=14&ie=UTF8&iwloc=&output=embed`;
-    
-    mapIframe.src = freeSearchUrl;
-};
-
+/* >> NÖBETÇİ ECZANE MOTORU << */
 async function fetchPharmacies() {
     const el = document.getElementById('pharmacy-list');
     if (!el) return;
@@ -937,11 +953,9 @@ async function fetchPharmacies() {
                 </div>
             `).join('');
         } else {
-            el.innerHTML = "<p style='text-align:center;'>API limiti doldu veya anahtar geçersiz.</p>";
+            el.innerHTML = "<p style='text-align:center;'>Şu an nöbetçi eczane verisi alınamıyor (API Limiti).</p>";
         }
     } catch (err) {
         el.innerHTML = "<p style='color:red; text-align:center;'>Bağlantı hatası.</p>";
     }
 }
-
-// Fazlalık olan parantezleri veya yorum satırlarını buradan temizle.

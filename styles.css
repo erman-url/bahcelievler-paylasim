@@ -193,6 +193,23 @@ body {
     to { opacity: 1 }
 }
 
+/* Arama Çubuğu Tasarımı */
+#ad-search-input {
+    transition: all 0.3s ease;
+    border: 2px solid #ced4da !important;
+}
+
+#ad-search-input:focus {
+    outline: none;
+    border-color: #00d2ff !important;
+    box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.1);
+}
+
+#ad-search-input::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
 /* Kategori Filtre Tasarımı */
 .category-filter-container {
     display: flex;

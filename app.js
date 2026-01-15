@@ -1,7 +1,8 @@
 /* >> BAHÇELİEVLER PRO ENGINE V3.5 - STABİLİZE EDİLMİŞ TAM SÜRÜM << */
 let slideIndex = 0;
 let allAds = [];
-let isProcessing = false; 
+let isProcessing = false;
+let currentCategory = 'all'; // Seçili kategoriyi takip et 
 
 document.addEventListener("DOMContentLoaded", () => {
     setupNavigation();
@@ -13,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupKesintiForm(); 
     setupHizmetForm();  
     renderHizmetler();  
+    setupAdSearch(); // Arama çubuğu event listener'ı
     loadPortalData();
     fetchLiveInfo();
     setInterval(fetchLiveInfo, 15 * 60 * 1000);
@@ -462,16 +464,11 @@ async function fetchAndRenderAds() {
     if (!list) return;
     const { data } = await window.supabase.from('ilanlar').select('*').order('created_at', {ascending: false});
     allAds = data || [];
- list.innerHTML = allAds.map(ad => `
-    <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')">
-        <div style="position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.6); color:white; padding:2px 8px; border-radius:10px; font-size:0.6rem; z-index:1;">${ad.category}</div>
-        <img src="${ad.image_url || 'https://via.placeholder.com/150'}">
-        <div class="ad-card-info">
-            <div class="ad-card-id">#${ad.id.toString().slice(-5).toUpperCase()} | ${new Date(ad.created_at).toLocaleDateString('tr-TR')}</div>
-            <div style="font-weight:bold; font-size:1.1rem; color:var(--dark); margin:2px 0;">${ad.price} TL</div>
-            <div style="font-size:0.85rem; color:#444; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ad.title}</div>
-        </div>
-    </div>`).join('');
+    
+    // İlanlar yüklendikten sonra mevcut filtreleri uygula
+    const searchInput = document.getElementById("ad-search-input");
+    const searchTerm = searchInput ? searchInput.value.trim() : '';
+    applyFilters(currentCategory, searchTerm);
 }
 
 window.openAdDetail = function(id) {
@@ -877,27 +874,84 @@ async function fetchLiveInfo() {
     } catch (e) { console.error("Kur çekilemedi"); }
 }
 
+/* >> İLAN ARAMA VE FİLTRELEME SİSTEMİ << */
+function setupAdSearch() {
+    const searchInput = document.getElementById("ad-search-input");
+    if (!searchInput) return;
+    
+    // Anlık arama - her tuş vuruşunda filtrele
+    searchInput.addEventListener("input", (e) => {
+        applyFilters(currentCategory, e.target.value.trim());
+    });
+    
+    // Enter tuşuna basıldığında da filtrele (opsiyonel)
+    searchInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+        }
+    });
+}
+
+function applyFilters(category, searchTerm) {
+    const list = document.getElementById("ads-list");
+    if (!list) return;
+    
+    let filtered = allAds;
+    
+    // 1. Kategoriye göre filtrele
+    if (category !== 'all') {
+        filtered = filtered.filter(ad => ad.category === category);
+    }
+    
+    // 2. Arama terimine göre filtrele (başlıkta ara)
+    if (searchTerm && searchTerm.length > 0) {
+        const searchLower = searchTerm.toLowerCase();
+        filtered = filtered.filter(ad => {
+            const titleLower = (ad.title || '').toLowerCase();
+            return titleLower.includes(searchLower);
+        });
+    }
+    
+    // Sonuçları göster
+    if (filtered.length === 0) {
+        list.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #999;">
+                <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                <p style="font-size: 1rem; font-weight: bold;">Aradığınız kriterlere uygun ilan bulunamadı.</p>
+                <p style="font-size: 0.85rem; margin-top: 5px;">Farklı bir arama terimi veya kategori deneyin.</p>
+            </div>
+        `;
+    } else {
+        list.innerHTML = filtered.map(ad => `
+            <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')">
+                <div style="position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.6); color:white; padding:2px 8px; border-radius:10px; font-size:0.6rem; z-index:1;">${ad.category}</div>
+                <img src="${ad.image_url || 'https://via.placeholder.com/150'}">
+                <div class="ad-card-info">
+                    <div class="ad-card-id">#${ad.id.toString().slice(-5).toUpperCase()} | ${new Date(ad.created_at).toLocaleDateString('tr-TR')}</div>
+                    <div style="font-weight:bold; font-size:1.1rem; color:var(--dark); margin:2px 0;">${ad.price} TL</div>
+                    <div style="font-size:0.85rem; color:#444; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ad.title}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
 window.filterAds = function(category, clickedButton) {
     // Buton aktiflik durumu
     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
     if (clickedButton) {
         clickedButton.classList.add('active');
     }
-
-    const list = document.getElementById("ads-list");
-    const filtered = category === 'all' ? allAds : allAds.filter(ad => ad.category === category);
     
-    // fetchAndRenderAds ile aynı görünümü kullan
-    list.innerHTML = filtered.map(ad => `
-        <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')">
-            <div style="position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.6); color:white; padding:2px 8px; border-radius:10px; font-size:0.6rem; z-index:1;">${ad.category}</div>
-            <img src="${ad.image_url || 'https://via.placeholder.com/150'}">
-            <div class="ad-card-info">
-                <div class="ad-card-id">#${ad.id.toString().slice(-5).toUpperCase()} | ${new Date(ad.created_at).toLocaleDateString('tr-TR')}</div>
-                <div style="font-weight:bold; font-size:1.1rem; color:var(--dark); margin:2px 0;">${ad.price} TL</div>
-                <div style="font-size:0.85rem; color:#444; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ad.title}</div>
-            </div>
-        </div>`).join('');
+    // Mevcut kategoriyi güncelle
+    currentCategory = category;
+    
+    // Arama terimini al
+    const searchInput = document.getElementById("ad-search-input");
+    const searchTerm = searchInput ? searchInput.value.trim() : '';
+    
+    // Filtreleri uygula
+    applyFilters(category, searchTerm);
 };
 
 window.searchOnMap = function() {

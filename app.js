@@ -297,25 +297,26 @@ function setupForms() {
         }
     });
 }
-
 function toggleFirsatFields() {
     const type = document.getElementById("firsat-type").value;
     const onlineDiv = document.getElementById("online-only");
-    const yerelDiv = document.getElementById("yerel-only");
-    
-    const linkInput = document.getElementById("firsat-link");
+    const dateArea = document.getElementById("firsat-date-area");
+    const titleInput = document.getElementById("firsat-title");
     const descInput = document.getElementById("firsat-desc");
 
-    if (type === "online") {
-        onlineDiv.style.display = "block";
-        yerelDiv.style.display = "none";
-        if(linkInput) linkInput.required = true;
-        if(descInput) descInput.required = false; 
+    if (type === "yerel") {
+        if (onlineDiv) onlineDiv.style.display = "none";
+        if (dateArea) {
+            dateArea.style.display = "block";
+            document.getElementById("firsat-date").value = new Date().toISOString().split('T')[0];
+        }
+        titleInput.maxLength = 25;
+        descInput.maxLength = 255;
     } else {
-        onlineDiv.style.display = "none";
-        yerelDiv.style.display = "block";
-        if(linkInput) linkInput.required = false;
-        if(descInput) descInput.required = true; 
+        if (onlineDiv) onlineDiv.style.display = "block";
+        if (dateArea) dateArea.style.display = "none";
+        titleInput.maxLength = 100;
+        descInput.maxLength = 1000;
     }
 }
 
@@ -327,66 +328,132 @@ async function setupFirsatForm() {
         e.preventDefault();
         if (isProcessing) return;
 
-        const btn = document.getElementById("firsat-submit-btn");
         const type = document.getElementById("firsat-type").value;
-        const files = document.getElementById("firsat-files").files;
+        const title = document.getElementById("firsat-title").value;
+        const desc = document.getElementById("firsat-desc").value;
+        const link = document.getElementById("firsat-link").value;
+        const pass = document.getElementById("firsat-pass").value;
+        const fileInput = document.getElementById("firsat-files");
+        const files = fileInput.files;
 
-        if (type === "yerel" && files.length === 0) {
-            alert("Mağaza fırsatları için en az 1 görsel zorunludur.");
+        // 1. KESİN RESİM KONTROLÜ (Boş gönderimi engeller)
+        if (files.length === 0) {
+            alert("HATA: En az 1 adet resim yüklemeden paylaşım yapamazsınız!");
             return;
         }
 
+        // 2. YEREL İÇİN KARAKTER KONTROLÜ
+        if (type === "yerel") {
+            if (files.length > 2) return alert("HATA: Maksimum 2 görsel seçebilirsiniz.");
+            const safeRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.\,\!\?\-\:\(\)]+$/;
+            if (!safeRegex.test(title) || !safeRegex.test(desc)) {
+                return alert("HATA: Sadece harf, rakam ve noktalama işaretleri kullanın.");
+            }
+        }
+
         isProcessing = true;
-        btn.disabled = true;
-        btn.textContent = "GÖNDERİLİYOR...";
+        document.getElementById("firsat-submit-btn").textContent = "YÜKLENİYOR...";
 
         try {
+            // Resim Yükleme
             let urls = await handleMultipleUploads(files);
+
+            // 3. VERİTABANI EŞLEŞTİRME (Sütun isimleri image_ceda3d.png'ye göre sabitlendi)
             const payload = {
-                type: type,
-                title: document.getElementById("firsat-title").value,
-                link: type === "online" ? document.getElementById("firsat-link").value : null,
-                description: type === "yerel" ? document.getElementById("firsat-desc").value : null,
+                title: title,       // Title sütununa gider
+                content: desc,     // Content sütununa gider (Hatalı detaylar buradaydı)
+                link: type === "online" ? link : null,
+                category: type === 'yerel' ? 'Yerel Esnaf & Mağaza' : 'Online Ürün',
                 image_url: urls[0] || null,
                 image_url_2: urls[1] || null,
-                delete_password: document.getElementById("firsat-pass").value
+                delete_password: pass,
+                type: type // Mevcut type sütunu için
             };
 
             const { error } = await window.supabase.from('firsatlar').insert([payload]);
             if (error) throw error;
 
-            alert("Fırsat eklendi!");
+            alert("Paylaşım Başarılı!");
             form.reset();
             toggleFirsatFields();
             renderFirsatlar();
         } catch (err) {
-            alert("Hata: " + err.message);
+            alert("Sistem Hatası: " + err.message);
         } finally {
             isProcessing = false;
-            btn.disabled = false;
-            btn.textContent = "GÖNDER";
+            document.getElementById("firsat-submit-btn").textContent = "GÖNDER";
         }
     });
 }
 
+/* >> FIRSAT RENDER VE DETAY MOTORU << */
 async function renderFirsatlar() {
     const el = document.getElementById('firsat-list');
     if (!el) return;
+    
+    // Veriyi çekiyoruz
     const { data } = await window.supabase.from('firsatlar').select('*').order('created_at', {ascending: false});
     
     el.innerHTML = data?.map(f => `
-        <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid ${f.type === 'online' ? '#007bff' : '#28a745'};">
+        <div class="cyber-card ad-card" style="margin-bottom:15px; cursor:pointer; border-left: 5px solid ${f.category === 'Online Ürün' ? '#007bff' : '#28a745'};" onclick="openFirsatDetail('${f.id}')">
             <div style="display:flex; justify-content:space-between; align-items:start;">
-                <span style="font-size:0.7rem; font-weight:bold; text-transform:uppercase;">${f.type}</span>
-                <button onclick="deleteFirsat('${f.id}', '${f.delete_password}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                <span style="font-size:0.6rem; font-weight:bold; text-transform:uppercase; background:#eee; padding:2px 5px; border-radius:3px;">${f.category}</span>
+                <button onclick="event.stopPropagation(); deleteFirsat('${f.id}', '${f.delete_password}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;"><i class="fas fa-trash"></i></button>
             </div>
             <h4 style="margin:5px 0;">${f.title}</h4>
-            ${f.image_url ? `<img src="${f.image_url}" style="width:100%; border-radius:8px; margin:5px 0;">` : ''}
-            <p style="font-size:0.9rem;">${f.description || ''}</p>
-            ${f.link ? `<a href="${f.link}" target="_blank" class="cyber-btn-block" style="padding:8px; font-size:0.8rem; justify-content:center; background:#f0f8ff;">Fırsata Git<i class="fas fa-external-link-alt"></i></a>` : ''}
+            ${f.image_url ? `<img src="${f.image_url}" style="width:100%; height:150px; object-fit:cover; border-radius:8px; margin:5px 0;">` : ''}
+            <p style="font-size:0.8rem; color:#444; margin-top:5px; line-height:1.2;">${f.content ? f.content.substring(0, 50) + '...' : 'Detay yok.'}</p>
         </div>
     `).join('') || "";
 }
+
+
+/* >> FIRSAT DETAY MODAL AÇICI - FİNAL << */
+window.openFirsatDetail = async function(id) {
+    try {
+        // 1. Veriyi çek
+        const { data: f, error } = await window.supabase.from('firsatlar').select('*').eq('id', id).single();
+        if (error || !f) return;
+
+        // 2. Başlık ve Kategori
+        document.getElementById("modal-title").textContent = f.title;
+        document.getElementById("modal-price").textContent = f.category || "Fırsat";
+        
+        // 3. DETAYLAR (Metinlerin görünmeme hatası burada çözüldü)
+        const descriptionEl = document.getElementById("modal-description");
+        if (descriptionEl) {
+            // white-space: pre-wrap; hem enter tuşunu hem de boşlukları korur
+            descriptionEl.innerHTML = `<div style="white-space: pre-wrap; color: #333; margin-top:15px; font-size:1rem; line-height:1.5;">${f.content}</div>`;
+        }
+
+        // 4. RESİMLER (image_url ve image_url_2)
+        const gallery = document.getElementById("modal-image-gallery");
+        if (gallery) {
+            const images = [f.image_url, f.image_url_2].filter(Boolean);
+            gallery.innerHTML = images.map(src => `<img src="${src}" style="width:100%; margin-bottom:12px; border-radius:10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">`).join('');
+        }
+
+        // 5. BUTON AYARI (Online Link veya Mağaza Bilgisi)
+        const buyBtn = document.getElementById("modal-buy-btn");
+        if (buyBtn) {
+            if (f.link && f.link.trim() !== "") {
+                buyBtn.style.display = "block";
+                buyBtn.textContent = "FIRSATA GİT";
+                buyBtn.onclick = () => window.open(f.link, '_blank');
+            } else {
+                buyBtn.textContent = "MAĞAZA BİLGİSİ";
+                buyBtn.onclick = () => alert("Bu yerel bir fırsattır, mağaza ile iletişime geçin.");
+            }
+        }
+
+        // 6. MODALI AÇ
+        const modal = document.getElementById("ad-detail-modal");
+        if (modal) modal.style.display = "block";
+
+    } catch (err) {
+        console.error("Kritik hata:", err);
+    }
+};
 
 /* >> DİĞER FONKSİYONLAR << */
 async function renderTavsiyeler() {

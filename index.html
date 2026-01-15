@@ -50,7 +50,7 @@
     </div>
 </div>
 
-            <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.1.6</span></h1>
+            <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.1.8</span></h1>
             <div id="home-dashboard">
     <div class="home-widget cyber-card" data-target="duyurular" style="grid-column: span 2; border-left: 5px solid #ff007f;">
         <h4><i class="fas fa-bolt fa-beat"></i> SON EKLENEN DUYURULAR</h4>
@@ -260,23 +260,37 @@
     <div id="complaint-list" style="padding: 10px;"></div>
 </section>
 
-        <section id="firsat-indirim" class="page">
-            <h1 class="cyber-header">🔥 FIRSAT_VE_İNDİRİM</h1>
-            <form id="firsat-form" class="cyber-form">
-                <select id="firsat-type" required onchange="toggleFirsatFields()">
-                    <option value="online">Online Ürün</option>
-                    <option value="yerel">Yerel Esnaf</option>
-                </select>
-                <input type="text" id="firsat-title" maxlength="30" placeholder="Başlık" required>
-                <div id="online-only"><input type="url" id="firsat-link" placeholder="Ürün Linki"></div>
-                <div id="yerel-only" style="display:none;"><textarea id="firsat-desc" placeholder="Adres/Detay"></textarea></div>
-                <input type="file" id="firsat-files" multiple accept="image/*">
-                <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> Fırsatı bu şifre ile silebilirsiniz:</p>
-                <input type="password" id="firsat-pass" maxlength="4" placeholder="Şifre" required>
-                <button type="submit" id="firsat-submit-btn" class="cyber-submit">GÖNDER</button>
-            </form>
-            <div id="firsat-list" style="padding: 10px;"></div>
-        </section>
+<section id="firsat-indirim" class="page">
+    <h1 class="cyber-header">🔥 FIRSAT_VE_İNDİRİM</h1>
+    <form id="firsat-form" class="cyber-form">
+        <select id="firsat-type" required onchange="toggleFirsatFields()">
+            <option value="online">Online Ürün & Kampanya</option>
+            <option value="yerel">Yerel Esnaf & Mağaza</option>
+        </select>
+
+        <div id="firsat-date-area" style="display:none; margin-bottom: 10px;">
+            <label style="font-size: 0.7rem; color: #d32f2f; font-weight: bold;">İLAN TARİHİ:</label>
+            <input type="date" id="firsat-date" class="cyber-input" style="background: #eee;" readonly>
+        </div>
+
+        <input type="text" id="firsat-title" placeholder="Başlık" required>
+
+        <div id="online-only">
+            <input type="url" id="firsat-link" placeholder="Ürün Linki">
+        </div>
+
+        <textarea id="firsat-desc" placeholder="Fırsat Detayları / Adres" required style="height: 100px;"></textarea>
+
+        <label id="firsat-file-label" style="font-size: 0.7rem; color: #d32f2f; display: block; margin-top: 5px; font-weight:bold;">
+            <i class="fas fa-camera"></i> RESİM EKLEMEK ZORUNLUDUR!
+        </label>
+        <input type="file" id="firsat-files" multiple accept="image/*">
+
+        <input type="password" id="firsat-pass" maxlength="4" placeholder="Silme Şifresi" required>
+        <button type="submit" id="firsat-submit-btn" class="cyber-submit">GÖNDER</button>
+    </form>
+    <div id="firsat-list" style="padding: 10px;"></div>
+</section>
 
         <section id="iletisim" class="page">
             <h1 class="cyber-header">⚖️ KURUMSAL_&_YASAL</h1>

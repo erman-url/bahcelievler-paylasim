@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
     renderHizmetler();  
     loadPortalData();
     fetchLiveInfo();
-    fetchPharmacies(); // Eczaneleri yükle
     setInterval(fetchLiveInfo, 15 * 60 * 1000);
     
     if (document.getElementsByClassName("slider-item").length > 0) {
@@ -157,6 +156,7 @@ async function handleMultipleUploads(files) {
     }
     return urls;
 }
+
 function setupForms() {
     const adForm = document.getElementById("new-ad-form");
     if (adForm) {
@@ -167,7 +167,6 @@ function setupForms() {
             const titleVal = document.getElementById("ad-title").value;
             const priceVal = document.getElementById("ad-price").value;
             const contentVal = document.getElementById("ad-content").value;
-            const contactVal = document.getElementById("ad-contact").value; // İletişim bilgisini al
             
             const titleRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$/;
             if (titleVal.length > 25 || !titleRegex.test(titleVal)) {
@@ -185,12 +184,12 @@ function setupForms() {
                 let urls = await handleMultipleUploads(fileInput.files);
 
                 const { error } = await window.supabase.from('ilanlar').insert([{
-                    title: titleVal,
-                    price: priceVal,
-                    category: document.getElementById("ad-category").value,
-                    content: contentVal,
-                    contact: contactVal, // Veritabanına gönder
-                    delete_password: document.getElementById("ad-delete-password").value,
+    title: titleVal,
+    price: priceVal,
+    category: document.getElementById("ad-category").value,
+    content: contentVal,
+    contact: document.getElementById("ad-contact").value, // BU SATIRI EKLE
+    delete_password: document.getElementById("ad-delete-password").value,
                     image_url: urls[0] || null,
                     image_url_2: urls[1] || null,
                     image_url_3: urls[2] || null
@@ -208,8 +207,7 @@ function setupForms() {
                 btn.textContent = "YAYINLA";
             }
         });
-
-}
+    }
 
     document.getElementById("recommend-form")?.addEventListener("submit", async e => {
         e.preventDefault();
@@ -459,71 +457,105 @@ window.deleteSikayet = async (id, correctPass) => {
     } else if (userPass !== null) alert("Hatalı şifre!");
 };
 
-/* >> İLAN SİSTEMİ: MODERN GRID RENDER MOTORU << */
 async function fetchAndRenderAds() {
     const list = document.getElementById("ads-list");
     if (!list) return;
-    
     const { data } = await window.supabase.from('ilanlar').select('*').order('created_at', {ascending: false});
     allAds = data || [];
-    
-    list.innerHTML = allAds.map(ad => {
-        const ilanNo = ad.id.toString().slice(-5).toUpperCase(); // İlan No
-        const tarih = new Date(ad.created_at).toLocaleDateString('tr-TR'); // Tarih
-
-        return `
-        <div class="ad-card" onclick="openAdDetail('${ad.id}')">
-            <div class="ad-badge">${ad.category}</div>
-            <img src="${ad.image_url || 'img/no-image.jpg'}" loading="lazy">
-            <div class="ad-info">
-                <span style="font-size:0.65rem; color:#888; display:block; font-family:monospace; margin-bottom:2px;">#${ilanNo} | ${tarih}</span>
-                <span class="ad-price">${ad.price} TL</span>
-                <span class="ad-title">${ad.title}</span>
-            </div>
-        </div>`;
-    }).join('');
+ list.innerHTML = allAds.map(ad => `
+    <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')">
+        <div style="position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.6); color:white; padding:2px 8px; border-radius:10px; font-size:0.6rem; z-index:1;">${ad.category}</div>
+        <img src="${ad.image_url || 'https://via.placeholder.com/150'}">
+        <div class="ad-card-info">
+            <div class="ad-card-id">#${ad.id.toString().slice(-5).toUpperCase()} | ${new Date(ad.created_at).toLocaleDateString('tr-TR')}</div>
+            <div style="font-weight:bold; font-size:1.1rem; color:var(--dark); margin:2px 0;">${ad.price} TL</div>
+            <div style="font-size:0.85rem; color:#444; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ad.title}</div>
+        </div>
+    </div>`).join('');
 }
 
 window.openAdDetail = function(id) {
     const ad = allAds.find(a => a.id == id);
     if (!ad) return;
 
-    const ilanNo = ad.id.toString().slice(-5).toUpperCase();
-    document.getElementById("modal-title").innerHTML = `<small style="display:block; color:#aaa; font-size:0.7rem;">İlan No: #${ilanNo}</small>` + ad.title;
+    document.getElementById("modal-title").textContent = ad.title;
     document.getElementById("modal-price").textContent = ad.price + " TL";
-    document.getElementById("modal-description").textContent = ad.content;
     
-    const buyBtn = document.getElementById("modal-buy-btn");
+    // İletişim bilgisi ekle
+    const descriptionEl = document.getElementById("modal-description");
     if (ad.contact) {
-        buyBtn.innerHTML = `<i class="fas fa-phone-alt"></i> İLETİŞİME GEÇ: ${ad.contact}`;
-        buyBtn.style.background = "#28a745"; 
-        buyBtn.onclick = () => { 
-            if (!isNaN(ad.contact.replace(/\s/g, ''))) {
-                window.location.href = `tel:${ad.contact}`;
-            } else {
-                alert("İletişim Bilgisi: " + ad.contact);
-            }
-        };
+        // Güvenli şekilde HTML escape edilmiş içerik
+        const contentEscaped = ad.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+        const contactEscaped = ad.contact.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        descriptionEl.innerHTML = contentEscaped + `<br><br><strong style="color:#007bff;"><i class="fas fa-phone"></i> İletişim:</strong> ${contactEscaped}`;
     } else {
-        buyBtn.innerHTML = "SATIN ALMA TALEBİ";
-        buyBtn.style.background = "#00d2ff";
+        descriptionEl.textContent = ad.content;
     }
 
+    // Görsel galerisi (varsa 3 resim)
     const gallery = document.getElementById("modal-image-gallery");
-    const images = [ad.image_url, ad.image_url_2, ad.image_url_3].filter(url => url);
-    gallery.style.display = images.length ? "flex" : "none";
-    gallery.innerHTML = images.map(url => `<img src="${url}">`).join('');
-    
-    document.getElementById("modal-delete-btn-inner").onclick = async () => {
-        const pass = prompt("Silme Şifresi:");
-        if (pass === ad.delete_password) {
-            await window.supabase.from('ilanlar').delete().eq('id', ad.id);
-            document.getElementById("ad-detail-modal").style.display = "none";
-            loadPortalData();
+    if (gallery) {
+        const images = [ad.image_url, ad.image_url_2, ad.image_url_3].filter(Boolean);
+        gallery.innerHTML = images.length
+            ? images.map(src => `<img src="${src}" alt="İlan görseli">`).join('')
+            : '';
+    }
+
+    // SATIN ALMA BUTONU - İletişim bilgisini göster/kopyala
+    document.getElementById("modal-buy-btn").onclick = () => {
+        if (ad.contact) {
+            const copyText = ad.contact;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(copyText).then(() => {
+                    alert("İletişim bilgisi panoya kopyalandı: " + copyText);
+                });
+            } else {
+                alert("İletişim Bilgisi: " + copyText);
+            }
+        } else {
+            alert("Bu ilanda iletişim bilgisi bulunmuyor.");
         }
     };
+
+    // SİLME BUTONU AYARI
+    document.getElementById("modal-delete-btn-inner").onclick = () => {
+        const userPass = prompt("Bu ilanı silmek için 4 haneli şifrenizi girin:");
+        if (userPass === null) return;
+        if (userPass !== ad.delete_password) {
+            alert("Hatalı şifre!");
+            return;
+        }
+        window.supabase
+            .from('ilanlar')
+            .delete()
+            .eq('id', ad.id)
+            .then(({ error }) => {
+                if (error) {
+                    alert("Silme işlemi sırasında hata oluştu: " + error.message);
+                } else {
+                    alert("İlan başarıyla silindi.");
+                    document.getElementById("ad-detail-modal").style.display = "none";
+                    loadPortalData();
+                }
+            });
+    };
+
     document.getElementById("ad-detail-modal").style.display = "block";
 };
+
+// Modal kapatma işlevleri
+const closeModal = () => {
+    document.getElementById("ad-detail-modal").style.display = "none";
+};
+
+document.querySelector(".close-detail").onclick = closeModal;
+
+// Modal dışına tıklanınca kapat
+document.getElementById("ad-detail-modal").addEventListener("click", (e) => {
+    if (e.target.id === "ad-detail-modal") {
+        closeModal();
+    }
+});
 
 /* >> GELİŞMİŞ DASHBOARD GÜNCELLEME MOTORU << */
 async function updateDashboard() {
@@ -765,9 +797,6 @@ window.showLegal = function(type) {
                 <hr style="opacity:0.1; margin:10px 0;">
                 <p><b>3. Hizmet tanıtımı veya ilan vermek ücretli mi?</b><br>
                 Hayır, Bahçelievler Forum üzerindeki tüm temel özellikler semt sakinlerimiz için tamamen ücretsizdir.</p>
-                <hr style="opacity:0.1; margin:10px 0;">
-                <p><b>4. Nöbetçi eczaneler güncel mi?</b><br>
-                Evet, veriler canlı çekilmektedir. Ancak gitmeden önce eczaneyi arayarak teyit etmeniz önerilir.</p>
             </div>
         `,
         'contact-info': `
@@ -848,24 +877,25 @@ async function fetchLiveInfo() {
     } catch (e) { console.error("Kur çekilemedi"); }
 }
 
-window.filterAds = function(category) {
-    // Buton aktiflik durumu yönetimi
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.currentTarget.classList.add('active');
+window.filterAds = function(category, clickedButton) {
+    // Buton aktiflik durumu
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    if (clickedButton) {
+        clickedButton.classList.add('active');
+    }
 
     const list = document.getElementById("ads-list");
     const filtered = category === 'all' ? allAds : allAds.filter(ad => ad.category === category);
     
-    // Filtrelenmiş ilanları da kart yapısında göster
+    // fetchAndRenderAds ile aynı görünümü kullan
     list.innerHTML = filtered.map(ad => `
-        <div class="ad-card" onclick="openAdDetail('${ad.id}')">
-            <div class="ad-badge">${ad.category}</div>
-            <img src="${ad.image_url || 'img/no-image.jpg'}" loading="lazy">
-            <div class="ad-info">
-                <span class="ad-price">${ad.price} TL</span>
-                <span class="ad-title">${ad.title}</span>
+        <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')">
+            <div style="position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.6); color:white; padding:2px 8px; border-radius:10px; font-size:0.6rem; z-index:1;">${ad.category}</div>
+            <img src="${ad.image_url || 'https://via.placeholder.com/150'}">
+            <div class="ad-card-info">
+                <div class="ad-card-id">#${ad.id.toString().slice(-5).toUpperCase()} | ${new Date(ad.created_at).toLocaleDateString('tr-TR')}</div>
+                <div style="font-weight:bold; font-size:1.1rem; color:var(--dark); margin:2px 0;">${ad.price} TL</div>
+                <div style="font-size:0.85rem; color:#444; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ad.title}</div>
             </div>
         </div>`).join('');
 };
@@ -955,39 +985,3 @@ window.deleteHizmet = async (id, correctPass) => {
         renderHizmetler();
     } else if (userPass !== null) alert("Hatalı şifre!");
 };
-
-/* >> NÖBETÇİ ECZANE MOTORU << */
-async function fetchPharmacies() {
-    const el = document.getElementById('pharmacy-list');
-    if (!el) return;
-
-    try {
-        const res = await fetch("https://api.collectapi.com/health/dutyPharmacy?ilce=Bahcelievler&il=Istanbul", {
-            headers: { 
-                "content-type": "application/json",
-                "authorization": "apikey 5kUuIeH9E2K4Q5iI5M6h9o:0U2yD6fS8s3L7pP4j8oK" 
-            }
-        });
-        const result = await res.json();
-
-        if (result.success) {
-            el.innerHTML = result.result.map(e => `
-                <div class="cyber-card" style="margin-bottom:12px; border-left: 5px solid #ff4d4d;">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <strong style="color:#d32f2f;">${e.name} Eczanesi</strong>
-                        <a href="tel:${e.phone}" style="color:#28a745; font-size:1.2rem;"><i class="fas fa-phone-alt"></i></a>
-                    </div>
-                    <p style="font-size:0.85rem; margin:5px 0; color:#444;">${e.address}</p>
-                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.name + ' Eczanesi Bahçelievler')}" 
-                       target="_blank" class="cyber-btn-block" style="padding:5px; font-size:0.75rem; justify-content:center; background:#f8d7da; color:#721c24; border:none; text-decoration:none;">
-                       <i class="fas fa-map-marker-alt"></i> HARİTADA GÖSTER
-                    </a>
-                </div>
-            `).join('');
-        } else {
-            el.innerHTML = "<p style='text-align:center;'>Şu an nöbetçi eczane verisi alınamıyor (API Limiti).</p>";
-        }
-    } catch (err) {
-        el.innerHTML = "<p style='color:red; text-align:center;'>Bağlantı hatası.</p>";
-    }
-}

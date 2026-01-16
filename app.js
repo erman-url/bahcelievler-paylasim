@@ -422,12 +422,11 @@ async function setupFirsatForm() {
 }
 
 /* >> YENİ: AKILLI GÖRSEL BULUCU << */
+
 function getPlaceholderImage(link) {
     if (!link) return 'https://via.placeholder.com/400x250/f8f9fa/666666?text=Fırsat+Görseli';
     try {
-        // Linkten domaini alır (boyner.com.tr gibi)
         const domain = new URL(link).hostname.replace('www.', '');
-        // Profesyonel logo servisini kullanır
         return `https://logo.clearbit.com/${domain}?size=200`;
     } catch (e) {
         return 'https://via.placeholder.com/400x250/00d2ff/ffffff?text=Online+Kampanya';

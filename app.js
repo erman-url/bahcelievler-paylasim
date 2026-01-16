@@ -420,56 +420,65 @@ async function setupFirsatForm() {
         }
     });
 }
-
-/* >> YENİ: AKILLI GÖRSEL BULUCU << */
-
+/* >> GARANTİLİ LOGO VE GÖRSEL BULUCU (MÜHÜRLÜ) << */
 function getPlaceholderImage(link) {
-    if (!link) return 'https://via.placeholder.com/400x250/f8f9fa/666666?text=Fırsat+Görseli';
+    // Placeholder servisi sende çalışmadığı için güvenli bir SVG ikonu kullanıyoruz
+    const safeFallback = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 24 24' fill='none' stroke='%23ccc' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'%3E%3C/circle%3E%3Cpolyline points='21 15 16 10 5 21'%3E%3C/polyline%3E%3C/svg%3E";
+
+    if (!link || link.trim() === "") return safeFallback;
+
     try {
-        const domain = new URL(link).hostname.replace('www.', '');
-        return `https://logo.clearbit.com/${domain}?size=200`;
+        // Linkten temiz domaini al (Örn: boyner.com.tr)
+        const urlObj = new URL(link);
+        const domain = urlObj.hostname.replace('www.', '');
+        
+        // Clearbit yerine Google'ın çok daha stabil ve hızlı olan logo servisini kullanıyoruz
+        return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
     } catch (e) {
-        return 'https://via.placeholder.com/400x250/00d2ff/ffffff?text=Online+Kampanya';
+        return safeFallback;
     }
 }
 
-/* >> FIRSAT RENDER MOTORU << */
+/* >> 2. FIRSAT RENDER MOTORU (KATEGORİ VE LOGO UYUMLU) << */
 async function renderFirsatlar() {
     const el = document.getElementById('firsat-list');
     if (!el) return;
     const { data } = await window.supabase.from('firsatlar').select('*').order('created_at', {ascending: false});
     
     el.innerHTML = data?.map(f => {
-        // RESİM YOKSA OTOMATİK LOGO GETİRİR
+        // Resim yoksa logo çekiciyi çalıştır
         const displayImg = f.image_url || getPlaceholderImage(f.link);
         
+        // Kategoriye göre renk belirleme (index.html ile uyumlu)
+        const isOnline = f.category === 'Online Ürün & Kampanya';
+        const borderColor = isOnline ? '#007bff' : '#28a745';
+
         return `
-        <div class="cyber-card ad-card" style="margin-bottom:15px; cursor:pointer; border-left: 5px solid ${f.category === 'Online Ürün & Kampanya' ? '#007bff' : '#28a745'};" onclick="openFirsatDetail('${f.id}')">
+        <div class="cyber-card ad-card" style="margin-bottom:15px; cursor:pointer; border-left: 5px solid ${borderColor};" onclick="openFirsatDetail('${f.id}')">
             <div style="display:flex; justify-content:space-between; align-items:start;">
                 <span style="font-size:0.6rem; font-weight:bold; text-transform:uppercase; background:#eee; padding:2px 5px; border-radius:3px;">${f.category}</span>
                 <button onclick="event.stopPropagation(); deleteFirsat('${f.id}', '${f.delete_password}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;"><i class="fas fa-trash"></i></button>
             </div>
             <h4 style="margin:5px 0;">${f.title}</h4>
-            <img src="${displayImg}" 
-                 onerror="this.src='https://via.placeholder.com/400x250/00d2ff/ffffff?text=Online+Kampanya'"
-                 style="width:100%; height:150px; object-fit:contain; background:#fff; border-radius:8px; margin:5px 0; padding:10px;">
+
+          
+               <img src="${displayImg}" 
+     onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23ccc%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22%3E%3C/circle%3E%3Cline x1=%2212%22 y1=%228%22 x2=%2212%22 y2=%2212%22%3E%3C/line%3E%3Cline x1=%2212%22 y1=%2216%22 x2=%2212.01%22 y2=%2216%22%3E%3C/line%3E%3C/svg%3E';"
+     style="width:100%; height:150px; object-fit:contain; background:#f9f9f9; border-radius:8px; margin:5px 0; padding:10px;">
+
             <p style="font-size:0.8rem; color:#444; margin-top:5px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${f.content}</p>
         </div>`;
     }).join('') || "";
 }
-
-/* >> FIRSAT DETAY MODAL AÇICI (TARİHLİ VE FİYATLI) << */
 window.openFirsatDetail = async function(id) {
     try {
         const { data: f, error } = await window.supabase.from('firsatlar').select('*').eq('id', id).single();
         if (error || !f) return;
 
-        // Tarihi Türkiye formatına çevir
         const dateStr = new Date(f.created_at).toLocaleDateString('tr-TR', {day:'2-digit', month:'2-digit', year:'numeric'});
 
+        // BAŞLIK VE FİYAT
         document.getElementById("modal-title").textContent = f.title;
-        
-        // Modalın Üst Kısmı: Kategori ve Tarih
         document.getElementById("modal-price").innerHTML = `
             <div style="display:flex; justify-content:space-between; width:100%; font-size:0.85rem; color:#666;">
                 <span style="font-weight:bold; color:#28a745;">${f.category}</span>
@@ -484,7 +493,17 @@ window.openFirsatDetail = async function(id) {
         const gallery = document.getElementById("modal-image-gallery");
         if (gallery) {
             const images = [f.image_url, f.image_url_2].filter(Boolean);
-            gallery.innerHTML = images.map(src => `<img src="${src}" style="width:100%; margin-bottom:12px; border-radius:10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">`).join('');
+            if (images.length > 0) {
+                // Kullanıcı resim eklediyse: Siyah zemin ve tam resim
+                gallery.style.background = "#000"; 
+                gallery.innerHTML = images.map(src => `<img src="${src}" style="width:100%; margin-bottom:12px; border-radius:10px;">`).join('');
+            } else {
+                // SADECE LOGO VARSA: Temiz beyaz zemin ve ortalanmış logo (Şık görünümü sağlayan yer)
+                gallery.style.background = "#f8f9fa"; 
+                gallery.innerHTML = `<img src="${getPlaceholderImage(f.link)}" 
+                    onerror="this.src='https://www.google.com/s2/favicons?domain=${f.link}&sz=128'"
+                    style="width:auto; max-width:80%; max-height:150px; object-fit:contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));">`;
+            }
         }
 
         const buyBtn = document.getElementById("modal-buy-btn");
@@ -499,15 +518,12 @@ window.openFirsatDetail = async function(id) {
             }
         }
 
-        const modal = document.getElementById("ad-detail-modal");
-        if (modal) modal.style.display = "block";
+        document.getElementById("ad-detail-modal").style.display = "block";
 
     } catch (err) {
         console.error("Detay hatası:", err);
     }
 };
-
-
 /* >> DİĞER FONKSİYONLAR << */
 async function renderTavsiyeler() {
     const el = document.getElementById('recommend-list');
@@ -610,13 +626,17 @@ window.openAdDetail = function(id) {
     }
 
     // Görsel galerisi (varsa 3 resim)
-    const gallery = document.getElementById("modal-image-gallery");
-    if (gallery) {
-        const images = [ad.image_url, ad.image_url_2, ad.image_url_3].filter(Boolean);
-        gallery.innerHTML = images.length
-            ? images.map(src => `<img src="${src}" alt="İlan görseli">`).join('')
-            : '';
-    }
+  const gallery = document.getElementById("modal-image-gallery");
+if (gallery) {
+    const images = [ad.image_url, ad.image_url_2, ad.image_url_3].filter(Boolean);
+
+    gallery.innerHTML = images.length
+        ? images.map(src => `
+            <img src="${src}" alt="İlan görseli">
+        `).join('')
+        : '';
+}
+
 
     // SATIN ALMA BUTONU - İletişim bilgisini göster/kopyala
     document.getElementById("modal-buy-btn").onclick = () => {

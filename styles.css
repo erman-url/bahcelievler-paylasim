@@ -78,10 +78,7 @@ body {
     overflow-y: auto;
 }
 
-
-
-/* Modal Görsel Galerisi Düzenlemesi */
-/* === INSTAGRAM TARZI MODAL GALERİ === */
+/* === INSTAGRAM TARZI GERÇEK SWIPE GALERİ === */
 #modal-image-gallery {
     display: flex;
     flex-direction: row;
@@ -89,22 +86,24 @@ body {
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    gap: 0;
+    width: 100%;
     padding: 0;
+    margin: 0;
     background: #000;
 }
 
-/* Tek tek görseller */
+/* HER GÖRSEL = 1 EKRAN */
 #modal-image-gallery img {
-    flex: 0 0 100%;
-    width: 100%;
+    width: 100vw;              /* KRİTİK SATIR */
+    max-width: 100vw;          /* KRİTİK SATIR */
     height: 260px;
+    flex: 0 0 100vw;           /* KRİTİK SATIR */
     object-fit: contain;
     scroll-snap-align: center;
     background: #000;
 }
 
-/* Scrollbar gizle (Instagram hissi) */
+/* Scrollbar gizle */
 #modal-image-gallery::-webkit-scrollbar {
     display: none;
 }

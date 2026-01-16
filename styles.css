@@ -78,39 +78,37 @@ body {
     overflow-y: auto;
 }
 
-/* === INSTAGRAM TARZI GERÇEK SWIPE GALERİ === */
+/* === FIX: MOBIL SWIPE GALERI (INSTAGRAM DAVRANIŞI) === */
 #modal-image-gallery {
     display: flex;
-    flex-direction: row;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    width: 100%;
-    padding: 0;
-    margin: 0;
+
+    /* cyber-card padding reset */
+    margin-left: -15px;
+    margin-right: -15px;
+
     background: #000;
+    touch-action: pan-x;
+
+    scrollbar-width: none;
 }
 
-/* HER GÖRSEL = 1 EKRAN */
+#modal-image-gallery::-webkit-scrollbar {
+    display: none;
+}
+
+/* HER GÖRSEL = TEK SLIDE */
 #modal-image-gallery img {
-    width: 100vw;              /* KRİTİK SATIR */
-    max-width: 100vw;          /* KRİTİK SATIR */
+    flex: 0 0 100%;
+    width: 100%;
     height: 260px;
-    flex: 0 0 100vw;           /* KRİTİK SATIR */
     object-fit: contain;
     scroll-snap-align: center;
     background: #000;
 }
-
-/* Scrollbar gizle */
-#modal-image-gallery::-webkit-scrollbar {
-    display: none;
-}
-#modal-image-gallery {
-    scrollbar-width: none;
-}
-
 
 /* MODAL BUTONLARI VE PANEL */
 .modal-info-panel { padding: 20px; }
@@ -356,12 +354,4 @@ body {
     font-size: 0.6rem;
     color: #888;
     margin-bottom: 2px;
-}
-
-.modal-content {
-    overflow-y: auto;
-}
-
-#modal-image-gallery {
-    touch-action: pan-x;
 }

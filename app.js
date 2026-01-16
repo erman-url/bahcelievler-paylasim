@@ -297,17 +297,21 @@ function setupForms() {
         }
     });
 }
+
+/* >> FIRSAT ALANLARINI TETİKLEME MOTORU << */
 function toggleFirsatFields() {
     const type = document.getElementById("firsat-type").value;
     const onlineDiv = document.getElementById("online-only");
     const dateArea = document.getElementById("firsat-date-area");
     const titleInput = document.getElementById("firsat-title");
     const descInput = document.getElementById("firsat-desc");
+    const priceInput = document.getElementById("firsat-price");
 
     if (type === "yerel") {
         if (onlineDiv) onlineDiv.style.display = "none";
         if (dateArea) {
             dateArea.style.display = "block";
+            // Tarihi otomatik bugüne ayarla
             document.getElementById("firsat-date").value = new Date().toISOString().split('T')[0];
         }
         titleInput.maxLength = 25;
@@ -318,8 +322,21 @@ function toggleFirsatFields() {
         titleInput.maxLength = 100;
         descInput.maxLength = 1000;
     }
+	
+	const label = document.getElementById("firsat-file-label");
+    if (label) {
+        if (type === "yerel") {
+            label.innerHTML = '<i class="fas fa-camera"></i> RESİM EKLEMEK ZORUNLUDUR!';
+            label.style.color = "#d32f2f"; // Yerel için kırmızı (uyarıcı)
+        } else {
+            label.innerHTML = '<i class="fas fa-camera"></i> Görsel Ekle (Opsiyonel)';
+            label.style.color = "#666"; // Online için gri (isteğe bağlı olduğunu belli eder)
+        }
+    }
+    // >>> EKLEME BURADA BİTİYOR <<<
 }
 
+/* >> FIRSAT KAYIT MOTORU (GÜNCEL: FİYAT VE KESİN RESİM KONTROLLÜ) << */
 async function setupFirsatForm() {
     const form = document.getElementById("firsat-form");
     if (!form) return;
@@ -330,21 +347,39 @@ async function setupFirsatForm() {
 
         const type = document.getElementById("firsat-type").value;
         const title = document.getElementById("firsat-title").value;
+        const priceInfo = document.getElementById("firsat-price").value;
         const desc = document.getElementById("firsat-desc").value;
         const link = document.getElementById("firsat-link").value;
         const pass = document.getElementById("firsat-pass").value;
         const fileInput = document.getElementById("firsat-files");
         const files = fileInput.files;
 
-        // 1. KESİN RESİM KONTROLÜ (Boş gönderimi engeller)
-        if (files.length === 0) {
-            alert("HATA: En az 1 adet resim yüklemeden paylaşım yapamazsınız!");
-            return;
+        // --- DİNAMİK KONTROLLER ---
+
+        // 1. ONLINE İÇİN ÖZEL DURUM: Sadece Link zorunlu, resim ve detay opsiyonel.
+        if (type === "online") {
+            if (!link) {
+                alert("HATA: Online ürünler için Ürün Linki zorunludur!");
+                return;
+            }
         }
 
-        // 2. YEREL İÇİN KARAKTER KONTROLÜ
+        // 2. YEREL ESNAF İÇİN KATI KURALLAR (Aynen Korundu)
         if (type === "yerel") {
+            // Yerel'de Resim ZORUNLU
+            if (files.length === 0) {
+                alert("HATA: Yerel esnaf ilanları için en az 1 adet resim yüklemek zorunludur!");
+                return;
+            }
+            // Yerel'de Detay ZORUNLU
+            if (!desc || desc.trim() === "") {
+                alert("HATA: Yerel esnaf ilanları için Detay/Adres yazmak zorunludur!");
+                return;
+            }
+            // Resim sayısı sınırı
             if (files.length > 2) return alert("HATA: Maksimum 2 görsel seçebilirsiniz.");
+            
+            // Karakter kontrolü
             const safeRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.\,\!\?\-\:\(\)]+$/;
             if (!safeRegex.test(title) || !safeRegex.test(desc)) {
                 return alert("HATA: Sadece harf, rakam ve noktalama işaretleri kullanın.");
@@ -355,19 +390,19 @@ async function setupFirsatForm() {
         document.getElementById("firsat-submit-btn").textContent = "YÜKLENİYOR...";
 
         try {
-            // Resim Yükleme
-            let urls = await handleMultipleUploads(files);
+            // Resim varsa yükle, yoksa boş dizi dön
+            let urls = files.length > 0 ? await handleMultipleUploads(files) : [];
 
-            // 3. VERİTABANI EŞLEŞTİRME (Sütun isimleri image_ceda3d.png'ye göre sabitlendi)
             const payload = {
-                title: title,       // Title sütununa gider
-                content: desc,     // Content sütununa gider (Hatalı detaylar buradaydı)
+                title: title,
+                // Detay opsiyonel olduğu için boşsa sadece fiyatı yazar
+                content: desc ? `💰 FIRSAT: ${priceInfo}\n\n${desc}` : `💰 FIRSAT: ${priceInfo}`, 
                 link: type === "online" ? link : null,
-                category: type === 'yerel' ? 'Yerel Esnaf & Mağaza' : 'Online Ürün',
+                category: type === 'yerel' ? 'Yerel Esnaf & Mağaza' : 'Online Ürün & Kampanya',
                 image_url: urls[0] || null,
                 image_url_2: urls[1] || null,
                 delete_password: pass,
-                type: type // Mevcut type sütunu için
+                type: type
             };
 
             const { error } = await window.supabase.from('firsatlar').insert([payload]);
@@ -386,54 +421,73 @@ async function setupFirsatForm() {
     });
 }
 
-/* >> FIRSAT RENDER VE DETAY MOTORU << */
+/* >> YENİ: AKILLI GÖRSEL BULUCU << */
+function getPlaceholderImage(link) {
+    if (!link) return 'https://via.placeholder.com/400x250/f8f9fa/666666?text=Fırsat+Görseli';
+    try {
+        // Linkten domaini alır (boyner.com.tr gibi)
+        const domain = new URL(link).hostname.replace('www.', '');
+        // Profesyonel logo servisini kullanır
+        return `https://logo.clearbit.com/${domain}?size=200`;
+    } catch (e) {
+        return 'https://via.placeholder.com/400x250/00d2ff/ffffff?text=Online+Kampanya';
+    }
+}
+
+/* >> FIRSAT RENDER MOTORU << */
 async function renderFirsatlar() {
     const el = document.getElementById('firsat-list');
     if (!el) return;
-    
-    // Veriyi çekiyoruz
     const { data } = await window.supabase.from('firsatlar').select('*').order('created_at', {ascending: false});
     
-    el.innerHTML = data?.map(f => `
-        <div class="cyber-card ad-card" style="margin-bottom:15px; cursor:pointer; border-left: 5px solid ${f.category === 'Online Ürün' ? '#007bff' : '#28a745'};" onclick="openFirsatDetail('${f.id}')">
+    el.innerHTML = data?.map(f => {
+        // RESİM YOKSA OTOMATİK LOGO GETİRİR
+        const displayImg = f.image_url || getPlaceholderImage(f.link);
+        
+        return `
+        <div class="cyber-card ad-card" style="margin-bottom:15px; cursor:pointer; border-left: 5px solid ${f.category === 'Online Ürün & Kampanya' ? '#007bff' : '#28a745'};" onclick="openFirsatDetail('${f.id}')">
             <div style="display:flex; justify-content:space-between; align-items:start;">
                 <span style="font-size:0.6rem; font-weight:bold; text-transform:uppercase; background:#eee; padding:2px 5px; border-radius:3px;">${f.category}</span>
                 <button onclick="event.stopPropagation(); deleteFirsat('${f.id}', '${f.delete_password}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;"><i class="fas fa-trash"></i></button>
             </div>
             <h4 style="margin:5px 0;">${f.title}</h4>
-            ${f.image_url ? `<img src="${f.image_url}" style="width:100%; height:150px; object-fit:cover; border-radius:8px; margin:5px 0;">` : ''}
-            <p style="font-size:0.8rem; color:#444; margin-top:5px; line-height:1.2;">${f.content ? f.content.substring(0, 50) + '...' : 'Detay yok.'}</p>
-        </div>
-    `).join('') || "";
+            <img src="${displayImg}" 
+                 onerror="this.src='https://via.placeholder.com/400x250/00d2ff/ffffff?text=Online+Kampanya'"
+                 style="width:100%; height:150px; object-fit:contain; background:#fff; border-radius:8px; margin:5px 0; padding:10px;">
+            <p style="font-size:0.8rem; color:#444; margin-top:5px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${f.content}</p>
+        </div>`;
+    }).join('') || "";
 }
 
-
-/* >> FIRSAT DETAY MODAL AÇICI - FİNAL << */
+/* >> FIRSAT DETAY MODAL AÇICI (TARİHLİ VE FİYATLI) << */
 window.openFirsatDetail = async function(id) {
     try {
-        // 1. Veriyi çek
         const { data: f, error } = await window.supabase.from('firsatlar').select('*').eq('id', id).single();
         if (error || !f) return;
 
-        // 2. Başlık ve Kategori
+        // Tarihi Türkiye formatına çevir
+        const dateStr = new Date(f.created_at).toLocaleDateString('tr-TR', {day:'2-digit', month:'2-digit', year:'numeric'});
+
         document.getElementById("modal-title").textContent = f.title;
-        document.getElementById("modal-price").textContent = f.category || "Fırsat";
         
-        // 3. DETAYLAR (Metinlerin görünmeme hatası burada çözüldü)
+        // Modalın Üst Kısmı: Kategori ve Tarih
+        document.getElementById("modal-price").innerHTML = `
+            <div style="display:flex; justify-content:space-between; width:100%; font-size:0.85rem; color:#666;">
+                <span style="font-weight:bold; color:#28a745;">${f.category}</span>
+                <span><i class="far fa-calendar-alt"></i> ${dateStr}</span>
+            </div>`;
+        
         const descriptionEl = document.getElementById("modal-description");
         if (descriptionEl) {
-            // white-space: pre-wrap; hem enter tuşunu hem de boşlukları korur
             descriptionEl.innerHTML = `<div style="white-space: pre-wrap; color: #333; margin-top:15px; font-size:1rem; line-height:1.5;">${f.content}</div>`;
         }
 
-        // 4. RESİMLER (image_url ve image_url_2)
         const gallery = document.getElementById("modal-image-gallery");
         if (gallery) {
             const images = [f.image_url, f.image_url_2].filter(Boolean);
             gallery.innerHTML = images.map(src => `<img src="${src}" style="width:100%; margin-bottom:12px; border-radius:10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">`).join('');
         }
 
-        // 5. BUTON AYARI (Online Link veya Mağaza Bilgisi)
         const buyBtn = document.getElementById("modal-buy-btn");
         if (buyBtn) {
             if (f.link && f.link.trim() !== "") {
@@ -442,18 +496,18 @@ window.openFirsatDetail = async function(id) {
                 buyBtn.onclick = () => window.open(f.link, '_blank');
             } else {
                 buyBtn.textContent = "MAĞAZA BİLGİSİ";
-                buyBtn.onclick = () => alert("Bu yerel bir fırsattır, mağaza ile iletişime geçin.");
+                buyBtn.onclick = () => alert("Yerel esnaf fırsatıdır.");
             }
         }
 
-        // 6. MODALI AÇ
         const modal = document.getElementById("ad-detail-modal");
         if (modal) modal.style.display = "block";
 
     } catch (err) {
-        console.error("Kritik hata:", err);
+        console.error("Detay hatası:", err);
     }
 };
+
 
 /* >> DİĞER FONKSİYONLAR << */
 async function renderTavsiyeler() {

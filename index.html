@@ -50,7 +50,7 @@
     </div>
 </div>
 
-            <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.1.8</span></h1>
+            <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.1.9</span></h1>
             <div id="home-dashboard">
     <div class="home-widget cyber-card" data-target="duyurular" style="grid-column: span 2; border-left: 5px solid #ff007f;">
         <h4><i class="fas fa-bolt fa-beat"></i> SON EKLENEN DUYURULAR</h4>
@@ -261,7 +261,7 @@
 </section>
 
 <section id="firsat-indirim" class="page">
-    <h1 class="cyber-header">🔥 FIRSAT_VE_İNDİRİM</h1>
+    <h1 class="cyber-header">🔥 FIRSAT & İNDİRİM EKLE</h1>
     <form id="firsat-form" class="cyber-form">
         <select id="firsat-type" required onchange="toggleFirsatFields()">
             <option value="online">Online Ürün & Kampanya</option>
@@ -275,11 +275,13 @@
 
         <input type="text" id="firsat-title" placeholder="Başlık" required>
 
+        <input type="text" id="firsat-price" placeholder="Fiyat veya İndirim Notu (Örn: 150 TL veya %50)" maxlength="30" required>
+
         <div id="online-only">
             <input type="url" id="firsat-link" placeholder="Ürün Linki">
         </div>
 
-        <textarea id="firsat-desc" placeholder="Fırsat Detayları / Adres" required style="height: 100px;"></textarea>
+		<textarea id="firsat-desc" placeholder="Fırsat Detayları / Adres" style="height: 100px;"></textarea>
 
         <label id="firsat-file-label" style="font-size: 0.7rem; color: #d32f2f; display: block; margin-top: 5px; font-weight:bold;">
             <i class="fas fa-camera"></i> RESİM EKLEMEK ZORUNLUDUR!
@@ -287,6 +289,7 @@
         <input type="file" id="firsat-files" multiple accept="image/*">
 
         <input type="password" id="firsat-pass" maxlength="4" placeholder="Silme Şifresi" required>
+        
         <button type="submit" id="firsat-submit-btn" class="cyber-submit">GÖNDER</button>
     </form>
     <div id="firsat-list" style="padding: 10px;"></div>

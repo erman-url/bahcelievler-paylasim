@@ -1,1 +1,3 @@
-ilan verme düzgün detay düzgün.
+ilan verme*
+hizmetler * zorunlu alanlar ok
+stabil

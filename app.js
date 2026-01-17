@@ -41,23 +41,42 @@ async function loadPortalData() {
 }
 
 function setupNavigation() {
+    // Tüm navigasyon tetikleyicilerini seç
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
+    
     navItems.forEach(item => {
         item.addEventListener("click", e => {
-            const target = item.getAttribute("data-target");
-            if (!target) return;
+            // .closest() kullanarak tıklanan yer neresi olursa olsun 
+            // data-target olan ana öğeyi buluruz.
+            const trigger = e.target.closest("[data-target]");
+            if (!trigger) return;
 
-            // Eğer href bir dış bağlantı değilse portal içi geçiş yap
-            const href = item.getAttribute("href");
-            if (!href || href === "#") {
+            const target = trigger.getAttribute("data-target");
+            const href = trigger.getAttribute("href");
+
+            // Eğer bir dış link değilse portal içi geçişi başlat
+            if (!href || href === "#" || href === "") {
                 e.preventDefault();
+
+                // 1. Tüm sayfaları gizle
                 document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+                
+                // 2. Hedef sayfayı göster
                 const targetPage = document.getElementById(target);
-                if (targetPage) targetPage.classList.add("active");
-                window.scrollTo(0, 0);
+                if (targetPage) {
+                    targetPage.classList.add("active");
+                } else {
+                    console.error("HATA: " + target + " id'li sayfa bulunamadı!");
+                    return;
+                }
+
+                // 3. Navigasyon butonlarındaki 'active' sınıfını güncelle
                 document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
                 const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
                 if (activeLink) activeLink.classList.add("active");
+
+                // 4. Sayfayı en tepeye kaydır (Mobil deneyimi için kritik)
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
     });

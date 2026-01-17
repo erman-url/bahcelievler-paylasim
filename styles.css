@@ -78,36 +78,33 @@ body {
     overflow-y: auto;
 }
 
-/* === FIX: MOBIL SWIPE GALERI (INSTAGRAM DAVRANIŞI) === */
+
+/* === FIX: MOBIL SWIPE GALERI GÜNCELLEME === */
 #modal-image-gallery {
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x mandatory; /* Kaydırmayı hizalar */
     -webkit-overflow-scrolling: touch;
-
-    /* cyber-card padding reset */
     margin-left: -15px;
     margin-right: -15px;
-
     background: #000;
     touch-action: pan-x;
-
     scrollbar-width: none;
+    gap: 0; /* Swipe etkisini bozmamak için boşluğu sıfır tutun veya gap: 10px yapacaksanız flex-basis'i ayarlayın */
 }
 
 #modal-image-gallery::-webkit-scrollbar {
     display: none;
 }
 
-/* HER GÖRSEL = TEK SLIDE */
+/* HER GÖRSEL = TEK SLIDE (Kritik Düzeltme) */
 #modal-image-gallery img {
-    flex: 0 0 100%;
-    width: 100%;
-    height: 260px;
-    object-fit: contain;
-    scroll-snap-align: center;
-    background: #000;
+    flex: 0 0 100%; /* Sıkışmayı engeller, her resmin %100 genişlikte kalmasını sağlar */
+    width: 100%;    /* Genişliği zorunlu tutar */
+    height: 300px;  /* Görseldeki gibi daha iyi bir görünüm için yüksekliği artırabilirsiniz */
+    object-fit: contain; /* Resmin bozulmasını engeller */
+    scroll-snap-align: center; /* Kaydırınca resmin ortalanmasını sağlar */
 }
 
 /* MODAL BUTONLARI VE PANEL */

@@ -63,70 +63,97 @@ function setupNavigation() {
     });
 }
 
+
 /* >> TEKLİF ALMA SİSTEMİ MOTORU << */
+/* >> TEKLİF ALMA SİSTEMİ MOTORU - SÜPER KONTROL V3.6 << */
 async function setupQuoteForm() {
     const quoteForm = document.getElementById("quote-request-form");
     if (!quoteForm) return;
 
     quoteForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (isProcessing) return; 
+        if (isProcessing) return; // Çift tıklamayı engelle
 
+        const fileInput = document.getElementById("quote-file");
+        const emailInput = document.getElementById("quote-email");
         const btn = document.getElementById("quote-submit-btn");
+
+        // --- 1. MANTIK KONTROLÜ: GÖRSEL ZORUNLULUĞU ---
+        if (!fileInput.files || fileInput.files.length === 0) {
+            alert("HATA: Teklif alabilmek için lütfen bir görsel (.png veya .jpg) ekleyiniz.");
+            fileInput.focus();
+            return; // İşlemi burada keser, Supabase'e gitmez
+        }
+
+        // --- 2. KOD KONTROLÜ: DOSYA UZANTISI ---
+        const file = fileInput.files[0];
+        const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+        if (!allowedExtensions.exec(file.name)) {
+            alert("HATA: Sadece .png, .jpg veya .jpeg uzantılı dosyalar kabul edilmektedir.");
+            fileInput.value = ''; // Seçimi temizle
+            return;
+        }
+
+        // --- 3. SENARYO KONTROLÜ: E-POSTA FORMATI ---
+        const emailValue = emailInput.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailValue)) {
+            alert("HATA: Lütfen geçerli bir e-posta adresi yazınız (Örn: isim@mail.com)");
+            emailInput.focus();
+            return;
+        }
+
+        // --- TÜM KONTROLLER GEÇİLDİ, ŞİMDİ İŞLEMİ BAŞLAT ---
         isProcessing = true;
         btn.disabled = true;
         btn.textContent = "İŞLENİYOR...";
 
         try {
-            const fileInput = document.getElementById("quote-file");
-            let uploadedImageUrl = null;
+            // Görseli Supabase Storage'a yükle
+            const fileName = `teklif_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+            const { data, error: storageError } = await window.supabase.storage
+                .from('ilanlar')
+                .upload(fileName, file);
+            
+            if (storageError) throw storageError;
+            
+            const { data: urlData } = window.supabase.storage.from('ilanlar').getPublicUrl(fileName);
+            const uploadedImageUrl = urlData.publicUrl;
 
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                if (file.size > 5 * 1024 * 1024) {
-                    alert("Görsel boyutu 5MB'dan büyük olamaz.");
-                    throw new Error("Boyut hatası");
-                }
-                const fileName = `teklif_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-                const { data, error: storageError } = await window.supabase.storage
-                    .from('ilanlar')
-                    .upload(fileName, file);
-                
-                if (storageError) throw storageError;
-                const { data: urlData } = window.supabase.storage.from('ilanlar').getPublicUrl(fileName);
-                uploadedImageUrl = urlData.publicUrl;
-            }
-
+            // Veritabanına kaydet
             const payload = {
                 category: document.getElementById("quote-category").value,
                 talep_metni: document.getElementById("quote-text").value,
-                email: document.getElementById("quote-email").value,
+                email: emailValue,
                 image_url: uploadedImageUrl
             };
 
             const { error: dbError } = await window.supabase.from('teklifal').insert([payload]);
             if (dbError) throw dbError;
 
+            // EmailJS ile bildirim gönder
             const emailParams = {
                 name: `Teklif: ${payload.category}`,
                 email: payload.email,
-                message: `Talep Detayı: ${payload.talep_metni}\nGörsel: ${uploadedImageUrl || 'Yok'}`,
+                message: `Talep Detayı: ${payload.talep_metni}\nGörsel: ${uploadedImageUrl}`,
                 title: "Yeni Teklif Talebi"
             };
-
             await emailjs.send('service_hdlldav', 'template_1qzuj7s', emailParams);
 
-            alert("Talebiniz alınmıştır.");
+            // BAŞARI MESAJI
+            alert("Talebiniz bize ulaştı, en kısa sürede mail adresinize dönüş yapılacaktır.");
+            
             quoteForm.reset();
+            // Kullanıcıyı hizmetler listesine geri döndür
             document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
             document.getElementById("hizmetler").classList.add("active");
 
         } catch (err) {
-            if (err.message !== "Boyut hatası") alert("Hata: " + err.message);
+            alert("Sistem Hatası: " + err.message);
         } finally {
             isProcessing = false;
             btn.disabled = false;
-            btn.textContent = "GÖNDER";
+            btn.textContent = "TEKLİF TALEBİ GÖNDER";
         }
     });
 }

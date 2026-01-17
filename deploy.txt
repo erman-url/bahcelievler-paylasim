@@ -1,5 +1,1 @@
-git add .
-
-git commit -m "Fix 1301-01"
-
-git push -f origin master:main
+ilan verme düzgün detay düzgün.

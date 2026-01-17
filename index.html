@@ -50,7 +50,7 @@
     </div>
 </div>
 
-            <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.2.3</span></h1>
+            <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.2.8</span></h1>
             <div id="home-dashboard">
     <div class="home-widget cyber-card" data-target="duyurular" style="grid-column: span 2; border-left: 5px solid #ff007f;">
         <h4><i class="fas fa-bolt fa-beat"></i> SON EKLENEN DUYURULAR</h4>
@@ -318,40 +318,47 @@
             </div>
         </section>
 
-        <section id="teklif-al-form" class="page">
-            <h1 class="cyber-header">📄 ÜCRETSİZ TEKLİF AL</h1>
-            
-            <div class="cyber-card" style="margin: 10px; border-left: 5px solid #007bff; background: #f0f8ff;">
-                <h3 style="margin-top: 0; color: #007bff;"><i class="fas fa-handshake"></i> İhtiyacına En Uygun Teklifi Al!</h3>
-                <p style="font-size: 0.9rem; line-height: 1.5; color: #444;">
-                    Arızalanan bir cihazın mı var, boyacı mı arıyorsun ya da ev temizliği mi gerekiyor? 
-                    <b>Bahçelievler Forum</b> aracılığıyla ilçeye özel anlaşmalı firmalardan en uygun teklifleri size iletelim. 
-                    Aşağıdaki formu doldurarak süreci hemen başlatabilirsiniz.
-                </p>
-            </div>
+  <section id="teklif-al-form" class="page">
+    <h1 class="cyber-header">📄 ÜCRETSİZ TEKLİF AL</h1>
+    
+    <div class="cyber-card" style="margin: 10px; border-left: 5px solid #007bff; background: #f0f8ff;">
+        <h3 style="margin-top: 0; color: #007bff;"><i class="fas fa-handshake"></i> İhtiyacına En Uygun Teklifi Al!</h3>
+        <p style="font-size: 0.9rem; line-height: 1.5; color: #444;">
+            Arızalanan bir cihazın mı var, boyacı mı arıyorsun ya da ev temizliği mi gerekiyor? 
+            <b>Bahçelievler Forum</b> aracılığıyla ilçeye özel anlaşmalı firmalardan en uygun teklifleri size iletelim. 
+            Aşağıdaki formu doldurarak süreci hemen başlatabilirsiniz.
+        </p>
+    </div>
 
-            <div class="cyber-card" style="margin: 10px; border-top: 4px solid #007bff; border-left: none;">
-                <form id="quote-request-form" class="cyber-form">
-                    <label style="font-weight: bold; font-size: 0.85rem;">Hizmet Kategorisi</label>
-                    <select id="quote-category" required>
-                        <option value="" disabled selected>Seçiniz...</option>
-                        <option value="Ürün & Eşya Onarımı">Ürün & Eşya Onarımı</option>
-                        <option value="Ev & İşyeri Temizliği">Ev & İşyeri Temizliği</option>
-                        <option value="Hasta Bakıcı & Bakım">Hasta Bakıcı & Bakım</option>
-                        <option value="Boya & Tadilat İşlemi">Boya & Tadilat İşlemi</option>
-                        <option value="Bilgisayar Bakım & Onarım">Bilgisayar Bakım & Onarım</option>
-                        <option value="Nakliye & Taşımacılık">Nakliye & Taşımacılık</option>
-                        <option value="Özel Ders / Eğitim">Özel Ders & Eğitim</option>
-                        <option value="Diğer">Diğer & Hizmet </option>
-                    </select>
-                    <label style="font-weight: bold; font-size: 0.85rem; margin-top: 10px; display: block;">Varsa Arıza/İş Görseli</label>
-                    <input type="file" id="quote-file" accept="image/*">
-                    <textarea id="quote-text" maxlength="500" placeholder="İşin detaylarını yazınız..." rows="5" required></textarea>
-                    <input type="email" id="quote-email" placeholder="E-posta Adresiniz" required>
-                    <button type="submit" id="quote-submit-btn" class="cyber-submit" style="background: #007bff !important;">TEKLİF TALEBİ GÖNDER</button>
-                </form>
-            </div>
-        </section>
+    <div class="cyber-card" style="margin: 10px; border-top: 4px solid #007bff; border-left: none;">
+        <form id="quote-request-form" class="cyber-form">
+            <label style="font-weight: bold; font-size: 0.85rem;">Hizmet Kategorisi</label>
+            <select id="quote-category" required>
+                <option value="" disabled selected>Seçiniz...</option>
+                <option value="Ürün & Eşya Onarımı">Ürün & Eşya Onarımı</option>
+                <option value="Ev & İşyeri Temizliği">Ev & İşyeri Temizliği</option>
+                <option value="Hasta Bakıcı & Bakım">Hasta Bakıcı & Bakım</option>
+                <option value="Boya & Tadilat İşlemi">Boya & Tadilat İşlemi</option>
+                <option value="Bilgisayar Bakım & Onarım">Bilgisayar Bakım & Onarım</option>
+                <option value="Nakliye & Taşımacılık">Nakliye & Taşımacılık</option>
+                <option value="Özel Ders / Eğitim">Özel Ders & Eğitim</option>
+                <option value="Diğer">Diğer & Hizmet </option>
+            </select>
+
+            <label style="font-weight: bold; font-size: 0.85rem; margin-top: 10px; display: block; color: #d32f2f;">
+                <i class="fas fa-camera"></i> Arıza/İş Görseli (ZORUNLU - .jpg, .png)
+            </label>
+            <input type="file" id="quote-file" accept="image/png, image/jpeg" required>
+
+            <textarea id="quote-text" maxlength="500" placeholder="İşin detaylarını yazınız..." rows="5" required></textarea>
+
+            <label style="font-weight: bold; font-size: 0.85rem; margin-top: 10px; display: block;">E-posta Adresiniz</label>
+            <input type="email" id="quote-email" placeholder="E-posta Adresiniz (ZORUNLU: isim@mail.com)" required>
+
+            <button type="submit" id="quote-submit-btn" class="cyber-submit" style="background: #007bff !important;">TEKLİF TALEBİ GÖNDER</button>
+        </form>
+    </div>
+</section>
 		
         <section id="hizmet-ver" class="page">
             <h1 class="cyber-header">💼 ESNAF HİZMET TANITIMI</h1>

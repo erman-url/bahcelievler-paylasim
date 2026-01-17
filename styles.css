@@ -351,3 +351,37 @@ body {
     color: #888;
     margin-bottom: 2px;
 }
+/* >> MOBİL NAVİGASYON VE SLIDER GÜVENLİK MÜHÜRÜ << */
+@media screen and (max-width: 768px) {
+    /* 1. Slider'ın mobilde kaybolmasını engelle */
+    .slider-container {
+        display: block !important;
+        height: 180px !important;
+        min-height: 180px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .slider-item {
+        height: 100% !important;
+        display: none; /* JS showSlides() tarafından 'flex' yapılacak */
+    }
+
+    /* 2. Menü butonlarının üzerine basılmasını garanti et */
+    .app-footer-nav {
+        z-index: 9999 !important; /* En üst katman */
+        pointer-events: auto !important; /* Tıklamayı zorunlu kılan komut */
+    }
+
+    .nav-item {
+        flex: 1;
+        padding: 10px 0;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent; /* Mobildeki mavi tıklama gölgesini siler */
+    }
+    
+    /* 3. Sayfa içeriğinin menünün altında kalmasını sağla */
+    .content-area {
+        padding-bottom: 90px !important;
+    }
+}

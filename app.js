@@ -1133,7 +1133,8 @@ window.searchOnMap = function() {
     mapIframe.src = freeSearchUrl;
 };
 
-/* >> HİZMET TANITIM MOTORU << */
+
+/* >> HİZMET TANITIM MOTORU - GÖRSEL ZORUNLULUĞU V1.1 << */
 async function setupHizmetForm() {
     const form = document.getElementById("hizmet-form");
     if (!form) return;
@@ -1142,19 +1143,31 @@ async function setupHizmetForm() {
         e.preventDefault();
         if (isProcessing) return;
 
+        const fileInput = document.getElementById("hizmet-file");
         const btn = document.getElementById("hizmet-submit-btn");
+
+        // --- MANTIK KONTROLÜ: GÖRSEL ZORUNLULUĞU --- [cite: 2025-12-16]
+        if (!fileInput.files || fileInput.files.length === 0) {
+            alert("HATA: Hizmetinizi tanıtmak için lütfen bir görsel ekleyiniz.");
+            fileInput.focus();
+            return; // Resim yoksa burada durdur
+        }
+
+        const file = fileInput.files[0];
+        const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+        if (!allowedExtensions.exec(file.name)) {
+            alert("HATA: Sadece .png veya .jpg formatında görsel yükleyebilirsiniz.");
+            return;
+        }
+
         isProcessing = true;
         btn.disabled = true;
         btn.textContent = "YÜKLENİYOR...";
 
         try {
-            const fileInput = document.getElementById("hizmet-file");
-            let uploadedUrl = null;
-
-            if (fileInput.files.length > 0) {
-                let urls = await handleMultipleUploads(fileInput.files);
-                uploadedUrl = urls[0];
-            }
+            // Görseli yükle
+            let urls = await handleMultipleUploads(fileInput.files);
+            let uploadedUrl = urls[0];
 
             const payload = {
                 category: document.getElementById("hizmet-category").value,

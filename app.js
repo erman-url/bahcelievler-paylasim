@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupContactForm(); // Sadece bir kez çağrılmalı
     setupQuoteForm(); 
     setupFirsatForm();
-    setupStudentForm(); 
+    // setupStudentForm(); // Fonksiyon tanımlı değil, kaldırıldı
     setupKesintiForm(); 
     setupHizmetForm();  
     renderHizmetler();  
@@ -19,16 +19,40 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchLiveInfo();
     setInterval(fetchLiveInfo, 15 * 60 * 1000);
     
-    // Safari uyumlu slider başlatma
-    const sliderItems = document.getElementsByClassName("slider-item");
-    if (sliderItems.length > 0) {
-        // Safari için ilk slide'ı manuel göster
-        slideIndex = 0;
-        setTimeout(() => {
-            showSlides();
-        }, 100); // Safari için küçük bir gecikme
-    }
+    // Tüm tarayıcılar için slider başlatma
+    initSlider();
 });
+
+// Slider başlatma fonksiyonu - Tüm tarayıcılar için uyumlu
+function initSlider() {
+    const sliderItems = document.getElementsByClassName("slider-item");
+    if (sliderItems.length === 0) return;
+    
+    // Tüm slide'ları gizle
+    for (let i = 0; i < sliderItems.length; i++) {
+        sliderItems[i].style.display = "none";
+        sliderItems[i].style.opacity = "0";
+        sliderItems[i].style.visibility = "hidden";
+    }
+    
+    // İlk slide'ı göster (index 0)
+    slideIndex = 0;
+    if (sliderItems[0]) {
+        sliderItems[0].style.display = "block";
+        sliderItems[0].style.visibility = "visible";
+        // Reflow tetikle
+        void sliderItems[0].offsetWidth;
+        setTimeout(() => {
+            sliderItems[0].style.opacity = "1";
+        }, 50);
+    }
+    
+    // Slider'ı başlat (bir sonraki slide'dan devam etsin)
+    slideIndex = 1;
+    setTimeout(() => {
+        showSlides();
+    }, 4000); // İlk slide 4 saniye gösterilsin
+}
 
 async function loadPortalData() {
     // Tüm yüklemeleri aynı anda başlatır, hızı 3 kat artırır
@@ -49,13 +73,8 @@ function setupNavigation() {
     // Tüm navigasyon tetikleyicilerini seç
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     
-    // Safari uyumlu event handler
+    // Tüm tarayıcılar için uyumlu event handler
     const handleNavigation = (e) => {
-        // Safari için touch event kontrolü
-        if (e.type === 'touchstart') {
-            e.preventDefault(); // Safari'de scroll'u engelle
-        }
-        
         // .closest() kullanarak tıklanan yer neresi olursa olsun 
         // data-target olan ana öğeyi buluruz.
         const trigger = e.target.closest("[data-target]");
@@ -67,9 +86,9 @@ function setupNavigation() {
         // Eğer bir dış link değilse portal içi geçişi başlat
         if (!href || href === "#" || href === "") {
             e.preventDefault();
-            e.stopPropagation(); // Safari için event bubbling'i durdur
+            e.stopPropagation();
 
-            // 1. Tüm sayfaları gizle (Safari uyumlu)
+            // 1. Tüm sayfaları gizle
             document.querySelectorAll(".page").forEach(p => {
                 p.classList.remove("active");
                 p.style.display = "none";
@@ -77,15 +96,15 @@ function setupNavigation() {
                 p.style.opacity = "0";
             });
             
-            // 2. Hedef sayfayı göster (Safari uyumlu)
+            // 2. Hedef sayfayı göster
             const targetPage = document.getElementById(target);
             if (targetPage) {
                 targetPage.style.display = "block";
                 targetPage.style.visibility = "visible";
-                // Safari için reflow tetikle
+                // Reflow tetikle
                 void targetPage.offsetWidth;
                 targetPage.classList.add("active");
-                // Safari için opacity animasyonu
+                // Opacity animasyonu
                 setTimeout(() => {
                     targetPage.style.opacity = "1";
                 }, 10);
@@ -99,14 +118,14 @@ function setupNavigation() {
             const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
             if (activeLink) {
                 activeLink.classList.add("active");
-                // Safari için reflow
+                // Reflow
                 void activeLink.offsetWidth;
             }
 
-            // 4. Sayfayı en tepeye kaydır (Safari uyumlu)
-            if (window.scrollTo) {
+            // 4. Sayfayı en tepeye kaydır
+            try {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
+            } catch (err) {
                 // Fallback için
                 document.documentElement.scrollTop = 0;
                 document.body.scrollTop = 0;
@@ -114,10 +133,24 @@ function setupNavigation() {
         }
     };
     
-    // Hem click hem touch event'leri için listener ekle (Safari uyumluluğu)
+    // Click event'i için listener ekle (tüm tarayıcılar için)
     navItems.forEach(item => {
-        item.addEventListener("click", handleNavigation, { passive: false });
-        item.addEventListener("touchstart", handleNavigation, { passive: false });
+        // Click event (masaüstü ve mobil için)
+        item.addEventListener("click", handleNavigation);
+        
+        // Touch event (mobil için - scroll'u engellemeden)
+        let touchStartTime = 0;
+        item.addEventListener("touchstart", (e) => {
+            touchStartTime = Date.now();
+        }, { passive: true });
+        
+        item.addEventListener("touchend", (e) => {
+            // Eğer touch çok kısa sürdüyse (tap), navigation'ı tetikle
+            const touchDuration = Date.now() - touchStartTime;
+            if (touchDuration < 300) {
+                handleNavigation(e);
+            }
+        }, { passive: false });
     });
 }
 
@@ -244,32 +277,6 @@ async function handleMultipleUploads(files) {
     return urls;
 }
 
-// setupForms fonksiyonu içindeki ilan submit kısmı:
-// ... adForm.addEventListener("submit", async e => { ...
-const fileInput = document.getElementById("ads-files");
-const contentVal = document.getElementById("ad-content").value;
-
-// 1. FOTOĞRAF ZORUNLULUĞU KONTROLÜ
-if (!fileInput.files || fileInput.files.length === 0) {
-    alert("HATA: İlan yayınlamak için en az 1 adet fotoğraf yüklemek zorunludur!");
-    return;
-}
-// 2. ADET KONTROLÜ
-if (fileInput.files.length > 4) {
-    alert("HATA: En fazla 4 adet fotoğraf seçebilirsiniz.");
-    return;
-}
-// 3. KARAKTER KONTROLÜ (350 Sınırı ve Karakter Filtresi)
-if (contentVal.length > 350) {
-    alert("HATA: Açıklama 350 karakteri geçemez.");
-    return;
-}
-const safeRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.\,\!\?\-\:\(\)\;\/]+$/;
-if (!safeRegex.test(contentVal)) {
-    alert("HATA: Açıklamada geçersiz karakterler var.");
-    return;
-}
-
 function setupForms() {
     const adForm = document.getElementById("new-ad-form");
     if (adForm) {
@@ -280,7 +287,33 @@ function setupForms() {
             const titleVal = document.getElementById("ad-title").value;
             const priceVal = document.getElementById("ad-price").value;
             const contentVal = document.getElementById("ad-content").value;
+            const fileInput = document.getElementById("ads-files");
             
+            // 1. FOTOĞRAF ZORUNLULUĞU KONTROLÜ
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert("HATA: İlan yayınlamak için en az 1 adet fotoğraf yüklemek zorunludur!");
+                return;
+            }
+            
+            // 2. ADET KONTROLÜ
+            if (fileInput.files.length > 4) {
+                alert("HATA: En fazla 4 adet fotoğraf seçebilirsiniz.");
+                return;
+            }
+            
+            // 3. KARAKTER KONTROLÜ (350 Sınırı ve Karakter Filtresi)
+            if (contentVal.length > 350) {
+                alert("HATA: Açıklama 350 karakteri geçemez.");
+                return;
+            }
+            
+            const safeRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.\,\!\?\-\:\(\)\;\/]+$/;
+            if (!safeRegex.test(contentVal)) {
+                alert("HATA: Açıklamada geçersiz karakterler var.");
+                return;
+            }
+            
+            // 4. BAŞLIK KONTROLÜ
             const titleRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$/;
             if (titleVal.length > 25 || !titleRegex.test(titleVal)) {
                 alert("HATA: Başlık max 25 karakter olmalı.");
@@ -293,7 +326,6 @@ function setupForms() {
             btn.textContent = "YAYINLA...";
 
             try {
-                const fileInput = document.getElementById("ads-files");
                 let urls = await handleMultipleUploads(fileInput.files);
 
                 const { error } = await window.supabase.from('ilanlar').insert([{
@@ -864,31 +896,38 @@ function showSlides() {
     let slides = document.getElementsByClassName("slider-item");
     if (!slides.length) return;
     
-    // Safari uyumluluğu için tüm slide'ları gizle
+    // Tüm slide'ları gizle
     for (let i = 0; i < slides.length; i++) {
         slides[i].style.display = "none";
         slides[i].style.opacity = "0";
         slides[i].style.visibility = "hidden";
     }
     
-    slideIndex++;
-    if (slideIndex > slides.length) slideIndex = 1;
+    // Sonraki slide'a geç
+    if (slideIndex >= slides.length) {
+        slideIndex = 0;
+    }
     
-    // Safari'de block kullanmak daha güvenilir
-    const currentSlide = slides[slideIndex - 1];
+    // Aktif slide'ı göster
+    const currentSlide = slides[slideIndex];
     if (currentSlide) {
-        // Safari için explicit display ve visibility
+        // Display ve visibility ayarla
         currentSlide.style.display = "block";
         currentSlide.style.visibility = "visible";
         
-        // Safari için opacity animasyonu (reflow tetikle)
-        void currentSlide.offsetWidth; // Force reflow
+        // Reflow tetikle (tüm tarayıcılar için)
+        void currentSlide.offsetWidth;
+        
+        // Opacity animasyonu
         setTimeout(() => {
             currentSlide.style.opacity = "1";
-        }, 50);
+        }, 10);
     }
     
-    // Safari uyumlu timeout
+    // Sonraki slide için index'i artır
+    slideIndex++;
+    
+    // Sonraki slide için timeout
     setTimeout(showSlides, 4000);
 }
 

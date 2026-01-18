@@ -260,15 +260,16 @@ body {
     100% { left: -50px; }
 }
 
-/* SLIDER TASARIMI - SAFARI UYUMLU */
+/* SLIDER TASARIMI - TÜM TARAYICILAR İÇİN UYUMLU */
 .slider-container { 
     height: 200px; 
     overflow: hidden; 
     position: relative; 
     border-radius: 10px; 
     margin-bottom: 20px;
-    -webkit-transform: translateZ(0); /* Safari hardware acceleration */
+    -webkit-transform: translateZ(0); /* Hardware acceleration */
     transform: translateZ(0);
+    background: #000; /* Fallback background */
 }
 .slider-item { 
     height: 100%; 
@@ -281,16 +282,22 @@ body {
     text-align: center;
     opacity: 0;
     visibility: hidden;
-    -webkit-transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-    -webkit-transform: translateZ(0); /* Safari hardware acceleration */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    -webkit-transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
+    -webkit-transform: translateZ(0); /* Hardware acceleration */
     transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 .slider-item[style*="display: block"] {
-    opacity: 1;
-    visibility: visible;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 2;
 }
 
 /* >> OYUN ELEMENTLERİ STABİLİZASYONU << */
@@ -491,9 +498,9 @@ body {
     color: #888;
     margin-bottom: 2px;
 }
-/* >> MOBİL NAVİGASYON VE SLIDER GÜVENLİK MÜHÜRÜ - SAFARI UYUMLU << */
+/* >> MOBİL NAVİGASYON VE SLIDER - TÜM TARAYICILAR İÇİN UYUMLU << */
 @media screen and (max-width: 768px) {
-    /* 1. Slider'ın mobilde kaybolmasını engelle - Safari uyumlu */
+    /* 1. Slider'ın mobilde görünmesini garanti et */
     .slider-container {
         display: block !important;
         height: 180px !important;
@@ -502,11 +509,16 @@ body {
         opacity: 1 !important;
         -webkit-transform: translateZ(0) !important;
         transform: translateZ(0) !important;
+        position: relative !important;
     }
     
     .slider-item {
         height: 100% !important;
-        display: none !important; /* JS showSlides() tarafından 'block' yapılacak */
+        width: 100% !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        display: none !important; /* JS tarafından 'block' yapılacak */
         visibility: hidden !important;
         opacity: 0 !important;
     }

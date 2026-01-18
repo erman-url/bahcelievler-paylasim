@@ -50,7 +50,7 @@
     </div>
 </div>
 
-            <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.3.1</span></h1>
+            <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.3.2</span></h1>
             <div id="home-dashboard">
     <div class="home-widget cyber-card" data-target="duyurular" style="grid-column: span 2; border-left: 5px solid #ff007f;">
         <h4><i class="fas fa-bolt fa-beat"></i> SON EKLENEN DUYURULAR</h4>
@@ -113,13 +113,21 @@
                     <option value="Gayrimenkul">Ev & İşyeri</option>
                     <option value="Diğer">Diğer</option>
                 </select>
-                <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması" required></textarea>
-                <input type="file" id="ads-files" multiple accept="image/*">
-                <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> İlanı daha sonra bu şifre ile silebilirsiniz:</p>
-                <input type="password" id="ad-delete-password" maxlength="4" placeholder="4 Haneli Silme Şifresi" required>
-                <button type="submit" id="ad-submit-button" class="cyber-submit">YAYINLA</button>
-            </form>
-            <div id="ads-list"></div>
+              <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması (Maks 350 Karakter - Harf, Rakam ve Noktalama kullanılabilir)" required></textarea>
+
+<div id="ad-photo-warning" style="margin: 10px 0;">
+    <p style="font-size:0.75rem; color:#d32f2f; margin-bottom:5px; font-weight:bold;">
+        <i class="fas fa-camera"></i> FOTOĞRAF EKLEMEK ZORUNLUDUR!
+    </p>
+    <p style="font-size:0.65rem; color:#666;">(Maksimum 4 adet fotoğraf)</p>
+</div>
+<input type="file" id="ads-files" multiple accept="image/png, image/jpeg" required>
+<p style="font-size:0.7rem; color:#d32f2f; margin-top:10px; margin-bottom:2px; font-weight:bold;">
+    <i class="fas fa-key"></i> İlanı daha sonra bu şifre ile silebilirsiniz:</p>
+<input type="password" id="ad-delete-password" maxlength="4" placeholder="4 Haneli Silme Şifresi" required>
+<button type="submit" id="ad-submit-button" class="cyber-submit">YAYINLA</button>
+ </form>
+        <div id="ads-list"></div>
         </section>
 
         <section id="sosyal" class="page">

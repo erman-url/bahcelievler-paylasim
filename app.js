@@ -177,24 +177,24 @@ async function setupQuoteForm() {
     });
 }
 
-/* >> İLAN SİSTEMİ: RESİM YÜKLEME MOTORU << */
+/* >> İLAN YAYINLAMA: KURALLAR DAHİLİNDE GÜNCEL << */
 async function handleMultipleUploads(files) {
     if (!files || files.length === 0) return [];
     let urls = [];
-    const MAX_SIZE = 5 * 1024 * 1024;
-    const filesArray = Array.from(files).slice(0, 3);
+    const MAX_SIZE = 10 * 1024 * 1024; // 10 MB LİMİTİ
+    const filesArray = Array.from(files).slice(0, 4); // MAKSİMUM 4 ADET
 
     for (let file of filesArray) {
         if (file.size > MAX_SIZE) {
-            alert(`"${file.name}" çok büyük. Lütfen 5MB altı bir resim seçin.`);
+            alert(`"${file.name}" 10MB limitini aşıyor. Lütfen daha küçük bir dosya seçin.`);
             continue;
         }
         const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const fileName = `ilan_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
         try {
             const { data, error } = await window.supabase.storage
                 .from('ilanlar')
-                .upload(fileName, file, { cacheControl: '3600', upsert: false });
+                .upload(fileName, file);
             if (error) throw error;
             const { data: urlData } = window.supabase.storage.from('ilanlar').getPublicUrl(fileName);
             if (urlData) urls.push(urlData.publicUrl);
@@ -203,6 +203,32 @@ async function handleMultipleUploads(files) {
         }
     }
     return urls;
+}
+
+// setupForms fonksiyonu içindeki ilan submit kısmı:
+// ... adForm.addEventListener("submit", async e => { ...
+const fileInput = document.getElementById("ads-files");
+const contentVal = document.getElementById("ad-content").value;
+
+// 1. FOTOĞRAF ZORUNLULUĞU KONTROLÜ
+if (!fileInput.files || fileInput.files.length === 0) {
+    alert("HATA: İlan yayınlamak için en az 1 adet fotoğraf yüklemek zorunludur!");
+    return;
+}
+// 2. ADET KONTROLÜ
+if (fileInput.files.length > 4) {
+    alert("HATA: En fazla 4 adet fotoğraf seçebilirsiniz.");
+    return;
+}
+// 3. KARAKTER KONTROLÜ (350 Sınırı ve Karakter Filtresi)
+if (contentVal.length > 350) {
+    alert("HATA: Açıklama 350 karakteri geçemez.");
+    return;
+}
+const safeRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.\,\!\?\-\:\(\)\;\/]+$/;
+if (!safeRegex.test(contentVal)) {
+    alert("HATA: Açıklamada geçersiz karakterler var.");
+    return;
 }
 
 function setupForms() {

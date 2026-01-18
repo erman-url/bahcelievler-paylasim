@@ -778,10 +778,6 @@ async function updateDashboard() {
             document.getElementById("preview-kesinti").textContent = `${lastKesinti[0].type}: ${lastKesinti[0].location}`;
         }
 
-        // 3. Son Öğrenci İlanını Al
-        const { data: lastOgrenci } = await window.supabase.from('ogrenciler').select('title').order('created_at', {ascending: false}).limit(1);
-        if (lastOgrenci && lastOgrenci[0]) document.getElementById("preview-ogrenci").textContent = lastOgrenci[0].title;
-
         // 4. Son Fırsatı Al
         const { data: lastFirsat } = await window.supabase.from('firsatlar').select('title').order('created_at', {ascending: false}).limit(1);
         if (lastFirsat && lastFirsat[0]) document.getElementById("preview-firsat").textContent = lastFirsat[0].title;

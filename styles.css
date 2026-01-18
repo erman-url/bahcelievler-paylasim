@@ -16,10 +16,33 @@ body {
     overflow-x: hidden;
 }
 
-/* SAYFA YAPISI */
-.page { display: none; padding: 15px; box-sizing: border-box; }
-.page.active { display: block; animation: fadeIn 0.3s; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* SAYFA YAPISI - SAFARI UYUMLU */
+.page { 
+    display: none; 
+    padding: 15px; 
+    box-sizing: border-box;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transform: translateZ(0); /* Safari hardware acceleration */
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+.page.active { 
+    display: block; 
+    visibility: visible;
+    opacity: 1;
+    -webkit-animation: fadeIn 0.3s;
+    animation: fadeIn 0.3s;
+}
+@-webkit-keyframes fadeIn { 
+    from { opacity: 0; } 
+    to { opacity: 1; } 
+}
+@keyframes fadeIn { 
+    from { opacity: 0; } 
+    to { opacity: 1; } 
+}
 
 /* BAŞLIK VE KARTLAR */
 .cyber-header { text-align: center; text-transform: uppercase; letter-spacing: 2px; font-size: 1.2rem; margin: 20px 0; }
@@ -34,9 +57,11 @@ body {
     box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
 }
 
-/* SOSYAL BUTONLAR - GÖRSELLE TAM UYUMLU */
+/* SOSYAL BUTONLAR - SAFARI UYUMLU */
 .cyber-btn-block {
+    display: -webkit-flex;
     display: flex;
+    -webkit-align-items: center;
     align-items: center;
     background: #fff;
     color: var(--dark);
@@ -47,10 +72,22 @@ body {
     font-weight: 500;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     border: 1px solid #f0f0f0;
+    -webkit-transition: transform 0.2s;
     transition: transform 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
-.cyber-btn-block:active { transform: scale(0.98); }
+.cyber-btn-block:active { 
+    -webkit-transform: scale(0.98);
+    transform: scale(0.98);
+}
 
 .cyber-btn-block i {
     margin-right: 15px;
@@ -67,10 +104,24 @@ body {
 
 .cyber-submit { width: 100%; background: var(--dark); color: #fff; border: none; padding: 15px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
 
-/* MODAL - İLAN DETAYI (FULL STABILIZE) */
+/* MODAL - İLAN DETAYI (SAFARI UYUMLU) */
 .modal {
-    position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-    display: flex; align-items: center; justify-content: center;
+    position: fixed; 
+    z-index: 99999; /* Safari için daha yüksek */
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.9);
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-transform: translateZ(0); /* Safari hardware acceleration */
+    transform: translateZ(0);
+    -webkit-overflow-scrolling: touch; /* Safari smooth scroll */
 }
 
 .modal-content {
@@ -78,37 +129,65 @@ body {
     overflow-y: auto;
 }
 
-/* === FIX: MOBIL SWIPE GALERI GÜNCELLEME === */
+/* === SAFARI UYUMLU MOBIL SWIPE GALERI === */
 #modal-image-gallery {
+    display: -webkit-flex;
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
+    -webkit-scroll-snap-type: x mandatory; /* Safari prefix */
     scroll-snap-type: x mandatory; /* Kaydırmayı hizalar */
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch; /* Safari smooth scroll */
     margin-left: -15px;
     margin-right: -15px;
     background: #000;
+    -webkit-touch-action: pan-x; /* Safari touch action */
     touch-action: pan-x;
     scrollbar-width: none;
-    gap: 0; /* Swipe etkisini bozmamak için boşluğu sıfır tutun veya gap: 10px yapacaksanız flex-basis'i ayarlayın */
+    -ms-overflow-style: none; /* IE/Edge */
+    gap: 0; /* Swipe etkisini bozmamak için boşluğu sıfır tutun */
+    -webkit-transform: translateZ(0); /* Safari hardware acceleration */
+    transform: translateZ(0);
 }
 
 #modal-image-gallery::-webkit-scrollbar {
     display: none;
 }
 
-/* HER GÖRSEL = TEK SLIDE (Kritik Düzeltme) */
+/* HER GÖRSEL = TEK SLIDE (SAFARI UYUMLU) */
 #modal-image-gallery img {
+    -webkit-flex: 0 0 100%; /* Safari prefix */
     flex: 0 0 100%; /* Sıkışmayı engeller, her resmin %100 genişlikte kalmasını sağlar */
     width: 100%;    /* Genişliği zorunlu tutar */
     height: 300px;  /* Görseldeki gibi daha iyi bir görünüm için yüksekliği artırabilirsiniz */
+    -webkit-object-fit: contain; /* Safari prefix */
     object-fit: contain; /* Resmin bozulmasını engeller */
+    -webkit-scroll-snap-align: center; /* Safari prefix */
     scroll-snap-align: center; /* Kaydırınca resmin ortalanmasını sağlar */
+    -webkit-transform: translateZ(0); /* Safari hardware acceleration */
+    transform: translateZ(0);
 }
 
 /* MODAL BUTONLARI VE PANEL */
 .modal-info-panel { padding: 20px; }
-.close-detail { position: absolute; right: 15px; top: 10px; font-size: 30px; cursor: pointer; color: #fff; z-index: 100; text-shadow: 0 0 10px #000; }
+.close-detail { 
+    position: absolute; 
+    right: 15px; 
+    top: 10px; 
+    font-size: 30px; 
+    cursor: pointer; 
+    color: #fff; 
+    z-index: 100000; /* Safari için çok yüksek z-index */
+    text-shadow: 0 0 10px #000;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    padding: 10px;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
 
 #modal-buy-btn {
     background: var(--cyber-blue) !important;
@@ -122,35 +201,57 @@ body {
     padding: 10px;
 }
 
-/* MAVİ NAVİGASYON */
+/* MAVİ NAVİGASYON - SAFARI UYUMLU */
 .app-footer-nav {
     position: fixed;
     bottom: 0;
+    left: 0;
+    right: 0;
     width: 100%;
     background: var(--app-blue) !important;
+    display: -webkit-flex;
     display: flex;
+    -webkit-justify-content: space-around;
     justify-content: space-around;
     padding: 12px 0;
     padding-bottom: env(safe-area-inset-bottom);
-    z-index: 1000;
+    z-index: 10000; /* Safari için yüksek z-index */
     box-shadow: 0 -2px 15px rgba(0,0,0,0.15);
+    -webkit-transform: translateZ(0); /* Safari hardware acceleration */
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .nav-item {
     text-decoration: none;
     color: rgba(255, 255, 255, 0.7); /* Pasif beyazlar */
     font-size: 0.7rem;
+    display: -webkit-flex;
     display: flex;
+    -webkit-flex-direction: column;
     flex-direction: column;
+    -webkit-align-items: center;
     align-items: center;
+    -webkit-transition: 0.3s;
     transition: 0.3s;
+    -webkit-tap-highlight-color: transparent; /* Safari tap highlight kaldır */
+    -webkit-touch-callout: none; /* Safari long press menüsünü kaldır */
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-.nav-item i { font-size: 1.4rem; margin-bottom: 3px; }
+.nav-item i { 
+    font-size: 1.4rem; 
+    margin-bottom: 3px;
+    pointer-events: none; /* Safari için icon tıklamasını engelle */
+}
 
 .nav-item.active {
     color: #ffffff; /* Aktif buton tam beyaz */
     font-weight: bold;
+    -webkit-transform: translateY(-2px);
     transform: translateY(-2px);
 }
 
@@ -159,9 +260,38 @@ body {
     100% { left: -50px; }
 }
 
-/* SLIDER TASARIMI */
-.slider-container { height: 200px; overflow: hidden; position: relative; border-radius: 10px; margin-bottom: 20px; }
-.slider-item { height: 100%; background-size: cover; background-position: center; display: none; align-items: center; justify-content: center; color: #fff; text-align: center; }
+/* SLIDER TASARIMI - SAFARI UYUMLU */
+.slider-container { 
+    height: 200px; 
+    overflow: hidden; 
+    position: relative; 
+    border-radius: 10px; 
+    margin-bottom: 20px;
+    -webkit-transform: translateZ(0); /* Safari hardware acceleration */
+    transform: translateZ(0);
+}
+.slider-item { 
+    height: 100%; 
+    background-size: cover; 
+    background-position: center; 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+    color: #fff; 
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    -webkit-transform: translateZ(0); /* Safari hardware acceleration */
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+.slider-item[style*="display: block"] {
+    opacity: 1;
+    visibility: visible;
+}
 
 /* >> OYUN ELEMENTLERİ STABİLİZASYONU << */
 #player {
@@ -274,15 +404,25 @@ body {
 }
 
 .home-widget {
+    -webkit-transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     background: linear-gradient(145deg, #ffffff, #f0f0f0) !important;
     box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff !important;
     border-radius: 15px !important;
     overflow: hidden;
     position: relative;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 .home-widget:active {
+    -webkit-transform: scale(0.95);
     transform: scale(0.95);
     box-shadow: inset 5px 5px 10px #d1d1d1, inset -5px -5px 10px #ffffff !important;
 }
@@ -351,37 +491,74 @@ body {
     color: #888;
     margin-bottom: 2px;
 }
-/* >> MOBİL NAVİGASYON VE SLIDER GÜVENLİK MÜHÜRÜ << */
+/* >> MOBİL NAVİGASYON VE SLIDER GÜVENLİK MÜHÜRÜ - SAFARI UYUMLU << */
 @media screen and (max-width: 768px) {
-    /* 1. Slider'ın mobilde kaybolmasını engelle */
+    /* 1. Slider'ın mobilde kaybolmasını engelle - Safari uyumlu */
     .slider-container {
         display: block !important;
         height: 180px !important;
         min-height: 180px !important;
         visibility: visible !important;
         opacity: 1 !important;
+        -webkit-transform: translateZ(0) !important;
+        transform: translateZ(0) !important;
     }
     
     .slider-item {
         height: 100% !important;
-        display: none; /* JS showSlides() tarafından 'flex' yapılacak */
+        display: none !important; /* JS showSlides() tarafından 'block' yapılacak */
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+    
+    .slider-item[style*="display: block"] {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
 
-    /* 2. Menü butonlarının üzerine basılmasını garanti et */
+    /* 2. Menü butonlarının üzerine basılmasını garanti et - Safari uyumlu */
     .app-footer-nav {
-        z-index: 9999 !important; /* En üst katman */
+        z-index: 10000 !important; /* Safari için çok yüksek */
         pointer-events: auto !important; /* Tıklamayı zorunlu kılan komut */
+        -webkit-transform: translateZ(0) !important;
+        transform: translateZ(0) !important;
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
     }
 
     .nav-item {
+        -webkit-flex: 1;
         flex: 1;
         padding: 10px 0;
         cursor: pointer;
-        -webkit-tap-highlight-color: transparent; /* Mobildeki mavi tıklama gölgesini siler */
+        -webkit-tap-highlight-color: transparent !important; /* Mobildeki mavi tıklama gölgesini siler */
+        -webkit-touch-callout: none !important; /* Safari long press menüsünü kaldır */
+        -webkit-user-select: none !important;
+        user-select: none !important;
+        touch-action: manipulation !important; /* Safari için touch optimizasyonu */
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
     }
     
     /* 3. Sayfa içeriğinin menünün altında kalmasını sağla */
     .content-area {
         padding-bottom: 90px !important;
+        -webkit-overflow-scrolling: touch; /* Safari smooth scroll */
+    }
+    
+    /* 4. Safari için sayfa geçişleri */
+    .page {
+        -webkit-overflow-scrolling: touch;
+        overflow-y: auto;
+    }
+    
+    .page.active {
+        -webkit-overflow-scrolling: touch;
+        overflow-y: auto;
     }
 }

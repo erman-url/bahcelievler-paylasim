@@ -19,8 +19,14 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchLiveInfo();
     setInterval(fetchLiveInfo, 15 * 60 * 1000);
     
-    if (document.getElementsByClassName("slider-item").length > 0) {
-        showSlides();
+    // Safari uyumlu slider başlatma
+    const sliderItems = document.getElementsByClassName("slider-item");
+    if (sliderItems.length > 0) {
+        // Safari için ilk slide'ı manuel göster
+        slideIndex = 0;
+        setTimeout(() => {
+            showSlides();
+        }, 100); // Safari için küçük bir gecikme
     }
 });
 
@@ -43,41 +49,75 @@ function setupNavigation() {
     // Tüm navigasyon tetikleyicilerini seç
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     
-    navItems.forEach(item => {
-        item.addEventListener("click", e => {
-            // .closest() kullanarak tıklanan yer neresi olursa olsun 
-            // data-target olan ana öğeyi buluruz.
-            const trigger = e.target.closest("[data-target]");
-            if (!trigger) return;
+    // Safari uyumlu event handler
+    const handleNavigation = (e) => {
+        // Safari için touch event kontrolü
+        if (e.type === 'touchstart') {
+            e.preventDefault(); // Safari'de scroll'u engelle
+        }
+        
+        // .closest() kullanarak tıklanan yer neresi olursa olsun 
+        // data-target olan ana öğeyi buluruz.
+        const trigger = e.target.closest("[data-target]");
+        if (!trigger) return;
 
-            const target = trigger.getAttribute("data-target");
-            const href = trigger.getAttribute("href");
+        const target = trigger.getAttribute("data-target");
+        const href = trigger.getAttribute("href");
 
-            // Eğer bir dış link değilse portal içi geçişi başlat
-            if (!href || href === "#" || href === "") {
-                e.preventDefault();
+        // Eğer bir dış link değilse portal içi geçişi başlat
+        if (!href || href === "#" || href === "") {
+            e.preventDefault();
+            e.stopPropagation(); // Safari için event bubbling'i durdur
 
-                // 1. Tüm sayfaları gizle
-                document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-                
-                // 2. Hedef sayfayı göster
-                const targetPage = document.getElementById(target);
-                if (targetPage) {
-                    targetPage.classList.add("active");
-                } else {
-                    console.error("HATA: " + target + " id'li sayfa bulunamadı!");
-                    return;
-                }
-
-                // 3. Navigasyon butonlarındaki 'active' sınıfını güncelle
-                document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-                const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
-                if (activeLink) activeLink.classList.add("active");
-
-                // 4. Sayfayı en tepeye kaydır (Mobil deneyimi için kritik)
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            // 1. Tüm sayfaları gizle (Safari uyumlu)
+            document.querySelectorAll(".page").forEach(p => {
+                p.classList.remove("active");
+                p.style.display = "none";
+                p.style.visibility = "hidden";
+                p.style.opacity = "0";
+            });
+            
+            // 2. Hedef sayfayı göster (Safari uyumlu)
+            const targetPage = document.getElementById(target);
+            if (targetPage) {
+                targetPage.style.display = "block";
+                targetPage.style.visibility = "visible";
+                // Safari için reflow tetikle
+                void targetPage.offsetWidth;
+                targetPage.classList.add("active");
+                // Safari için opacity animasyonu
+                setTimeout(() => {
+                    targetPage.style.opacity = "1";
+                }, 10);
+            } else {
+                console.error("HATA: " + target + " id'li sayfa bulunamadı!");
+                return;
             }
-        });
+
+            // 3. Navigasyon butonlarındaki 'active' sınıfını güncelle
+            document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+            const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
+            if (activeLink) {
+                activeLink.classList.add("active");
+                // Safari için reflow
+                void activeLink.offsetWidth;
+            }
+
+            // 4. Sayfayı en tepeye kaydır (Safari uyumlu)
+            if (window.scrollTo) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                // Fallback için
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+            }
+        }
+    };
+    
+    // Hem click hem touch event'leri için listener ekle (Safari uyumluluğu)
+    navItems.forEach(item => {
+        item.addEventListener("click", handleNavigation, { passive: false });
+        item.addEventListener("touchstart", handleNavigation, { passive: false });
     });
 }
 
@@ -751,19 +791,52 @@ if (gallery) {
     document.getElementById("ad-detail-modal").style.display = "block";
 };
 
-// Modal kapatma işlevleri
+// Modal kapatma işlevleri - Safari uyumlu
 const closeModal = () => {
-    document.getElementById("ad-detail-modal").style.display = "none";
+    const modal = document.getElementById("ad-detail-modal");
+    if (modal) {
+        modal.style.display = "none";
+        // Safari için explicit visibility
+        modal.style.visibility = "hidden";
+        modal.style.opacity = "0";
+    }
 };
 
-document.querySelector(".close-detail").onclick = closeModal;
-
-// Modal dışına tıklanınca kapat
-document.getElementById("ad-detail-modal").addEventListener("click", (e) => {
-    if (e.target.id === "ad-detail-modal") {
+// Safari uyumlu event listener
+const closeBtn = document.querySelector(".close-detail");
+if (closeBtn) {
+    closeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         closeModal();
-    }
-});
+    }, { passive: false });
+    
+    // Safari touch desteği
+    closeBtn.addEventListener("touchend", (e) => {
+        e.preventDefault();
+        closeModal();
+    }, { passive: false });
+}
+
+// Modal dışına tıklanınca kapat - Safari uyumlu
+const modalElement = document.getElementById("ad-detail-modal");
+if (modalElement) {
+    modalElement.addEventListener("click", (e) => {
+        if (e.target.id === "ad-detail-modal") {
+            e.preventDefault();
+            e.stopPropagation();
+            closeModal();
+        }
+    }, { passive: false });
+    
+    // Safari touch desteği
+    modalElement.addEventListener("touchend", (e) => {
+        if (e.target.id === "ad-detail-modal") {
+            e.preventDefault();
+            closeModal();
+        }
+    }, { passive: false });
+}
 
 /* >> GELİŞMİŞ DASHBOARD GÜNCELLEME MOTORU << */
 async function updateDashboard() {
@@ -790,13 +863,32 @@ async function updateDashboard() {
 function showSlides() {
     let slides = document.getElementsByClassName("slider-item");
     if (!slides.length) return;
+    
+    // Safari uyumluluğu için tüm slide'ları gizle
     for (let i = 0; i < slides.length; i++) {
         slides[i].style.display = "none";
+        slides[i].style.opacity = "0";
+        slides[i].style.visibility = "hidden";
     }
+    
     slideIndex++;
     if (slideIndex > slides.length) slideIndex = 1;
-    // Tasarımla uyumlu olması için flex kullanıyoruz
-    slides[slideIndex - 1].style.display = "flex"; 
+    
+    // Safari'de block kullanmak daha güvenilir
+    const currentSlide = slides[slideIndex - 1];
+    if (currentSlide) {
+        // Safari için explicit display ve visibility
+        currentSlide.style.display = "block";
+        currentSlide.style.visibility = "visible";
+        
+        // Safari için opacity animasyonu (reflow tetikle)
+        void currentSlide.offsetWidth; // Force reflow
+        setTimeout(() => {
+            currentSlide.style.opacity = "1";
+        }, 50);
+    }
+    
+    // Safari uyumlu timeout
     setTimeout(showSlides, 4000);
 }
 

@@ -32,7 +32,6 @@ async function loadPortalData() {
         renderSikayetler(),
         renderFirsatlar(),
         renderDuyurular(),
-        renderStudents(),
         renderKesintiler()
     ]).then(() => {
         updateDashboard();
@@ -829,81 +828,6 @@ async function renderDuyurular() {
         previewEl.textContent = "Aktif duyuru bulunmuyor.";
     }
 }
-
-/* >> ÖĞRENCİ YARDIMLAŞMA MOTORU << */
-async function setupStudentForm() {
-    const form = document.getElementById("student-form");
-    if (!form) return;
-
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        if (isProcessing) return;
-
-        const btn = document.getElementById("stu-submit-btn");
-        isProcessing = true;
-        btn.disabled = true;
-        btn.textContent = "İŞLENİYOR...";
-
-        try {
-            const fileInput = document.getElementById("stu-file");
-            let uploadedUrl = null;
-
-            if (fileInput.files.length > 0) {
-                let urls = await handleMultipleUploads(fileInput.files);
-                uploadedUrl = urls[0];
-            }
-
-            const payload = {
-                category: document.getElementById("stu-category").value,
-                title: document.getElementById("stu-title").value,
-                content: document.getElementById("stu-content").value,
-                image_url: uploadedUrl,
-                delete_password: document.getElementById("stu-pass").value
-            };
-
-            const { error } = await window.supabase.from('ogrenciler').insert([payload]);
-            if (error) throw error;
-
-            alert("Öğrenci ilanı başarıyla yayınlandı!");
-            form.reset();
-            renderStudents();
-        } catch (err) {
-            alert("Hata: " + err.message);
-        } finally {
-            isProcessing = false;
-            btn.disabled = false;
-            btn.textContent = "YAYINLA";
-        }
-    });
-}
-
-async function renderStudents() {
-    const el = document.getElementById('student-list');
-    if (!el) return;
-
-    const { data } = await window.supabase.from('ogrenciler').select('*').order('created_at', { ascending: false });
-
-    el.innerHTML = data?.map(s => `
-        <div class="cyber-card" style="margin-bottom:15px; border-top: 4px solid #6f42c1; border-left: none;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                <span class="student-badge">${s.category}</span>
-                <button onclick="deleteStudent('${s.id}', '${s.delete_password}')" style="background:none; border:none; color:#999;"><i class="fas fa-times"></i></button>
-            </div>
-            <h4 style="margin:5px 0;">${s.title}</h4>
-            ${s.image_url ? `<img src="${s.image_url}" style="width:100%; border-radius:8px; margin:8px 0;">` : ''}
-            <p style="font-size:0.9rem; color:#444;">${s.content}</p>
-            <div style="text-align:right; font-size:0.6rem; color:#aaa; margin-top:8px;">${new Date(s.created_at).toLocaleDateString('tr-TR')}</div>
-        </div>
-    `).join('') || "<p style='text-align:center;'>Henüz bir ilan yok.</p>";
-}
-
-window.deleteStudent = async (id, correctPass) => {
-    const userPass = prompt("Silmek için şifrenizi girin:");
-    if (userPass === correctPass) {
-        await window.supabase.from('ogrenciler').delete().eq('id', id);
-        renderStudents();
-    } else if (userPass !== null) alert("Hatalı şifre!");
-};
 
 /* >> KESİNTİ BİLDİRİM MOTORU << */
 async function setupKesintiForm() {

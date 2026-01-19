@@ -13,16 +13,17 @@ const PiyasaMotoru = {
         }
 
         const fiyatlar = urunGecmisi.map(u => parseFloat(u.fiyat));
-        const ortalama = fiyatlar.reduce((a, b) => a + b, 0) / fiyatlar.length;
-   /* piyasa.js dosyasındaki ilgili bölüm */
-   const sapma = ((yeniFiyat - ortalama) / ortalama) * 100;
+	const ortalama = fiyatlar.reduce((a, b) => a + b, 0) / fiyatlar.length;
+        const sapma = ((yeniFiyat - ortalama) / ortalama) * 100;
 
         return {
             ortalama: ortalama.toFixed(2),
             sapma: sapma.toFixed(2),
             durum: sapma > 5 ? "pahali" : sapma < -5 ? "hesapli" : "normal" 
         };
-    }, // İŞTE BU KAPANIŞ PARANTEZİ VE VİRGÜL EKSİK!
+    }, // Buradaki süslü parantez ve virgül fonksiyonu doğru kapatır
+	
+	
 
     // SÜPER KONTROL: Barkod kaldırıldı, GÖRSEL ZORUNLU! [cite: 1, 2025-12-16]
     girdiKontrol: function(veri) {

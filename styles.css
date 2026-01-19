@@ -574,9 +574,3 @@ body {
         overflow-y: auto;
     }
 }
-
-.slider-item h2 {
-    color: rgba(255, 255, 255, 0.6); /* Beyaz rengi %60 görünür yapar */
-    /* VEYA */
-    opacity: 0.6;
-}

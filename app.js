@@ -317,7 +317,7 @@ function setupForms() {
                     image_url_3: urls[2] || null
                 }]);
 
-                if (error) throw error;
+    if (error) throw error;
                 alert("İlan yayınlandı!");
                 adForm.reset();
                 loadPortalData();
@@ -326,12 +326,11 @@ function setupForms() {
             } finally {
                 isProcessing = false;
                 btn.disabled = false;
-                btn.textContent = "YAYINLA";
+           btn.textContent = "YAYINLA";
             }
-        });
-    }
+        }); 
+    } 
 
-/* >> TAVSİYE ET MOTORU - L1 STABİLİZASYON << */
 document.getElementById("recommend-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (isProcessing) return;
@@ -1051,39 +1050,117 @@ window.deleteKesinti = async (id, correctPass) => {
 window.showLegal = function(type) {
     const area = document.getElementById('legal-content-area');
     const contents = {
-        about: `
-            <h3>🎓 Hakkımızda</h3>
-            <p><b>Bahçelievler Forum</b>, semt sakinleri arasında dayanışmayı artırmak, yerel ticareti desteklemek ve güncel mahalle duyurularını tek merkezden toplamak amacıyla kurulmuş dijital bir mahalle platformudur.</p>
-            <p>Tamamen gönüllülük esasıyla çalışan bu yapı, semt kültürünü dijital dünyaya taşımayı hedefler.</p>
+     about: `
+    <div style="text-align:left; font-size:0.9rem; line-height:1.5; color:#333;">
+        <h3 style="text-align:center; border-bottom:1px solid #eee; padding-bottom:10px;">🎓 HAKKIMIZDA</h3>
+        
+        <p><b>Bahçelievler Forum</b>, ilçemizin dijital dönüşümüne öncülük eden, mahalle kültürünü modern teknoloji ile birleştiren bağımsız bir yerel medya ve hizmet platformudur.</p>
+
+        <p>Amacımız; Bahçelievler sakinlerinin ilanlarını tek merkezde toplamak, yerel esnafın dijital dünyada daha görünür olmasını sağlamak ve semt içi ticareti canlandırmaktır. Platformumuz; güncel mahalle duyurularından fiyat radarına, esnaf tanıtımlarından şikayet hatlarına kadar geniş bir yelpazede hizmet sunmaktadır.</p>
+
+        <p><b>Vizyonumuz:</b> Bahçelievler’in en kapsamlı dijital rehberi ve yerel ekonomi merkezi olmak. Kullanıcılarımıza sunduğumuz yenilikçi çözümlerle, semt içi etkileşimi en üst düzeye çıkarmayı hedefliyoruz.</p>
+
+        <p style="margin-top:15px; font-weight:bold; color:var(--app-blue);">Bahçelievler Forum, yerel dinamikleri teknolojiyle buluşturan bir girişim projesidir.</p>
+    </div>
         `,
-        disclaimer: `
-            <h3>⚖️ Sorumluluk Reddi (Disclaimer)</h3>
-            <p>1. <b>İçerik Sorumluluğu:</b> Platformda paylaşılan ilanlar, yorumlar, tavsiyeler ve şikayetlerin içeriğinden doğrudan paylaşımı yapan kullanıcı sorumludur. Bahçelievler Forum, içeriğin doğruluğunu garanti etmez.</p>
-            <p>2. <b>Ticari İlişkiler:</b> Kullanıcılar arasında gerçekleşen alışveriş, hizmet alımı veya randevularda oluşabilecek maddi/manevi zararlardan platformumuz sorumlu tutulamaz.</p>
-            <p>3. <b>Dış Bağlantılar:</b> Sitede yer alan üçüncü taraf linkleri (Oyunlar, ISP haritaları vb.) harici servislerdir; bu sitelerin içeriklerinden ve veri politikalarından sorumlu değiliz.</p>
+disclaimer: `
+    <div style="text-align:left; font-size:0.8rem; line-height:1.4; color:#333; padding:5px;">
+        <h3 style="text-align:center; color:#d32f2f; border-bottom:1px solid #eee; padding-bottom:10px;">⚖️ KULLANIM KOŞULLARI VE SORUMLULUK REDDİ</h3>
+        
+        <p><b>1. İÇERİK SORUMLULUĞU:</b> Platformda yayınlanan her türlü ilan, yorum, şikayet, tavsiye ve görselin içeriğinden doğrudan paylaşımı yapan kullanıcı sorumludur. <b>Bahçelievler Forum</b>, paylaşılan bilgilerin güncelliğini, doğruluğunu veya kalitesini garanti etmez. T.C. kanunlarına aykırı, hakaret içeren veya yanıltıcı paylaşımlardan doğacak hukuki sorumluluk tamamen kullanıcıya aittir.</p>
+
+        <p><b>2. TİCARİ İLİŞKİLER VE ALIŞVERİŞ:</b> Kullanıcılar arasında gerçekleşen ürün satışı, hizmet alımı, pazarlık veya randevularda <b>Bahçelievler Forum</b> taraf değildir. Gerçekleşebilecek maddi kayıp, kusurlu ürün, dolandırıcılık veya manevi zararlardan platformumuz hiçbir şekilde sorumlu tutulamaz. Alışverişlerinizi güvenli alanlarda yapmanız önerilir.</p>
+
+        <p><b>3. FİYAT RADARI (DEDEKTİFİ):</b> "Fiyat Dedektifi" bölümünde paylaşılan etiket ve fiyat verileri kullanıcı beyanıdır. Marketlerin anlık fiyat değişikliği yapma hakkı saklıdır. Bu veriler bilgilendirme amaçlı olup, mağaza ile yaşanacak fiyat uyuşmazlıklarında platformumuz sorumluluk kabul etmez.</p>
+
+        <p><b>4. HİZMET KALİTESİ VE TEKLİFLER:</b> "Teklif Al" sistemi üzerinden yönlendirilen esnafların iş kalitesi, zamanlaması veya fiyatlandırması üzerinde platformumuzun bir denetimi yoktur. Hizmet sağlayıcı ile kullanıcı arasındaki sözleşme serbestliği esastır; yaşanacak teknik veya hukuki ihtilaflarda platformumuz arabulucu veya taraf değildir.</p>
+
+        <p><b>5. TELİF HAKLARI:</b> Kullanıcılar, yükledikleri görsellerin kendilerine ait olduğunu veya kullanım hakkına sahip olduklarını taahhüt ederler. Başkasına ait görsel kullanımı nedeniyle oluşabilecek telif hakkı ihlallerinden ilgili kullanıcı doğrudan sorumlu tutulacaktır.</p>
+
+        <p><b>6. HİZMET KESİNTİSİ:</b> Teknik güncellemeler, siber saldırılar veya servis sağlayıcı kaynaklı kesintiler nedeniyle platforma erişilememesi durumunda oluşabilecek veri kayıplarından platform yönetimi sorumlu değildir.</p>
+
+        <p><b>7. DIŞ BAĞLANTILAR:</b> Sitede yer alan üçüncü taraf linkleri (Oyunlar, ISP haritaları vb.) harici servislerdir. Bu sitelerin içeriklerinden, güvenlik politikalarından ve veri toplama pratiklerinden sorumlu değiliz.</p>
+
+        <p style="font-size:0.7rem; color:#d32f2f; font-weight:bold; border-top:1px solid #eee; padding-top:10px; margin-top:10px;"><i>Bahçelievler Forum platformunu kullanan tüm ziyaretçiler, bu şartları peşinen kabul etmiş sayılır. Yönetim, bu metni dilediği zaman güncelleme hakkını saklı tutar.</i></p>
+    </div>
         `,
         kvkk: `
-            <h3>🛡️ KVKK Aydınlatma Metni</h3>
-            <p>6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) uyarınca verileriniz şu kapsamda işlenmektedir:</p>
+    <div style="text-align:left; font-size:0.8rem; line-height:1.4; color:#333; padding:5px;">
+        <h3 style="text-align:center; color:#000; border-bottom:1px solid #eee; padding-bottom:10px;">🛡️ KVKK AYDINLATMA METNİ</h3>
+        
+        <p><b>1. VERİ SORUMLUSU:</b> 6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) uyarınca kişisel verileriniz, veri sorumlusu sıfatıyla <b>Bahçelievler Forum Mahalle Platformu</b> (“Platform”) tarafından aşağıda açıklanan kapsamda işlenmektedir.</p>
+
+        <p><b>2. İŞLENEN KİŞİSEL VERİ KATEGORİLERİ:</b> Platform tarafından kullanıcılarımıza ait;
             <ul>
-                <li><b>Toplanan Veriler:</b> İlan paylaşımı sırasında verdiğiniz e-posta adresi, paylaşılan görseller, IP adresi ve oluşturduğunuz 4 haneli silme şifresi.</li>
-                <li><b>İşleme Amacı:</b> İlan güvenliğinin sağlanması, kötü niyetli kullanımın (küfür, hakaret, dolandırıcılık) önlenmesi ve teknik hataların tespiti.</li>
-                <li><b>Veri Aktarımı:</b> Verileriniz, sadece adli makamların resmi talebi doğrultusunda ilgili mercilerle paylaşılır; üçüncü taraflara pazarlama amacıyla satılmaz.</li>
-                <li><b>Haklarınız:</b> İlanınızı şifrenizle silerek verinizi platformdan her an kaldırabilirsiniz. Veri silme talepleri için iletişim formunu kullanabilirsiniz.</li>
+                <li><b>Kimlik ve İletişim:</b> E-posta adresi, (belirtilmesi halinde) Ad-Soyad.</li>
+                <li><b>İşlem Güvenliği:</b> IP adresi, 4 haneli içerik silme şifresi, giriş-çıkış log kayıtları.</li>
+                <li><b>Lokasyon Verisi:</b> İlan, kesinti ve şikayet formlarında kullanıcı tarafından manuel beyan edilen mahalle/sokak/konum bilgileri.</li>
+                <li><b>Görsel Veriler:</b> Formlara yüklenen etiket, arıza, hizmet veya mekan fotoğrafları.</li>
             </ul>
+        </p>
+
+        <p><b>3. VERİ İŞLEME AMAÇLARI VE HUKUKİ SEBEPLER:</b> Verileriniz, KVKK’nın 5. ve 6. maddelerinde belirtilen; 
+            <i>"Bir sözleşmenin kurulması veya ifasıyla doğrudan doğruya ilgili olması"</i> ve <i>"Veri sorumlusunun meşru menfaatleri"</i> hukuki sebeplerine dayanarak;
+            <ul>
+                <li>İlan, şikayet ve hizmet tanıtımlarının doğrulanması ve yayına alınması,</li>
+                <li>"Teklif Al" sistemi üzerinden kullanıcı taleplerinin hizmet sağlayıcılara iletilmesi,</li>
+                <li>Platform güvenliğinin sağlanması ve suistimallerin önlenmesi,</li>
+                <li>Resmi kurumlarca talep edilen yasal bildirimlerin yapılması amacıyla işlenmektedir.</li>
+            </ul>
+        </p>
+
+        <p><b>4. VERİLERİN AKTARIMI VE SAKLANMASI:</b> Kişisel verileriniz, bulut tabanlı yüksek güvenlikli Supabase altyapısında saklanmakta olup; ticari amaçlarla üçüncü taraflara <b>asla satılmamaktadır.</b> Verileriniz yalnızca yasal zorunluluk hallerinde yetkili kamu kurumları ve adli makamlar ile paylaşılabilecektir.</p>
+
+        <p><b>5. VERİ SİLME VE UNUTULMA HAKKI:</b> Kullanıcı, kendi belirlediği silme şifresi ile paylaştığı veriyi dilediği an sistemden kalıcı olarak temizleme hakkına sahiptir. Bu işlem gerçekleştirildiğinde veriler veri tabanımızdan geri döndürülemeyecek şekilde silinir.</p>
+
+        <p><b>6. İLGİLİ KİŞİNİN HAKLARI:</b> Kanun’un 11. maddesi kapsamında; verilerinizin işlenip işlenmediğini öğrenme, yanlış verilerin düzeltilmesini isteme ve verilerinizin silinmesini talep etme haklarınız saklıdır. Taleplerinizi "Bize Yazın" sekmesinden iletebilirsiniz.</p>
+
+        <p style="font-size:0.7rem; color:#888; border-top:1px solid #eee; padding-top:10px; margin-top:10px;"><i>Bu aydınlatma metni, platformun kullanımı ile eş zamanlı olarak yürürlüğe girmiş kabul edilir.</i></p>
+    </div>
         `,
         sss: `
-            <h3>❓ Sıkça Sorulan Sorular</h3>
-            <div style="margin-top:10px; text-align:left;">
-                <p><b>1. Paylaştığım bir içeriği nasıl silebilirim?</b><br>
-                İçeriği eklerken belirlediğiniz 4 haneli şifreyi kullanarak, içeriğin altındaki "Sil" butonuna basıp işlemi tamamlayabilirsiniz.</p>
-                <hr style="opacity:0.1; margin:10px 0;">
-                <p><b>2. Şifremi unuttum, ne yapmalıyım?</b><br>
-                Güvenlik gereği şifreler sistemde korunmaktadır. Silme işlemleri için "Bize Yazın" kısmından ilgili başlığı belirterek destek isteyebilirsiniz.</p>
-                <hr style="opacity:0.1; margin:10px 0;">
-                <p><b>3. Hizmet tanıtımı veya ilan vermek ücretli mi?</b><br>
-                Hayır, Bahçelievler Forum üzerindeki tüm temel özellikler semt sakinlerimiz için tamamen ücretsizdir.</p>
-            </div>
+    <h3>❓ Sıkça Sorulan Sorular</h3>
+    <div style="margin-top:10px; text-align:left; font-size:0.85rem; line-height:1.5;">
+        
+        <p><b>1. Paylaştığım içeriği (İlan, Fırsat, Şikayet vb.) nasıl silebilirim?</b><br>
+        Paylaşım yaparken belirlediğiniz 4 haneli "Silme Şifresi" sizin anahtarınızdır. İçeriğinizin altındaki "SİL" butonuna basıp bu şifreyi girdiğinizde, verileriniz hem ekrandan hem de veri tabanımızdan kalıcı olarak silinir.</p>
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>2. Şifremi unuttum, içeriği sildirmek istiyorum?</b><br>
+        Güvenlik nedeniyle şifreleri biz dahi göremiyoruz. Ancak içeriği paylaşırken kullandığınız e-posta adresi üzerinden "Bize Yazın" kısmından talep gönderirseniz, manuel kontrol sonrası silme işlemini yönetim gerçekleştirebilir.</p>
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>3. "Fiyat Dedektifi / Radar" nedir?</b><br>
+        Bu bir sosyal dayanışma projesidir. Marketlerde gördüğünüz fiyatları etiket fotoğrafı ile bildirerek, tüm mahallenin en uygun ürünü nerede bulacağını görmesini sağlarsınız. Gerçek zamanlı veri analizi ile fahiş fiyat artışlarını takip etmemizi sağlar.</p>
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>4. Platformda reklam vermek veya işletmemi öne çıkarmak istiyorum?</b><br>
+        İşletmenizin mahalle sakinlerine daha hızlı ulaşması için ana sayfa widget alanlarında veya ilan listelerinde "Sponsorlu" içerik olarak yer alabilirsiniz. Detaylı reklam tarifesi için "Bize Yazın" bölümünden iletişim bilgilerinizi bırakın.</p>
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>5. "Ücretsiz Teklif Al" sistemi güvenli mi?</b><br>
+        Evet. Talebiniz sadece Bahçelievler bölgesinde referansı olan, doğrulanmış esnaflara iletilir. Esnaflar size e-posta yoluyla teklif sunar. Bahçelievler Forum, taraflar arasındaki ticari pazarlığa karışmaz, sadece köprü kurar.</p>
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>6. Şikayet bildirirken nelere dikkat etmeliyim?</b><br>
+        Şikayetlerin yapıcı bir dille yazılması zorunludur. Hakaret, küfür veya asılsız karalama içeren içerikler yayınlanmaz. Sorunu somutlaştırmak için fotoğraf eklemeniz, çözüm sürecini hızlandıracaktır.</p>
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>7. İlanım neden onaylanmadı veya silindi?</b><br>
+        Yanıltıcı fiyat içeren, yasal olmayan ürün satışı yapılan, iletişim bilgisi hatalı olan veya 4'ten fazla fotoğraf yüklenmeye çalışılan ilanlar sistem tarafından otomatik olarak reddedilmiş olabilir.</p>
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>8. Mahalle Duyuruları kısmında kimler paylaşım yapabilir?</b><br>
+        Duyurular bölümü resmi kurumlar, mahalle muhtarlıkları ve Bahçelievler Forum yönetimi tarafından güncellenir. Önemli bir mahalle duyurunuz varsa yönetime iletebilirsiniz.</p>
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>9. Kişisel verilerim 3. şahıslarla paylaşılıyor mu?</b><br>
+        KVKK politikamız gereği e-posta ve iletişim bilgileriniz asla satılmaz. Verileriniz sadece sizin rızanızla (ilanlarda görünecek şekilde) veya yasal zorunluluk hallerinde yetkili makamlarla paylaşılır.</p>
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>10. Bahçelievler Forum bir belediye uygulaması mı?</b><br>
+        Hayır. Bu platform Bahçelievler sakinleri tarafından oluşturulmuş bağımsız bir mahalle rehberidir ve tamamen gönüllülük/yerel ticaret odaklı çalışır.</p>
+    </div>
         `,
         'contact-info': `
             <h3>💬 Bize Yazın</h3>

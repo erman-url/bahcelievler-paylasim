@@ -610,3 +610,8 @@ body {
 /* Önemli: piyasa.js içindeki analiz.durum çıktıları "pahali" ve "hesapli" (küçük harf) olmalıdır */
 .piyasa-item.pahali img { border-color: var(--cyber-pink); }
 .piyasa-item.hesapli img { border-color: var(--cyber-blue); }
+
+.page {
+    touch-action: pan-y; /* Yatay kaydırmayı kısıtla, dikey kaydırmayı serbest bırak */
+    -webkit-overflow-scrolling: touch;
+}

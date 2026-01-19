@@ -331,45 +331,57 @@ function setupForms() {
         });
     }
 
-    document.getElementById("recommend-form")?.addEventListener("submit", async e => {
-        e.preventDefault();
-        if (isProcessing) return;
-        const btn = e.target.querySelector('button');
-        isProcessing = true;
-        btn.disabled = true;
-        btn.textContent = "YAYINLANIYOR...";
+/* >> TAVSİYE ET MOTORU - L1 STABİLİZASYON << */
+document.getElementById("recommend-form")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (isProcessing) return;
 
-        try {
-            const fileInput = document.getElementById("rec-file");
-            let uploadedUrl = null;
-            if (fileInput && fileInput.files.length > 0) {
-                let urls = await handleMultipleUploads(fileInput.files);
-                uploadedUrl = urls[0];
-            }
+    const btn = e.target.querySelector('button');
+    const titleVal = document.getElementById("rec-title").value;
+    const ratingVal = parseInt(document.getElementById("rec-rating").value);
+    const contentVal = document.getElementById("rec-content").value;
+    const passVal = document.getElementById("rec-pass").value;
+    const fileInput = document.getElementById("rec-file");
 
-            const payload = {
-                title: document.getElementById("rec-title").value,
-                comment: document.getElementById("rec-content").value,
-                rating: parseInt(document.getElementById("rec-rating").value),
-                delete_password: document.getElementById("rec-pass").value,
-                image_url: uploadedUrl,
-                category: "Genel"
-            };
+    isProcessing = true;
+    btn.disabled = true;
+    btn.textContent = "YAYINLANIYOR...";
 
-            const { error } = await window.supabase.from('tavsiyeler').insert([payload]);
-            if (!error) { 
-                alert("Tavsiyeniz eklendi!"); 
-                e.target.reset(); 
-                loadPortalData(); 
-            }
-        } catch (err) {
-            alert("Hata: " + err.message);
-        } finally {
-            isProcessing = false;
-            btn.disabled = false;
-            btn.textContent = "PAYLAŞ";
+    try {
+        let uploadedUrl = null;
+        // Görsel varsa yükle
+        if (fileInput && fileInput.files.length > 0) {
+            const urls = await handleMultipleUploads(fileInput.files);
+            uploadedUrl = urls[0];
         }
-    });
+
+        const payload = {
+            title: titleVal,
+            comment: contentVal,
+            rating: ratingVal,
+            delete_password: passVal,
+            image_url: uploadedUrl,
+            category: "Genel" // Tavsiye panosu genel kategorisindedir
+        };
+
+        const { error } = await window.supabase.from('tavsiyeler').insert([payload]);
+        if (error) throw error;
+
+        alert("Tavsiyeniz başarıyla panoya eklendi!");
+        e.target.reset();
+        
+        // Listeyi anlık yenilemek için ana veri motorunu çağırır
+        if (typeof loadPortalData === "function") loadPortalData();
+
+    } catch (err) {
+        console.error("L2 Uzman Desteği Gerekebilir:", err.message);
+        alert("Hata: " + err.message);
+    } finally {
+        isProcessing = false;
+        btn.disabled = false;
+        btn.textContent = "PAYLAŞ";
+    }
+});
 
     document.getElementById("complaint-form")?.addEventListener("submit", async e => {
         e.preventDefault();

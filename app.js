@@ -859,28 +859,27 @@ if (modalElement) {
     }, { passive: false });
 }
 
-/* >> GELİŞMİŞ DASHBOARD GÜNCELLEME MOTORU - RADAR ENTEGRELİ << */
+/* >> GELİŞMİŞ DASHBOARD GÜNCELLEME MOTORU - NİHAİ SÜRÜM << */
 async function updateDashboard() {
     try {
         // 1. Son İlanı Al
         const { data: lastAd } = await window.supabase.from('ilanlar').select('title').order('created_at', {ascending: false}).limit(1);
-        if (lastAd && lastAd[0]) document.getElementById("preview-ad").textContent = lastAd[0].title;
+        if (lastAd?.[0]) document.getElementById("preview-ad").textContent = lastAd[0].title;
 
         // 2. Son Kesintiyi Al
         const { data: lastKesinti } = await window.supabase.from('kesintiler').select('location, type').order('created_at', {ascending: false}).limit(1);
-        if (lastKesinti && lastKesinti[0]) {
+        if (lastKesinti?.[0]) {
             document.getElementById("preview-kesinti").textContent = `${lastKesinti[0].type}: ${lastKesinti[0].location}`;
         }
 
-        // 3. Son Piyasa Radarı Verisini Al (Yeni Ekleme)
+        // 3. Son Piyasa Radarı Verisini Al
         const { data: lastPiyasa } = await window.supabase
             .from('piyasa_verileri')
             .select('urun_adi, fiyat, market_adi, image_url')
             .order('created_at', {ascending: false})
             .limit(1);
 
-        if (lastPiyasa && lastPiyasa[0]) {
-            // Metin bilgilerini güncelle
+        if (lastPiyasa?.[0]) {
             const previewPiyasa = document.getElementById("preview-piyasa");
             if (previewPiyasa) {
                 previewPiyasa.innerHTML = `
@@ -889,8 +888,6 @@ async function updateDashboard() {
                     <small style="color:#888;">@${lastPiyasa[0].market_adi}</small>
                 `;
             }
-            
-            // Görseli widget ikonuna yerleştir
             const imgEl = document.getElementById("preview-piyasa-img");
             if (imgEl && lastPiyasa[0].image_url) {
                 imgEl.style.backgroundImage = `url('${lastPiyasa[0].image_url}')`;
@@ -899,7 +896,19 @@ async function updateDashboard() {
 
         // 4. Son Fırsatı Al
         const { data: lastFirsat } = await window.supabase.from('firsatlar').select('title').order('created_at', {ascending: false}).limit(1);
-        if (lastFirsat && lastFirsat[0]) document.getElementById("preview-firsat").textContent = lastFirsat[0].title;
+        if (lastFirsat?.[0]) document.getElementById("preview-firsat").textContent = lastFirsat[0].title;
+
+        // 5. Son Mekan Tavsiyesini Al (YENİ EKLEME)
+        const { data: lastTavsiye } = await window.supabase
+            .from('tavsiyeler')
+            .select('title')
+            .order('created_at', {ascending: false})
+            .limit(1);
+        
+        const previewTavsiye = document.getElementById("preview-tavsiye");
+        if (previewTavsiye && lastTavsiye?.[0]) {
+            previewTavsiye.textContent = lastTavsiye[0].title;
+        }
 
     } catch (err) {
         console.error("Dashboard güncelleme hatası:", err.message);

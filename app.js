@@ -54,19 +54,32 @@ function initSlider() {
     }, 4000); // İlk slide 4 saniye gösterilsin
 }
 
+// app.js içindeki loadPortalData fonksiyonuna fetchAndRenderPiyasa() eklenmeli
 async function loadPortalData() {
-    // Tüm yüklemeleri aynı anda başlatır, hızı 3 kat artırır
     Promise.allSettled([
         fetchAndRenderAds(),
         renderTavsiyeler(),
         renderSikayetler(),
         renderFirsatlar(),
         renderDuyurular(),
-        renderKesintiler()
+        renderKesintiler(),
+        fetchAndRenderPiyasa() // Yeni eklenen fonksiyon
     ]).then(() => {
         updateDashboard();
-        console.log("Portal verileri hücresel uyumlu yüklendi.");
+        console.log("Fiyat radarı dahil tüm veriler yüklendi.");
     });
+}
+
+// Veritabanından verileri çeken motor
+async function fetchAndRenderPiyasa() {
+    const { data, error } = await window.supabase
+        .from('piyasa_verileri')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (!error && data) {
+        window.PiyasaMotoru.listeOlustur(data);
+    }
 }
 
 function setupNavigation() {

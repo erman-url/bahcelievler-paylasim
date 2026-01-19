@@ -574,3 +574,7 @@ body {
         overflow-y: auto;
     }
 }
+
+/* piyasa.js'den gelen dinamik sınıflar */
+.cyber-pink { color: var(--cyber-pink) !important; font-weight: bold; }
+.cyber-blue { color: var(--cyber-blue) !important; font-weight: bold; }

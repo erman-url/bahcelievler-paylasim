@@ -282,16 +282,45 @@
 
 <section id="fiyat-dedektifi" class="page">
     <h1 class="cyber-header">🔍 FİYAT DEDEKTİFİ</h1>
-    <div class="cyber-card" style="text-align: center; padding: 50px 20px; border-left: 5px solid var(--cyber-pink);">
-        <i class="fas fa-tools fa-spin" style="font-size: 3rem; color: var(--cyber-pink); margin-bottom: 20px;"></i>
-        <h2 class="neon-text">ÇOK YAKINDA!</h2>
-        <p style="color: #666; font-size: 0.9rem; line-height: 1.5;">
-            Bahçelievler'deki market ve mağaza fiyatlarını karşılaştırıp en uygununu bulmanızı sağlayacak sistemimiz hazırlanıyor. 
-            <br><br>
-            <b>Takipte kalın, tasarrufa hazırlanın!</b>
+    
+    <div class="cyber-card" style="margin-bottom:20px; border-top: 3px solid var(--app-blue);">
+        <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">
+            <i class="fas fa-camera"></i> Etiket fotoğrafı çekerek fiyat bildirin, mahalle radarını güçlendirin. [cite: 2026-01-19]
         </p>
+        <button onclick="document.getElementById('piyasa-form-container').scrollIntoView({behavior: 'smooth'})" class="cyber-submit" style="background:var(--app-blue)!important;">YENİ FİYAT BİLDİR</button>
+    </div>
+
+    <div id="fiyat-dedektifi-listesi">
+        <div style="text-align:center; padding:40px;">
+            <i class="fas fa-microchip fa-spin" style="font-size:2rem; color:var(--cyber-blue);"></i>
+            <p>Radar verileri analiz ediliyor...</p>
+        </div>
+    </div>
+	
+    <div id="piyasa-form-container" class="cyber-card" style="margin-top: 20px; border-left: 5px solid var(--cyber-pink);">
+        <h3 style="font-size: 0.9rem; margin-bottom: 15px;"><i class="fas fa-plus-circle"></i> Radar Girişi</h3>
+        <form id="piyasa-form" class="cyber-form">
+            <input type="text" id="piyasa-barkod" placeholder="Barkod / Ürün Kodu" required>
+            <input type="text" id="piyasa-urun-adi" placeholder="Ürün Adı (Örn: Çay 1kg)" required>
+            <input type="number" step="0.01" id="piyasa-fiyat" placeholder="Gördüğünüz Fiyat (TL)" required>
+            <select id="piyasa-market" required>
+                <option value="" disabled selected>Market Seçin</option>
+                <option value="A101">A101</option>
+                <option value="BIM">BİM</option>
+                <option value="SOK">ŞOK</option>
+                <option value="Yerel Esnaf">Yerel Esnaf</option>
+            </select>
+            <label style="font-size:0.7rem; color:var(--cyber-pink); font-weight:bold; display:block; margin-bottom:5px;">
+                <i class="fas fa-camera"></i> ETİKET FOTOĞRAFI ZORUNLUDUR
+            </label>
+            <input type="file" id="piyasa-file" accept="image/*" capture="camera" required>
+            <input type="password" id="piyasa-pass" maxlength="4" placeholder="4 Haneli Silme Şifresi" required>
+            <button type="button" onclick="submitPiyasaVerisi()" class="cyber-submit">RADARA EKLE</button>
+        </form>
     </div>
 </section>
+
+
 
 
         <section id="iletisim" class="page">
@@ -429,5 +458,6 @@
 
     <script src="games.js" defer></script>
     <script src="app.js" defer></script>
+	<script src="piyasa.js" defer></script>
 </body>
 </html>

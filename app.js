@@ -947,28 +947,38 @@ function showSlides() {
     setTimeout(showSlides, 4000);
 }
 
-/* >> DUYURU RENDER MOTORU << */
+/* >> DUYURU RENDER MOTORU - NİHAİ SÜRÜM << */
 async function renderDuyurular() {
     const previewEl = document.getElementById('preview-duyuru'); 
-    if (!previewEl) return;
+    const listEl = document.getElementById('duyuru-list'); // Tam liste alanı
 
     const { data, error } = await window.supabase
         .from('duyurular')
         .select('*')
-        .order('created_at', { ascending: false })
-        .limit(1); // Sadece en son duyuruyu al
+        .order('created_at', { ascending: false });
 
     if (error) {
         console.error("Duyuru çekme hatası:", error.message);
-        previewEl.textContent = "Duyuru yüklenemedi.";
         return;
     }
 
-    if (data && data.length > 0) {
-        // Dashboard'daki pembe "YÜKLENİYOR..." yazısını günceller
+    // 1. Ana Sayfa Preview (Dashboard) Güncelleme
+    if (previewEl && data.length > 0) {
         previewEl.textContent = data[0].title;
-    } else {
-        previewEl.textContent = "Aktif duyuru bulunmuyor.";
+    }
+
+    // 2. Sosyal -> Duyurular Sayfası Listesi Güncelleme
+    if (listEl) {
+        listEl.innerHTML = data.map(d => `
+            <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff007f;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <small style="color:#888;">${new Date(d.created_at).toLocaleDateString('tr-TR')}</small>
+                    <i class="fas fa-bullhorn" style="color:#ff007f;"></i>
+                </div>
+                <h3 style="margin:10px 0 5px 0; color:var(--dark);">${d.title}</h3>
+                <p style="font-size:0.9rem; color:#444; line-height:1.4;">${d.content}</p>
+            </div>
+        `).join('') || "<p style='text-align:center; padding:20px;'>Aktif duyuru bulunmuyor.</p>";
     }
 }
 

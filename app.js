@@ -1,4 +1,4 @@
-/* >> BAHÇELİEVLER PRO ENGINE V4.2 - %100 STABİLİZE EDİLMİŞ NİHAİ SÜRÜM << */
+/* >> BAHÇELİEVLER PRO ENGINE V4.3 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
 let slideIndex = 0;
 let allAds = [];
 let isProcessing = false;
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initSlider();
 });
 
-// --- NAVİGASYON MOTORU (TEK VE STABİL) ---
+// --- 1. NAVİGASYON MOTORU (TEK VE STABİL) ---
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     let startY = 0;
@@ -40,17 +40,18 @@ function setupNavigation() {
             const currentPage = document.querySelector(".page.active");
             if (currentPage && currentPage.id === target) return;
 
-            // Tüm sayfaları tam gizle ve etkileşimi kes
             document.querySelectorAll(".page").forEach(p => {
                 p.classList.remove("active");
                 p.style.display = "none";
                 p.style.pointerEvents = "none"; 
                 p.style.opacity = "0";
+                p.style.visibility = "hidden";
             });
             
             const targetPage = document.getElementById(target);
             if (targetPage) {
                 targetPage.style.display = "block";
+                targetPage.style.visibility = "visible";
                 targetPage.style.pointerEvents = "auto";
                 void targetPage.offsetWidth; 
                 targetPage.classList.add("active");
@@ -77,7 +78,7 @@ function setupNavigation() {
     });
 }
 
-// --- VERİ YÜKLEME MOTORU ---
+// --- 2. VERİ YÜKLEME MOTORU ---
 async function loadPortalData() {
     try {
         await Promise.allSettled([
@@ -90,154 +91,44 @@ async function loadPortalData() {
             fetchAndRenderPiyasa() 
         ]);
         updateDashboard();
-        console.log("Sistem stabilize edildi.");
-    } catch (err) { console.error("Yükleme hatası:", err); }
+    } catch (err) { console.error("Portal yükleme hatası:", err); }
 }
 
 async function fetchAndRenderPiyasa() {
-    const { data, error } = await window.supabase
-        .from('piyasa_verileri')
-        .select('*')
-        .order('created_at', { ascending: false });
+    try {
+        const { data, error } = await window.supabase
+            .from('piyasa_verileri')
+            .select('*')
+            .order('created_at', { ascending: false });
 
-    if (!error && data && window.PiyasaMotoru) {
-        window.PiyasaMotoru.listeOlustur(data);
-    }
-}
-
-// ... (Slider ve Diğer Form fonksiyonlarını buraya ekleyerek devam et)
-
-function setupNavigation() {
-    const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
-    
-    // Mobil kaydırma ve tıklama ayrımı için değişkenler
-    let startY = 0;
-    const scrollThreshold = 10; // 10px'den fazla kaydırma tıklamayı iptal eder
-
-    const handleNavigation = (e) => {
-        const trigger = e.target.closest("[data-target]");
-        if (!trigger) return;
-
-        const target = trigger.getAttribute("data-target");
-        const href = trigger.getAttribute("href");
-
-        // Dış link kontrolü ve portal içi geçiş
-        if (!href || href === "#" || href === "") {
-            if (e.cancelable) e.preventDefault();
-            e.stopPropagation();
-
-            // SÜPER KONTROL: Mevcut aktif sayfayı kontrol et
-            const currentPage = document.querySelector(".page.active");
-            if (currentPage && currentPage.id === target) return;
-
-            // 1. Tüm sayfaları temizle ve etkisiz hale getir
-            document.querySelectorAll(".page").forEach(p => {
-                p.classList.remove("active");
-                p.style.display = "none";
-                p.style.visibility = "hidden";
-                p.style.opacity = "0";
-                p.style.pointerEvents = "none"; // Dokunmatik karmaşasını önler
-            });
-            
-            // 2. Hedef sayfayı aktive et
-            const targetPage = document.getElementById(target);
-            if (targetPage) {
-                targetPage.style.display = "block";
-                targetPage.style.visibility = "visible";
-                targetPage.style.pointerEvents = "auto"; 
-                void targetPage.offsetWidth; // Reflow tetikle
-                targetPage.classList.add("active");
-                
-                setTimeout(() => {
-                    targetPage.style.opacity = "1";
-                }, 10);
-            } else {
-                console.error("HATA: " + target + " id'li sayfa bulunamadı!");
-                return;
-            }
-
-            // 3. Navigasyon butonlarındaki aktiflik durumunu güncelle
-            document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-            const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
-            if (activeLink) {
-                activeLink.classList.add("active");
-            }
-
-            // 4. Sayfayı en tepeye odakla
-            window.scrollTo(0, 0);
+        if (!error && data && window.PiyasaMotoru) {
+            window.PiyasaMotoru.listeOlustur(data);
         }
-    };
-
-    // Her bir öğe için event dinleyicilerini kur
-    navItems.forEach(el => {
-        // Dokunma başlangıcı: Koordinatı kaydet
-        el.addEventListener('touchstart', (e) => {
-            startY = e.touches[0].pageY;
-        }, { passive: true });
-
-        // Dokunma bitişi: Mesafe kontrolü yap
-        el.addEventListener('touchend', (e) => {
-            const endY = e.changedTouches[0].pageY;
-            const distance = Math.abs(endY - startY);
-            
-            // Eğer dikey kaydırma miktarı eşikten düşükse (saf tıklama)
-            if (distance < scrollThreshold) {
-                handleNavigation(e);
-            }
-        }, { passive: false });
-
-        // Masaüstü için tıklama desteği (mouse tıklamalarında touchend çalışmaz)
-        el.addEventListener('click', (e) => {
-            if (e.pointerType === "mouse" || !e.pointerType) {
-                handleNavigation(e);
-            }
-        });
-    });
+    } catch (e) { console.error("Piyasa Motoru Çevrimdışı"); }
 }
-    // Mobil cihazlar için dokunmatik başlangıç ve bitiş kontrolü
-    navItems.forEach(el => {
-        el.addEventListener('touchstart', (e) => {
-            startY = e.touches[0].pageY;
-        }, { passive: true });
 
-        el.addEventListener('touchend', (e) => {
-            const endY = e.changedTouches[0].pageY;
-            const distance = Math.abs(endY - startY);
-            
-            // Eğer mesafe eşiğin altındaysa (saf tıklama), navigasyonu çalıştır
-            if (distance < scrollThreshold) {
-                handleNavigation(e);
-            }
-        }, { passive: false });
+// --- 3. SLIDER BAŞLATICI (TÜM TARAYICILARDA STABİL) ---
+function initSlider() {
+    const slides = document.getElementsByClassName("slider-item");
+    if (!slides || slides.length === 0) return;
 
-        // Masaüstü cihazlar için normal click desteği
-        el.addEventListener('click', (e) => {
-            if (e.pointerType === "mouse") {
-                handleNavigation(e);
-            }
-        });
-    });
-}
-    
-    // Click event'i için listener ekle (tüm tarayıcılar için)
-    navItems.forEach(item => {
-        // Click event (masaüstü ve mobil için)
-        item.addEventListener("click", handleNavigation);
-        
-        // Touch event (mobil için - scroll'u engellemeden)
-        let touchStartTime = 0;
-        item.addEventListener("touchstart", (e) => {
-            touchStartTime = Date.now();
-        }, { passive: true });
-        
-        item.addEventListener("touchend", (e) => {
-            // Eğer touch çok kısa sürdüyse (tap), navigation'ı tetikle
-            const touchDuration = Date.now() - touchStartTime;
-            if (touchDuration < 300) {
-                handleNavigation(e);
-            }
-        }, { passive: false });
-    });
+    // İlk açılışta tüm slide'ları sıfırla
+    for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+        slides[i].style.opacity = "0";
+        slides[i].style.visibility = "hidden";
+    }
+
+    // İlk slide'ı göster
+    slideIndex = 0;
+    slides[0].style.display = "block";
+    slides[0].style.visibility = "visible";
+    void slides[0].offsetWidth; // reflow
+    slides[0].style.opacity = "1";
+
+    // Döngüyü başlat
+    slideIndex = 1;
+    setTimeout(showSlides, 4000);
 }
 
 

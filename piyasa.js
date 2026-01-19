@@ -16,12 +16,12 @@ const PiyasaMotoru = {
         const ortalama = fiyatlar.reduce((a, b) => a + b, 0) / fiyatlar.length;
         const sapma = ((yeniFiyat - ortalama) / ortalama) * 100;
 
-        return {
-            ortalama: ortalama.toFixed(2),
-            sapma: sapma.toFixed(2),
-            durum: sapma > 5 ? "Pahalı" : sapma < -5 ? "Hesaplı" : "Normal"
-        };
-    },
+     return {
+    ortalama: ortalama.toFixed(2),
+    sapma: sapma.toFixed(2),
+    // Küçük harf ve güvenli karakter kullanımı
+    durum: sapma > 5 ? "pahali" : sapma < -5 ? "hesapli" : "normal" 
+};
 
     // SÜPER KONTROL: Barkod kaldırıldı, GÖRSEL ZORUNLU! [cite: 1, 2025-12-16]
     girdiKontrol: function(veri) {

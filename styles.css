@@ -574,10 +574,9 @@ body {
         overflow-y: auto;
     }
 }
+/* >> BAHÇELİEVLER FORUM - PİYASA RADARI & ARAYÜZ STABİLİZASYONU V1.3 << */
 
-/* >> PİYASA RADARI DİNAMİK STİLLERİ - STABİL V1.2 << */
-
-/* 1. Renk ve Efekt Tanımları (Çoklamalar birleştirildi) */
+/* 1. Renk ve Efekt Tanımları (Çoklamalar Tek Bir Yapıda Birleştirildi) */
 .cyber-pink { 
     color: var(--cyber-pink) !important; 
     text-shadow: 0 0 5px var(--cyber-pink);
@@ -590,19 +589,24 @@ body {
     font-weight: bold;
 }
 
-/* 2. Dashboard Widget Animasyonu */
+/* 2. Katman Yönetimi (Z-Index) */
+/* Menü (Navigasyon) her zaman en üstte kalmalı, Modal onun bir tık altında veya kontrollü olmalı */
+.modal { z-index: 10000; } 
+.app-footer-nav { z-index: 10001; } 
+
+/* 3. Dashboard Widget Animasyonu */
 .home-widget[data-target="fiyat-dedektifi"]:active {
-    -webkit-transform: scale(0.95); /* Safari uyumu eklendi */
+    -webkit-transform: scale(0.95); /* Safari/iOS Donanım Uyumu */
     transform: scale(0.95);
     transition: transform 0.1s ease;
 }
 
-/* 3. Radar Listesi Görsel Efektleri (Sınıf isimleri güvenli hale getirildi) */
+/* 4. Radar Listesi Görsel Efektleri (Küçük Harf & Güvenli Karakterler) */
 .piyasa-item img {
     border: 2px solid transparent;
     transition: border-color 0.3s ease;
 }
 
-/* Dikkat: JS tarafında analiz.durum çıktılarını küçük harf yapmanız önerilir */
+/* Önemli: piyasa.js içindeki analiz.durum çıktıları "pahali" ve "hesapli" (küçük harf) olmalıdır */
 .piyasa-item.pahali img { border-color: var(--cyber-pink); }
 .piyasa-item.hesapli img { border-color: var(--cyber-blue); }

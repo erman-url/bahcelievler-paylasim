@@ -50,7 +50,7 @@
     </div>
 </div>
 
-            <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.4.0</span></h1>
+            <h1 class="cyber-header">BAHÇELİEVLER FORUM <span class="neon-text">NET_V.4.1</span></h1>
             <div id="home-dashboard">
     <div class="home-widget cyber-card" data-target="duyurular" style="grid-column: span 2; border-left: 5px solid #ff007f;">
         <h4><i class="fas fa-bolt fa-beat"></i> SON EKLENEN DUYURULAR</h4>
@@ -81,6 +81,17 @@
         <h4><i class="fas fa-exclamation-triangle fa-shake"></i> SON EKLENEN ŞİKAYET</h4>
         <p id="preview-sikayet" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
     </div>
+	
+	<div class="home-widget cyber-card" data-target="fiyat-dedektifi" style="display: flex; align-items: center; gap: 12px; border-left: 5px solid var(--cyber-pink); cursor: pointer;">
+    <div id="preview-piyasa-img" style="width: 50px; height: 50px; border-radius: 8px; background: #333; background-size: cover; background-position: center; flex-shrink: 0; border: 1px solid var(--cyber-pink);">
+        <i class="fas fa-image" style="display: block; text-align: center; line-height: 50px; color: #555; font-size: 0.8rem;"></i>
+    </div>
+	
+    <div style="flex: 1; overflow: hidden;">
+        <h4 style="margin: 0; font-size: 0.8rem;"><i class="fas fa-search-dollar fa-beat"></i> SON RADAR</h4>
+        <p id="preview-piyasa" style="font-size: 0.75rem; font-weight: bold; margin: 4px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Yükleniyor...</p>
+    </div>
+</div>
 </div>
         </section>
 
@@ -460,8 +471,8 @@
         <a href="#" class="nav-item" data-target="iletisim"><i class="fas fa-users"></i><span>İletişim</span></a>
     </nav>
 
-    <script src="games.js" defer></script>
+   	<script src="piyasa.js" defer></script>
     <script src="app.js" defer></script>
-	<script src="piyasa.js" defer></script>
+    <script src="games.js" defer></script>
 </body>
 </html>

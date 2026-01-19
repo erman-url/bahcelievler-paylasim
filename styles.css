@@ -575,6 +575,34 @@ body {
     }
 }
 
-/* piyasa.js'den gelen dinamik sınıflar */
-.cyber-pink { color: var(--cyber-pink) !important; font-weight: bold; }
-.cyber-blue { color: var(--cyber-blue) !important; font-weight: bold; }
+/* >> PİYASA RADARI DİNAMİK STİLLERİ - STABİL V1.2 << */
+
+/* 1. Renk ve Efekt Tanımları (Çoklamalar birleştirildi) */
+.cyber-pink { 
+    color: var(--cyber-pink) !important; 
+    text-shadow: 0 0 5px var(--cyber-pink);
+    font-weight: bold;
+}
+
+.cyber-blue { 
+    color: var(--cyber-blue) !important; 
+    text-shadow: 0 0 5px var(--cyber-blue);
+    font-weight: bold;
+}
+
+/* 2. Dashboard Widget Animasyonu */
+.home-widget[data-target="fiyat-dedektifi"]:active {
+    -webkit-transform: scale(0.95); /* Safari uyumu eklendi */
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+/* 3. Radar Listesi Görsel Efektleri (Sınıf isimleri güvenli hale getirildi) */
+.piyasa-item img {
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+/* Dikkat: JS tarafında analiz.durum çıktılarını küçük harf yapmanız önerilir */
+.piyasa-item.pahali img { border-color: var(--cyber-pink); }
+.piyasa-item.hesapli img { border-color: var(--cyber-blue); }

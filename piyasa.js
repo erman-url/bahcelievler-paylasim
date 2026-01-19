@@ -1,9 +1,12 @@
-/* >> BAHÇELİEVLER FORUM - PİYASA MOTORU V1.0 << */
+/* >> BAHÇELİEVLER FORUM - PİYASA MOTORU V1.1 (Barkodsuz) << */
 
 const PiyasaMotoru = {
-    // Ortalama.net mantığı: Topluluk verilerinden istatistik üretir
-    istatistikHesapla: function(barkod, yeniFiyat, tumVeriler) {
-        const urunGecmisi = tumVeriler.filter(item => item.barkod === barkod);
+    // Analiz artık barkod yerine Ürün Adı üzerinden benzerlik kurar
+    istatistikHesapla: function(urunAdi, yeniFiyat, tumVeriler) {
+        // Ürün adını küçük harfe çevirip boşlukları temizleyerek eşleştirme yapar
+        const urunGecmisi = tumVeriler.filter(item => 
+            item.urun_adi.toLowerCase().trim() === urunAdi.toLowerCase().trim()
+        );
         
         if (urunGecmisi.length === 0) {
             return { durum: "Yeni", mesaj: "İlk kez radara girdi.", sapma: 0 };
@@ -11,26 +14,23 @@ const PiyasaMotoru = {
 
         const fiyatlar = urunGecmisi.map(u => parseFloat(u.fiyat));
         const ortalama = fiyatlar.reduce((a, b) => a + b, 0) / fiyatlar.length;
-        
         const sapma = ((yeniFiyat - ortalama) / ortalama) * 100;
 
         return {
             ortalama: ortalama.toFixed(2),
             sapma: sapma.toFixed(2),
-            durum: sapma > 5 ? "Pahalı" : sapma < -5 ? "Hesaplı" : "Normal",
-            seviye: Math.abs(sapma) > 20 ? "Yüksek Sapma" : "Stabil"
+            durum: sapma > 5 ? "Pahalı" : sapma < -5 ? "Hesaplı" : "Normal"
         };
     },
 
-    // Süper Kontrol: Görsel zorunluluğu [cite: 2025-12-16]
+    // SÜPER KONTROL: Barkod kaldırıldı, GÖRSEL ZORUNLU! [cite: 1, 2025-12-16]
     girdiKontrol: function(veri) {
         if (!veri.image) return { hata: true, mesaj: "Görsel kanıt (fotoğraf) zorunludur!" };
         if (!veri.fiyat || veri.fiyat <= 0) return { hata: true, mesaj: "Geçerli bir fiyat giriniz." };
-        if (!veri.barkod) return { hata: true, mesaj: "Barkod veya Ürün Kodu zorunludur!" };
+        if (!veri.urunAdi) return { hata: true, mesaj: "Ürün adı zorunludur!" };
         return { hata: false };
     },
 
-    // Fiyat Dedektifi Listesini Render Et
     listeOlustur: function(veriler) {
         const container = document.getElementById('fiyat-dedektifi-listesi');
         if (!container) return;
@@ -41,8 +41,11 @@ const PiyasaMotoru = {
         }
 
         container.innerHTML = veriler.map(urun => {
-            const analiz = this.istatistikHesapla(urun.barkod, urun.fiyat, veriler);
-            const durumClass = analiz.durum === "Pahalı" ? "cyber-pink" : "cyber-blue";
+            // Analiz parametresi Ürün Adı üzerinden çalışır
+            const analiz = this.istatistikHesapla(urun.urun_adi, urun.fiyat, veriler);
+            
+            // SÜPER KONTROL: CSS'deki küçük harf sınıflarla uyum sağlandı
+            const durumClass = analiz.durum === "pahali" ? "cyber-pink" : "cyber-blue";
 
             return `
                 <div class="cyber-card" style="margin-bottom:12px; border-left: 5px solid var(--${durumClass});">
@@ -50,14 +53,14 @@ const PiyasaMotoru = {
                         <img src="${urun.image_url}" style="width:80px; height:80px; object-fit:cover; border-radius:8px;">
                         <div style="flex:1;">
                             <div style="display:flex; justify-content:space-between;">
-                                <small style="font-size:0.6rem; color:#888;">Barkod: ${urun.barkod}</small>
-                                <small style="color:var(--${durumClass}); font-weight:bold;">${analiz.durum}</small>
+                                <small style="font-size:0.6rem; color:#888;">Radar Girişi</small>
+                                <small style="color:var(--${durumClass}); font-weight:bold;">${analiz.durum.toUpperCase()}</small>
                             </div>
                             <h4 style="margin:2px 0;">${urun.urun_adi}</h4>
                             <div style="font-weight:bold; color:var(--dark);">${urun.fiyat} TL</div>
                             <div style="font-size:0.7rem; margin-top:4px;">
                                 Radar: <span style="color:var(--${durumClass})">%${analiz.sapma} sapma</span> 
-                                (Ort: ${analiz.ortalama} TL)
+                                <br><small>İşletme: ${urun.market_adi}</small>
                             </div>
                         </div>
                     </div>
@@ -67,30 +70,26 @@ const PiyasaMotoru = {
     }
 };
 
-// Sayfa yüklendiğinde otomatik çalışması için global scope'a ekliyoruz
 window.PiyasaMotoru = PiyasaMotoru;
-
 
 /* >> PİYASA VERİ KAYIT MOTORU << */
 async function submitPiyasaVerisi() {
     const fileInput = document.getElementById("piyasa-file");
-    const barkod = document.getElementById("piyasa-barkod").value;
     const fiyat = parseFloat(document.getElementById("piyasa-fiyat").value);
     const urunAdi = document.getElementById("piyasa-urun-adi").value;
     const marketAdi = document.getElementById("piyasa-market").value;
     const pass = document.getElementById("piyasa-pass").value;
 
-    // SÜPER KONTROL: Görsel ve Veri Denetimi [cite: 2025-12-16]
-    const kontrol = window.PiyasaMotoru.girdiKontrol({ image: fileInput.files[0], fiyat, barkod });
+    // SÜPER KONTROL: Barkod parametresi çıkarıldı [cite: 1, 2025-12-16]
+    const kontrol = window.PiyasaMotoru.girdiKontrol({ image: fileInput.files[0], fiyat, urunAdi });
     if (kontrol.hata) {
         alert(kontrol.mesaj);
         return;
     }
 
     try {
-        // 1. Görseli Storage'a Yükle (piyasa-kanitlar bucketına)
         const file = fileInput.files[0];
-        const fileName = `kanit_${Date.now()}_${barkod}.jpg`;
+        const fileName = `kanit_${Date.now()}.jpg`; // Barkodsuz isimlendirme
         const { data: uploadData, error: uploadError } = await window.supabase.storage
             .from('piyasa-kanitlar')
             .upload(fileName, file);
@@ -98,22 +97,21 @@ async function submitPiyasaVerisi() {
         if (uploadError) throw uploadError;
 
         const { data: urlData } = window.supabase.storage.from('piyasa-kanitlar').getPublicUrl(fileName);
-        const imageUrl = urlData.publicUrl;
 
-        // 2. Veritabanına (piyasa_verileri tablosuna) Kaydet
+        // Veritabanı kaydında barkod gönderilmiyor
         const { error: dbError } = await window.supabase.from('piyasa_verileri').insert([{
-            barkod: barkod,
             urun_adi: urunAdi,
             fiyat: fiyat,
             market_adi: marketAdi,
-            image_url: imageUrl,
+            image_url: urlData.publicUrl,
             delete_password: pass
         }]);
 
         if (dbError) throw dbError;
 
-        alert("Fiyat başarıyla radara eklendi!");
+        alert("Fiyat radara eklendi!");
         document.getElementById("piyasa-form").reset();
+        loadPortalData(); // Dashboard widget'ını ve listeyi yeniler
     } catch (err) {
         alert("Sistem Hatası: " + err.message);
     }

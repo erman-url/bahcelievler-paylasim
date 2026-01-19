@@ -883,7 +883,7 @@ if (modalElement) {
     }, { passive: false });
 }
 
-/* >> GELİŞMİŞ DASHBOARD GÜNCELLEME MOTORU << */
+/* >> GELİŞMİŞ DASHBOARD GÜNCELLEME MOTORU - RADAR ENTEGRELİ << */
 async function updateDashboard() {
     try {
         // 1. Son İlanı Al
@@ -894,6 +894,31 @@ async function updateDashboard() {
         const { data: lastKesinti } = await window.supabase.from('kesintiler').select('location, type').order('created_at', {ascending: false}).limit(1);
         if (lastKesinti && lastKesinti[0]) {
             document.getElementById("preview-kesinti").textContent = `${lastKesinti[0].type}: ${lastKesinti[0].location}`;
+        }
+
+        // 3. Son Piyasa Radarı Verisini Al (Yeni Ekleme)
+        const { data: lastPiyasa } = await window.supabase
+            .from('piyasa_verileri')
+            .select('urun_adi, fiyat, market_adi, image_url')
+            .order('created_at', {ascending: false})
+            .limit(1);
+
+        if (lastPiyasa && lastPiyasa[0]) {
+            // Metin bilgilerini güncelle
+            const previewPiyasa = document.getElementById("preview-piyasa");
+            if (previewPiyasa) {
+                previewPiyasa.innerHTML = `
+                    ${lastPiyasa[0].urun_adi}<br>
+                    <span style="color:var(--cyber-pink);">${lastPiyasa[0].fiyat} TL</span> 
+                    <small style="color:#888;">@${lastPiyasa[0].market_adi}</small>
+                `;
+            }
+            
+            // Görseli widget ikonuna yerleştir
+            const imgEl = document.getElementById("preview-piyasa-img");
+            if (imgEl && lastPiyasa[0].image_url) {
+                imgEl.style.backgroundImage = `url('${lastPiyasa[0].image_url}')`;
+            }
         }
 
         // 4. Son Fırsatı Al

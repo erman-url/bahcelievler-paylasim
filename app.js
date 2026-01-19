@@ -85,42 +85,42 @@ async function fetchAndRenderPiyasa() {
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     
-    // Mobil kaydırma sırasında tıklamayı iptal etmek için mesafe kontrolü
+    // Mobil kaydırma ve tıklama ayrımı için değişkenler
     let startY = 0;
-    const scrollThreshold = 10; // 10 pikselden fazla kaydırma yapılırsa tıklama iptal olur
+    const scrollThreshold = 10; // 10px'den fazla kaydırma tıklamayı iptal eder
 
     const handleNavigation = (e) => {
-        // Kaydırma kontrolü: Eğer parmak dikeyde çok hareket ettiyse navigasyonu başlatma
         const trigger = e.target.closest("[data-target]");
         if (!trigger) return;
 
         const target = trigger.getAttribute("data-target");
         const href = trigger.getAttribute("href");
 
+        // Dış link kontrolü ve portal içi geçiş
         if (!href || href === "#" || href === "") {
-            e.preventDefault();
+            if (e.cancelable) e.preventDefault();
             e.stopPropagation();
 
-            // SÜPER KONTROL: Mevcut aktif sayfayı kontrol et, aynı sayfaya geçişi engelle
+            // SÜPER KONTROL: Mevcut aktif sayfayı kontrol et
             const currentPage = document.querySelector(".page.active");
             if (currentPage && currentPage.id === target) return;
 
-            // 1. Tüm sayfaları tam olarak etkisiz hale getir (Pointer-events dahil)
+            // 1. Tüm sayfaları temizle ve etkisiz hale getir
             document.querySelectorAll(".page").forEach(p => {
                 p.classList.remove("active");
                 p.style.display = "none";
                 p.style.visibility = "hidden";
                 p.style.opacity = "0";
-                p.style.pointerEvents = "none"; // Kaydırma sırasında tetiklenmeyi önler
+                p.style.pointerEvents = "none"; // Dokunmatik karmaşasını önler
             });
             
-            // 2. Hedef sayfayı göster
+            // 2. Hedef sayfayı aktive et
             const targetPage = document.getElementById(target);
             if (targetPage) {
                 targetPage.style.display = "block";
                 targetPage.style.visibility = "visible";
-                targetPage.style.pointerEvents = "auto"; // Etkileşimi geri aç
-                void targetPage.offsetWidth; 
+                targetPage.style.pointerEvents = "auto"; 
+                void targetPage.offsetWidth; // Reflow tetikle
                 targetPage.classList.add("active");
                 
                 setTimeout(() => {
@@ -131,18 +131,44 @@ function setupNavigation() {
                 return;
             }
 
-            // 3. Navigasyon butonlarını güncelle
+            // 3. Navigasyon butonlarındaki aktiflik durumunu güncelle
             document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
             const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
             if (activeLink) {
                 activeLink.classList.add("active");
             }
 
-            // 4. Sayfayı en tepeye kaydır (Anlık tepki için smooth yerine auto)
+            // 4. Sayfayı en tepeye odakla
             window.scrollTo(0, 0);
         }
     };
 
+    // Her bir öğe için event dinleyicilerini kur
+    navItems.forEach(el => {
+        // Dokunma başlangıcı: Koordinatı kaydet
+        el.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].pageY;
+        }, { passive: true });
+
+        // Dokunma bitişi: Mesafe kontrolü yap
+        el.addEventListener('touchend', (e) => {
+            const endY = e.changedTouches[0].pageY;
+            const distance = Math.abs(endY - startY);
+            
+            // Eğer dikey kaydırma miktarı eşikten düşükse (saf tıklama)
+            if (distance < scrollThreshold) {
+                handleNavigation(e);
+            }
+        }, { passive: false });
+
+        // Masaüstü için tıklama desteği (mouse tıklamalarında touchend çalışmaz)
+        el.addEventListener('click', (e) => {
+            if (e.pointerType === "mouse" || !e.pointerType) {
+                handleNavigation(e);
+            }
+        });
+    });
+}
     // Mobil cihazlar için dokunmatik başlangıç ve bitiş kontrolü
     navItems.forEach(el => {
         el.addEventListener('touchstart', (e) => {

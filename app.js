@@ -859,7 +859,7 @@ if (modalElement) {
     }, { passive: false });
 }
 
-/* >> GELİŞMİŞ DASHBOARD GÜNCELLEME MOTORU - NİHAİ SÜRÜM << */
+/* >> GELİŞMİŞ DASHBOARD GÜNCELLEME MOTORU - V5.1 (STABİLİZE EDİLMİŞ) << */
 async function updateDashboard() {
     try {
         // 1. Son İlanı Al
@@ -868,8 +868,9 @@ async function updateDashboard() {
 
         // 2. Son Kesintiyi Al
         const { data: lastKesinti } = await window.supabase.from('kesintiler').select('location, type').order('created_at', {ascending: false}).limit(1);
-        if (lastKesinti?.[0]) {
-            document.getElementById("preview-kesinti").textContent = `${lastKesinti[0].type}: ${lastKesinti[0].location}`;
+        const kesintiEl = document.getElementById("preview-kesinti");
+        if (kesintiEl) {
+            kesintiEl.textContent = lastKesinti?.[0] ? `${lastKesinti[0].type}: ${lastKesinti[0].location}` : "Aktif kesinti yok.";
         }
 
         // 3. Son Piyasa Radarı Verisini Al
@@ -882,36 +883,28 @@ async function updateDashboard() {
         if (lastPiyasa?.[0]) {
             const previewPiyasa = document.getElementById("preview-piyasa");
             if (previewPiyasa) {
-                previewPiyasa.innerHTML = `
-                    ${lastPiyasa[0].urun_adi}<br>
-                    <span style="color:var(--cyber-pink);">${lastPiyasa[0].fiyat} TL</span> 
-                    <small style="color:#888;">@${lastPiyasa[0].market_adi}</small>
-                `;
+                previewPiyasa.innerHTML = `${lastPiyasa[0].urun_adi}<br><span style="color:var(--cyber-pink);">${lastPiyasa[0].fiyat} TL</span> <small style="color:#888;">@${lastPiyasa[0].market_adi}</small>`;
             }
             const imgEl = document.getElementById("preview-piyasa-img");
-            if (imgEl && lastPiyasa[0].image_url) {
-                imgEl.style.backgroundImage = `url('${lastPiyasa[0].image_url}')`;
-            }
+            if (imgEl && lastPiyasa[0].image_url) imgEl.style.backgroundImage = `url('${lastPiyasa[0].image_url}')`;
         }
 
         // 4. Son Fırsatı Al
         const { data: lastFirsat } = await window.supabase.from('firsatlar').select('title').order('created_at', {ascending: false}).limit(1);
         if (lastFirsat?.[0]) document.getElementById("preview-firsat").textContent = lastFirsat[0].title;
 
-        // 5. Son Mekan Tavsiyesini Al (YENİ EKLEME)
-        const { data: lastTavsiye } = await window.supabase
-            .from('tavsiyeler')
-            .select('title')
-            .order('created_at', {ascending: false})
-            .limit(1);
-        
+        // 5. Son Mekan Tavsiyesini Al
+        const { data: lastTavsiye } = await window.supabase.from('tavsiyeler').select('title').order('created_at', {ascending: false}).limit(1);
         const previewTavsiye = document.getElementById("preview-tavsiye");
-        if (previewTavsiye && lastTavsiye?.[0]) {
-            previewTavsiye.textContent = lastTavsiye[0].title;
-        }
+        if (previewTavsiye) previewTavsiye.textContent = lastTavsiye?.[0] ? lastTavsiye[0].title : "Henüz tavsiye yok.";
+
+        // 6. Son Şikayeti Al (EKSİK OLAN BUYDU!)
+        const { data: lastSikayet } = await window.supabase.from('sikayetler').select('title').order('created_at', {ascending: false}).limit(1);
+        const previewSikayet = document.getElementById("preview-sikayet");
+        if (previewSikayet) previewSikayet.textContent = lastSikayet?.[0] ? lastSikayet[0].title : "Aktif bildirim yok.";
 
     } catch (err) {
-        console.error("Dashboard güncelleme hatası:", err.message);
+        console.error("Dashboard güncelleme motoru durdu:", err.message);
     }
 }
 

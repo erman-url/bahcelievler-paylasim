@@ -308,12 +308,16 @@
                 <option value="A101">A101</option>
                 <option value="BIM">BİM</option>
                 <option value="SOK">ŞOK</option>
-                <option value="Yerel Esnaf">Yerel Esnaf</option>
+				  <option value="SOK">ONUR</option>
+				  	  <option value="SOK">ÇAĞRI</option>
+                <option value="Yerel Esnaf">Yerel Esnaf/Pazar</option>
             </select>
             <label style="font-size:0.7rem; color:var(--cyber-pink); font-weight:bold; display:block; margin-bottom:5px;">
-                <i class="fas fa-camera"></i> ETİKET FOTOĞRAFI ZORUNLUDUR
-            </label>
-            <input type="file" id="piyasa-file" accept="image/*" capture="camera" required>
+    <i class="fas fa-camera-retro"></i> FOTOĞRAF ÇEK VEYA GALERİDEN YÜKLE
+</label>
+       
+			<input type="file" id="piyasa-file" accept="image/*" required>
+			
             <input type="password" id="piyasa-pass" maxlength="4" placeholder="4 Haneli Silme Şifresi" required>
             <button type="button" onclick="submitPiyasaVerisi()" class="cyber-submit">RADARA EKLE</button>
         </form>

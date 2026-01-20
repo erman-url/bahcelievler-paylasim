@@ -132,6 +132,16 @@ function initSlider() {
 }
 
 
+/* >> BOT KORUMA MOTORU << */
+function isBotDetected() {
+    const hpField = document.getElementById("hp_check");
+    if (hpField && hpField.value !== "") {
+        console.warn("Süper Kontrol: Bot algılandı, işlem reddedildi.");
+        return true;
+    }
+    return false;
+}
+
 /* >> TEKLİF ALMA SİSTEMİ MOTORU << */
 /* >> TEKLİF ALMA SİSTEMİ MOTORU - SÜPER KONTROL V3.6 << */
 async function setupQuoteForm() {
@@ -140,7 +150,7 @@ async function setupQuoteForm() {
 
     quoteForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (isProcessing) return; // Çift tıklamayı engelle
+        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
         const fileInput = document.getElementById("quote-file");
         const emailInput = document.getElementById("quote-email");
@@ -150,7 +160,7 @@ async function setupQuoteForm() {
         if (!fileInput.files || fileInput.files.length === 0) {
             alert("HATA: Teklif alabilmek için lütfen bir görsel (.png veya .jpg) ekleyiniz.");
             fileInput.focus();
-            return; // İşlemi burada keser, Supabase'e gitmez
+            return; 
         }
 
         // --- 2. KOD KONTROLÜ: DOSYA UZANTISI ---
@@ -158,7 +168,7 @@ async function setupQuoteForm() {
         const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
         if (!allowedExtensions.exec(file.name)) {
             alert("HATA: Sadece .png, .jpg veya .jpeg uzantılı dosyalar kabul edilmektedir.");
-            fileInput.value = ''; // Seçimi temizle
+            fileInput.value = ''; 
             return;
         }
 
@@ -171,13 +181,11 @@ async function setupQuoteForm() {
             return;
         }
 
-        // --- TÜM KONTROLLER GEÇİLDİ, ŞİMDİ İŞLEMİ BAŞLAT ---
         isProcessing = true;
         btn.disabled = true;
         btn.textContent = "İŞLENİYOR...";
 
         try {
-            // Görseli Supabase Storage'a yükle
             const fileName = `teklif_${Date.now()}_${Math.random().toString(36).substring(7)}`;
             const { data, error: storageError } = await window.supabase.storage
                 .from('ilanlar')
@@ -188,7 +196,6 @@ async function setupQuoteForm() {
             const { data: urlData } = window.supabase.storage.from('ilanlar').getPublicUrl(fileName);
             const uploadedImageUrl = urlData.publicUrl;
 
-            // Veritabanına kaydet
             const payload = {
                 category: document.getElementById("quote-category").value,
                 talep_metni: document.getElementById("quote-text").value,
@@ -199,7 +206,6 @@ async function setupQuoteForm() {
             const { error: dbError } = await window.supabase.from('teklifal').insert([payload]);
             if (dbError) throw dbError;
 
-            // EmailJS ile bildirim gönder
             const emailParams = {
                 name: `Teklif: ${payload.category}`,
                 email: payload.email,
@@ -208,11 +214,9 @@ async function setupQuoteForm() {
             };
             await emailjs.send('service_hdlldav', 'template_1qzuj7s', emailParams);
 
-            // BAŞARI MESAJI
             alert("Talebiniz bize ulaştı, en kısa sürede mail adresinize dönüş yapılacaktır.");
             
             quoteForm.reset();
-            // Kullanıcıyı hizmetler listesine geri döndür
             document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
             document.getElementById("hizmetler").classList.add("active");
 
@@ -259,26 +263,23 @@ function setupForms() {
     if (adForm) {
         adForm.addEventListener("submit", async e => {
             e.preventDefault();
-            if (isProcessing) return;
+            if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
             const titleVal = document.getElementById("ad-title").value;
             const priceVal = document.getElementById("ad-price").value;
             const contentVal = document.getElementById("ad-content").value;
             const fileInput = document.getElementById("ads-files");
             
-            // 1. FOTOĞRAF ZORUNLULUĞU KONTROLÜ
             if (!fileInput.files || fileInput.files.length === 0) {
                 alert("HATA: İlan yayınlamak için en az 1 adet fotoğraf yüklemek zorunludur!");
                 return;
             }
             
-            // 2. ADET KONTROLÜ
             if (fileInput.files.length > 4) {
                 alert("HATA: En fazla 4 adet fotoğraf seçebilirsiniz.");
                 return;
             }
             
-            // 3. KARAKTER KONTROLÜ (350 Sınırı ve Karakter Filtresi)
             if (contentVal.length > 350) {
                 alert("HATA: Açıklama 350 karakteri geçemez.");
                 return;
@@ -290,7 +291,6 @@ function setupForms() {
                 return;
             }
             
-            // 4. BAŞLIK KONTROLÜ
             const titleRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$/;
             if (titleVal.length > 25 || !titleRegex.test(titleVal)) {
                 alert("HATA: Başlık max 25 karakter olmalı.");
@@ -306,18 +306,18 @@ function setupForms() {
                 let urls = await handleMultipleUploads(fileInput.files);
 
                 const { error } = await window.supabase.from('ilanlar').insert([{
-    title: titleVal,
-    price: priceVal,
-    category: document.getElementById("ad-category").value,
-    content: contentVal,
-    contact: document.getElementById("ad-contact").value, // BU SATIRI EKLE
-    delete_password: document.getElementById("ad-delete-password").value,
+                    title: titleVal,
+                    price: priceVal,
+                    category: document.getElementById("ad-category").value,
+                    content: contentVal,
+                    contact: document.getElementById("ad-contact").value, 
+                    delete_password: document.getElementById("ad-delete-password").value,
                     image_url: urls[0] || null,
                     image_url_2: urls[1] || null,
                     image_url_3: urls[2] || null
                 }]);
 
-    if (error) throw error;
+                if (error) throw error;
                 alert("İlan yayınlandı!");
                 adForm.reset();
                 loadPortalData();
@@ -326,14 +326,14 @@ function setupForms() {
             } finally {
                 isProcessing = false;
                 btn.disabled = false;
-           btn.textContent = "YAYINLA";
+                btn.textContent = "YAYINLA";
             }
         }); 
     } 
 
 document.getElementById("recommend-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (isProcessing) return;
+    if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
     const btn = e.target.querySelector('button');
     const titleVal = document.getElementById("rec-title").value;
@@ -348,7 +348,6 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
 
     try {
         let uploadedUrl = null;
-        // Görsel varsa yükle
         if (fileInput && fileInput.files.length > 0) {
             const urls = await handleMultipleUploads(fileInput.files);
             uploadedUrl = urls[0];
@@ -360,7 +359,7 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
             rating: ratingVal,
             delete_password: passVal,
             image_url: uploadedUrl,
-            category: "Genel" // Tavsiye panosu genel kategorisindedir
+            category: "Genel" 
         };
 
         const { error } = await window.supabase.from('tavsiyeler').insert([payload]);
@@ -369,7 +368,6 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
         alert("Tavsiyeniz başarıyla panoya eklendi!");
         e.target.reset();
         
-        // Listeyi anlık yenilemek için ana veri motorunu çağırır
         if (typeof loadPortalData === "function") loadPortalData();
 
     } catch (err) {
@@ -384,7 +382,7 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
 
     document.getElementById("complaint-form")?.addEventListener("submit", async e => {
         e.preventDefault();
-        if (isProcessing) return;
+        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
         
         const btn = document.getElementById("comp-submit-btn");
         const fileInput = document.getElementById("comp-files");
@@ -442,7 +440,6 @@ function toggleFirsatFields() {
         if (onlineDiv) onlineDiv.style.display = "none";
         if (dateArea) {
             dateArea.style.display = "block";
-            // Tarihi otomatik bugüne ayarla
             document.getElementById("firsat-date").value = new Date().toISOString().split('T')[0];
         }
         titleInput.maxLength = 25;
@@ -458,13 +455,12 @@ function toggleFirsatFields() {
     if (label) {
         if (type === "yerel") {
             label.innerHTML = '<i class="fas fa-camera"></i> RESİM EKLEMEK ZORUNLUDUR!';
-            label.style.color = "#d32f2f"; // Yerel için kırmızı (uyarıcı)
+            label.style.color = "#d32f2f"; 
         } else {
             label.innerHTML = '<i class="fas fa-camera"></i> Görsel Ekle (Opsiyonel)';
-            label.style.color = "#666"; // Online için gri (isteğe bağlı olduğunu belli eder)
+            label.style.color = "#666"; 
         }
     }
-    // >>> EKLEME BURADA BİTİYOR <<<
 }
 
 /* >> FIRSAT KAYIT MOTORU (GÜNCEL: FİYAT VE KESİN RESİM KONTROLLÜ) << */
@@ -474,7 +470,7 @@ async function setupFirsatForm() {
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (isProcessing) return;
+        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
         const type = document.getElementById("firsat-type").value;
         const title = document.getElementById("firsat-title").value;
@@ -485,9 +481,6 @@ async function setupFirsatForm() {
         const fileInput = document.getElementById("firsat-files");
         const files = fileInput.files;
 
-        // --- DİNAMİK KONTROLLER ---
-
-        // 1. ONLINE İÇİN ÖZEL DURUM: Sadece Link zorunlu, resim ve detay opsiyonel.
         if (type === "online") {
             if (!link) {
                 alert("HATA: Online ürünler için Ürün Linki zorunludur!");
@@ -495,22 +488,17 @@ async function setupFirsatForm() {
             }
         }
 
-        // 2. YEREL ESNAF İÇİN KATI KURALLAR (Aynen Korundu)
         if (type === "yerel") {
-            // Yerel'de Resim ZORUNLU
             if (files.length === 0) {
                 alert("HATA: Yerel esnaf ilanları için en az 1 adet resim yüklemek zorunludur!");
                 return;
             }
-            // Yerel'de Detay ZORUNLU
             if (!desc || desc.trim() === "") {
                 alert("HATA: Yerel esnaf ilanları için Detay/Adres yazmak zorunludur!");
                 return;
             }
-            // Resim sayısı sınırı
             if (files.length > 2) return alert("HATA: Maksimum 2 görsel seçebilirsiniz.");
             
-            // Karakter kontrolü
             const safeRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.\,\!\?\-\:\(\)]+$/;
             if (!safeRegex.test(title) || !safeRegex.test(desc)) {
                 return alert("HATA: Sadece harf, rakam ve noktalama işaretleri kullanın.");
@@ -521,12 +509,10 @@ async function setupFirsatForm() {
         document.getElementById("firsat-submit-btn").textContent = "YÜKLENİYOR...";
 
         try {
-            // Resim varsa yükle, yoksa boş dizi dön
             let urls = files.length > 0 ? await handleMultipleUploads(files) : [];
 
             const payload = {
                 title: title,
-                // Detay opsiyonel olduğu için boşsa sadece fiyatı yazar
                 content: desc ? `💰 FIRSAT: ${priceInfo}\n\n${desc}` : `💰 FIRSAT: ${priceInfo}`, 
                 link: type === "online" ? link : null,
                 category: type === 'yerel' ? 'Yerel Esnaf & Mağaza' : 'Online Ürün & Kampanya',
@@ -553,17 +539,13 @@ async function setupFirsatForm() {
 }
 /* >> GARANTİLİ LOGO VE GÖRSEL BULUCU (MÜHÜRLÜ) << */
 function getPlaceholderImage(link) {
-    // Placeholder servisi sende çalışmadığı için güvenli bir SVG ikonu kullanıyoruz
     const safeFallback = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 24 24' fill='none' stroke='%23ccc' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'%3E%3C/circle%3E%3Cpolyline points='21 15 16 10 5 21'%3E%3C/polyline%3E%3C/svg%3E";
 
     if (!link || link.trim() === "") return safeFallback;
 
     try {
-        // Linkten temiz domaini al (Örn: boyner.com.tr)
         const urlObj = new URL(link);
         const domain = urlObj.hostname.replace('www.', '');
-        
-        // Clearbit yerine Google'ın çok daha stabil ve hızlı olan logo servisini kullanıyoruz
         return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
     } catch (e) {
         return safeFallback;
@@ -577,10 +559,7 @@ async function renderFirsatlar() {
     const { data } = await window.supabase.from('firsatlar').select('*').order('created_at', {ascending: false});
     
     el.innerHTML = data?.map(f => {
-        // Resim yoksa logo çekiciyi çalıştır
         const displayImg = f.image_url || getPlaceholderImage(f.link);
-        
-        // Kategoriye göre renk belirleme (index.html ile uyumlu)
         const isOnline = f.category === 'Online Ürün & Kampanya';
         const borderColor = isOnline ? '#007bff' : '#28a745';
 
@@ -591,12 +570,9 @@ async function renderFirsatlar() {
                 <button onclick="event.stopPropagation(); deleteFirsat('${f.id}', '${f.delete_password}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;"><i class="fas fa-trash"></i></button>
             </div>
             <h4 style="margin:5px 0;">${f.title}</h4>
-
-          
                <img src="${displayImg}" 
      onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23ccc%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22%3E%3C/circle%3E%3Cline x1=%2212%22 y1=%228%22 x2=%2212%22 y2=%2212%22%3E%3C/line%3E%3Cline x1=%2212%22 y1=%2216%22 x2=%2212.01%22 y2=%2216%22%3E%3C/line%3E%3C/svg%3E';"
      style="width:100%; height:150px; object-fit:contain; background:#f9f9f9; border-radius:8px; margin:5px 0; padding:10px;">
-
             <p style="font-size:0.8rem; color:#444; margin-top:5px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${f.content}</p>
         </div>`;
     }).join('') || "";
@@ -608,7 +584,6 @@ window.openFirsatDetail = async function(id) {
 
         const dateStr = new Date(f.created_at).toLocaleDateString('tr-TR', {day:'2-digit', month:'2-digit', year:'numeric'});
 
-        // BAŞLIK VE FİYAT
         document.getElementById("modal-title").textContent = f.title;
         document.getElementById("modal-price").innerHTML = `
             <div style="display:flex; justify-content:space-between; width:100%; font-size:0.85rem; color:#666;">
@@ -625,11 +600,9 @@ window.openFirsatDetail = async function(id) {
         if (gallery) {
             const images = [f.image_url, f.image_url_2].filter(Boolean);
             if (images.length > 0) {
-                // Kullanıcı resim eklediyse: Siyah zemin ve tam resim
                 gallery.style.background = "#000"; 
                 gallery.innerHTML = images.map(src => `<img src="${src}" style="width:100%; margin-bottom:12px; border-radius:10px;">`).join('');
             } else {
-                // SADECE LOGO VARSA: Temiz beyaz zemin ve ortalanmış logo (Şık görünümü sağlayan yer)
                 gallery.style.background = "#f8f9fa"; 
                 gallery.innerHTML = `<img src="${getPlaceholderImage(f.link)}" 
                     onerror="this.src='https://www.google.com/s2/favicons?domain=${f.link}&sz=128'"
@@ -701,10 +674,20 @@ async function renderSikayetler() {
 
 window.deleteFirsat = async (id, correctPass) => {
     const userPass = prompt("Şifrenizi girin:");
-    if (userPass === correctPass) {
-        await window.supabase.from('firsatlar').delete().eq('id', id);
+    if (!userPass) return;
+
+    const { error } = await window.supabase
+        .from('firsatlar')
+        .delete()
+        .eq('id', id)
+        .eq('delete_password', userPass); 
+
+    if (!error) {
+        alert("Fırsat silindi.");
         renderFirsatlar();
-    } else if (userPass !== null) alert("Hatalı!");
+    } else {
+        alert("Hata: Şifre yanlış!");
+    }
 };
 
 window.deleteTavsiye = async (id, correctPass) => {
@@ -717,13 +700,20 @@ window.deleteTavsiye = async (id, correctPass) => {
 
 window.deleteSikayet = async (id, correctPass) => {
     const userPass = prompt("Şikayeti silmek için şifre girin:");
-    if (userPass === correctPass) {
-        const { error } = await window.supabase.from('sikayetler').delete().eq('id', id);
-        if (!error) {
-            alert("Şikayet kaldırıldı.");
-            loadPortalData();
-        }
-    } else if (userPass !== null) alert("Hatalı şifre!");
+    if (!userPass) return;
+
+    const { error } = await window.supabase
+        .from('sikayetler')
+        .delete()
+        .eq('id', id)
+        .eq('delete_password', userPass); 
+
+    if (!error) {
+        alert("Şikayet kaldırıldı.");
+        loadPortalData();
+    } else {
+        alert("Hata: Şifre yanlış!");
+    }
 };
 
 async function fetchAndRenderAds() {
@@ -732,7 +722,6 @@ async function fetchAndRenderAds() {
     const { data } = await window.supabase.from('ilanlar').select('*').order('created_at', {ascending: false});
     allAds = data || [];
     
-    // İlanlar yüklendikten sonra mevcut filtreleri uygula
     const searchInput = document.getElementById("ad-search-input");
     const searchTerm = searchInput ? searchInput.value.trim() : '';
     applyFilters(currentCategory, searchTerm);
@@ -745,18 +734,15 @@ window.openAdDetail = function(id) {
     document.getElementById("modal-title").textContent = ad.title;
     document.getElementById("modal-price").textContent = ad.price + " TL";
     
-    // İletişim bilgisi ekle
     const descriptionEl = document.getElementById("modal-description");
     if (ad.contact) {
-        // Güvenli şekilde HTML escape edilmiş içerik
-        const contentEscaped = ad.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
-        const contactEscaped = ad.contact.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const contentEscaped = ad.content.replace(/</g, '<').replace(/>/g, '>').replace(/\n/g, '<br>');
+        const contactEscaped = ad.contact.replace(/</g, '<').replace(/>/g, '>');
         descriptionEl.innerHTML = contentEscaped + `<br><br><strong style="color:#007bff;"><i class="fas fa-phone"></i> İletişim:</strong> ${contactEscaped}`;
     } else {
         descriptionEl.textContent = ad.content;
     }
 
-    // Görsel galerisi (varsa 3 resim)
   const gallery = document.getElementById("modal-image-gallery");
 if (gallery) {
     const images = [ad.image_url, ad.image_url_2, ad.image_url_3].filter(Boolean);
@@ -768,8 +754,6 @@ if (gallery) {
         : '';
 }
 
-
-    // SATIN ALMA BUTONU - İletişim bilgisini göster/kopyala
     document.getElementById("modal-buy-btn").onclick = () => {
         if (ad.contact) {
             const copyText = ad.contact;
@@ -785,7 +769,6 @@ if (gallery) {
         }
     };
 
-    // SİLME BUTONU AYARI
     document.getElementById("modal-delete-btn-inner").onclick = () => {
         const userPass = prompt("Bu ilanı silmek için 4 haneli şifrenizi girin:");
         if (userPass === null) return;
@@ -811,18 +794,15 @@ if (gallery) {
     document.getElementById("ad-detail-modal").style.display = "block";
 };
 
-// Modal kapatma işlevleri - Safari uyumlu
 const closeModal = () => {
     const modal = document.getElementById("ad-detail-modal");
     if (modal) {
         modal.style.display = "none";
-        // Safari için explicit visibility
         modal.style.visibility = "hidden";
         modal.style.opacity = "0";
     }
 };
 
-// Safari uyumlu event listener
 const closeBtn = document.querySelector(".close-detail");
 if (closeBtn) {
     closeBtn.addEventListener("click", (e) => {
@@ -831,14 +811,12 @@ if (closeBtn) {
         closeModal();
     }, { passive: false });
     
-    // Safari touch desteği
     closeBtn.addEventListener("touchend", (e) => {
         e.preventDefault();
         closeModal();
     }, { passive: false });
 }
 
-// Modal dışına tıklanınca kapat - Safari uyumlu
 const modalElement = document.getElementById("ad-detail-modal");
 if (modalElement) {
     modalElement.addEventListener("click", (e) => {
@@ -849,7 +827,6 @@ if (modalElement) {
         }
     }, { passive: false });
     
-    // Safari touch desteği
     modalElement.addEventListener("touchend", (e) => {
         if (e.target.id === "ad-detail-modal") {
             e.preventDefault();
@@ -858,21 +835,17 @@ if (modalElement) {
     }, { passive: false });
 }
 
-/* >> GELİŞMİŞ DASHBOARD GÜNCELLEME MOTORU - V5.1 (STABİLİZE EDİLMİŞ) << */
 async function updateDashboard() {
     try {
-        // 1. Son İlanı Al
         const { data: lastAd } = await window.supabase.from('ilanlar').select('title').order('created_at', {ascending: false}).limit(1);
         if (lastAd?.[0]) document.getElementById("preview-ad").textContent = lastAd[0].title;
 
-        // 2. Son Kesintiyi Al
         const { data: lastKesinti } = await window.supabase.from('kesintiler').select('location, type').order('created_at', {ascending: false}).limit(1);
         const kesintiEl = document.getElementById("preview-kesinti");
         if (kesintiEl) {
             kesintiEl.textContent = lastKesinti?.[0] ? `${lastKesinti[0].type}: ${lastKesinti[0].location}` : "Aktif kesinti yok.";
         }
 
-        // 3. Son Piyasa Radarı Verisini Al
         const { data: lastPiyasa } = await window.supabase
             .from('piyasa_verileri')
             .select('urun_adi, fiyat, market_adi, image_url')
@@ -888,16 +861,13 @@ async function updateDashboard() {
             if (imgEl && lastPiyasa[0].image_url) imgEl.style.backgroundImage = `url('${lastPiyasa[0].image_url}')`;
         }
 
-        // 4. Son Fırsatı Al
         const { data: lastFirsat } = await window.supabase.from('firsatlar').select('title').order('created_at', {ascending: false}).limit(1);
         if (lastFirsat?.[0]) document.getElementById("preview-firsat").textContent = lastFirsat[0].title;
 
-        // 5. Son Mekan Tavsiyesini Al
         const { data: lastTavsiye } = await window.supabase.from('tavsiyeler').select('title').order('created_at', {ascending: false}).limit(1);
         const previewTavsiye = document.getElementById("preview-tavsiye");
         if (previewTavsiye) previewTavsiye.textContent = lastTavsiye?.[0] ? lastTavsiye[0].title : "Henüz tavsiye yok.";
 
-        // 6. Son Şikayeti Al (EKSİK OLAN BUYDU!)
         const { data: lastSikayet } = await window.supabase.from('sikayetler').select('title').order('created_at', {ascending: false}).limit(1);
         const previewSikayet = document.getElementById("preview-sikayet");
         if (previewSikayet) previewSikayet.textContent = lastSikayet?.[0] ? lastSikayet[0].title : "Aktif bildirim yok.";
@@ -911,45 +881,33 @@ function showSlides() {
     let slides = document.getElementsByClassName("slider-item");
     if (!slides.length) return;
     
-    // Tüm slide'ları gizle
     for (let i = 0; i < slides.length; i++) {
         slides[i].style.display = "none";
         slides[i].style.opacity = "0";
         slides[i].style.visibility = "hidden";
     }
     
-    // Sonraki slide'a geç
     if (slideIndex >= slides.length) {
         slideIndex = 0;
     }
     
-    // Aktif slide'ı göster
     const currentSlide = slides[slideIndex];
     if (currentSlide) {
-        // Display ve visibility ayarla
         currentSlide.style.display = "block";
         currentSlide.style.visibility = "visible";
-        
-        // Reflow tetikle (tüm tarayıcılar için)
         void currentSlide.offsetWidth;
-        
-        // Opacity animasyonu
         setTimeout(() => {
             currentSlide.style.opacity = "1";
         }, 10);
     }
     
-    // Sonraki slide için index'i artır
     slideIndex++;
-    
-    // Sonraki slide için timeout
     setTimeout(showSlides, 4000);
 }
 
-/* >> DUYURU RENDER MOTORU - NİHAİ SÜRÜM << */
 async function renderDuyurular() {
     const previewEl = document.getElementById('preview-duyuru'); 
-    const listEl = document.getElementById('duyuru-list'); // Tam liste alanı
+    const listEl = document.getElementById('duyuru-list'); 
 
     const { data, error } = await window.supabase
         .from('duyurular')
@@ -961,12 +919,10 @@ async function renderDuyurular() {
         return;
     }
 
-    // 1. Ana Sayfa Preview (Dashboard) Güncelleme
     if (previewEl && data.length > 0) {
         previewEl.textContent = data[0].title;
     }
 
-    // 2. Sosyal -> Duyurular Sayfası Listesi Güncelleme
     if (listEl) {
         listEl.innerHTML = data.map(d => `
             <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff007f;">
@@ -981,14 +937,13 @@ async function renderDuyurular() {
     }
 }
 
-/* >> KESİNTİ BİLDİRİM MOTORU << */
 async function setupKesintiForm() {
     const form = document.getElementById("kesinti-form");
     if (!form) return;
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (isProcessing) return;
+        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
         const btn = document.getElementById("kes-submit-btn");
         isProcessing = true;
@@ -1046,7 +1001,6 @@ window.deleteKesinti = async (id, correctPass) => {
     }
 };
 
-/* >> YASAL METİNLER VE İLETİŞİM YÖNETİMİ << */
 window.showLegal = function(type) {
     const area = document.getElementById('legal-content-area');
     const contents = {
@@ -1182,14 +1136,13 @@ disclaimer: `
     }
 };
 
-// İletişim Formu Başlatıcı (Kurumsal Alan İçin)
 function setupContactForm() {
     const form = document.getElementById('contact-form');
     if(!form) return;
     
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        if (isProcessing) return;
+        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
         
         const btn = document.getElementById("contact-submit-btn");
         isProcessing = true;
@@ -1217,9 +1170,7 @@ function setupContactForm() {
     });
 }
 
-/* >> CANLI VERİ ÇEKİCİ MOTORU << */
 async function fetchLiveInfo() {
-    // 1. Canlı Hava Durumu (Open-Meteo - API KEY Gerektirmez)
     try {
         const wRes = await fetch("https://api.open-meteo.com/v1/forecast?latitude=41.00&longitude=28.84&current_weather=true");
         const wData = await wRes.json();
@@ -1227,7 +1178,6 @@ async function fetchLiveInfo() {
         document.getElementById("weather-temp").textContent = `Bahçelievler: ${temp}°C`;
     } catch (e) { document.getElementById("weather-temp").textContent = "Hava: --"; }
 
-    // 2. Canlı Kur Bilgisi
     try {
         const simpleRes = await fetch("https://open.er-api.com/v6/latest/USD");
         const sData = await simpleRes.json();
@@ -1240,17 +1190,14 @@ async function fetchLiveInfo() {
     } catch (e) { console.error("Kur çekilemedi"); }
 }
 
-/* >> İLAN ARAMA VE FİLTRELEME SİSTEMİ << */
 function setupAdSearch() {
     const searchInput = document.getElementById("ad-search-input");
     if (!searchInput) return;
     
-    // Anlık arama - her tuş vuruşunda filtrele
     searchInput.addEventListener("input", (e) => {
         applyFilters(currentCategory, e.target.value.trim());
     });
     
-    // Enter tuşuna basıldığında da filtrele (opsiyonel)
     searchInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
@@ -1264,12 +1211,10 @@ function applyFilters(category, searchTerm) {
     
     let filtered = allAds;
     
-    // 1. Kategoriye göre filtrele
     if (category !== 'all') {
         filtered = filtered.filter(ad => ad.category === category);
     }
     
-    // 2. Arama terimine göre filtrele (başlıkta ara)
     if (searchTerm && searchTerm.length > 0) {
         const searchLower = searchTerm.toLowerCase();
         filtered = filtered.filter(ad => {
@@ -1278,7 +1223,6 @@ function applyFilters(category, searchTerm) {
         });
     }
     
-    // Sonuçları göster
     if (filtered.length === 0) {
         list.innerHTML = `
             <div style="text-align: center; padding: 40px; color: #999;">
@@ -1303,20 +1247,15 @@ function applyFilters(category, searchTerm) {
 }
 
 window.filterAds = function(category, clickedButton) {
-    // Buton aktiflik durumu
     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
     if (clickedButton) {
         clickedButton.classList.add('active');
     }
     
-    // Mevcut kategoriyi güncelle
     currentCategory = category;
-    
-    // Arama terimini al
     const searchInput = document.getElementById("ad-search-input");
     const searchTerm = searchInput ? searchInput.value.trim() : '';
     
-    // Filtreleri uygula
     applyFilters(category, searchTerm);
 };
 
@@ -1325,8 +1264,6 @@ window.searchOnMap = function() {
     if (!query) return alert("Lütfen aramak istediğiniz usta türünü yazın.");
     
     const mapIframe = document.getElementById('target-map');
-    
-    // Google Maps Embed (Stabil ve ücretsiz format)
     const freeSearchUrl = `https://www.google.com/search?q=https://maps.google.com/maps%3Fq%3D${encodeURIComponent(query)}+Bahçelievler+İstanbul&t=&z=14&ie=UTF8&iwloc=&output=embed`;
     
     mapIframe.src = freeSearchUrl;
@@ -1340,16 +1277,15 @@ async function setupHizmetForm() {
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (isProcessing) return;
+        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
         const fileInput = document.getElementById("hizmet-file");
         const btn = document.getElementById("hizmet-submit-btn");
 
-        // --- MANTIK KONTROLÜ: GÖRSEL ZORUNLULUĞU --- [cite: 2025-12-16]
         if (!fileInput.files || fileInput.files.length === 0) {
             alert("HATA: Hizmetinizi tanıtmak için lütfen bir görsel ekleyiniz.");
             fileInput.focus();
-            return; // Resim yoksa burada durdur
+            return; 
         }
 
         const file = fileInput.files[0];
@@ -1364,7 +1300,6 @@ async function setupHizmetForm() {
         btn.textContent = "YÜKLENİYOR...";
 
         try {
-            // Görseli yükle
             let urls = await handleMultipleUploads(fileInput.files);
             let uploadedUrl = urls[0];
 
@@ -1413,8 +1348,38 @@ async function renderHizmetler() {
 
 window.deleteHizmet = async (id, correctPass) => {
     const userPass = prompt("Silmek için şifrenizi girin:");
-    if (userPass === correctPass) {
-        await window.supabase.from('hizmetler').delete().eq('id', id);
+    if (!userPass) return;
+
+    const { error } = await window.supabase
+        .from('hizmetler')
+        .delete()
+        .eq('id', id)
+        .eq('delete_password', userPass); // GÜVENLİ SİLME UYGULANDI
+
+    if (!error) {
+        alert("Hizmet kaldırıldı.");
         renderHizmetler();
-    } else if (userPass !== null) alert("Hatalı şifre!");
+    } else {
+        alert("Hata: Şifre yanlış!");
+    }
+};
+
+/* >> MERKEZİ İLAN SİLME MOTORU - RLS UYUMLU << */
+window.deleteİlan = async (id, correctPass) => {
+    const userPass = prompt("İlanı silmek için 4 haneli şifrenizi girin:");
+    if (!userPass) return;
+
+    const { error } = await window.supabase
+        .from('ilanlar')
+        .delete()
+        .eq('id', id)
+        .eq('delete_password', userPass); 
+
+    if (error) {
+        alert("Hata: Şifre yanlış veya silme yetkiniz yok!");
+    } else {
+        alert("İlan başarıyla kaldırıldı.");
+        if (typeof closeModal === "function") closeModal(); 
+        loadPortalData(); 
+    }
 };

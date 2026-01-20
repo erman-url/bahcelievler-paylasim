@@ -1,4 +1,4 @@
-/* >> BAHÇELİEVLER NET - AZURE CORPORATE NİHAİ SÜRÜM V4.5 << */
+/* >> BAHÇELİEVLER NET - AZURE CORPORATE NİHAİ SÜRÜM V4.7 << */
 :root {
     --bg: #F0F4F8; /* Azure gri-mavi arka plan */
     --cyber-blue: #00d2ff;
@@ -8,6 +8,7 @@
     --azure-light: #E3F2FD;
     --dark-text: #1A202C;
     --card-shadow: 0 10px 25px rgba(0, 86, 179, 0.05);
+    --card-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04); /* Modern derinlik katmanı */
     --border-radius: 16px;
 }
 
@@ -42,25 +43,41 @@ body {
 @-webkit-keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* BAŞLIK VE KARTLAR (MODERNIZE EDİLDİ) */
+/* --- 2. KURUMSAL BANNER VE BAŞLIK TASARIMI --- */
 .cyber-header { 
-    text-align: left; 
+    text-align: center; 
     font-weight: 800;
-    font-size: 1.4rem;
-    margin: 20px 5px; 
+    font-size: 1.3rem;
+    margin: 30px auto; 
+    padding: 15px 10px;
     color: var(--app-blue);
-    letter-spacing: -0.5px;
+    letter-spacing: 1.5px;
+    background: rgba(255, 255, 255, 0.6); /* Şeffaf beyaz banner */
+    backdrop-filter: blur(10px); /* Cam efekti */
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 50px; /* Oval banner yapısı */
+    border: 1px solid rgba(0, 86, 179, 0.1);
+    box-shadow: var(--card-shadow-soft);
+    width: fit-content;
+    min-width: 280px;
+    white-space: nowrap; /* Tek satır garantisi */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.neon-text { color: var(--app-blue); font-weight: bold; }
+
+.neon-text { 
+    display: none; 
+}
 
 .cyber-card {
     background: #fff;
-    border: none;
+    border: 1px solid rgba(0, 86, 179, 0.08); /* Hafif modern çerçeve */
     padding: 18px;
     border-radius: var(--border-radius);
-    box-shadow: var(--card-shadow);
+    box-shadow: var(--card-shadow-soft);
     margin-bottom: 20px;
-    transition: transform 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* SOSYAL BUTONLAR - SAFARI UYUMLU (KAYIPSIZ KORUNDU) */
@@ -103,15 +120,24 @@ body {
     text-align: center;
 }
 
-/* FORM ELEMENTLERİ */
+/* FORM ELEMENTLERİ - MİKRO ETKİLEŞİM */
 .cyber-form input, .cyber-form textarea, .cyber-form select {
     width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #E2E8F0; 
     border-radius: 12px; background: #F8FAFC; box-sizing: border-box; font-size: 16px !important;
+    transition: 0.3s ease;
+}
+
+.cyber-form input:focus {
+    border-color: var(--app-blue) !important;
+    background: #fff;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1);
 }
 
 .cyber-submit { 
     width: 100%; background: var(--app-blue); color: #fff; border: none; padding: 16px; 
     font-weight: 700; border-radius: 12px; text-transform: uppercase; cursor: pointer; 
+    transition: 0.3s;
 }
 
 /* MODAL - İLAN DETAYI (SAFARI UYUMLU - KAYIPSIZ) */
@@ -200,7 +226,7 @@ body {
     padding: 10px 0;
     padding-bottom: env(safe-area-inset-bottom);
     z-index: 10000;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+    box-shadow: 0 -10px 30px rgba(0, 86, 179, 0.08); /* Yukarı yönlü yumuşak gölge */
     border-top: 1px solid var(--azure-light);
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
@@ -269,9 +295,9 @@ body {
 .filter-btn.active { background: var(--app-blue); color: white; border-color: var(--app-blue); box-shadow: 0 4px 12px rgba(0, 86, 179, 0.2); }
 
 /* Modern İlan Kartları (Grid Uyumlu) */
-.ad-card.cyber-card { transition: 0.3s; border: none !important; background: #fff; box-shadow: var(--card-shadow) !important; }
+.ad-card.cyber-card { transition: 0.3s ease; border: none !important; background: #fff; box-shadow: var(--card-shadow) !important; }
 .ad-card.cyber-card:active { transform: scale(0.97); }
-.ad-card img { border-radius: 0 !important; }
+.ad-card img { border-radius: 0 !important; background: #e2e8f0; } /* Skeleton etkisi */
 
 /* Ana Sayfa Widget Dinamizmi */
 #home-dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 5px; }
@@ -281,6 +307,9 @@ body {
     border-radius: var(--border-radius) !important; padding: 18px;
     border: 1px solid rgba(0, 86, 179, 0.02);
 }
+
+.home-widget[data-target="duyurular"] { background: var(--azure-light) !important; border-left: 5px solid var(--app-blue) !important; }
+
 .home-widget:active { -webkit-transform: scale(0.95); transform: scale(0.95); }
 .home-widget h4 { font-size: 0.75rem; color: var(--app-blue); font-weight: 800; margin-bottom: 8px; }
 
@@ -297,6 +326,9 @@ body {
 .ad-card img { width: 100% !important; height: 135px !important; object-fit: cover !important; }
 .ad-card-info { padding: 12px; }
 .ad-card-id { font-size: 0.6rem; color: #A0AEC0; margin-bottom: 4px; }
+
+/* >> ROZET SİSTEMİ (GELİR MODELİ ALTYAPISI) << */
+.ad-badge { position: absolute; top: 8px; right: 8px; background: var(--app-blue); color: white; padding: 3px 8px; border-radius: 8px; font-size: 0.6rem; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
 /* >> MOBİL NAVİGASYON VE SLIDER (TAM KORUMA) << */
 @media screen and (max-width: 768px) {

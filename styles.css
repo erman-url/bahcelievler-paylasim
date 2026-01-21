@@ -361,7 +361,7 @@ h1:not(.cyber-header) i {
 @keyframes pulsate { 100% { text-shadow: 0 0 10px var(--azure-light); } 0% { text-shadow: 0 0 2px #fff; } }
 .ad-badge { position: absolute; top: 8px; right: 8px; background: var(--app-blue); color: white; padding: 3px 8px; border-radius: 8px; font-size: 0.6rem; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
-/* >> MOBİL NAVİGASYON VE SLIDER << */
+/* >> MOBİL NAVİGASYON VE SLIDER (TAM KORUMA) << */
 @media screen and (max-width: 768px) {
     .slider-container { height: 180px !important; min-height: 180px !important; }
     .app-footer-nav { padding-bottom: 25px !important; }
@@ -377,37 +377,37 @@ h1:not(.cyber-header) i {
 .piyasa-item.hesapli img { border-color: var(--app-blue); }
 
 /* HOME HERO (Ana sayfa başlığı) */
-.home-hero{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   margin: 10px 12px 18px 12px;
 }
 
-.home-hero-pill{
+.home-hero-pill {
   width: min(520px, 92%);
   background: linear-gradient(180deg, #ffffff 0%, #f4fbff 100%);
-  border: 2px solid rgba(0, 86, 179, 0.18); /* Stabil & daha kurumsal */
+  border: 2px solid rgba(0, 86, 179, 0.18);
   border-radius: 22px;
   padding: 18px 22px;
   box-shadow: 0 8px 18px rgba(0,0,0,0.06);
   position: relative;
 }
 
-.home-hero-pill::after{
-  content:"";
-  position:absolute;
+.home-hero-pill::after {
+  content: "";
+  position: absolute;
   inset: 6px;
   border-radius: 18px;
   border: 1px solid rgba(0, 123, 255, 0.10);
-  pointer-events:none;
+  pointer-events: none;
 }
 
-.home-hero-text{
-  display:block;
-  text-align:center;
+.home-hero-text {
+  display: block;
+  text-align: center;
   font-weight: 900;
   letter-spacing: 2px;
   color: var(--app-blue);
@@ -416,18 +416,19 @@ h1:not(.cyber-header) i {
   text-shadow: 0 1px 0 rgba(255,255,255,0.65), 0 3px 10px rgba(0,86,179,0.15);
 }
 
-.home-hero-sub{
+.home-hero-sub {
   font-weight: 900;
   color: var(--app-blue);
   opacity: 0.9;
   letter-spacing: 1px;
   text-transform: uppercase;
   font-size: 0.85rem;
-  text-align:center;
+  text-align: center;
 }
 
-.home-hero-sub .dot{
-  display:inline-block;
+.home-hero-sub .dot {
+  display: inline-block;
   margin: 0 6px;
   opacity: 0.55;
 }
+/* DOSYA SONU - FAZLADAN PARANTEZ SİLİNDİ */

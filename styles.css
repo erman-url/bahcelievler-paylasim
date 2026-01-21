@@ -1,14 +1,14 @@
-/* >> BAHÇELİEVLER NET - AZURE CORPORATE NİHAİ SÜRÜM V4.7 << */
+/* >> BAHÇELİEVLER NET - AZURE CORPORATE NİHAİ SÜRÜM V4.9 (STABİL FINAL) << */
 :root {
-    --bg: #F0F4F8; /* Azure gri-mavi arka plan */
+    --bg: #F0F4F8; 
     --cyber-blue: #00d2ff;
     --cyber-pink: #ff007f;
     --dark: #212529;
-    --app-blue: #0056b3; /* Belediye kurumsal mavisi */
+    --app-blue: #0056b3; 
     --azure-light: #E3F2FD;
     --dark-text: #1A202C;
     --card-shadow: 0 10px 25px rgba(0, 86, 179, 0.05);
-    --card-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04); /* Modern derinlik katmanı */
+    --card-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04); 
     --border-radius: 16px;
 }
 
@@ -28,7 +28,7 @@ body {
     box-sizing: border-box;
     visibility: hidden;
     opacity: 0;
-    -webkit-transform: translateZ(0); /* Safari hardware acceleration */
+    -webkit-transform: translateZ(0); 
     transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -49,30 +49,66 @@ body {
     font-weight: 800;
     font-size: 1.3rem;
     margin: 30px auto; 
-    padding: 15px 10px;
+    padding: 15px 25px;
     color: var(--app-blue);
     letter-spacing: 1.5px;
-    background: rgba(255, 255, 255, 0.6); /* Şeffaf beyaz banner */
-    backdrop-filter: blur(10px); /* Cam efekti */
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 50px; /* Oval banner yapısı */
-    border: 1px solid rgba(0, 86, 179, 0.1);
+    background: rgba(255, 255, 255, 0.7); /* Şeffaf beyaz banner */
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 50px; 
+    border: 1px solid rgba(0, 86, 179, 0.15); 
     box-shadow: var(--card-shadow-soft);
     width: fit-content;
     min-width: 280px;
-    white-space: nowrap; /* Tek satır garantisi */
+    white-space: nowrap; 
     display: flex;
     align-items: center;
     justify-content: center;
+    text-transform: uppercase;
+
+    /* Stabil: mobil taşma engeli */
+    max-width: calc(100vw - 30px);
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.neon-text { 
-    display: none; 
+/* --- SAYFA ANA BAŞLIKLARI (İstenen Mavi Banner & Beyaz Yazı Stili) --- */
+h1:not(.cyber-header) {
+    font-weight: 800;
+    font-size: 1.25rem;
+    margin: 30px auto 20px auto; 
+    padding: 12px 25px;
+    color: #ffffff !important; /* İstenen Beyaz Harf Rengi */
+    letter-spacing: 1px;
+    /* İstenen İçi Mavi Banner Stili */
+    background: linear-gradient(135deg, var(--app-blue) 0%, #00d2ff 100%);
+    border-radius: 50px; /* Oval Banner Yapısı */
+    border: 2px solid #ffffff; /* Banner Çerçevesi */
+    box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
+    width: fit-content;
+    min-width: 240px;
+    text-align: center;
+    white-space: nowrap; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+
+    /* Stabil: mobil taşma engeli */
+    max-width: calc(100vw - 30px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Sayfa başlıklarındaki ikon renklerini banner içinde beyaz yapmak için ek destek */
+h1:not(.cyber-header) i {
+    color: #ffffff !important;
+    margin-right: 10px;
 }
 
 .cyber-card {
     background: #fff;
-    border: 1px solid rgba(0, 86, 179, 0.08); /* Hafif modern çerçeve */
+    border: 1px solid rgba(0, 86, 179, 0.08);
     padding: 18px;
     border-radius: var(--border-radius);
     box-shadow: var(--card-shadow-soft);
@@ -80,7 +116,7 @@ body {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* SOSYAL BUTONLAR - SAFARI UYUMLU (KAYIPSIZ KORUNDU) */
+/* SOSYAL BUTONLAR - TAM KORUMA */
 .cyber-btn-block {
     display: -webkit-flex;
     display: flex;
@@ -107,6 +143,11 @@ body {
     transform: translateZ(0);
 }
 
+/* Sosyal Alan İkonu Desteği */
+[data-target="sosyal"] i::before {
+    content: "\f0ac"; /* FontAwesome Globe */
+}
+
 .cyber-btn-block:active { 
     -webkit-transform: scale(0.98);
     transform: scale(0.98);
@@ -120,7 +161,7 @@ body {
     text-align: center;
 }
 
-/* FORM ELEMENTLERİ - MİKRO ETKİLEŞİM */
+/* FORM ELEMENTLERİ */
 .cyber-form input, .cyber-form textarea, .cyber-form select {
     width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #E2E8F0; 
     border-radius: 12px; background: #F8FAFC; box-sizing: border-box; font-size: 16px !important;
@@ -140,10 +181,9 @@ body {
     transition: 0.3s;
 }
 
-/* MODAL - İLAN DETAYI (SAFARI UYUMLU - KAYIPSIZ) */
+/* MODAL - TAM KORUMA */
 .modal {
-    position: fixed; 
-    z-index: 99999; 
+    position: fixed; z-index: 99999; 
     left: 0; top: 0; width: 100%; height: 100%; 
     background: rgba(26, 32, 44, 0.85);
     backdrop-filter: blur(8px);
@@ -165,7 +205,7 @@ body {
     border-radius: 24px;
 }
 
-/* === SAFARI UYUMLU MOBIL SWIPE GALERI (TAM KORUMA) === */
+/* SWIPE GALERİ - TAM KORUMA */
 #modal-image-gallery {
     display: -webkit-flex;
     display: flex;
@@ -174,10 +214,8 @@ body {
     -webkit-scroll-snap-type: x mandatory; 
     scroll-snap-type: x mandatory; 
     -webkit-overflow-scrolling: touch; 
-    margin-left: -15px;
-    margin-right: -15px;
+    margin-left: -15px; margin-right: -15px;
     background: #000;
-    -webkit-touch-action: pan-x; 
     touch-action: pan-x;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -185,8 +223,6 @@ body {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
 }
-
-#modal-image-gallery::-webkit-scrollbar { display: none; }
 
 #modal-image-gallery img {
     -webkit-flex: 0 0 100%;
@@ -196,29 +232,17 @@ body {
     object-fit: contain;
     -webkit-scroll-snap-align: center;
     scroll-snap-align: center;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-}
-
-/* MODAL BUTONLARI VE PANEL */
-.modal-info-panel { padding: 20px; }
-.close-detail { 
-    position: absolute; right: 15px; top: 10px; font-size: 30px; 
-    cursor: pointer; color: #fff; z-index: 100000; text-shadow: 0 0 10px #000;
-    -webkit-tap-highlight-color: transparent; padding: 10px;
-    -webkit-transform: translateZ(0); transform: translateZ(0);
 }
 
 #modal-buy-btn { background: var(--app-blue) !important; margin-bottom: 10px; transition: 0.3s; }
 #modal-delete-btn-inner { background: #ff4d4d !important; font-size: 0.8rem; padding: 10px; }
 
-/* MAVİ NAVİGASYON - AZURE STYLE (SAFARI UYUMLU) */
+/* ALT MENÜ (FOOTER) - RENK MANTIĞI */
 .app-footer-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
     width: 100%;
-    background: rgba(255, 255, 255, 0.96) !important;
-    backdrop-filter: blur(10px);
+    background: var(--app-blue) !important; /* Her zaman kurumsal mavi */
     display: -webkit-flex;
     display: flex;
     -webkit-justify-content: space-around;
@@ -226,15 +250,14 @@ body {
     padding: 10px 0;
     padding-bottom: env(safe-area-inset-bottom);
     z-index: 10000;
-    box-shadow: 0 -10px 30px rgba(0, 86, 179, 0.08); /* Yukarı yönlü yumuşak gölge */
-    border-top: 1px solid var(--azure-light);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
 }
 
 .nav-item {
     text-decoration: none;
-    color: #A0AEC0;
+    color: rgba(255, 255, 255, 0.6); /* Pasif ikonlar */
     font-size: 0.7rem;
     display: -webkit-flex;
     display: flex;
@@ -242,16 +265,14 @@ body {
     flex-direction: column;
     -webkit-align-items: center;
     align-items: center;
-    -webkit-transition: 0.3s;
     transition: 0.3s;
-    -webkit-tap-highlight-color: transparent;
     cursor: pointer;
 }
 
 .nav-item i { font-size: 1.5rem; margin-bottom: 3px; pointer-events: none; }
 
 .nav-item.active {
-    color: var(--app-blue);
+    color: #ffffff !important; /* Tıklanan ikon beyaza döner */
     font-weight: bold;
     -webkit-transform: translateY(-2px);
     transform: translateY(-2px);
@@ -260,46 +281,65 @@ body {
 /* OYUN ANİMASYONLARI (TAM KORUMA) */
 @keyframes moveObstacle { 0% { left: 100%; } 100% { left: -50px; } }
 
-/* SLIDER TASARIMI - TÜM TARAYICILAR (TAM KORUMA) */
+/* SLIDER TASARIMI - TAM KORUMA */
 .slider-container { 
     height: 200px; overflow: hidden; position: relative; border-radius: var(--border-radius); 
     margin-bottom: 25px; -webkit-transform: translateZ(0); transform: translateZ(0); background: #000;
     box-shadow: var(--card-shadow);
 }
-.slider-item { 
-    height: 100%; background-size: cover; background-position: center; display: none;
-    align-items: center; justify-content: center; color: #fff; text-align: center;
-    opacity: 0; visibility: hidden; position: absolute; top: 0; left: 0; width: 100%;
-    z-index: 1; -webkit-transition: opacity 0.5s ease-in-out; transition: opacity 0.5s ease-in-out;
-    -webkit-transform: translateZ(0); transform: translateZ(0);
-}
-.slider-item[style*="display: block"] { opacity: 1 !important; visibility: visible !important; z-index: 2; }
 
-/* >> OYUN ELEMENTLERİ << */
+.slider-item { 
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: none;
+
+    /* Flex ayarları (aktif slide flex olunca ortalar) */
+    align-items: center;
+    justify-content: center;
+
+    color: #fff;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    -webkit-transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* Aktif slide: hem görünür yap hem flex ile ortala */
+.slider-item[style*="display: block"] { 
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 2;
+    will-change: opacity;
+}
+
+/* >> OYUN VE DİĞER ELEMENTLER << */
 #player { transition: bottom 0.1s; }
 #obstacle { animation-fill-mode: forwards; }
-
-/* >> DİĞER STİLLER << */
 #firsat-list img { max-height: 250px; object-fit: cover; width: 100%; border-radius: 12px; margin-top: 10px; }
 .student-badge { background: var(--azure-light); color: var(--app-blue); padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.7rem; }
 .fade { animation-name: fade; animation-duration: 1.5s; }
 @keyframes fade { from { opacity: .4 } to { opacity: 1 } }
 
-/* Arama Çubuğu */
+/* ARAMA VE FİLTRELEME */
 #ad-search-input { transition: 0.3s; border: 1.5px solid #E2E8F0 !important; border-radius: 12px !important; }
 #ad-search-input:focus { border-color: var(--app-blue) !important; box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1); }
-
-/* Kategori Filtre */
 .category-filter-container { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; margin-bottom: 15px; }
-.filter-btn { background: #fff; border: 1.5px solid var(--azure-light); padding: 10px 18px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; transition: 0.3s; }
-.filter-btn.active { background: var(--app-blue); color: white; border-color: var(--app-blue); box-shadow: 0 4px 12px rgba(0, 86, 179, 0.2); }
+.filter-btn { background: #fff; border: 1px solid rgba(0, 86, 179, 0.15); padding: 10px 18px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; transition: 0.3s; }
+.filter-btn.active { background: var(--app-blue); color: white; border-color: var(--app-blue); }
 
-/* Modern İlan Kartları (Grid Uyumlu) */
-.ad-card.cyber-card { transition: 0.3s ease; border: none !important; background: #fff; box-shadow: var(--card-shadow) !important; }
-.ad-card.cyber-card:active { transform: scale(0.97); }
-.ad-card img { border-radius: 0 !important; background: #e2e8f0; } /* Skeleton etkisi */
+/* GRID VE WIDGETS */
+#ads-list { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 15px !important; padding: 5px !important; }
+.ad-card.cyber-card { transition: 0.3s; border: none !important; background: #fff; box-shadow: var(--card-shadow) !important; position: relative; }
+.ad-card img { width: 100% !important; height: 135px !important; object-fit: cover !important; background: #e2e8f0; }
 
-/* Ana Sayfa Widget Dinamizmi */
 #home-dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 5px; }
 .home-widget {
     -webkit-transition: all 0.3s ease; transition: all 0.3s ease;
@@ -307,30 +347,21 @@ body {
     border-radius: var(--border-radius) !important; padding: 18px;
     border: 1px solid rgba(0, 86, 179, 0.02);
 }
-
 .home-widget[data-target="duyurular"] { background: var(--azure-light) !important; border-left: 5px solid var(--app-blue) !important; }
-
 .home-widget:active { -webkit-transform: scale(0.95); transform: scale(0.95); }
 .home-widget h4 { font-size: 0.75rem; color: var(--app-blue); font-weight: 800; margin-bottom: 8px; }
 
-/* Cam Efekti Veri Çubuğu */
-#info-bar { background: rgba(255, 255, 255, 0.9) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 14px !important; border: none !important; box-shadow: var(--card-shadow) !important; }
+/* BİLGİ VE RADAR */
+#info-bar { background: rgba(255, 255, 255, 0.9) !important; backdrop-filter: blur(10px); border-radius: 14px !important; border: none !important; box-shadow: var(--card-shadow) !important; }
+.neon-text { 
+  display: inline-block; 
+  animation: pulsate 1.5s infinite alternate; 
+}
 
-/* Neon Animasyonlu Yazı */
-.neon-text { animation: pulsate 1.5s infinite alternate; }
 @keyframes pulsate { 100% { text-shadow: 0 0 10px var(--azure-light); } 0% { text-shadow: 0 0 2px #fff; } }
-
-/* MODERN İLAN GRID SİSTEMİ - IMAGE_607647 UYUMU */
-#ads-list { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 15px !important; padding: 5px !important; }
-.ad-card.cyber-card { padding: 0 !important; border-radius: var(--border-radius) !important; overflow: hidden; position: relative; }
-.ad-card img { width: 100% !important; height: 135px !important; object-fit: cover !important; }
-.ad-card-info { padding: 12px; }
-.ad-card-id { font-size: 0.6rem; color: #A0AEC0; margin-bottom: 4px; }
-
-/* >> ROZET SİSTEMİ (GELİR MODELİ ALTYAPISI) << */
 .ad-badge { position: absolute; top: 8px; right: 8px; background: var(--app-blue); color: white; padding: 3px 8px; border-radius: 8px; font-size: 0.6rem; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
-/* >> MOBİL NAVİGASYON VE SLIDER (TAM KORUMA) << */
+/* >> MOBİL NAVİGASYON VE SLIDER << */
 @media screen and (max-width: 768px) {
     .slider-container { height: 180px !important; min-height: 180px !important; }
     .app-footer-nav { padding-bottom: 25px !important; }
@@ -339,9 +370,64 @@ body {
     .page { -webkit-overflow-scrolling: touch; overflow-y: auto; touch-action: pan-y; }
 }
 
-/* >> PİYASA RADARI STABİLİZASYONU << */
 .cyber-pink { color: var(--cyber-pink) !important; font-weight: bold; }
 .cyber-blue { color: var(--app-blue) !important; font-weight: bold; }
 .piyasa-item img { border: 2px solid transparent; transition: 0.3s; }
 .piyasa-item.pahali img { border-color: var(--cyber-pink); }
 .piyasa-item.hesapli img { border-color: var(--app-blue); }
+
+/* HOME HERO (Ana sayfa başlığı) */
+.home-hero{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin: 10px 12px 18px 12px;
+}
+
+.home-hero-pill{
+  width: min(520px, 92%);
+  background: linear-gradient(180deg, #ffffff 0%, #f4fbff 100%);
+  border: 2px solid rgba(0, 86, 179, 0.18); /* Stabil & daha kurumsal */
+  border-radius: 22px;
+  padding: 18px 22px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+  position: relative;
+}
+
+.home-hero-pill::after{
+  content:"";
+  position:absolute;
+  inset: 6px;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 123, 255, 0.10);
+  pointer-events:none;
+}
+
+.home-hero-text{
+  display:block;
+  text-align:center;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: var(--app-blue);
+  font-size: clamp(18px, 4.2vw, 26px);
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.65), 0 3px 10px rgba(0,86,179,0.15);
+}
+
+.home-hero-sub{
+  font-weight: 900;
+  color: var(--app-blue);
+  opacity: 0.9;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  text-align:center;
+}
+
+.home-hero-sub .dot{
+  display:inline-block;
+  margin: 0 6px;
+  opacity: 0.55;
+}

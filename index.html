@@ -22,7 +22,8 @@
         <section id="home" class="page active">
             <div class="slider-container cyber-border">
                 <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider1.jpg');">
-                    <h2>BAHÇELİEVLER FORUM</h2>
+                   <img src="img/bahcelievler-forum-banner.png" alt="Bahçelievler Forum" class="home-title-banner">
+
                 </div>
                 <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider2.jpg');"><h2>.</h2></div>
                 <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/slider3.jpg');"><h2>.</h2></div>
@@ -42,8 +43,15 @@
                 </div>
             </div>
 
-            <h1 class="cyber-header">BAHÇELİEVLER FORUM</h1>
-            
+        <div class="home-hero">
+  <div class="home-hero-pill">
+    <span class="home-hero-text">BAHÇELİEVLER FORUM</span>
+  </div>
+
+  <div class="home-hero-sub">
+    GÜNDEM <span class="dot">•</span> DUYURU <span class="dot">•</span> İLAN <span class="dot">•</span> FIRSAT
+  </div>
+</div>       
             <div id="home-dashboard">
                 <div class="home-widget cyber-card" data-target="duyurular" style="grid-column: span 2; border-left: 5px solid #ff007f;">
                     <h4><i class="fas fa-bolt fa-beat"></i> SON EKLENEN DUYURULAR</h4>
@@ -80,54 +88,64 @@
                         <i class="fas fa-image" style="display: block; text-align: center; line-height: 50px; color: #555; font-size: 0.8rem;"></i>
                     </div>
                     <div style="flex: 1; overflow: hidden;">
-                        <h4 style="margin: 0; font-size: 0.8rem;"><i class="fas fa-search-dollar fa-beat"></i> SON RADAR</h4>
+                       <h4 style="margin: 0; font-size: 0.8rem;"><i class="fas fa-search-dollar fa-beat"></i> SON FİYAT RADARI</h4>
                         <p id="preview-piyasa" style="font-size: 0.75rem; font-weight: bold; margin: 4px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Yükleniyor...</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="ilanlar" class="page">
-            <h1 class="cyber-header">📣 İLAN PANOSU</h1>
-            <div style="margin-bottom: 15px;">
-                <input type="text" id="ad-search-input" class="cyber-form" placeholder="🔍 İlan başlığında ara..." style="width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ced4da; border-radius: 5px; box-sizing: border-box; font-size: 16px !important;">
-            </div>
-            <div class="category-filter-container">
-                <button class="filter-btn active" onclick="filterAds('all', this)">TÜMÜ</button>
-                <button class="filter-btn" onclick="filterAds('Ürün-Eşya', this)">EŞYA</button>
-                <button class="filter-btn" onclick="filterAds('İş&İnsan', this)">İŞ</button>
-                <button class="filter-btn" onclick="filterAds('Araç', this)">VASITA</button>
-                <button class="filter-btn" onclick="filterAds('Gayrimenkul', this)">EMLAK</button>
-            </div>
-            <form id="new-ad-form" class="cyber-form">
-                <input type="text" id="ad-title" maxlength="25" pattern="^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$" placeholder="İlan Başlığı" required>
-                <input type="number" id="ad-price" placeholder="Fiyat (TL)" required>
-                <input type="text" id="ad-contact" maxlength="50" placeholder="İletişim Bilgisi (Telefon / E-posta)" required>
-                <select id="ad-category" required>
-                    <option value="" disabled selected>Kategori Seçiniz</option>
-                    <option value="Ürün-Eşya">Ürün & Eşya</option>
-                    <option value="İş&İnsan">İş & İnsan</option>
-                    <option value="Araç">Araç & Oto</option>
-                    <option value="Gayrimenkul">Ev & İşyeri</option>
-                    <option value="Diğer">Diğer</option>
-                </select>
-                <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması (Maks 350 Karakter - Harf, Rakam ve Noktalama kullanılabilir)" required></textarea>
-                <div id="ad-photo-warning" style="margin: 10px 0;">
-                    <p style="font-size:0.75rem; color:#d32f2f; margin-bottom:5px; font-weight:bold;"><i class="fas fa-camera"></i> FOTOĞRAF EKLEMEK ZORUNLUDUR! </p>
-                    <p style="font-size:0.65rem; color:#666;">(Maksimum 4 adet fotoğraf)</p>
-                </div>
-                <input type="file" id="ads-files" multiple accept="image/png, image/jpeg" required>
-                <input type="password" id="ad-delete-password" maxlength="4" placeholder="4 Haneli Silme Şifresi" required>
-                <div style="display:none !important; visibility:hidden !important;">
-                    <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
-                </div>
-                <button type="submit" id="ad-submit-button" class="cyber-submit">YAYINLA</button> 
-            </form>
-            <div id="ads-list"></div>
-        </section>
+<section id="ilanlar" class="page">
+    <h1><i class="fas fa-bullhorn"></i> İLAN PANOSU</h1>
+
+    <div style="margin-bottom: 20px; padding: 0 5px;">
+        <input type="text" id="ad-search-input" class="cyber-form" placeholder="🔍 İlan başlığında ara...">
+    </div>
+
+    <div class="category-filter-container">
+        <button class="filter-btn active" onclick="filterAds('all', this)">TÜMÜ</button>
+        <button class="filter-btn" onclick="filterAds('Ürün-Eşya', this)">EŞYA</button>
+        <button class="filter-btn" onclick="filterAds('İş&İnsan', this)">İŞ</button>
+        <button class="filter-btn" onclick="filterAds('Araç', this)">VASITA</button>
+        <button class="filter-btn" onclick="filterAds('Gayrimenkul', this)">EMLAK</button>
+    </div>
+
+    <form id="new-ad-form" class="cyber-form">
+        <input type="text" id="ad-title" maxlength="25" pattern="^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$" placeholder="İlan Başlığı" required>
+        <input type="number" id="ad-price" placeholder="Fiyat (TL)" required>
+        <input type="text" id="ad-contact" maxlength="50" placeholder="İletişim Bilgisi (Telefon / E-posta)" required>
+        
+        <select id="ad-category" required>
+            <option value="" disabled selected>Kategori Seçiniz</option>
+            <option value="Ürün-Eşya">Ürün & Eşya</option>
+            <option value="İş&İnsan">İş & İnsan</option>
+            <option value="Araç">Araç & Oto</option>
+            <option value="Gayrimenkul">Ev & İşyeri</option>
+            <option value="Diğer">Diğer</option>
+        </select>
+
+        <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması (Maks 350 Karakter)"></textarea>
+
+        <div id="ad-photo-warning" style="margin: 10px 0; text-align: center;">
+            <p style="font-size:0.75rem; color:#d32f2f; margin-bottom:5px; font-weight:bold;"><i class="fas fa-camera"></i> FOTOĞRAF EKLEMEK ZORUNLUDUR! </p>
+            <p style="font-size:0.65rem; color:#666;">(Maksimum 4 adet fotoğraf)</p>
+        </div>
+
+        <input type="file" id="ads-files" multiple accept="image/png, image/jpeg" required>
+        <input type="password" id="ad-delete-password" maxlength="4" placeholder="4 Haneli Silme Şifresi" required>
+
+        <div style="display:none !important; visibility:hidden !important;">
+            <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
+        </div>
+
+        <button type="submit" id="ad-submit-button" class="cyber-submit">YAYINLA</button> 
+    </form>
+
+    <div id="ads-list"></div>
+</section>
 
         <section id="sosyal" class="page">
-            <h1 class="cyber-header">SOSYAL ALAN</h1>
+            <h1>SOSYAL ALAN</h1>
             <a href="#" class="cyber-btn-block" data-target="duyurular"><i class="fas fa-bullhorn"></i> Duyurular</a>
             <a href="#" class="cyber-btn-block" data-target="firsat-indirim"><i class="fas fa-tags"></i> Fırsat & İndirim</a>
             <a href="#" class="cyber-btn-block" data-target="fiyat-dedektifi"><i class="fas fa-search-dollar"></i> Fiyat Dedektifi</a>
@@ -299,7 +317,11 @@
         </section>
 
         <section id="iletisim" class="page">
-            <h1 class="cyber-header">⚖️ YASAL METİNLER</h1>
+           <h1><i class="fas fa-gavel"></i> Yasal Metinler</h1>
+		<p style="padding: 0 15px; font-size: 0.9rem; color: #555;">
+  KVKK, yasal uyarılar ve iletişim detayları burada.
+</p>
+
             <div style="padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <button onclick="showLegal('about')" class="cyber-btn-block" style="font-size: 0.8rem;"><i class="fas fa-info-circle"></i> Hakkımızda</button>
                 <button onclick="showLegal('disclaimer')" class="cyber-btn-block" style="font-size: 0.8rem;"><i class="fas fa-gavel"></i> Yasal Uyarı</button>
@@ -310,14 +332,21 @@
             <div id="legal-content-area" class="cyber-card" style="margin: 15px; min-height: 200px; font-size: 0.85rem;"><p style="text-align:center;">Lütfen incelemek istediğiniz başlığı seçiniz.</p></div>
         </section>
 
-        <section id="hizmetler" class="page">
-            <h1 class="cyber-header" style="text-align: left; margin-left: 10px;"><i class="fas fa-tools"></i> Yerel Hizmetler</h1>
-            <p style="padding: 0 15px; font-size: 0.9rem; color: #555;">Hizmet kategorilerine buradan erişebilirsiniz.</p>
-            <div style="padding: 10px;">
-                <a href="#" class="cyber-btn-block" data-target="teklif-al-form"><i class="fas fa-file-invoice-dollar" style="color: #007bff;"></i> Teklif Al</a>
-                <a href="#" class="cyber-btn-block" data-target="hizmet-ver"><i class="fas fa-hand-holding-usd" style="color: #007bff;"></i> Hizmet Ver (İşinizi Tanıtın)</a>
-            </div>
-        </section>
+      <section id="hizmetler" class="page">
+    <h1><i class="fas fa-tools"></i> Yerel Hizmetler</h1>
+    
+    <div style="padding: 10px;">
+        <a href="#" class="cyber-btn-block" data-target="teklif-al-form">
+            <i class="fas fa-file-invoice-dollar"></i> 
+            <span>Teklif Al</span>
+        </a>
+
+        <a href="#" class="cyber-btn-block" data-target="hizmet-ver">
+            <i class="fas fa-hand-holding-usd"></i> 
+            <span>Hizmet Ver (İşinizi Tanıtın)</span>
+        </a>
+    </div>
+</section>
 
         <section id="teklif-al-form" class="page">
             <h1 class="cyber-header">📄 ÜCRETSİZ TEKLİF AL</h1>

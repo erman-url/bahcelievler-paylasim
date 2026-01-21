@@ -711,15 +711,27 @@ window.deleteFirsat = async (id, correctPass) => {
 };
 
 window.deleteTavsiye = async (id, correctPass) => {
-    const userPass = prompt("Şifre:");
-    if (userPass === correctPass) {
-        await window.supabase.from('tavsiyeler').delete().eq('id', id);
-        loadPortalData();
+    const userPass = prompt("Tavsiyeyi silmek için şifre:");
+    if (!userPass) return;
+
+    // SÜPER KONTROL: Şifreyi doğrudan DB sorgusunda doğrula
+    const { error } = await window.supabase
+        .from('tavsiyeler')
+        .delete()
+        .eq('id', id)
+        .eq('delete_password', userPass); 
+
+    if (!error) {
+        alert("Tavsiye başarıyla silindi.");
+        // Listeyi yeniden render et
+        renderTavsiyeler(); 
+    } else {
+        alert("Hata: Şifre yanlış!");
     }
 };
 
 window.deleteSikayet = async (id, correctPass) => {
-    const userPass = prompt("Şikayeti silmek için şifre girin:");
+    const userPass = prompt("Şikayeti silmek için şifre:");
     if (!userPass) return;
 
     const { error } = await window.supabase
@@ -730,7 +742,7 @@ window.deleteSikayet = async (id, correctPass) => {
 
     if (!error) {
         alert("Şikayet kaldırıldı.");
-        loadPortalData();
+        renderSikayetler();
     } else {
         alert("Hata: Şifre yanlış!");
     }

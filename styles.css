@@ -23,22 +23,18 @@ body {
 
 /* SAYFA YAPISI - SAFARI UYUMLU (KAYIPSIZ KORUNDU) */
 .page { 
-    display: none; 
+    display: none; /* Başlangıçta her şey kapalı */
+    width: 100%;
+    min-height: calc(100vh - 80px); /* Footer payı düşülmüş tam ekran */
     padding: 15px; 
     box-sizing: border-box;
-    visibility: hidden;
     opacity: 0;
-    -webkit-transform: translateZ(0); 
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+    transition: opacity 0.2s ease-in;
 }
+
 .page.active { 
-    display: block; 
-    visibility: visible;
+    display: block !important; /* Sadece aktif sayfa yer kaplar */
     opacity: 1;
-    -webkit-animation: fadeIn 0.3s;
-    animation: fadeIn 0.3s;
 }
 @-webkit-keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -430,5 +426,33 @@ h1:not(.cyber-header) i {
   display: inline-block;
   margin: 0 6px;
   opacity: 0.55;
+}
+
+/* --- KURUMSAL BANNER TASARIMI (TÜM SAYFA BAŞLIKLARI) --- */
+.cyber-header, h1:not(.cyber-header) {
+    font-weight: 800;
+    font-size: 1.25rem;
+    margin: 20px auto; 
+    padding: 12px 25px;
+    color: #ffffff !important;
+    background: linear-gradient(135deg, var(--app-blue) 0%, #00d2ff 100%);
+    border-radius: 50px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
+    width: fit-content;
+    min-width: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    max-width: calc(100vw - 40px);
+    overflow: hidden;
+}
+
+/* Başlık içi ikon desteği */
+.cyber-header i, h1:not(.cyber-header) i {
+    color: #ffffff !important;
+    margin-right: 10px;
 }
 /* DOSYA SONU - FAZLADAN PARANTEZ SİLİNDİ */

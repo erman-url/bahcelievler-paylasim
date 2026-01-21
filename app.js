@@ -33,39 +33,59 @@ function setupNavigation() {
         const target = trigger.getAttribute("data-target");
         const href = trigger.getAttribute("href");
 
+        // Sayfa geçişini başlat
         if (!href || href === "#" || href === "") {
             if (e.cancelable) e.preventDefault();
             e.stopPropagation();
 
-            const currentPage = document.querySelector(".page.active");
-            if (currentPage && currentPage.id === target) return;
-
+            // 1. KESİN GİZLEME: Tüm sayfaları ve ana sayfa bileşenlerini kapat
             document.querySelectorAll(".page").forEach(p => {
                 p.classList.remove("active");
                 p.style.display = "none";
-                p.style.pointerEvents = "none"; 
                 p.style.opacity = "0";
                 p.style.visibility = "hidden";
             });
-            
+
+            // Ana sayfa özel bileşenlerini hedef "home" değilse gizle
+            const homeComponents = [
+                document.querySelector(".slider-container"),
+                document.getElementById("home-dashboard"),
+                document.querySelector(".home-hero"),
+                document.getElementById("info-bar")
+            ];
+
+            if (target === "home") {
+                homeComponents.forEach(el => { if(el) el.style.display = "block"; });
+                if(document.getElementById("home-dashboard")) document.getElementById("home-dashboard").style.display = "grid";
+            } else {
+                homeComponents.forEach(el => { if(el) el.style.display = "none"; });
+            }
+
+            // 2. HEDEF SAYFAYI GÖSTER
             const targetPage = document.getElementById(target);
             if (targetPage) {
                 targetPage.style.display = "block";
                 targetPage.style.visibility = "visible";
                 targetPage.style.pointerEvents = "auto";
+                
+                // Reflow force (Animasyon stabilitesi için)
                 void targetPage.offsetWidth; 
+                
                 targetPage.classList.add("active");
                 setTimeout(() => { targetPage.style.opacity = "1"; }, 10);
+                
+                // KRİTİK: Sayfayı en üste taşı (Mobil uygulama hissi için)
+                window.scrollTo({ top: 0, behavior: 'instant' });
             }
 
+            // 3. ALT MENÜ İKONLARINI GÜNCELLE
             document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
             const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
             if (activeLink) activeLink.classList.add("active");
-
-            window.scrollTo(0, 0);
         }
     };
 
+    // Dokunma ve tıklama olaylarını bağla
     navItems.forEach(el => {
         el.addEventListener('touchstart', (e) => { startY = e.touches[0].pageY; }, { passive: true });
         el.addEventListener('touchend', (e) => {

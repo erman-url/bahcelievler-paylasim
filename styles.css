@@ -211,14 +211,14 @@ h1:not(.cyber-header) i {
 
 /* Görev: 'X' Kapatma Butonu */
 .close-detail {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+    position: fixed;
+    top: 15px;
+    right: 15px;
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #fff;
-    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0,0,0,0.1);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
@@ -227,7 +227,7 @@ h1:not(.cyber-header) i {
     color: #333;
     cursor: pointer;
     transition: all 0.25s ease;
-    z-index: 10000; /* İstenen z-index */
+    z-index: 100002;
 }
 
 .close-detail:hover {
@@ -271,18 +271,17 @@ h1:not(.cyber-header) i {
 
 /* Yeni görev: 'İlanı Kaldır' Butonu */
 #modal-delete-btn-inner {
-    position: absolute;
-    bottom: 10px;
-    right: 15px;
     background: transparent !important;
     border: 1px solid #ff4d4d; /* İnce kırmızı çerçeve */
     color: #ff4d4d;
-    font-size: 0.7rem; /* Çok küçük font */
+    font-size: 0.8rem;
     font-weight: 600;
-    padding: 4px 8px;
-    border-radius: 6px;
+    padding: 10px 15px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #modal-delete-btn-inner:hover {

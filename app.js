@@ -663,7 +663,7 @@ async function renderSikayetler() {
         <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff4d4d;">
             <div style="display:flex; justify-content:space-between; align-items:start;">
                 <span style="font-size:0.7rem; font-weight:bold; background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px;">${i.category}</span>
-                <button onclick="deleteSikayet('${i.id}', '${i.delete_password}')" style="background:none; border:none; color:#999; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                <button onclick="event.stopPropagation(); deleteSikayet('${i.id}', '${i.delete_password}')" style="background:none; border:none; color:#999; cursor:pointer;"><i class="fas fa-trash"></i></button>
             </div>
             <h4 style="margin:10px 0 5px 0;">${i.title}</h4>
             <p style="font-size:0.9rem; color:#444;">${i.content}</p>
@@ -688,7 +688,7 @@ window.deleteFirsat = async (id, correctPass) => {
 
     if (!error) {
         alert("Fırsat silindi.");
-        renderFirsatlar();
+        loadPortalData();
     } else {
         alert("Hata: Şifre yanlış!");
     }

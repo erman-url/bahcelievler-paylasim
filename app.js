@@ -176,22 +176,6 @@ async function setupQuoteForm() {
         const emailInput = document.getElementById("quote-email");
         const btn = document.getElementById("quote-submit-btn");
 
-        // --- 1. MANTIK KONTROLÜ: GÖRSEL ZORUNLULUĞU ---
-        if (!fileInput.files || fileInput.files.length === 0) {
-            alert("HATA: Teklif alabilmek için lütfen bir görsel (.png veya .jpg) ekleyiniz.");
-            fileInput.focus();
-            return; 
-        }
-
-        // --- 2. KOD KONTROLÜ: DOSYA UZANTISI ---
-        const file = fileInput.files[0];
-        const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-        if (!allowedExtensions.exec(file.name)) {
-            alert("HATA: Sadece .png, .jpg veya .jpeg uzantılı dosyalar kabul edilmektedir.");
-            fileInput.value = ''; 
-            return;
-        }
-
         // --- 3. SENARYO KONTROLÜ: E-POSTA FORMATI ---
         const emailValue = emailInput.value.trim();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -711,27 +695,15 @@ window.deleteFirsat = async (id, correctPass) => {
 };
 
 window.deleteTavsiye = async (id, correctPass) => {
-    const userPass = prompt("Tavsiyeyi silmek için şifre:");
-    if (!userPass) return;
-
-    // SÜPER KONTROL: Şifreyi doğrudan DB sorgusunda doğrula
-    const { error } = await window.supabase
-        .from('tavsiyeler')
-        .delete()
-        .eq('id', id)
-        .eq('delete_password', userPass); 
-
-    if (!error) {
-        alert("Tavsiye başarıyla silindi.");
-        // Listeyi yeniden render et
-        renderTavsiyeler(); 
-    } else {
-        alert("Hata: Şifre yanlış!");
+    const userPass = prompt("Şifre:");
+    if (userPass === correctPass) {
+        await window.supabase.from('tavsiyeler').delete().eq('id', id);
+        loadPortalData();
     }
 };
 
 window.deleteSikayet = async (id, correctPass) => {
-    const userPass = prompt("Şikayeti silmek için şifre:");
+    const userPass = prompt("Şikayeti silmek için şifre girin:");
     if (!userPass) return;
 
     const { error } = await window.supabase
@@ -742,7 +714,7 @@ window.deleteSikayet = async (id, correctPass) => {
 
     if (!error) {
         alert("Şikayet kaldırıldı.");
-        renderSikayetler();
+        loadPortalData();
     } else {
         alert("Hata: Şifre yanlış!");
     }
@@ -764,7 +736,7 @@ window.openAdDetail = function(id) {
     if (!ad) return;
 
     document.getElementById("modal-title").textContent = ad.title;
-    document.getElementById("modal-price").textContent = ad.price + " TL";
+    document.getElementById("modal-price").textContent = new Intl.NumberFormat('tr-TR').format(ad.price) + " TL";
     
     const descriptionEl = document.getElementById("modal-description");
     if (ad.contact) {
@@ -823,7 +795,7 @@ if (gallery) {
             });
     };
 
-    document.getElementById("ad-detail-modal").style.display = "block";
+    document.getElementById("ad-detail-modal").style.display = "flex";
 };
 
 const closeModal = () => {
@@ -1270,7 +1242,7 @@ function applyFilters(category, searchTerm) {
                 <img src="${ad.image_url || 'https://via.placeholder.com/150'}">
                 <div class="ad-card-info">
                     <div class="ad-card-id">#${ad.id.toString().slice(-5).toUpperCase()} | ${new Date(ad.created_at).toLocaleDateString('tr-TR')}</div>
-                    <div style="font-weight:bold; font-size:1.1rem; color:var(--dark); margin:2px 0;">${ad.price} TL</div>
+                    <div style="font-weight:bold; font-size:1.1rem; color:var(--dark); margin:2px 0;">${new Intl.NumberFormat('tr-TR').format(ad.price)} TL</div>
                     <div style="font-size:0.85rem; color:#444; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ad.title}</div>
                 </div>
             </div>
@@ -1397,7 +1369,7 @@ window.deleteHizmet = async (id, correctPass) => {
 };
 
 /* >> MERKEZİ İLAN SİLME MOTORU - RLS UYUMLU << */
-window.deleteİlan = async (id, correctPass) => {
+window.deleteAd = async (id, correctPass) => {
     const userPass = prompt("İlanı silmek için 4 haneli şifrenizi girin:");
     if (!userPass) return;
 

@@ -26,7 +26,7 @@ const PiyasaMotoru = {
 
     // MANTIK KONTROLÜ: Görsel ve Fiyat Zorunluluğu [cite: 2025-12-16]
     girdiKontrol: function(veri) {
-        if (!veri.image) return { hata: true, mesaj: "HATA: Görsel kanıt eklemek zorunludur!" };
+        // Görsel zorunluluğu kaldırıldı (Hızlı veri girişi için)
         if (!veri.fiyat || veri.fiyat <= 0) return { hata: true, mesaj: "HATA: Geçerli bir fiyat girmelisiniz." };
         if (!veri.urunAdi || veri.urunAdi.length < 2) return { hata: true, mesaj: "HATA: Ürün adı çok kısa veya boş." };
         return { hata: false };
@@ -91,21 +91,25 @@ async function submitPiyasaVerisi() {
         const file = fileInput.files[0];
         const fileName = `kanit_${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
         
-        // 1. Görseli Storage'a yükle
-        const { data: uploadData, error: uploadError } = await window.supabase.storage
-            .from('piyasa-kanitlar')
-            .upload(fileName, file);
+        let publicUrl = null;
 
-        if (uploadError) throw uploadError;
+        // 1. Görsel varsa Storage'a yükle
+        if (file) {
+            const { error: uploadError } = await window.supabase.storage
+                .from('piyasa-kanitlar')
+                .upload(fileName, file);
 
-        const { data: urlData } = window.supabase.storage.from('piyasa-kanitlar').getPublicUrl(fileName);
+            if (uploadError) throw uploadError;
+            const { data: urlData } = window.supabase.storage.from('piyasa-kanitlar').getPublicUrl(fileName);
+            publicUrl = urlData.publicUrl;
+        }
 
         // 2. Veriyi Database'e kaydet (Barkodsuz yapı)
         const { error: dbError } = await window.supabase.from('piyasa_verileri').insert([{
             urun_adi: urunAdi,
             fiyat: fiyat,
             market_adi: marketAdi,
-            image_url: urlData.publicUrl,
+            image_url: publicUrl,
             delete_password: pass
         }]);
 

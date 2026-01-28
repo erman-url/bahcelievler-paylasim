@@ -914,16 +914,19 @@ async function updateDashboard() {
             .order('created_at', {ascending: false})
             .limit(1);
 
-  if (lastPiyasa?.[0]) {
+if (lastPiyasa?.[0]) {
             const previewPiyasa = document.getElementById("preview-piyasa");
             if (previewPiyasa) {
+                // Yazıyı güncelle ve ortala
                 previewPiyasa.innerHTML = `${lastPiyasa[0].urun_adi}<br><span style="color:var(--cyber-pink);">${lastPiyasa[0].fiyat} TL</span> <small style="color:#888;">@${lastPiyasa[0].market_adi}</small>`;
+                previewPiyasa.style.width = "100%";
+                previewPiyasa.style.textAlign = "center";
             }
-            
-            // SÜPER KONTROL: Kareyi hem gizle hem de stilini sıfırla
-            const imgEl = document.getElementById("preview-piyasa-img");
-            if (imgEl) {
-                imgEl.setAttribute("style", "display: none !important; width: 0; height: 0; visibility: hidden;");
+
+            // SÜPER KONTROL: index.html'deki GERÇEK ID'yi hedefliyoruz
+            const actualImg = document.getElementById("piyasa-img"); 
+            if (actualImg) {
+                actualImg.remove(); // Kareyi HTML'den söküp atar
             }
         }
 

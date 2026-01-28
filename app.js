@@ -821,7 +821,9 @@ const closeModal = () => {
     const modal = document.getElementById("ad-detail-modal");
     if (modal) {
         modal.style.display = "none";
-        document.body.style.overflow = 'auto';
+        modal.style.opacity = "0";
+        modal.style.visibility = "hidden";
+        document.body.style.overflow = 'auto'; // Sayfa donmasını engeller
     }
 };
 

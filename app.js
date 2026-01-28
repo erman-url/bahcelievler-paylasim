@@ -735,28 +735,34 @@ window.openAdDetail = function(id) {
     const ad = allAds.find(a => a.id == id);
     if (!ad) return;
 
+    document.body.style.overflow = 'hidden'; // Arka plan kaydırmasını engelle
+
     document.getElementById("modal-title").textContent = ad.title;
+    // Fiyat formatı tr-TR (1.000.000 TL) olarak korunuyor
     document.getElementById("modal-price").textContent = new Intl.NumberFormat('tr-TR').format(ad.price) + " TL";
-    
+
     const descriptionEl = document.getElementById("modal-description");
-    if (ad.contact) {
-        const contentEscaped = ad.content.replace(/</g, '<').replace(/>/g, '>').replace(/\n/g, '<br>');
-        const contactEscaped = ad.contact.replace(/</g, '<').replace(/>/g, '>');
-        descriptionEl.innerHTML = contentEscaped + `<br><br><strong style="color:#007bff;"><i class="fas fa-phone"></i> İletişim:</strong> ${contactEscaped}`;
+    const content = ad.content || '';
+    const contact = ad.contact || '';
+
+    // Güvenlik Düzeltmesi: Olası XSS saldırılarını engellemek için kullanıcı girdilerini güvenli hale getiriyoruz.
+    const safeContent = content.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
+
+    if (contact) {
+        const safeContact = contact.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        descriptionEl.innerHTML = safeContent + `<br><br><strong style="color:#007bff;"><i class="fas fa-phone"></i> İletişim:</strong> ${safeContact}`;
     } else {
-        descriptionEl.textContent = ad.content;
+        descriptionEl.innerHTML = safeContent;
     }
 
-  const gallery = document.getElementById("modal-image-gallery");
-if (gallery) {
-    const images = [ad.image_url, ad.image_url_2, ad.image_url_3].filter(Boolean);
+    const gallery = document.getElementById("modal-image-gallery");
+    if (gallery) {
+        const images = [ad.image_url, ad.image_url_2, ad.image_url_3].filter(Boolean);
 
-    gallery.innerHTML = images.length
-        ? images.map(src => `
-            <img src="${src}" alt="İlan görseli">
-        `).join('')
-        : '';
-}
+        gallery.innerHTML = images.length
+            ? images.map(src => `<img src="${src}" alt="İlan görseli" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">`).join('')
+            : '<p style="text-align: center; color: #888; padding: 20px 0;">Bu ilan için görsel mevcut değil.</p>';
+    }
 
     document.getElementById("modal-buy-btn").onclick = () => {
         if (ad.contact) {
@@ -764,6 +770,8 @@ if (gallery) {
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(copyText).then(() => {
                     alert("İletişim bilgisi panoya kopyalandı: " + copyText);
+                }, () => {
+                    alert("Kopyalanamadı. İletişim Bilgisi: " + copyText);
                 });
             } else {
                 alert("İletişim Bilgisi: " + copyText);
@@ -775,35 +783,44 @@ if (gallery) {
 
     document.getElementById("modal-delete-btn-inner").onclick = () => {
         const userPass = prompt("Bu ilanı silmek için 4 haneli şifrenizi girin:");
-        if (userPass === null) return;
-        if (userPass !== ad.delete_password) {
-            alert("Hatalı şifre!");
-            return;
-        }
+        if (userPass === null || userPass.trim() === '') return;
+        
+        // Güvenli Silme: Şifre kontrolü artık doğrudan Supabase RLS ile yapılıyor.
         window.supabase
             .from('ilanlar')
             .delete()
             .eq('id', ad.id)
+            .eq('delete_password', userPass)
             .then(({ error }) => {
                 if (error) {
-                    alert("Silme işlemi sırasında hata oluştu: " + error.message);
+                    alert("Hata: Şifre yanlış veya bir sorun oluştu! " + error.message);
                 } else {
                     alert("İlan başarıyla silindi.");
-                    document.getElementById("ad-detail-modal").style.display = "none";
+                    closeModal();
                     loadPortalData();
                 }
             });
     };
 
-    document.getElementById("ad-detail-modal").style.display = "flex";
+    const modal = document.getElementById("ad-detail-modal");
+    if (modal) {
+        modal.style.display = "flex";
+        setTimeout(() => {
+            modal.style.visibility = "visible";
+            modal.style.opacity = "1";
+        }, 10);
+    }
 };
 
 const closeModal = () => {
     const modal = document.getElementById("ad-detail-modal");
     if (modal) {
-        modal.style.display = "none";
-        modal.style.visibility = "hidden";
+        document.body.style.overflow = 'auto'; // Sayfa kaydırmayı serbest bırak
         modal.style.opacity = "0";
+        setTimeout(() => {
+            modal.style.display = "none"; // Modal'ı gizle
+            modal.style.visibility = "hidden";
+        }, 300); // Not: Bu süre CSS'teki 'transition' süresiyle eşleşmelidir.
     }
 };
 

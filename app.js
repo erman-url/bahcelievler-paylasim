@@ -619,12 +619,11 @@ window.openFirsatDetail = async function(id) {
                 buyBtn.style.display = "block";
                 buyBtn.textContent = "FIRSATA GİT";
                 
-                // Güvenli Link Kontrolü
+                // Link yönlendirme güvenliği
                 const safeLink = f.link.startsWith('http') ? f.link : 'https://' + f.link;
                 
                 buyBtn.onclick = (e) => {
                     e.preventDefault();
-                    e.stopPropagation();
                     window.open(safeLink, '_blank');
                 };
             } else {
@@ -633,9 +632,15 @@ window.openFirsatDetail = async function(id) {
             }
         }
 
-        document.getElementById("ad-detail-modal").style.display = "flex";
-        document.getElementById("ad-detail-modal").style.opacity = "1";
-        document.getElementById("ad-detail-modal").style.visibility = "visible";
+        // Modalı ekranda göster
+        const modal = document.getElementById("ad-detail-modal");
+        if (modal) {
+            modal.style.display = "flex";
+            setTimeout(() => {
+                modal.style.visibility = "visible";
+                modal.style.opacity = "1";
+            }, 10);
+        }
 
     } catch (err) {
         console.error("Detay hatası:", err);
@@ -686,33 +691,55 @@ async function renderSikayetler() {
     `).join('') || "";
 }
 
+
+// FIRSAT SİLME MOTORU - TİP ÇAKALIMINI BİTİREN VERSİYON
 window.deleteFirsat = async (id) => {
     const userPass = prompt("Bu fırsatı silmek için lütfen şifrenizi girin:");
     if (!userPass || !userPass.trim()) return;
 
-    const { error } = await window.supabase.from('firsatlar').delete().eq('id', id).eq('delete_password', userPass); 
+    const finalPass = String(userPass).trim();
+    console.log("Silme İsteği -> ID:", id, "Girilmiş Şifre:", finalPass);
 
-    if (!error) {
+    // SÜPER KONTROL: Hem sayı hem metin gibi davranan OR sorgusu
+    const { data, error } = await window.supabase
+        .from('firsatlar')
+        .delete()
+        .eq('id', id)
+        .or(`delete_password.eq.${finalPass},delete_password.eq."${finalPass}"`)
+        .select();
+
+    if (error) {
+        console.error("Supabase Hatası:", error);
+        alert("Sistem Hatası: " + error.message);
+        return;
+    }
+
+    if (data && data.length > 0) {
         alert("Fırsat başarıyla silindi.");
-        loadPortalData(); // SÜPER KONTROL: Listeyi anında yeniler
+        setTimeout(() => {
+            if (typeof loadPortalData === "function") loadPortalData();
+        }, 200);
     } else {
         alert("Hata: Şifre yanlış!");
+        console.warn("Eşleşme yok. DB'deki değer ile '" + finalPass + "' uyuşmuyor.");
     }
 };
 
+// TAVSİYE SİLME MOTORU
 window.deleteTavsiye = async (id) => {
     const userPass = prompt("Bu tavsiyeyi silmek için şifrenizi girin:");
-    if (userPass === null || !userPass.trim()) return;
+    if (!userPass || !userPass.trim()) return;
 
-    const { error } = await window.supabase
+    const { data, error } = await window.supabase
         .from('tavsiyeler')
         .delete()
+        .or(`delete_password.eq."${userPass}",delete_password.eq.${parseInt(userPass)}`) 
         .eq('id', id)
-        .eq('delete_password', userPass);
+        .select();
 
-    if (!error) {
+    if (data && data.length > 0) {
         alert("Tavsiye başarıyla silindi.");
-        loadPortalData(); // Ekranda anında yok olmasını sağlar
+        loadPortalData();
     } else {
         alert("Hata: Girdiğiniz şifre yanlış.");
     }

@@ -571,7 +571,7 @@ async function renderFirsatlar() {
         <div class="cyber-card ad-card" style="margin-bottom:15px; cursor:pointer; border-left: 5px solid ${borderColor};" onclick="openFirsatDetail('${f.id}')">
             <div style="display:flex; justify-content:space-between; align-items:start;">
                 <span style="font-size:0.6rem; font-weight:bold; text-transform:uppercase; background:#eee; padding:2px 5px; border-radius:3px;">${f.category}</span>
-                <button onclick="event.stopImmediatePropagation(); deleteFirsat('${f.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer; padding:10px;"><i class="fas fa-trash"></i></button>
+                <button onclick="event.stopPropagation(); window.deleteFirsat('${f.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer; padding:10px;"><i class="fas fa-trash"></i></button>
             </div>
             <h4 style="margin:5px 0;">${f.title}</h4>
             <img src="${displayImg}" style="width:100%; height:150px; object-fit:contain; background:#f9f9f9; border-radius:8px; margin:5px 0; padding:10px;">
@@ -618,19 +618,30 @@ window.openFirsatDetail = async function(id) {
             if (f.link && f.link.trim() !== "") {
                 buyBtn.style.display = "block";
                 buyBtn.textContent = "FIRSATA GİT";
-                buyBtn.onclick = () => window.open(f.link, '_blank');
+                
+                // Güvenli Link Kontrolü
+                const safeLink = f.link.startsWith('http') ? f.link : 'https://' + f.link;
+                
+                buyBtn.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(safeLink, '_blank');
+                };
             } else {
                 buyBtn.textContent = "MAĞAZA BİLGİSİ";
                 buyBtn.onclick = () => alert("Yerel esnaf fırsatıdır.");
             }
         }
 
-        document.getElementById("ad-detail-modal").style.display = "block";
+        document.getElementById("ad-detail-modal").style.display = "flex";
+        document.getElementById("ad-detail-modal").style.opacity = "1";
+        document.getElementById("ad-detail-modal").style.visibility = "visible";
 
     } catch (err) {
         console.error("Detay hatası:", err);
     }
 };
+
 /* >> DİĞER FONKSİYONLAR << */
 async function renderTavsiyeler() {
     const el = document.getElementById('recommend-list');

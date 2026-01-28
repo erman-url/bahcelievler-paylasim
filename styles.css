@@ -511,4 +511,10 @@ h1:not(.cyber-header) i {
     color: #ffffff !important;
     margin-right: 10px;
 }
+
+
+.home-widget[data-target="fiyat-dedektifi"] {
+    justify-content: center;
+    text-align: center;
+}
 /* DOSYA SONU - FAZLADAN PARANTEZ SİLİNDİ */

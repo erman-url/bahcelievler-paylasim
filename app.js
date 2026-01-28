@@ -162,7 +162,6 @@ function isBotDetected() {
     return false;
 }
 
-/* >> TEKLİF ALMA SİSTEMİ MOTORU << */
 /* >> TEKLİF ALMA SİSTEMİ MOTORU - SÜPER KONTROL V3.6 << */
 async function setupQuoteForm() {
     const quoteForm = document.getElementById("quote-request-form");
@@ -170,7 +169,7 @@ async function setupQuoteForm() {
 
     quoteForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ AKTİF
 
         const fileInput = document.getElementById("quote-file");
         const emailInput = document.getElementById("quote-email");
@@ -182,6 +181,13 @@ async function setupQuoteForm() {
         if (!emailRegex.test(emailValue)) {
             alert("HATA: Lütfen geçerli bir e-posta adresi yazınız (Örn: isim@mail.com)");
             emailInput.focus();
+            return;
+        }
+
+        // SÜPER KONTROL: Dosya değişkeni tanımlandı
+        const file = fileInput.files[0];
+        if (!file) {
+            alert("HATA: Lütfen arıza veya iş ile ilgili bir görsel ekleyiniz.");
             return;
         }
 
@@ -1432,23 +1438,48 @@ window.deleteHizmet = async (id, correctPass) => {
         alert("Hata: Şifre yanlış!");
     }
 };
-
 /* >> MERKEZİ İLAN SİLME MOTORU - RLS UYUMLU << */
-window.deleteAd = async (id, correctPass) => {
+window.deleteAd = async (id) => {
     const userPass = prompt("İlanı silmek için 4 haneli şifrenizi girin:");
-    if (!userPass) return;
+    if (!userPass || !userPass.trim()) return;
 
-    const { error } = await window.supabase
+    const finalPass = String(userPass).trim();
+
+    // SÜPER KONTROL: Hem sayı hem metin tipini kabul eden mühürlü yapı
+    const { data, error } = await window.supabase
         .from('ilanlar')
         .delete()
         .eq('id', id)
-        .eq('delete_password', userPass); 
+        .or(`delete_password.eq."${finalPass}",delete_password.eq.${parseInt(finalPass)}`)
+        .select();
 
     if (error) {
-        alert("Hata: Şifre yanlış veya silme yetkiniz yok!");
-    } else {
+        alert("Sistem Hatası: " + error.message);
+    } else if (data && data.length > 0) {
         alert("İlan başarıyla kaldırıldı.");
         if (typeof closeModal === "function") closeModal(); 
         loadPortalData(); 
+    } else {
+        alert("Hata: Girdiğiniz şifre yanlış veya bu ilanı silme yetkiniz yok!");
+    }
+};
+
+/* >> KESİNTİ BİLDİRİMİ SİLME MOTORU << */
+window.deleteKesinti = async (id) => {
+    const userPass = prompt("Bu bildirimi silmek için şifrenizi girin:");
+    if (!userPass || !userPass.trim()) return;
+
+    const { data, error } = await window.supabase
+        .from('kesintiler')
+        .delete()
+        .or(`delete_password.eq."${userPass}",delete_password.eq.${parseInt(userPass)}`)
+        .eq('id', id)
+        .select();
+
+    if (data && data.length > 0) {
+        alert("Bildirim kaldırıldı.");
+        loadPortalData();
+    } else {
+        alert("Hata: Şifre yanlış.");
     }
 };

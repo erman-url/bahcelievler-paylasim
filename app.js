@@ -1483,3 +1483,72 @@ window.deleteKesinti = async (id) => {
         alert("Hata: Şifre yanlış.");
     }
 };
+
+/* >> RADAR ÖZEL MODAL MOTORU << */
+window.openRadarDetail = async function(id) {
+    try {
+        const { data: urun, error } = await window.supabase
+            .from('piyasa_verileri')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error || !urun) return;
+
+        // Radar Modalı Elementlerini Doldur
+        document.getElementById("radar-title").textContent = urun.urun_adi;
+        document.getElementById("radar-price").textContent = urun.fiyat + " TL";
+        document.getElementById("radar-image-gallery").innerHTML = `<img src="${urun.image_url}" style="width:100%; border-radius:12px;">`;
+        
+        document.getElementById("radar-info-content").innerHTML = `
+            <p><strong><i class="fas fa-store"></i> Market:</strong> ${urun.market_adi}</p>
+            <p><strong><i class="fas fa-calendar-alt"></i> Tarih:</strong> ${urun.tarih_etiketi || 'Belirtilmedi'}</p>
+        `;
+
+        // Radarı Kaldır Butonu (Soft Delete)
+        const delBtn = document.getElementById("radar-delete-btn");
+        delBtn.onclick = () => window.softDeleteRadar(urun.id, urun.delete_password);
+
+        // Modalı Göster
+        const modal = document.getElementById("radar-detail-modal");
+        modal.style.display = "block";
+        setTimeout(() => { modal.style.opacity = "1"; }, 10);
+    } catch (err) { console.error("Radar detay hatası:", err); }
+};
+
+window.closeRadarModal = () => {
+    const modal = document.getElementById("radar-detail-modal");
+    if (modal) {
+        modal.style.opacity = "0";
+        setTimeout(() => { modal.style.display = "none"; }, 200);
+    }
+};
+
+/* >> VERİ TOPLAMA ODAKLI SİLME (SOFT DELETE) - STABİLİZE EDİLDİ << */
+window.softDeleteRadar = async (id) => {
+    const userPass = prompt("Radarı kaldırmak için şifrenizi girin:");
+    if (!userPass || !userPass.trim()) return;
+
+    const finalPass = String(userPass).trim();
+
+    // SÜPER KONTROL: Veriyi SİLMİYORUZ, sadece is_active: false yapıyoruz [cite: 2026-01-19]
+    // .select() ekleyerek dönen veriyi kontrol ediyoruz (Şifre doğrulaması için)
+    const { data, error } = await window.supabase
+        .from('piyasa_verileri')
+        .update({ is_active: false })
+        .eq('id', id)
+        .or(`delete_password.eq."${finalPass}",delete_password.eq.${parseInt(finalPass) || 0}`)
+        .select();
+
+    if (error) {
+        alert("Sistem Hatası: " + error.message);
+    } else if (data && data.length > 0) {
+        // Eğer data dönmüşse güncelleme başarılıdır (Şifre doğru)
+        alert("Radar panodan kaldırıldı (Veri analiz için saklandı).");
+        if (typeof window.closeRadarModal === "function") window.closeRadarModal();
+        if (typeof loadPortalData === "function") loadPortalData(); 
+    } else {
+        // Satır güncellenmediyse şifre yanlıştır
+        alert("Hata: Girdiğiniz şifre yanlış!");
+    }
+};

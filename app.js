@@ -571,7 +571,7 @@ async function renderFirsatlar() {
         <div class="cyber-card ad-card" style="margin-bottom:15px; cursor:pointer; border-left: 5px solid ${borderColor};" onclick="openFirsatDetail('${f.id}')">
             <div style="display:flex; justify-content:space-between; align-items:start;">
                 <span style="font-size:0.6rem; font-weight:bold; text-transform:uppercase; background:#eee; padding:2px 5px; border-radius:3px;">${f.category}</span>
-                <button onclick="event.stopPropagation(); deleteFirsat('${f.id}', '${f.delete_password}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                <button onclick="event.stopPropagation(); deleteFirsat('${f.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;"><i class="fas fa-trash"></i></button>
             </div>
             <h4 style="margin:5px 0;">${f.title}</h4>
                <img src="${displayImg}" 
@@ -581,6 +581,7 @@ async function renderFirsatlar() {
         </div>`;
     }).join('') || "";
 }
+
 window.openFirsatDetail = async function(id) {
     try {
         const { data: f, error } = await window.supabase.from('firsatlar').select('*').eq('id', id).single();
@@ -636,7 +637,7 @@ window.openFirsatDetail = async function(id) {
 async function renderTavsiyeler() {
     const el = document.getElementById('recommend-list');
     if (!el) return;
-    const { data } = await window.supabase.from('tavsiyeler').select('*').order('created_at', {ascending: false});
+    const { data } = await window.supabase.from('tavsiyeler').select('*').order('created_at', { ascending: false });
     el.innerHTML = data?.map(item => `
         <div class="cyber-card" style="margin-bottom:15px; border-bottom:1px solid #eee;">
             <div style="display:flex; justify-content:space-between;">
@@ -646,7 +647,7 @@ async function renderTavsiyeler() {
             ${item.image_url ? `<img src="${item.image_url}" style="width:100%; border-radius:8px; margin:10px 0; max-height:200px; object-fit:cover;">` : ''}
             <p style="margin:8px 0; font-style:italic;">"${item.comment}"</p>
             <div style="text-align:right;">
-                <button onclick="deleteTavsiye('${item.id}', '${item.delete_password}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer; font-size:0.8rem;">
+                <button onclick="deleteTavsiye('${item.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer; font-size:0.8rem;">
                     <i class="fas fa-trash"></i> Sil
                 </button>
             </div>
@@ -657,13 +658,13 @@ async function renderTavsiyeler() {
 async function renderSikayetler() {
     const el = document.getElementById('complaint-list');
     if (!el) return;
-    const { data } = await window.supabase.from('sikayetler').select('*').order('created_at', {ascending: false});
+    const { data } = await window.supabase.from('sikayetler').select('*').order('created_at', { ascending: false });
     
     el.innerHTML = data?.map(i => `
         <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff4d4d;">
             <div style="display:flex; justify-content:space-between; align-items:start;">
                 <span style="font-size:0.7rem; font-weight:bold; background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px;">${i.category}</span>
-                <button onclick="event.stopPropagation(); deleteSikayet('${i.id}', '${i.delete_password}')" style="background:none; border:none; color:#999; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                <button onclick="event.stopPropagation(); deleteSikayet('${i.id}')" style="background:none; border:none; color:#999; cursor:pointer;"><i class="fas fa-trash"></i></button>
             </div>
             <h4 style="margin:10px 0 5px 0;">${i.title}</h4>
             <p style="font-size:0.9rem; color:#444;">${i.content}</p>
@@ -676,9 +677,13 @@ async function renderSikayetler() {
     `).join('') || "";
 }
 
-window.deleteFirsat = async (id, correctPass) => {
-    const userPass = prompt("Şifrenizi girin:");
-    if (!userPass) return;
+window.deleteFirsat = async (id) => {
+    const userPass = prompt("Bu fırsatı silmek için lütfen şifrenizi girin:");
+    if (userPass === null) return;
+    if (!userPass.trim()) {
+        alert("HATA: Şifre alanı boş bırakılamaz.");
+        return;
+    }
 
     const { error } = await window.supabase
         .from('firsatlar')
@@ -687,24 +692,44 @@ window.deleteFirsat = async (id, correctPass) => {
         .eq('delete_password', userPass); 
 
     if (!error) {
-        alert("Fırsat silindi.");
+        alert("Fırsat başarıyla silindi.");
         loadPortalData();
     } else {
-        alert("Hata: Şifre yanlış!");
+        alert("Hata: Girdiğiniz şifre yanlış. Lütfen tekrar deneyin.");
+        console.error("Silme Hatası:", error.message);
     }
 };
 
-window.deleteTavsiye = async (id, correctPass) => {
-    const userPass = prompt("Şifre:");
-    if (userPass === correctPass) {
-        await window.supabase.from('tavsiyeler').delete().eq('id', id);
+window.deleteTavsiye = async (id) => {
+    const userPass = prompt("Bu tavsiyeyi silmek için şifrenizi girin:");
+    if (userPass === null) return;
+    if (!userPass.trim()) {
+        alert("HATA: Şifre alanı boş bırakılamaz.");
+        return;
+    }
+
+    const { error } = await window.supabase
+        .from('tavsiyeler')
+        .delete()
+        .eq('id', id)
+        .eq('delete_password', userPass);
+
+    if (!error) {
+        alert("Tavsiye başarıyla silindi.");
         loadPortalData();
+    } else {
+        alert("Hata: Girdiğiniz şifre yanlış. Lütfen tekrar deneyin.");
+        console.error("Silme Hatası:", error.message);
     }
 };
 
-window.deleteSikayet = async (id, correctPass) => {
-    const userPass = prompt("Şikayeti silmek için şifre girin:");
-    if (!userPass) return;
+window.deleteSikayet = async (id) => {
+    const userPass = prompt("Bu şikayeti silmek için şifrenizi girin:");
+    if (userPass === null) return;
+    if (!userPass.trim()) {
+        alert("HATA: Şifre alanı boş bırakılamaz.");
+        return;
+    }
 
     const { error } = await window.supabase
         .from('sikayetler')
@@ -713,10 +738,11 @@ window.deleteSikayet = async (id, correctPass) => {
         .eq('delete_password', userPass); 
 
     if (!error) {
-        alert("Şikayet kaldırıldı.");
+        alert("Şikayet başarıyla kaldırıldı.");
         loadPortalData();
     } else {
-        alert("Hata: Şifre yanlış!");
+        alert("Hata: Girdiğiniz şifre yanlış. Lütfen tekrar deneyin.");
+        console.error("Silme Hatası:", error.message);
     }
 };
 

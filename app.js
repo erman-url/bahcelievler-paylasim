@@ -914,13 +914,17 @@ async function updateDashboard() {
             .order('created_at', {ascending: false})
             .limit(1);
 
-        if (lastPiyasa?.[0]) {
+  if (lastPiyasa?.[0]) {
             const previewPiyasa = document.getElementById("preview-piyasa");
             if (previewPiyasa) {
                 previewPiyasa.innerHTML = `${lastPiyasa[0].urun_adi}<br><span style="color:var(--cyber-pink);">${lastPiyasa[0].fiyat} TL</span> <small style="color:#888;">@${lastPiyasa[0].market_adi}</small>`;
             }
+            
+            // SÜPER KONTROL: Kareyi hem gizle hem de stilini sıfırla
             const imgEl = document.getElementById("preview-piyasa-img");
-            if (imgEl && lastPiyasa[0].image_url) imgEl.style.backgroundImage = `url('${lastPiyasa[0].image_url}')`;
+            if (imgEl) {
+                imgEl.setAttribute("style", "display: none !important; width: 0; height: 0; visibility: hidden;");
+            }
         }
 
         const { data: lastFirsat } = await window.supabase.from('firsatlar').select('title').order('created_at', {ascending: false}).limit(1);

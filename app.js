@@ -571,12 +571,10 @@ async function renderFirsatlar() {
         <div class="cyber-card ad-card" style="margin-bottom:15px; cursor:pointer; border-left: 5px solid ${borderColor};" onclick="openFirsatDetail('${f.id}')">
             <div style="display:flex; justify-content:space-between; align-items:start;">
                 <span style="font-size:0.6rem; font-weight:bold; text-transform:uppercase; background:#eee; padding:2px 5px; border-radius:3px;">${f.category}</span>
-                <button onclick="event.stopPropagation(); deleteFirsat('${f.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                <button onclick="event.stopImmediatePropagation(); deleteFirsat('${f.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer; padding:10px;"><i class="fas fa-trash"></i></button>
             </div>
             <h4 style="margin:5px 0;">${f.title}</h4>
-               <img src="${displayImg}" 
-     onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23ccc%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22%3E%3C/circle%3E%3Cline x1=%2212%22 y1=%228%22 x2=%2212%22 y2=%2212%22%3E%3C/line%3E%3Cline x1=%2212%22 y1=%2216%22 x2=%2212.01%22 y2=%2216%22%3E%3C/line%3E%3C/svg%3E';"
-     style="width:100%; height:150px; object-fit:contain; background:#f9f9f9; border-radius:8px; margin:5px 0; padding:10px;">
+            <img src="${displayImg}" style="width:100%; height:150px; object-fit:contain; background:#f9f9f9; border-radius:8px; margin:5px 0; padding:10px;">
             <p style="font-size:0.8rem; color:#444; margin-top:5px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${f.content}</p>
         </div>`;
     }).join('') || "";
@@ -679,34 +677,21 @@ async function renderSikayetler() {
 
 window.deleteFirsat = async (id) => {
     const userPass = prompt("Bu fırsatı silmek için lütfen şifrenizi girin:");
-    if (userPass === null) return;
-    if (!userPass.trim()) {
-        alert("HATA: Şifre alanı boş bırakılamaz.");
-        return;
-    }
+    if (!userPass || !userPass.trim()) return;
 
-    const { error } = await window.supabase
-        .from('firsatlar')
-        .delete()
-        .eq('id', id)
-        .eq('delete_password', userPass); 
+    const { error } = await window.supabase.from('firsatlar').delete().eq('id', id).eq('delete_password', userPass); 
 
     if (!error) {
         alert("Fırsat başarıyla silindi.");
-        loadPortalData();
+        loadPortalData(); // SÜPER KONTROL: Listeyi anında yeniler
     } else {
-        alert("Hata: Girdiğiniz şifre yanlış. Lütfen tekrar deneyin.");
-        console.error("Silme Hatası:", error.message);
+        alert("Hata: Şifre yanlış!");
     }
 };
 
 window.deleteTavsiye = async (id) => {
     const userPass = prompt("Bu tavsiyeyi silmek için şifrenizi girin:");
-    if (userPass === null) return;
-    if (!userPass.trim()) {
-        alert("HATA: Şifre alanı boş bırakılamaz.");
-        return;
-    }
+    if (userPass === null || !userPass.trim()) return;
 
     const { error } = await window.supabase
         .from('tavsiyeler')
@@ -716,20 +701,15 @@ window.deleteTavsiye = async (id) => {
 
     if (!error) {
         alert("Tavsiye başarıyla silindi.");
-        loadPortalData();
+        loadPortalData(); // Ekranda anında yok olmasını sağlar
     } else {
-        alert("Hata: Girdiğiniz şifre yanlış. Lütfen tekrar deneyin.");
-        console.error("Silme Hatası:", error.message);
+        alert("Hata: Girdiğiniz şifre yanlış.");
     }
 };
 
 window.deleteSikayet = async (id) => {
     const userPass = prompt("Bu şikayeti silmek için şifrenizi girin:");
-    if (userPass === null) return;
-    if (!userPass.trim()) {
-        alert("HATA: Şifre alanı boş bırakılamaz.");
-        return;
-    }
+    if (userPass === null || !userPass.trim()) return;
 
     const { error } = await window.supabase
         .from('sikayetler')
@@ -739,10 +719,9 @@ window.deleteSikayet = async (id) => {
 
     if (!error) {
         alert("Şikayet başarıyla kaldırıldı.");
-        loadPortalData();
+        loadPortalData(); // Ekranda anında yok olmasını sağlar
     } else {
-        alert("Hata: Girdiğiniz şifre yanlış. Lütfen tekrar deneyin.");
-        console.error("Silme Hatası:", error.message);
+        alert("Hata: Girdiğiniz şifre yanlış.");
     }
 };
 
@@ -1391,17 +1370,17 @@ async function renderHizmetler() {
 
 window.deleteHizmet = async (id, correctPass) => {
     const userPass = prompt("Silmek için şifrenizi girin:");
-    if (!userPass) return;
+    if (!userPass || !userPass.trim()) return;
 
     const { error } = await window.supabase
         .from('hizmetler')
         .delete()
         .eq('id', id)
-        .eq('delete_password', userPass); // GÜVENLİ SİLME UYGULANDI
+        .eq('delete_password', userPass); 
 
     if (!error) {
-        alert("Hizmet kaldırıldı.");
-        renderHizmetler();
+        alert("Hizmet başarıyla kaldırıldı.");
+        loadPortalData(); // SÜPER KONTROL: Tüm portal verilerini ve dashboard'u senkronize yeniler
     } else {
         alert("Hata: Şifre yanlış!");
     }

@@ -177,10 +177,10 @@ h1:not(.cyber-header) i {
     transition: 0.3s;
 }
 
-/* MODAL - V2 STİLLERİ (İSTEKLERE GÖRE RAFİNE EDİLDİ) */
+/* MODAL - V3 STİLLERİ */
 .modal {
     position: fixed;
-    z-index: 100001; /* Close butonundan bir katman altta */
+    z-index: 9999;
     left: 0;
     top: 0;
     width: 100%;
@@ -201,7 +201,6 @@ h1:not(.cyber-header) i {
     overflow-y: auto;
     background: #fff;
     border-radius: 24px;
-    /* Görev: Modern gölge ve estetik boşluk */
     padding: 25px;
     position: relative;
     width: calc(100% - 30px);
@@ -225,25 +224,23 @@ h1:not(.cyber-header) i {
     align-items: center;
     justify-content: center;
     font-size: 20px;
-    color: #333; /* İstenen renk */
+    color: #333;
     cursor: pointer;
     transition: all 0.25s ease;
-    z-index: 100002; /* İstenen z-index */
+    z-index: 10000; /* İstenen z-index */
 }
 
 .close-detail:hover {
     transform: scale(1.1);
 }
 
-/* Görev: Görselin tepeye sıfır oturması */
 #modal-image-gallery {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    /* Negatif margin ile padding'i iptal et ve üst/yanlara yasla */
     margin: -25px -25px 20px -25px;
     background: #e2e8f0;
-    border-top-left-radius: 24px; /* Modal ile aynı yuvarlaklık */
+    border-top-left-radius: 24px;
     border-top-right-radius: 24px;
 }
 
@@ -255,33 +252,42 @@ h1:not(.cyber-header) i {
     scroll-snap-align: center;
 }
 
+/* Yeni görev: .ad-info-box */
+.ad-info-box {
+    border: 1px solid #e2e8f0;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 #modal-buy-btn {
     width: 100%;
     background: var(--app-blue) !important;
-    margin-bottom: 35px; /* Silme butonuyla çakışmasın diye boşluk */
+    margin-bottom: 35px;
     transition: 0.3s;
     box-sizing: border-box;
 }
 
-/* Görev: 'İlanı Kaldır' Butonu */
+/* Yeni görev: 'İlanı Kaldır' Butonu */
 #modal-delete-btn-inner {
     position: absolute;
-    bottom: 15px;
-    right: 25px;
+    bottom: 10px;
+    right: 15px;
     background: transparent !important;
-    border: none;
-    outline: none;
+    border: 1px solid #ff4d4d; /* İnce kırmızı çerçeve */
     color: #ff4d4d;
-    font-size: 0.75rem; /* Küçük font */
+    font-size: 0.7rem; /* Çok küçük font */
     font-weight: 600;
-    text-decoration: underline;
-    padding: 5px;
+    padding: 4px 8px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 #modal-delete-btn-inner:hover {
-    color: #d32f2f;
+    background: #ff4d4d !important;
+    color: #fff;
 }
 
 /* ALT MENÜ (FOOTER) - RENK MANTIĞI */

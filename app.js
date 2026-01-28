@@ -739,7 +739,7 @@ window.openAdDetail = function(id) {
 
     document.getElementById("modal-title").textContent = ad.title;
     // Fiyat formatı tr-TR (1.000.000 TL) olarak korunuyor
-    document.getElementById("modal-price").textContent = new Intl.NumberFormat('tr-TR').format(ad.price) + " TL";
+    document.getElementById("modal-price").textContent = new Intl.NumberFormat('tr-TR').format(ad.price) + ' TL';
 
     const descriptionEl = document.getElementById("modal-description");
     const content = ad.content || '';
@@ -815,12 +815,8 @@ window.openAdDetail = function(id) {
 const closeModal = () => {
     const modal = document.getElementById("ad-detail-modal");
     if (modal) {
-        document.body.style.overflow = 'auto'; // Sayfa kaydırmayı serbest bırak
-        modal.style.opacity = "0";
-        setTimeout(() => {
-            modal.style.display = "none"; // Modal'ı gizle
-            modal.style.visibility = "hidden";
-        }, 300); // Not: Bu süre CSS'teki 'transition' süresiyle eşleşmelidir.
+        modal.style.display = "none";
+        document.body.style.overflow = 'auto';
     }
 };
 

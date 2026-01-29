@@ -1714,6 +1714,7 @@ function renderHaberler(haberler) {
 }
 
 window.openHaberDetail = async function(id) {
+    document.body.style.overflow = 'hidden'; // Kilit Kırma: Sayfa kaydırmayı kilitle
     try {
         const { data: h, error } = await window.supabase.from('haberler').select('*').eq('id', id).single();
         if (error || !h) return;
@@ -1755,19 +1756,14 @@ window.openHaberDetail = async function(id) {
 window.closeHaberModal = function() {
     const modal = document.getElementById('haber-detail-modal');
     if (modal) {
-        modal.style.display = 'none';
         modal.style.opacity = '0';
         modal.style.visibility = 'hidden';
-        // Yeni haber açıldığında eski görselin sıçramaması için temizlik
-        const modalImg = document.getElementById('haber-modal-image');
-        if (modalImg) modalImg.src = '';
-        // Sayfa kaydırmasını geri aç
-        // CSS animasyonunun bitmesini bekle
+        document.body.style.overflow = 'auto'; // Sayfa kaydırmasını geri aç
+        
         setTimeout(() => {
             modal.style.display = 'none';
             const modalImg = document.getElementById('haber-modal-image');
             if (modalImg) modalImg.src = '';
         }, 300);
-        document.body.style.overflow = 'auto';
     }
 };

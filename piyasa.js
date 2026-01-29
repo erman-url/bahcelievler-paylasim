@@ -1,4 +1,5 @@
 /* >> BAHÇELİEVLER FORUM - PİYASA MOTORU V1.8 (SOFT-DELETE VE VERİ ANALİZ DESTEKLİ) << */
+window.PiyasaMotoruReady = true;
 
 const PiyasaMotoru = {
     // Analiz barkod yerine Ürün Adı üzerinden benzerlik kurar

@@ -115,6 +115,13 @@ async function loadPortalData() {
 }
 
 async function fetchAndRenderPiyasa() {
+    // PiyasaMotoru yüklenene kadar bekle (Max 2 saniye)
+    let attempts = 0;
+    while (!window.PiyasaMotoru && attempts < 20) {
+        await new Promise(r => setTimeout(r, 100));
+        attempts++;
+    }
+
     try {
         const { data, error } = await window.supabase
             .from('piyasa_verileri')
@@ -122,7 +129,8 @@ async function fetchAndRenderPiyasa() {
             .order('created_at', { ascending: false });
 
         if (!error && data && window.PiyasaMotoru) {
-            window.PiyasaMotoru.listeOlustur(data);
+            // Veriyi hem aktif hem tüm veri olarak gönderiyoruz
+            window.PiyasaMotoru.listeOlustur(data, data);
         }
     } catch (e) { console.error("Piyasa Motoru Çevrimdışı"); }
 }

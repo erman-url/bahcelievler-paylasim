@@ -109,6 +109,7 @@ async function loadPortalData() {
             renderFirsatlar(),
             renderDuyurular(),
             renderKesintiler()
+            renderKesintiler(),
         ]);
 
         // KRİTİK: Önce verileri çek, sonra grafiği oluştur

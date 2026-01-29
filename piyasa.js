@@ -121,7 +121,9 @@ async function submitPiyasaVerisi() {
             return;
         }
 
-        const file = fileInput.files[0];
+        const rawFiles = Array.from(fileInput.files);
+        const optimizedFiles = await Promise.all(rawFiles.map(file => optimizeImage(file)));
+        const file = optimizedFiles[0];
         let publicUrl = null;
 
         const fileName = `kanit_${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
@@ -136,7 +138,7 @@ async function submitPiyasaVerisi() {
         const bugun = new Date().toLocaleDateString('tr-TR');
 
         // is_active: true mühürü ile kaydedilir (Data toplama amacı için [cite: 2026-01-19])
-        const { error: dbError } = await window.supabase.from('piyasa_verileri').insert([{
+        const { error: dbError } = await window.supabase.from('piyasa_analiz').insert([{
             urun_adi: urunAdi,
             fiyat: fiyat,
             barkod: barkod, // DB'deki barkod sütununa veri gönderiliyor
@@ -163,7 +165,7 @@ async function submitPiyasaVerisi() {
 async function fetchAndRenderPiyasa() {
     try {
         const { data: tumVeriler, error } = await window.supabase
-            .from('piyasa_verileri')
+            .from('piyasa_analiz')
             .select('id, urun_adi, fiyat, market_adi, tarih_etiketi, image_url, is_active, created_at')
             .order('created_at', { ascending: false });
 

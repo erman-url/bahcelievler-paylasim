@@ -382,7 +382,9 @@ function setupForms() {
             btn.textContent = "YAYINLA...";
 
             try {
-                let urls = await handleMultipleUploads(fileInput.files);
+                const rawFiles = Array.from(fileInput.files);
+                const optimizedFiles = await Promise.all(rawFiles.map(file => optimizeImage(file)));
+                let urls = await handleMultipleUploads(optimizedFiles);
 
                 const { error } = await window.supabase.from('ilanlar').insert([{
                     title: titleVal,
@@ -1620,6 +1622,10 @@ window.softDeleteRadar = async (id) => {
     const tcNo = prompt("Güvenlik doğrulaması için TC Kimlik Numaranızı girin:");
     if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
         alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
+        return;
+    }
+    if (!validateTC(tcNo)) {
+        alert("Girilen TC Kimlik Numarası geçersizdir. Lütfen kontrol ediniz.");
         return;
     }
 

@@ -1719,12 +1719,32 @@ window.openHaberDetail = async function(id) {
         if (error || !h) return;
 
         const modal = document.getElementById('haber-detail-modal');
-        if (document.getElementById('haber-modal-image')) document.getElementById('haber-modal-image').src = h.image_url || '';
+        const modalImage = document.getElementById('haber-modal-image');
+        
+        if (modalImage) {
+            // Görsel yüklenene kadar bir yer tutucu göstererek kaymaları engelle.
+            modalImage.style.backgroundColor = '#f0f4f8'; // Placeholder rengi
+            modalImage.style.minHeight = '200px'; // Kaymayı önlemek için geçici yükseklik
+            
+            // Gerçek resmi yükle ve stilleri temizle
+            modalImage.onload = () => {
+                modalImage.style.backgroundColor = '';
+                modalImage.style.minHeight = '';
+            };
+            modalImage.onerror = () => {
+                modalImage.style.backgroundColor = '';
+                modalImage.style.minHeight = '';
+                // Hata durumunda alternatif bir görsel göster
+                modalImage.src = 'https://via.placeholder.com/400x200?text=Görsel+Yüklenemedi';
+            };
+            
+            modalImage.src = h.image_url || '';
+        }
         if (document.getElementById('haber-modal-title')) document.getElementById('haber-modal-title').textContent = h.title;
         if (document.getElementById('haber-modal-content')) document.getElementById('haber-modal-content').innerHTML = h.content.replace(/\n/g, '<br>');
 
         if (modal) {
-            modal.style.display = 'flex';
+            modal.style.display = 'flex'; // Modal'ı flex olarak göster.
             setTimeout(() => { modal.style.visibility = 'visible'; modal.style.opacity = '1'; }, 10);
         }
     } catch (err) { console.error(err); }

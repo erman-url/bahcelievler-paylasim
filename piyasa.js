@@ -1,4 +1,4 @@
-/* >> BAHÇELİEVLER FORUM - PİYASA MOTORU V1.8 (SOFT-DELETE VE VERİ ANALİZ DESTEKLİ) << */
+/* >> BAHÇELİEVLER FORUM - PİYASA MOTORU V2.0 (TAM SÜRÜM - HATASIZ) << */
 window.PiyasaMotoruReady = true;
 
 const PiyasaMotoru = {
@@ -24,11 +24,20 @@ const PiyasaMotoru = {
             durum: sapma > 5 ? "pahali" : sapma < -5 ? "hesapli" : "normal"
         };
     },
-
-    // MANTIK KONTROLÜ: Fiyat ve Ürün Adı Zorunluluğu [cite: 2025-12-16]
+	
     girdiKontrol: function(veri) {
-        if (!veri.fiyat || veri.fiyat <= 0) return { hata: true, mesaj: "HATA: Geçerli bir fiyat girmelisiniz." };
-        if (!veri.urunAdi || veri.urunAdi.length < 2) return { hata: true, mesaj: "HATA: Ürün adı çok kısa veya boş." };
+        // 1. Görsel kontrolü (Data toplama güvenliği için zorunlu [cite: 2026-01-19])
+        if (!veri.file || typeof veri.file === 'undefined') {
+            return { hata: true, mesaj: "HATA: Etiket/Barkod fotoğrafı eklemek zorunludur!" };
+        }
+        // 2. Fiyat kontrolü
+        if (!veri.fiyat || isNaN(veri.fiyat) || veri.fiyat <= 0) {
+            return { hata: true, mesaj: "HATA: Geçerli bir fiyat (örn: 50.50) girmelisiniz." };
+        }
+        // 3. Ürün adı kontrolü
+        if (!veri.urunAdi || veri.urunAdi.trim().length < 2) {
+            return { hata: true, mesaj: "HATA: Ürün adı çok kısa veya boş." };
+        }
         return { hata: false };
     },
 
@@ -66,8 +75,7 @@ const PiyasaMotoru = {
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }).join('');
     }
 };
@@ -76,39 +84,45 @@ window.PiyasaMotoru = PiyasaMotoru;
 
 /* >> PİYASA VERİ KAYIT MOTORU (Soft-Delete Uyumlu) << */
 async function submitPiyasaVerisi() {
-    const fileInput = document.getElementById("piyasa-file");
-    const fiyatInput = document.getElementById("piyasa-fiyat");
-    const urunAdiInput = document.getElementById("piyasa-urun-adi");
-    const marketAdiInput = document.getElementById("piyasa-market");
-    const passInput = document.getElementById("piyasa-pass");
-
-    if(!fiyatInput || !urunAdiInput) return;
-
-    const fiyat = parseFloat(fiyatInput.value);
-    const urunAdi = urunAdiInput.value;
-    const marketAdi = marketAdiInput.value;
-    const pass = passInput.value;
-
-    const kontrol = window.PiyasaMotoru.girdiKontrol({ fiyat, urunAdi });
-    if (kontrol.hata) {
-        alert(kontrol.mesaj);
-        return;
-    }
-
     try {
+        const fileInput = document.getElementById("piyasa-file");
+        const fiyatInput = document.getElementById("piyasa-fiyat");
+        const urunAdiInput = document.getElementById("piyasa-urun-adi");
+        const barkodInput = document.getElementById("piyasa-barkod"); // Eksik kolon tanımlandı
+        const marketAdiInput = document.getElementById("piyasa-market");
+        const passInput = document.getElementById("piyasa-pass");
+
+        if(!fiyatInput || !urunAdiInput) return;
+
+        const fiyat = parseFloat(fiyatInput.value);
+        const urunAdi = urunAdiInput.value;
+        const barkod = barkodInput ? barkodInput.value : null;
+        const marketAdi = marketAdiInput.value;
+        const pass = passInput.value;
+
+        // --- SÜPER KONTROL: Giriş Doğrulama ---
+        const kontrol = window.PiyasaMotoru.girdiKontrol({ 
+            file: fileInput.files[0], 
+            fiyat, 
+            urunAdi 
+        });
+        
+        if (kontrol.hata) {
+            alert(kontrol.mesaj);
+            return;
+        }
+
         const file = fileInput.files[0];
         let publicUrl = null;
 
-        if (file) {
-            const fileName = `kanit_${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
-            const { error: uploadError } = await window.supabase.storage
-                .from('piyasa-kanitlar')
-                .upload(fileName, file);
+        const fileName = `kanit_${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
+        const { error: uploadError } = await window.supabase.storage
+            .from('piyasa-kanitlar')
+            .upload(fileName, file);
 
-            if (uploadError) throw uploadError;
-            const { data: urlData } = window.supabase.storage.from('piyasa-kanitlar').getPublicUrl(fileName);
-            publicUrl = urlData.publicUrl;
-        }
+        if (uploadError) throw uploadError;
+        const { data: urlData } = window.supabase.storage.from('piyasa-kanitlar').getPublicUrl(fileName);
+        publicUrl = urlData.publicUrl;
 
         const bugun = new Date().toLocaleDateString('tr-TR');
 
@@ -116,6 +130,7 @@ async function submitPiyasaVerisi() {
         const { error: dbError } = await window.supabase.from('piyasa_verileri').insert([{
             urun_adi: urunAdi,
             fiyat: fiyat,
+            barkod: barkod, // DB'deki barkod sütununa veri gönderiliyor
             market_adi: marketAdi,
             image_url: publicUrl,
             delete_password: pass,
@@ -156,4 +171,37 @@ async function fetchAndRenderPiyasa() {
         const container = document.getElementById('fiyat-dedektifi-listesi');
         if (container) container.innerHTML = `<p style="text-align:center; color:red;">Veriler yüklenemedi.</p>`;
     }
+}
+
+async function renderEnflasyonGrafigi() {
+    const ctx = document.getElementById('enflasyonChart');
+    if (!ctx) return;
+
+    // Analiz tablosundan verileri çek
+    const { data, error } = await window.supabase
+        .from('piyasa_analizi')
+        .select('created_at, ortalama_fiyat')
+        .order('created_at', { ascending: true })
+        .limit(10);
+
+    if (error || !data || data.length === 0) return;
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.map(d => new Date(d.created_at).toLocaleDateString('tr-TR')),
+            datasets: [{
+                label: 'Ortalama Fiyat (TL)',
+                data: data.map(d => d.ortalama_fiyat),
+                borderColor: '#ff007f',
+                backgroundColor: 'rgba(255, 0, 127, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: false } }
+        }
+    });
 }

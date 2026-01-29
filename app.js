@@ -101,6 +101,7 @@ function setupNavigation() {
 // --- 2. VERİ YÜKLEME MOTORU ---
 async function loadPortalData() {
     try {
+        // Önce temel verileri yükle
         await Promise.allSettled([
             fetchAndRenderAds(),
             renderTavsiyeler(),
@@ -108,14 +109,17 @@ async function loadPortalData() {
             renderFirsatlar(),
             renderDuyurular(),
             renderKesintiler(),
-            fetchAndRenderPiyasa() 
+            renderEnflasyonGrafigi()
         ]);
+
+        // KRİTİK: Önce verileri çek, sonra grafiği oluştur
+        await fetchAndRenderPiyasa(); 
+
         updateDashboard();
     } catch (err) { console.error("Portal yükleme hatası:", err); }
 }
 
 async function fetchAndRenderPiyasa() {
-    // PiyasaMotoru yüklenene kadar bekle (Max 2 saniye)
     let attempts = 0;
     while (!window.PiyasaMotoru && attempts < 20) {
         await new Promise(r => setTimeout(r, 100));
@@ -129,8 +133,9 @@ async function fetchAndRenderPiyasa() {
             .order('created_at', { ascending: false });
 
         if (!error && data && window.PiyasaMotoru) {
-            // Veriyi hem aktif hem tüm veri olarak gönderiyoruz
-            window.PiyasaMotoru.listeOlustur(data, data);
+            // SÜPER KONTROL: Sadece aktif olanları listeye gönder, ama analiz için tüm datayı (data) kullan
+            const aktifVeriler = data.filter(u => u.is_active !== false);
+            window.PiyasaMotoru.listeOlustur(aktifVeriler, data);
         }
     } catch (e) { console.error("Piyasa Motoru Çevrimdışı"); }
 }

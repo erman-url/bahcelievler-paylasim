@@ -531,9 +531,5 @@ h1:not(.cyber-header) i {
     align-items: center;
     text-align: center;
 }
-
-#haber-detail-modal { align-items: center; justify-content: center; }
-#haber-modal-content { text-align: left; padding: 0 10px; line-height: 1.6; }
-
-
+#haber-modal-content { text-align: left; width: 100%; white-space: pre-wrap; }
 /* DOSYA SONU - FAZLADAN PARANTEZ SİLİNDİ */

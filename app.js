@@ -1747,6 +1747,9 @@ window.openHaberDetail = async function(id) {
         if (modal) {
             modal.style.display = 'flex'; // Modal'ı flex olarak göster.
             setTimeout(() => { modal.style.visibility = 'visible'; modal.style.opacity = '1'; }, 10);
+            modal.style.display = 'flex';
+            modal.style.opacity = '1';
+            modal.style.visibility = 'visible';
         }
     } catch (err) { console.error(err); }
 };

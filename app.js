@@ -328,7 +328,6 @@ function setupForms() {
             }
 
             // GÜVENLİK: TC No Kontrol ve Hashleme
-            const tcInput = document.getElementById("ad-tc");
             const tcInput = document.getElementById("ad-tc-no");
             if (!tcInput || tcInput.value.length !== 11 || isNaN(tcInput.value)) {
                 alert("HATA: Güvenlik gereği 11 haneli TC Kimlik No zorunludur.");
@@ -350,8 +349,6 @@ function setupForms() {
                     price: priceVal,
                     category: document.getElementById("ad-category").value,
                     content: contentVal,
-                    contact: document.getElementById("ad-contact").value, 
-                    delete_password: document.getElementById("ad-delete-password").value,
                     contact: document.getElementById("ad-contact").value,
                     tc_no: secureTC,
                     is_active: true,
@@ -805,7 +802,6 @@ window.deleteSikayet = async (id) => {
 async function fetchAndRenderAds() {
     const list = document.getElementById("ads-list");
     if (!list) return;
-    const { data } = await window.supabase.from('ilanlar').select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3').order('created_at', {ascending: false});
     const { data } = await window.supabase.from('ilanlar')
         .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3')
         .or('is_active.is.null,is_active.eq.true')
@@ -868,10 +864,6 @@ window.openAdDetail = function(id) {
     };
 
     document.getElementById("modal-delete-btn-inner").onclick = async () => {
-        const userPass = prompt("Bu ilanı silmek için 4 haneli şifrenizi girin:");
-        if (userPass === null || userPass.trim() === '') return;
-        
-        const tcNo = prompt("Güvenlik doğrulaması için TC Kimlik Numaranızı girin:");
         const tcNo = prompt("Bu ilanı kaldırmak için TC Kimlik Numaranızı girin:");
         if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
             alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
@@ -881,22 +873,18 @@ window.openAdDetail = function(id) {
 
         const { data, error } = await window.supabase
             .from('ilanlar')
-            .delete()
             .update({ is_active: false })
             .eq('id', ad.id)
-            .eq('delete_password', userPass)
             .eq('tc_no', secureTC)
             .select();
 
         if (error) {
             alert("Hata: " + error.message);
         } else if (data && data.length > 0) {
-            alert("İlan başarıyla silindi.");
             alert("İlan başarıyla kaldırıldı.");
             closeModal();
             loadPortalData();
         } else {
-            alert("Hata: Şifre veya TC Kimlik No yanlış!");
             alert("Hata: TC Kimlik No yanlış veya bu ilanı silme yetkiniz yok.");
         }
     };
@@ -1490,27 +1478,19 @@ window.deleteHizmet = async (id, correctPass) => {
 };
 /* >> MERKEZİ İLAN SİLME MOTORU - RLS UYUMLU << */
 window.deleteAd = async (id) => {
-    const userPass = prompt("İlanı silmek için 4 haneli şifrenizi girin:");
-    if (!userPass || !userPass.trim()) return;
-    
-    const tcNo = prompt("Güvenlik doğrulaması için TC Kimlik Numaranızı girin:");
     const tcNo = prompt("İlanı kaldırmak için TC Kimlik Numaranızı girin:");
     if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
         alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
         return;
     }
     
-    const finalPass = String(userPass).trim();
     const secureTC = btoa(tcNo.split('').reverse().join('')).substring(0, 20);
 
-    // SÜPER KONTROL: Hem sayı hem metin tipini kabul eden mühürlü yapı
     const { data, error } = await window.supabase
         .from('ilanlar')
-        .delete()
         .update({ is_active: false })
         .eq('id', id)
         .eq('tc_no', secureTC)
-        .or(`delete_password.eq."${finalPass}",delete_password.eq.${parseInt(finalPass)}`)
         .select();
 
     if (error) {
@@ -1520,7 +1500,6 @@ window.deleteAd = async (id) => {
         if (typeof closeModal === "function") closeModal(); 
         loadPortalData(); 
     } else {
-        alert("Hata: Girdiğiniz şifre veya TC Kimlik No yanlış!");
         alert("Hata: TC Kimlik No yanlış veya bu ilanı silme yetkiniz yok.");
     }
 };

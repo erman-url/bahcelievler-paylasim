@@ -329,6 +329,7 @@ function setupForms() {
 
             // GÜVENLİK: TC No Kontrol ve Hashleme
             const tcInput = document.getElementById("ad-tc");
+            const tcInput = document.getElementById("ad-tc-no");
             if (!tcInput || tcInput.value.length !== 11 || isNaN(tcInput.value)) {
                 alert("HATA: Güvenlik gereği 11 haneli TC Kimlik No zorunludur.");
                 return;
@@ -351,7 +352,9 @@ function setupForms() {
                     content: contentVal,
                     contact: document.getElementById("ad-contact").value, 
                     delete_password: document.getElementById("ad-delete-password").value,
+                    contact: document.getElementById("ad-contact").value,
                     tc_no: secureTC,
+                    is_active: true,
                     image_url: urls[0] || null,
                     image_url_2: urls[1] || null,
                     image_url_3: urls[2] || null
@@ -803,6 +806,10 @@ async function fetchAndRenderAds() {
     const list = document.getElementById("ads-list");
     if (!list) return;
     const { data } = await window.supabase.from('ilanlar').select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3').order('created_at', {ascending: false});
+    const { data } = await window.supabase.from('ilanlar')
+        .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3')
+        .or('is_active.is.null,is_active.eq.true')
+        .order('created_at', {ascending: false});
     allAds = data || [];
     
     const searchInput = document.getElementById("ad-search-input");
@@ -865,6 +872,7 @@ window.openAdDetail = function(id) {
         if (userPass === null || userPass.trim() === '') return;
         
         const tcNo = prompt("Güvenlik doğrulaması için TC Kimlik Numaranızı girin:");
+        const tcNo = prompt("Bu ilanı kaldırmak için TC Kimlik Numaranızı girin:");
         if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
             alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
             return;
@@ -874,6 +882,7 @@ window.openAdDetail = function(id) {
         const { data, error } = await window.supabase
             .from('ilanlar')
             .delete()
+            .update({ is_active: false })
             .eq('id', ad.id)
             .eq('delete_password', userPass)
             .eq('tc_no', secureTC)
@@ -883,10 +892,12 @@ window.openAdDetail = function(id) {
             alert("Hata: " + error.message);
         } else if (data && data.length > 0) {
             alert("İlan başarıyla silindi.");
+            alert("İlan başarıyla kaldırıldı.");
             closeModal();
             loadPortalData();
         } else {
             alert("Hata: Şifre veya TC Kimlik No yanlış!");
+            alert("Hata: TC Kimlik No yanlış veya bu ilanı silme yetkiniz yok.");
         }
     };
 
@@ -1483,6 +1494,7 @@ window.deleteAd = async (id) => {
     if (!userPass || !userPass.trim()) return;
     
     const tcNo = prompt("Güvenlik doğrulaması için TC Kimlik Numaranızı girin:");
+    const tcNo = prompt("İlanı kaldırmak için TC Kimlik Numaranızı girin:");
     if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
         alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
         return;
@@ -1495,6 +1507,7 @@ window.deleteAd = async (id) => {
     const { data, error } = await window.supabase
         .from('ilanlar')
         .delete()
+        .update({ is_active: false })
         .eq('id', id)
         .eq('tc_no', secureTC)
         .or(`delete_password.eq."${finalPass}",delete_password.eq.${parseInt(finalPass)}`)
@@ -1508,6 +1521,7 @@ window.deleteAd = async (id) => {
         loadPortalData(); 
     } else {
         alert("Hata: Girdiğiniz şifre veya TC Kimlik No yanlış!");
+        alert("Hata: TC Kimlik No yanlış veya bu ilanı silme yetkiniz yok.");
     }
 };
 

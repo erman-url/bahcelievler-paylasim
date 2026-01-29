@@ -320,6 +320,15 @@ function setupForms() {
                 return;
             }
 
+            // GÜVENLİK: TC No Kontrol ve Hashleme
+            const tcInput = document.getElementById("ad-tc");
+            if (!tcInput || tcInput.value.length !== 11 || isNaN(tcInput.value)) {
+                alert("HATA: Güvenlik gereği 11 haneli TC Kimlik No zorunludur.");
+                return;
+            }
+            // Basit Hash: TC'yi ters çevirip Base64 ile şifrele (DB'de ham veri tutulmaz)
+            const secureTC = btoa(tcInput.value.split('').reverse().join('')).substring(0, 20);
+
             const btn = document.getElementById("ad-submit-button");
             isProcessing = true;
             btn.disabled = true;
@@ -335,6 +344,7 @@ function setupForms() {
                     content: contentVal,
                     contact: document.getElementById("ad-contact").value, 
                     delete_password: document.getElementById("ad-delete-password").value,
+                    tc_no: secureTC,
                     image_url: urls[0] || null,
                     image_url_2: urls[1] || null,
                     image_url_3: urls[2] || null

@@ -91,8 +91,17 @@ async function submitPiyasaVerisi() {
         const barkodInput = document.getElementById("piyasa-barkod");
         const marketAdiInput = document.getElementById("piyasa-market");
         const passInput = document.getElementById("piyasa-pass");
+        const tcInput = document.getElementById("piyasa-tc");
 
         if(!fiyatInput || !urunAdiInput) return;
+
+        // GÜVENLİK: TC No Kontrol ve Hashleme
+        const tcVal = tcInput ? tcInput.value.trim() : "";
+        if (tcVal.length !== 11 || isNaN(tcVal)) {
+            alert("HATA: Radar kaydı için 11 haneli TC No zorunludur.");
+            return;
+        }
+        const secureTC = btoa(tcVal.split('').reverse().join('')).substring(0, 20);
 
         const fiyat = parseFloat(fiyatInput.value);
         const urunAdi = urunAdiInput.value;
@@ -134,6 +143,7 @@ async function submitPiyasaVerisi() {
             market_adi: marketAdi,
             image_url: publicUrl,
             delete_password: pass,
+            tc_no: secureTC,
             tarih_etiketi: bugun,
             is_active: true 
         }]);

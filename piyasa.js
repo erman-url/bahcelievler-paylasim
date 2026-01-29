@@ -164,8 +164,7 @@ async function fetchAndRenderPiyasa() {
     try {
         const { data: tumVeriler, error } = await window.supabase
             .from('piyasa_verileri')
-            .select('*')
-            .order('created_at', { ascending: false });
+            .select('reated_at', { ascending: false });
 
         if (error) throw error;
 

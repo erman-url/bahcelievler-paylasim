@@ -129,12 +129,19 @@ async function fetchAndRenderPiyasa() {
     try {
         const { data, error } = await window.supabase
             .from('piyasa_verileri')
-            .select('id, urun_adi, fiyat, market_adi, tarih_etiketi, image_url, is_active')
+            .select('id, urun_adi, fiyat, market_adi, tarih_etiketi, image_url, is_active, created_at')
             .order('created_at', { ascending: false });
 
         if (!error && data && window.PiyasaMotoru) {
-            // SÜPER KONTROL: Sadece aktif olanları listeye gönder, ama analiz için tüm datayı (data) kullan
-            const aktifVeriler = data.filter(u => u.is_active !== false);
+            // MÜHÜRLENDİ: Sadece aktif ve 45 günden yeni veriler listelenir.
+            const today = new Date();
+            const aktifVeriler = data.filter(u => {
+                const recordDate = new Date(u.created_at);
+                const ageInDays = (today - recordDate) / (1000 * 60 * 60 * 24);
+                return u.is_active === true && ageInDays <= 45;
+            });
+
+            // Analiz için tüm veriler (data), listeleme için filtrelenmiş aktifVeriler kullanılır.
             window.PiyasaMotoru.listeOlustur(aktifVeriler, data);
         }
     } catch (e) { console.error("Piyasa Motoru Çevrimdışı"); }

@@ -88,7 +88,7 @@ async function submitPiyasaVerisi() {
         const fileInput = document.getElementById("piyasa-file");
         const fiyatInput = document.getElementById("piyasa-fiyat");
         const urunAdiInput = document.getElementById("piyasa-urun-adi");
-        const barkodInput = document.getElementById("piyasa-barkod"); // Eksik kolon tanımlandı
+        const barkodInput = document.getElementById("piyasa-barkod");
         const marketAdiInput = document.getElementById("piyasa-market");
         const passInput = document.getElementById("piyasa-pass");
 
@@ -96,7 +96,7 @@ async function submitPiyasaVerisi() {
 
         const fiyat = parseFloat(fiyatInput.value);
         const urunAdi = urunAdiInput.value;
-        const barkod = barkodInput ? barkodInput.value : null;
+        const barkod = barkodInput ? barkodInput.value.trim() : null;
         const marketAdi = marketAdiInput.value;
         const pass = passInput.value;
 

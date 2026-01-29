@@ -998,11 +998,11 @@ async function updateDashboard() {
             kesintiEl.textContent = lastKesinti?.[0] ? `${lastKesinti[0].type}: ${lastKesinti[0].location}` : "Aktif kesinti yok.";
         }
 
-        const { data: lastPiyasa } = await window.supabase
-            .from('piyasa_analiz')
-            .select('urun_adi, fiyat, market_adi, image_url')
-            .order('created_at', {ascending: false})
-            .limit(1);
+      const { data: lastPiyasa } = await window.supabase
+    .from('piyasa_analiz')
+    .select('urun_adi,fiyat,market_adi,image_url') // Boşlukları virgül dibine çektim, en güvenli hali budur.
+    .order('created_at', {ascending: false})
+    .limit(1);
 
 if (lastPiyasa?.[0]) {
             const previewPiyasa = document.getElementById("preview-piyasa");

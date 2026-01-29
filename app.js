@@ -1741,12 +1741,9 @@ window.openHaberDetail = async function(id) {
             modalImage.src = h.image_url || '';
         }
         if (document.getElementById('haber-modal-title')) document.getElementById('haber-modal-title').textContent = h.title;
-        if (document.getElementById('haber-modal-content')) document.getElementById('haber-modal-content').innerHTML = h.content.replace(/\n/g, '<br>');
         if (document.getElementById('haber-modal-content')) document.getElementById('haber-modal-content').innerHTML = (h.icerik || h.content || '').replace(/\n/g, '<br>');
 
         if (modal) {
-            modal.style.display = 'flex'; // Modal'ı flex olarak göster.
-            setTimeout(() => { modal.style.visibility = 'visible'; modal.style.opacity = '1'; }, 10);
             modal.style.display = 'flex';
             modal.style.opacity = '1';
             modal.style.visibility = 'visible';

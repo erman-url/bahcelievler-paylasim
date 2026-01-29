@@ -138,7 +138,7 @@ async function submitPiyasaVerisi() {
         const bugun = new Date().toLocaleDateString('tr-TR');
 
         // is_active: true mühürü ile kaydedilir (Data toplama amacı için [cite: 2026-01-19])
-        const { error: dbError } = await window.supabase.from('piyasa_analiz').insert([{
+        const { error: dbError } = await window.supabase.from('piyasa_verileri').insert([{
             urun_adi: urunAdi,
             fiyat: fiyat,
             barkod: barkod, // DB'deki barkod sütununa veri gönderiliyor
@@ -196,7 +196,7 @@ async function renderEnflasyonGrafigi() {
     // Analiz tablosundan verileri çek
     const { data, error } = await window.supabase
         .from("piyasa_analiz")
-        .select('created_at,fiyat')
+        .select('created_at, ortalama_fiyat')
         .order('created_at', { ascending: true })
         .limit(10);
 
@@ -213,7 +213,7 @@ async function renderEnflasyonGrafigi() {
             labels: data.map(d => new Date(d.created_at).toLocaleDateString('tr-TR')),
             datasets: [{
                 label: 'Ortalama Fiyat (TL)',
-                data: data.map(d => d.fiyat),
+                data: data.map(d => d.ortalama_fiyat),
                 borderColor: '#ff007f',
                 backgroundColor: 'rgba(255, 0, 127, 0.1)',
                 fill: true,

@@ -163,7 +163,7 @@ async function fetchAndRenderPiyasa() {
 
     try {
         const { data, error } = await window.supabase
-            .from('piyasa_analiz')
+            .from('piyasa_verileri')
             .select('id, urun_adi, fiyat, market_adi, tarih_etiketi, image_url, is_active, created_at')
             .order('created_at', { ascending: false });
 
@@ -999,7 +999,7 @@ async function updateDashboard() {
         }
 
       const { data: lastPiyasa } = await window.supabase
-    .from('piyasa_analiz')
+    .from('piyasa_verileri')
     .select('id,urun_adi,fiyat,market_adi,tarih_etiketi,image_url,is_active,created_at,barkod')
     .order('created_at', {ascending: false})
     .limit(1);
@@ -1578,7 +1578,7 @@ window.deleteKesinti = async (id) => {
 window.openRadarDetail = async function(id) {
     try {
         const { data: urun, error } = await window.supabase
-            .from('piyasa_analiz')
+            .from('piyasa_verileri')
             .select('id, urun_adi, fiyat, image_url, market_adi, tarih_etiketi')
             .eq('id', id)
             .single();
@@ -1618,27 +1618,15 @@ window.closeRadarModal = () => {
 window.softDeleteRadar = async (id) => {
     const userPass = prompt("Radarı kaldırmak için şifrenizi girin:");
     if (!userPass || !userPass.trim()) return;
-
-    const tcNo = prompt("Güvenlik doğrulaması için TC Kimlik Numaranızı girin:");
-    if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
-        alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
-        return;
-    }
-    if (!validateTC(tcNo)) {
-        alert("Girilen TC Kimlik Numarası geçersizdir. Lütfen kontrol ediniz.");
-        return;
-    }
-
+    
     const finalPass = String(userPass).trim();
-    const secureTC = btoa(tcNo.split('').reverse().join('')).substring(0, 20);
 
     // SÜPER KONTROL: Veriyi SİLMİYORUZ, sadece is_active: false yapıyoruz [cite: 2026-01-19]
     // .select() ekleyerek dönen veriyi kontrol ediyoruz (Şifre doğrulaması için)
     const { data, error } = await window.supabase
-        .from('piyasa_analiz')
+        .from('piyasa_verileri')
         .update({ is_active: false })
         .eq('id', id)
-        .eq('tc_no', secureTC)
         .or(`delete_password.eq."${finalPass}",delete_password.eq.${parseInt(finalPass) || 0}`)
         .select();
 
@@ -1649,7 +1637,7 @@ window.softDeleteRadar = async (id) => {
         if (typeof window.closeRadarModal === "function") window.closeRadarModal();
         if (typeof loadPortalData === "function") loadPortalData(); 
     } else {
-        alert("Hata: Girdiğiniz şifre veya TC Kimlik No yanlış!");
+        alert("Hata: Girdiğiniz şifre yanlış!");
     }
 };
 

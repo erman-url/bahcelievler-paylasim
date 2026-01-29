@@ -108,8 +108,6 @@ async function loadPortalData() {
             renderSikayetler(),
             renderFirsatlar(),
             renderDuyurular(),
-            renderKesintiler(),
-            renderEnflasyonGrafigi()
             renderKesintiler()
         ]);
 

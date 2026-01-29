@@ -333,6 +333,10 @@ function setupForms() {
                 alert("HATA: Güvenlik gereği 11 haneli TC Kimlik No zorunludur.");
                 return;
             }
+            if (!validateTC(tcInput.value)) {
+                alert('Geçersiz TC Kimlik No! Lütfen algoritmayı kontrol edin.');
+                return;
+            }
             // Basit Hash: TC'yi ters çevirip Base64 ile şifrele (DB'de ham veri tutulmaz)
             const secureTC = btoa(tcInput.value.split('').reverse().join('')).substring(0, 20);
 

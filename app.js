@@ -144,6 +144,7 @@ async function loadPortalData() {
             renderFirsatlar(),
             renderDuyurular(),
             renderKesintiler(),
+            fetchHaberler(), // Haber Motoru Başlatıldı
         ]);
 
         // KRİTİK: Önce verileri çek, sonra grafiği oluştur
@@ -1665,4 +1666,66 @@ window.scrollToIlanForm = function() {
     }
 };
 
+/* >> HABER MOTORU (GÜNDEM & HABER) << */
+async function fetchHaberler() {
+    const el = document.getElementById('haber-listesi');
+    if (!el) return;
 
+    try {
+        const { data, error } = await window.supabase
+            .from('haberler')
+            .select('*')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false })
+            .limit(6);
+
+        if (error) throw error;
+        renderHaberler(data);
+    } catch (err) {
+        console.error("Haber akışı hatası:", err);
+        el.innerHTML = '<p style="text-align:center; width:100%; color:#888;">Haberler yüklenemedi.</p>';
+    }
+}
+
+function renderHaberler(haberler) {
+    const el = document.getElementById('haber-listesi');
+    if (!el) return;
+
+    if (!haberler || haberler.length === 0) {
+        el.innerHTML = '<p style="text-align:center; width:100%; color:#888;">Henüz haber girişi yapılmamış.</p>';
+        return;
+    }
+
+    el.innerHTML = haberler.map(h => {
+        const img = h.image_url || 'https://via.placeholder.com/400x200?text=Bahcelievler+Haber';
+        const ozet = h.content && h.content.length > 90 ? h.content.substring(0, 90) + '...' : h.content;
+        
+        return `
+        <div class="cyber-card" onclick="openHaberDetail('${h.id}')" style="min-width: 280px; width: 280px; margin: 0; padding: 0; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; border: 1px solid #eee; flex-shrink: 0;">
+            <div style="height: 150px; overflow: hidden; position: relative;">
+                <img src="${img}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;">
+            </div>
+            <div style="padding: 15px; flex: 1; display: flex; flex-direction: column;">
+                <h4 style="margin: 0 0 8px 0; font-size: 1rem; font-weight: 700; line-height: 1.3; color: var(--dark); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${h.title}</h4>
+                <p style="font-size: 0.85rem; color: #555; margin: 0; flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; line-height: 1.4;">${ozet}</p>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+window.openHaberDetail = async function(id) {
+    try {
+        const { data: h, error } = await window.supabase.from('haberler').select('*').eq('id', id).single();
+        if (error || !h) return;
+
+        const modal = document.getElementById('haber-detail-modal');
+        if (document.getElementById('haber-modal-image')) document.getElementById('haber-modal-image').src = h.image_url || '';
+        if (document.getElementById('haber-modal-title')) document.getElementById('haber-modal-title').textContent = h.title;
+        if (document.getElementById('haber-modal-content')) document.getElementById('haber-modal-content').innerHTML = h.content.replace(/\n/g, '<br>');
+
+        if (modal) {
+            modal.style.display = 'flex';
+            setTimeout(() => { modal.style.visibility = 'visible'; modal.style.opacity = '1'; }, 10);
+        }
+    } catch (err) { console.error(err); }
+};

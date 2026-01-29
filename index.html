@@ -82,18 +82,7 @@
                         <p id="preview-piyasa" style="font-size: 0.75rem; font-weight: bold; margin: 4px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Yükleniyor...</p>
                     </div>
                 </div>
-            </div>
-            <!-- Fiyat Grafiği Widget'ı -->
-            <div class="home-widget cyber-card" data-target="fiyat-dedektifi" style="grid-column: span 2; border-left: 5px solid var(--cyber-pink); cursor: pointer; padding: 15px;">
-                <h4 style="text-align:center; color: var(--cyber-pink); margin: 0 0 10px 0;"><i class="fas fa-chart-area"></i> Bahçelievler Gerçek Enflasyon Grafiği</h4>
-                <div style="position: relative; width: 100%; height: 180px;">
-                    <canvas id="enflasyonChart"></canvas>
-                </div>
-                <p style="font-size:0.6rem; color:#888; text-align:center; margin-top:8px; margin-bottom: 0;">
-                    *Radar verilerine dayalı gerçek zamanlı semt analizi.
-                </p>
-            </div>
-        </section>
+            </div> 
 
 <section id="ilanlar" class="page">
     <h1><i class="fas fa-bullhorn"></i> İLAN PANOSU</h1>
@@ -314,6 +303,10 @@
                     </div>
                     <button type="button" onclick="submitPiyasaVerisi()" class="cyber-submit">RADARA EKLE</button>
                 </form>
+            </div>
+            <div class='cyber-card' style='margin-top:20px; border-top:3px solid var(--cyber-pink);'>
+               <h3 style='font-size:0.9rem; color:var(--cyber-pink);'><i class='fas fa-chart-line'></i> Bahçelievler Gerçek Enflasyon Grafiği</h3>
+               <canvas id='enflasyonChart' style='width:100%; height:180px;'></canvas>
             </div>
         </section>
 

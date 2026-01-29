@@ -160,10 +160,14 @@ async function fetchAndRenderPiyasa() {
         if (error) throw error;
 
         if (tumVeriler) {
-            // Sadece is_active değeri false OLMAYANLARI filtrele (null veya true olanlar gelir)
-            const aktifVeriler = tumVeriler.filter(u => u.is_active !== false);
+            // SÜPER KONTROL V2: Sadece aktif olan ve 45 günden yeni verileri listele
+            const today = new Date();
+            const aktifVeriler = tumVeriler.filter(u => {
+                const recordDate = new Date(u.created_at);
+                const ageInDays = (today - recordDate) / (1000 * 60 * 60 * 24);
+                return u.is_active === true && ageInDays <= 45;
+            });
 
-            // Analiz için tumVeriler, görüntüleme için aktifVeriler gönderilir
             window.PiyasaMotoru.listeOlustur(aktifVeriler, tumVeriler);
         }
     } catch (e) {

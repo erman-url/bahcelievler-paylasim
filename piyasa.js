@@ -196,7 +196,7 @@ async function renderEnflasyonGrafigi() {
     // Analiz tablosundan verileri çek
     const { data, error } = await window.supabase
         .from("piyasa_analiz")
-        .select('created_at, ortalama_fiyat')
+        .select('created_at, fiyat')
         .order('created_at', { ascending: true })
         .limit(10);
 
@@ -213,7 +213,7 @@ async function renderEnflasyonGrafigi() {
             labels: data.map(d => new Date(d.created_at).toLocaleDateString('tr-TR')),
             datasets: [{
                 label: 'Ortalama Fiyat (TL)',
-                data: data.map(d => d.ortalama_fiyat),
+                data: data.map(d => d.fiyat),
                 borderColor: '#ff007f',
                 backgroundColor: 'rgba(255, 0, 127, 0.1)',
                 fill: true,

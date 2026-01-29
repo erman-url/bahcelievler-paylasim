@@ -1000,7 +1000,7 @@ async function updateDashboard() {
 
       const { data: lastPiyasa } = await window.supabase
     .from('piyasa_analiz')
-    .select('urun_adi,fiyat,market_adi,image_url') // Boşlukları virgül dibine çektim, en güvenli hali budur.
+    .select('urun_adi,fiyat,market_adi,image_url')
     .order('created_at', {ascending: false})
     .limit(1);
 
@@ -1578,7 +1578,6 @@ window.deleteKesinti = async (id) => {
 window.openRadarDetail = async function(id) {
     try {
         const { data: urun, error } = await window.supabase
-            .from('piyasa_verileri')
             .from('piyasa_analiz')
             .select('id, urun_adi, fiyat, image_url, market_adi, tarih_etiketi')
             .eq('id', id)

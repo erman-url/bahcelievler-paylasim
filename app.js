@@ -1598,3 +1598,17 @@ window.softDeleteRadar = async (id) => {
         alert("Hata: Girdiğiniz şifre veya TC Kimlik No yanlış!");
     }
 };
+
+function validateTC(tc) {
+    if (!tc || tc.length !== 11 || tc[0] === '0') return false;
+    const digits = tc.split('').map(Number);
+    // 10. Hane Kontrolü: (1,3,5,7,9 haneler toplamı * 7 - 2,4,6,8 haneler toplamı) % 10
+    const oddSum = digits[0] + digits[2] + digits[4] + digits[6] + digits[8];
+    const evenSum = digits[1] + digits[3] + digits[5] + digits[7];
+    const step10 = (oddSum * 7 - evenSum) % 10;
+    if (step10 !== digits[9]) return false;
+    // 11. Hane Kontrolü: (İlk 10 hane toplamı) % 10
+    const totalSum = digits.slice(0, 10).reduce((a, b) => a + b, 0);
+    if (totalSum % 10 !== digits[10]) return false;
+    return true;
+}

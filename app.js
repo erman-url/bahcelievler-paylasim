@@ -110,10 +110,12 @@ async function loadPortalData() {
             renderDuyurular(),
             renderKesintiler(),
             renderEnflasyonGrafigi()
+            renderKesintiler()
         ]);
 
         // KRİTİK: Önce verileri çek, sonra grafiği oluştur
         await fetchAndRenderPiyasa(); 
+        await renderEnflasyonGrafigi(); 
 
         updateDashboard();
     } catch (err) { console.error("Portal yükleme hatası:", err); }

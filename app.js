@@ -1579,6 +1579,7 @@ window.openRadarDetail = async function(id) {
     try {
         const { data: urun, error } = await window.supabase
             .from('piyasa_verileri')
+            .from('piyasa_analiz')
             .select('id, urun_adi, fiyat, image_url, market_adi, tarih_etiketi')
             .eq('id', id)
             .single();

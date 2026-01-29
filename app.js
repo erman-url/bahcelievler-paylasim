@@ -335,6 +335,7 @@ function setupForms() {
             }
             if (!validateTC(tcInput.value)) {
                 alert('Geçersiz TC Kimlik No! Lütfen algoritmayı kontrol edin.');
+                alert('Girilen TC Kimlik Numarası geçersizdir. Lütfen kontrol ediniz.');
                 return;
             }
             // Basit Hash: TC'yi ters çevirip Base64 ile şifrele (DB'de ham veri tutulmaz)
@@ -871,6 +872,10 @@ window.openAdDetail = function(id) {
         const tcNo = prompt("Bu ilanı kaldırmak için TC Kimlik Numaranızı girin:");
         if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
             alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
+            return;
+        }
+        if (!validateTC(tcNo)) {
+            alert("Girilen TC Kimlik Numarası geçersizdir. Lütfen kontrol ediniz.");
             return;
         }
         const secureTC = btoa(tcNo.split('').reverse().join('')).substring(0, 20);
@@ -1485,6 +1490,10 @@ window.deleteAd = async (id) => {
     const tcNo = prompt("İlanı kaldırmak için TC Kimlik Numaranızı girin:");
     if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
         alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
+        return;
+    }
+    if (!validateTC(tcNo)) {
+        alert("Girilen TC Kimlik Numarası geçersizdir. Lütfen kontrol ediniz.");
         return;
     }
     

@@ -1579,6 +1579,7 @@ window.openRadarDetail = async function(id) {
     try {
         const { data: urun, error } = await window.supabase
             .from('piyasa_verileri')
+            .from('piyasa_verileri') // Mühürlendi: piyasa_verileri
             .select('id, urun_adi, fiyat, image_url, market_adi, tarih_etiketi')
             .eq('id', id)
             .single();
@@ -1623,6 +1624,7 @@ window.softDeleteRadar = async (id) => {
 
     // SÜPER KONTROL: Veriyi SİLMİYORUZ, sadece is_active: false yapıyoruz [cite: 2026-01-19]
     // .select() ekleyerek dönen veriyi kontrol ediyoruz (Şifre doğrulaması için)
+    // MÜHÜRLENDİ: TC No yok, sadece şifre ile is_active: false
     const { data, error } = await window.supabase
         .from('piyasa_verileri')
         .update({ is_active: false })

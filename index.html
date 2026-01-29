@@ -38,13 +38,13 @@
                 </div>
             </div>
 
-        <div class="home-hero">
-  <div class="home-hero-pill">
-    <span class="home-hero-text">BAHÇELİEVLER FORUM</span>
-  </div>
-
-
-</div>       
+        <section id="gundem-haber">
+            <h1 class="cyber-header" style="margin-top: 25px; margin-bottom: 15px;">🏙️ GÜNDEM & HABER</h1>
+            <div id="haber-listesi" style="display: flex; overflow-x: auto; gap: 15px; padding: 0 15px 20px 15px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+                <p style="color: #888; width: 100%; text-align: center;">Haberler yükleniyor...</p>
+            </div>
+        </section>
+     
             <div id="home-dashboard">
                 <div class="home-widget cyber-card" data-target="duyurular" style="grid-column: span 2; border-left: 5px solid #ff007f;">
                     <h4><i class="fas fa-bolt fa-beat"></i> SON EKLENEN DUYURULAR</h4>
@@ -457,6 +457,17 @@
             <div style="margin-top:20px;">
                 <button id="radar-delete-btn" class="cyber-submit" style="background:#ff4d4d !important;">RADARI KALDIR</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<div id="haber-detail-modal" class="modal" style="display:none;">
+    <span class="close-detail" onclick="this.parentElement.style.display='none'">&times;</span>
+    <div class="modal-content cyber-card">
+        <img id="haber-modal-image" src="" style="width: 100%; height: auto; max-height: 300px; object-fit: contain; border-radius: 16px; margin-bottom: 20px; background-color: #f0f4f8;">
+        <h2 id="haber-modal-title" style="margin-top: 0; font-size: 1.2rem;"></h2>
+        <div id="haber-modal-content" style="font-size: 0.95rem; line-height: 1.6; color: #333; white-space: pre-wrap; max-height: 50vh; overflow-y: auto;">
+            <!-- Haber metni buraya gelecek -->
         </div>
     </div>
 </div>

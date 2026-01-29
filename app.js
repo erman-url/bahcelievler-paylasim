@@ -129,7 +129,7 @@ async function fetchAndRenderPiyasa() {
     try {
         const { data, error } = await window.supabase
             .from('piyasa_verileri')
-            .select('*')
+            .select('id, urun_adi, fiyat, market_adi, tarih_etiketi, image_url, is_active')
             .order('created_at', { ascending: false });
 
         if (!error && data && window.PiyasaMotoru) {
@@ -795,7 +795,7 @@ window.deleteSikayet = async (id) => {
 async function fetchAndRenderAds() {
     const list = document.getElementById("ads-list");
     if (!list) return;
-    const { data } = await window.supabase.from('ilanlar').select('*').order('created_at', {ascending: false});
+    const { data } = await window.supabase.from('ilanlar').select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3').order('created_at', {ascending: false});
     allAds = data || [];
     
     const searchInput = document.getElementById("ad-search-input");
@@ -853,25 +853,34 @@ window.openAdDetail = function(id) {
         }
     };
 
-    document.getElementById("modal-delete-btn-inner").onclick = () => {
+    document.getElementById("modal-delete-btn-inner").onclick = async () => {
         const userPass = prompt("Bu ilanı silmek için 4 haneli şifrenizi girin:");
         if (userPass === null || userPass.trim() === '') return;
         
-        // Güvenli Silme: Şifre kontrolü artık doğrudan Supabase RLS ile yapılıyor.
-        window.supabase
+        const tcNo = prompt("Güvenlik doğrulaması için TC Kimlik Numaranızı girin:");
+        if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
+            alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
+            return;
+        }
+        const secureTC = btoa(tcNo.split('').reverse().join('')).substring(0, 20);
+
+        const { data, error } = await window.supabase
             .from('ilanlar')
             .delete()
             .eq('id', ad.id)
             .eq('delete_password', userPass)
-            .then(({ error }) => {
-                if (error) {
-                    alert("Hata: Şifre yanlış veya bir sorun oluştu! " + error.message);
-                } else {
-                    alert("İlan başarıyla silindi.");
-                    closeModal();
-                    loadPortalData();
-                }
-            });
+            .eq('tc_no', secureTC)
+            .select();
+
+        if (error) {
+            alert("Hata: " + error.message);
+        } else if (data && data.length > 0) {
+            alert("İlan başarıyla silindi.");
+            closeModal();
+            loadPortalData();
+        } else {
+            alert("Hata: Şifre veya TC Kimlik No yanlış!");
+        }
     };
 
     const modal = document.getElementById("ad-detail-modal");
@@ -1465,14 +1474,22 @@ window.deleteHizmet = async (id, correctPass) => {
 window.deleteAd = async (id) => {
     const userPass = prompt("İlanı silmek için 4 haneli şifrenizi girin:");
     if (!userPass || !userPass.trim()) return;
-
+    
+    const tcNo = prompt("Güvenlik doğrulaması için TC Kimlik Numaranızı girin:");
+    if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
+        alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
+        return;
+    }
+    
     const finalPass = String(userPass).trim();
+    const secureTC = btoa(tcNo.split('').reverse().join('')).substring(0, 20);
 
     // SÜPER KONTROL: Hem sayı hem metin tipini kabul eden mühürlü yapı
     const { data, error } = await window.supabase
         .from('ilanlar')
         .delete()
         .eq('id', id)
+        .eq('tc_no', secureTC)
         .or(`delete_password.eq."${finalPass}",delete_password.eq.${parseInt(finalPass)}`)
         .select();
 
@@ -1483,7 +1500,7 @@ window.deleteAd = async (id) => {
         if (typeof closeModal === "function") closeModal(); 
         loadPortalData(); 
     } else {
-        alert("Hata: Girdiğiniz şifre yanlış veya bu ilanı silme yetkiniz yok!");
+        alert("Hata: Girdiğiniz şifre veya TC Kimlik No yanlış!");
     }
 };
 
@@ -1512,7 +1529,7 @@ window.openRadarDetail = async function(id) {
     try {
         const { data: urun, error } = await window.supabase
             .from('piyasa_verileri')
-            .select('*')
+            .select('id, urun_adi, fiyat, image_url, market_adi, tarih_etiketi')
             .eq('id', id)
             .single();
 
@@ -1530,7 +1547,7 @@ window.openRadarDetail = async function(id) {
 
         // Radarı Kaldır Butonu (Soft Delete)
         const delBtn = document.getElementById("radar-delete-btn");
-        delBtn.onclick = () => window.softDeleteRadar(urun.id, urun.delete_password);
+        delBtn.onclick = () => window.softDeleteRadar(urun.id);
 
         // Modalı Göster
         const modal = document.getElementById("radar-detail-modal");
@@ -1552,7 +1569,14 @@ window.softDeleteRadar = async (id) => {
     const userPass = prompt("Radarı kaldırmak için şifrenizi girin:");
     if (!userPass || !userPass.trim()) return;
 
+    const tcNo = prompt("Güvenlik doğrulaması için TC Kimlik Numaranızı girin:");
+    if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
+        alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
+        return;
+    }
+
     const finalPass = String(userPass).trim();
+    const secureTC = btoa(tcNo.split('').reverse().join('')).substring(0, 20);
 
     // SÜPER KONTROL: Veriyi SİLMİYORUZ, sadece is_active: false yapıyoruz [cite: 2026-01-19]
     // .select() ekleyerek dönen veriyi kontrol ediyoruz (Şifre doğrulaması için)
@@ -1560,18 +1584,17 @@ window.softDeleteRadar = async (id) => {
         .from('piyasa_verileri')
         .update({ is_active: false })
         .eq('id', id)
+        .eq('tc_no', secureTC)
         .or(`delete_password.eq."${finalPass}",delete_password.eq.${parseInt(finalPass) || 0}`)
         .select();
 
     if (error) {
         alert("Sistem Hatası: " + error.message);
     } else if (data && data.length > 0) {
-        // Eğer data dönmüşse güncelleme başarılıdır (Şifre doğru)
         alert("Radar panodan kaldırıldı (Veri analiz için saklandı).");
         if (typeof window.closeRadarModal === "function") window.closeRadarModal();
         if (typeof loadPortalData === "function") loadPortalData(); 
     } else {
-        // Satır güncellenmediyse şifre yanlıştır
-        alert("Hata: Girdiğiniz şifre yanlış!");
+        alert("Hata: Girdiğiniz şifre veya TC Kimlik No yanlış!");
     }
 };

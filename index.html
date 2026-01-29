@@ -83,15 +83,20 @@
                     </div>
                 </div>
             </div> 
-
 <section id="ilanlar" class="page">
-    <h1><i class="fas fa-bullhorn"></i> İLAN PANOSU</h1>
+    <h1 class="cyber-header"><i class="fas fa-bullhorn"></i> İLAN PANOSU</h1>
 
-    <div style="margin-bottom: 20px; padding: 0 5px;">
+    <div style="padding: 0 15px 15px 15px;">
+        <button onclick="document.getElementById('new-ad-form-container').scrollIntoView({behavior: 'smooth'})" class="cyber-submit" style="background:var(--app-blue)!important; width: 100%; border-radius: 12px; font-weight: bold;">
+            <i class="fas fa-plus-circle"></i> YENİ İLAN EKLE
+        </button>
+    </div>
+
+    <div style="margin-bottom: 20px; padding: 0 15px;">
         <input type="text" id="ad-search-input" class="cyber-form" placeholder="🔍 İlan başlığında ara...">
     </div>
 
-    <div class="category-filter-container">
+    <div class="category-filter-container" style="padding: 0 15px;">
         <button class="filter-btn active" onclick="filterAds('all', this)">TÜMÜ</button>
         <button class="filter-btn" onclick="filterAds('Ürün-Eşya', this)">EŞYA</button>
         <button class="filter-btn" onclick="filterAds('İş&İnsan', this)">İŞ</button>
@@ -99,38 +104,43 @@
         <button class="filter-btn" onclick="filterAds('Gayrimenkul', this)">EMLAK</button>
     </div>
 
-    <form id="new-ad-form" class="cyber-form">
-        <input type="text" id="ad-title" maxlength="25" pattern="^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$" placeholder="İlan Başlığı" required>
-        <input type="number" id="ad-price" placeholder="Fiyat (TL)" required>
-        <input type="text" id="ad-contact" maxlength="50" placeholder="İletişim Bilgisi (Telefon / E-posta)" required>
-        
-        <select id="ad-category" required>
-            <option value="" disabled selected>Kategori Seçiniz</option>
-            <option value="Ürün-Eşya">Ürün & Eşya</option>
-            <option value="İş&İnsan">İş & İnsan</option>
-            <option value="Araç">Araç & Oto</option>
-            <option value="Gayrimenkul">Ev & İşyeri</option>
-            <option value="Diğer">Diğer</option>
-        </select>
+    <div id="ads-list" style="min-height: 200px;">
+        <p style="text-align:center; padding:20px; color:#888;">İlanlar yükleniyor...</p>
+    </div>
 
-        <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması (Maks 350 Karakter)"></textarea>
+    <div id="new-ad-form-container" class="cyber-card" style="margin: 30px 15px; border-top: 5px solid var(--app-blue);">
+        <h3 style="text-align: center; margin-bottom: 15px;"><i class="fas fa-edit"></i> İlan Detaylarını Yazın</h3>
+        <form id="new-ad-form" class="cyber-form">
+            <input type="text" id="ad-title" maxlength="25" pattern="^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$" placeholder="İlan Başlığı" required>
+            <input type="number" id="ad-price" placeholder="Fiyat (TL)" required>
+            <input type="text" id="ad-contact" maxlength="50" placeholder="İletişim Bilgisi (Telefon / E-posta)" required>
+            
+            <select id="ad-category" required>
+                <option value="" disabled selected>Kategori Seçiniz</option>
+                <option value="Ürün-Eşya">Ürün & Eşya</option>
+                <option value="İş&İnsan">İş & İnsan</option>
+                <option value="Araç">Araç & Oto</option>
+                <option value="Gayrimenkul">Ev & İşyeri</option>
+                <option value="Diğer">Diğer</option>
+            </select>
 
-        <div id="ad-photo-warning" style="margin: 10px 0; text-align: center;">
-            <p style="font-size:0.75rem; color:#d32f2f; margin-bottom:5px; font-weight:bold;"><i class="fas fa-camera"></i> FOTOĞRAF EKLEMEK ZORUNLUDUR! </p>
-            <p style="font-size:0.65rem; color:#666;">(Maksimum 4 adet fotoğraf)</p>
-        </div>
+            <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması (Maks 350 Karakter)"></textarea>
 
-        <input type="file" id="ads-files" multiple accept="image/png, image/jpeg" required>
-        <input type="text" id="ad-tc-no" maxlength="11" placeholder="TC Kimlik No (Silme işlemi için gereklidir)" required>
+            <div id="ad-photo-warning" style="margin: 10px 0; text-align: center;">
+                <p style="font-size:0.75rem; color:#d32f2f; margin-bottom:5px; font-weight:bold;"><i class="fas fa-camera"></i> FOTOĞRAF EKLEMEK ZORUNLUDUR! </p>
+                <p style="font-size:0.65rem; color:#666;">(Maksimum 4 adet fotoğraf)</p>
+            </div>
 
-        <div style="display:none !important; visibility:hidden !important;">
-            <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
-        </div>
+            <input type="file" id="ads-files" multiple accept="image/png, image/jpeg" required>
+            <input type="text" id="ad-tc-no" maxlength="11" placeholder="TC Kimlik No (Silme işlemi için gereklidir)" required title="Lütfen 11 haneli TC kimlik numaranızı giriniz">
 
-        <button type="submit" id="ad-submit-button" class="cyber-submit">YAYINLA</button> 
-    </form>
+            <div style="display:none !important; visibility:hidden !important;">
+                <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
+            </div>
 
-    <div id="ads-list"></div>
+            <button type="submit" id="ad-submit-button" class="cyber-submit">İLANINI YAYINLA</button> 
+        </form>
+    </div>
 </section>
 
         <section id="sosyal" class="page">

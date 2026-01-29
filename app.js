@@ -1654,3 +1654,11 @@ function validateTC(tc) {
     if (totalSum % 10 !== digits[10]) return false;
     return true;
 }
+
+window.scrollToIlanForm = function() {
+    const formBolumu = document.getElementById('new-ad-form-container');
+    if (formBolumu) {
+        formBolumu.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => { document.getElementById('ad-title')?.focus(); }, 800);
+    }
+};

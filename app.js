@@ -1742,6 +1742,7 @@ window.openHaberDetail = async function(id) {
         }
         if (document.getElementById('haber-modal-title')) document.getElementById('haber-modal-title').textContent = h.title;
         if (document.getElementById('haber-modal-content')) document.getElementById('haber-modal-content').innerHTML = h.content.replace(/\n/g, '<br>');
+        if (document.getElementById('haber-modal-content')) document.getElementById('haber-modal-content').innerHTML = (h.icerik || h.content || '').replace(/\n/g, '<br>');
 
         if (modal) {
             modal.style.display = 'flex'; // Modal'ı flex olarak göster.
@@ -1761,6 +1762,12 @@ window.closeHaberModal = function() {
         const modalImg = document.getElementById('haber-modal-image');
         if (modalImg) modalImg.src = '';
         // Sayfa kaydırmasını geri aç
+        // CSS animasyonunun bitmesini bekle
+        setTimeout(() => {
+            modal.style.display = 'none';
+            const modalImg = document.getElementById('haber-modal-image');
+            if (modalImg) modalImg.src = '';
+        }, 300);
         document.body.style.overflow = 'auto';
     }
 };

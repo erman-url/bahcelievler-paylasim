@@ -128,7 +128,7 @@ async function fetchAndRenderPiyasa() {
 
     try {
         const { data, error } = await window.supabase
-            .from('piyasa_verileri')
+            .from('piyasa_analiz')
             .select('id, urun_adi, fiyat, market_adi, tarih_etiketi, image_url, is_active, created_at')
             .order('created_at', { ascending: false });
 

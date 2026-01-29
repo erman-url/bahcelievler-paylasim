@@ -1756,14 +1756,11 @@ window.openHaberDetail = async function(id) {
 window.closeHaberModal = function() {
     const modal = document.getElementById('haber-detail-modal');
     if (modal) {
+        document.body.style.overflow = 'auto';
+        modal.style.display = 'none';
         modal.style.opacity = '0';
         modal.style.visibility = 'hidden';
-        document.body.style.overflow = 'auto'; // Sayfa kaydırmasını geri aç
-        
-        setTimeout(() => {
-            modal.style.display = 'none';
-            const modalImg = document.getElementById('haber-modal-image');
-            if (modalImg) modalImg.src = '';
-        }, 300);
+        const modalImg = document.getElementById('haber-modal-image');
+        if (modalImg) modalImg.src = '';
     }
 };

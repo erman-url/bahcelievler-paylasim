@@ -179,7 +179,7 @@ async function renderEnflasyonGrafigi() {
 
     // Analiz tablosundan verileri çek
     const { data, error } = await window.supabase
-        .from('piyasa_analizi')
+        .from("piyasa_analizi")
         .select('created_at, ortalama_fiyat')
         .order('created_at', { ascending: true })
         .limit(10);

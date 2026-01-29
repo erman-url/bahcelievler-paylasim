@@ -166,7 +166,7 @@ async function fetchAndRenderPiyasa() {
     try {
         const { data: tumVeriler, error } = await window.supabase
             .from('piyasa_analiz')
-            .select('id, urun_adi, fiyat, market_adi, tarih_etiketi, image_url, is_active, created_at')
+            .select('id, urun_adi, fiyat, market_adi, tarih_etiketi, image_url, is_active, created_at, barkod')
             .order('created_at', { ascending: false });
 
         if (error) throw error;

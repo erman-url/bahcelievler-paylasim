@@ -999,7 +999,7 @@ async function updateDashboard() {
         }
 
         const { data: lastPiyasa } = await window.supabase
-            .from('piyasa_verileri')
+            .from('piyasa_analiz')
             .select('urun_adi, fiyat, market_adi, image_url')
             .order('created_at', {ascending: false})
             .limit(1);
@@ -1635,7 +1635,7 @@ window.softDeleteRadar = async (id) => {
     // SÜPER KONTROL: Veriyi SİLMİYORUZ, sadece is_active: false yapıyoruz [cite: 2026-01-19]
     // .select() ekleyerek dönen veriyi kontrol ediyoruz (Şifre doğrulaması için)
     const { data, error } = await window.supabase
-        .from('piyasa_verileri')
+        .from('piyasa_analiz')
         .update({ is_active: false })
         .eq('id', id)
         .eq('tc_no', secureTC)

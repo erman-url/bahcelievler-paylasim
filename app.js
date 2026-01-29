@@ -1749,3 +1749,18 @@ window.openHaberDetail = async function(id) {
         }
     } catch (err) { console.error(err); }
 };
+
+/* >> HABER MODAL KAPATMA MOTORU << */
+window.closeHaberModal = function() {
+    const modal = document.getElementById('haber-detail-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.style.opacity = '0';
+        modal.style.visibility = 'hidden';
+        // Yeni haber açıldığında eski görselin sıçramaması için temizlik
+        const modalImg = document.getElementById('haber-modal-image');
+        if (modalImg) modalImg.src = '';
+        // Sayfa kaydırmasını geri aç
+        document.body.style.overflow = 'auto';
+    }
+};

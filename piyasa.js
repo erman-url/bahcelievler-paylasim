@@ -184,7 +184,12 @@ async function renderEnflasyonGrafigi() {
         .order('created_at', { ascending: true })
         .limit(10);
 
-    if (error || !data || data.length === 0) return;
+    if (error) {
+        console.error("Grafik Veri Hatası:", error);
+        return;
+    }
+
+    if (!data || data.length === 0) return;
 
     new Chart(ctx, {
         type: 'line',

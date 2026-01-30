@@ -186,7 +186,7 @@ async function loadPortalData() {
             renderTavsiyeler(),
             renderSikayetler(),
             renderFirsatlar(),
-            renderDuyurular(),
+            fetchDuyurular(), // Duyuru Motoru Güncellendi
             renderKesintiler(),
             fetchHaberler(), // Haber Motoru Başlatıldı
         ]);
@@ -1148,7 +1148,8 @@ function showSlides() {
     setTimeout(showSlides, 4000);
 }
 
-async function renderDuyurular() {
+/* >> DUYURU MOTORU: RESMİ BİLGİ AKIŞI << */
+async function fetchDuyurular() {
     const previewEl = document.getElementById('preview-duyuru'); 
     const listEl = document.getElementById('duyuru-list'); 
 
@@ -1162,21 +1163,26 @@ async function renderDuyurular() {
         return;
     }
 
+    // İsim Kontrolü: Duyurular için 'baslik' ve 'icerik' öncelikli
     if (previewEl && data.length > 0) {
-        previewEl.textContent = data[0].title;
+        previewEl.textContent = data[0].baslik || data[0].title || "Duyuru";
     }
 
     if (listEl) {
-        listEl.innerHTML = data.map(d => `
-            <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff007f;">
+        listEl.innerHTML = data.map(d => {
+            const baslik = d.baslik || d.title || "Duyuru";
+            const icerik = d.icerik || d.content || "";
+            const ozet = icerik.length > 120 ? icerik.substring(0, 120) + "..." : icerik;
+            return `
+            <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff007f; cursor:pointer;" onclick="openHaberDetail('${d.id}', 'duyuru')">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <small style="color:#888;">${new Date(d.created_at).toLocaleDateString('tr-TR')}</small>
                     <i class="fas fa-bullhorn" style="color:#ff007f;"></i>
                 </div>
-                <h3 style="margin:10px 0 5px 0; color:var(--dark);">${d.title}</h3>
-                <p style="font-size:0.9rem; color:#444; line-height:1.4;">${d.content}</p>
+                <h3 style="margin:10px 0 5px 0; color:var(--dark);">${baslik}</h3>
+                <p style="font-size:0.9rem; color:#444; line-height:1.4;">${ozet}</p>
             </div>
-        `).join('') || "<p style='text-align:center; padding:20px;'>Aktif duyuru bulunmuyor.</p>";
+        `}).join('') || "<p style='text-align:center; padding:20px;'>Aktif duyuru bulunmuyor.</p>";
     }
 }
 
@@ -1781,11 +1787,12 @@ function renderHaberler(haberler) {
 
     el.innerHTML = haberler.map(h => {
         const img = h.image_url || 'https://via.placeholder.com/400x200?text=Bahcelievler+Haber';
-        const ozet = (h.ozet || h.icerik || h.content || '').substring(0, 100) + '...';
-        const baslik = h.baslik || h.title || 'Bahçelievler Haber';
+        // İsim Kontrolü: Haberler için 'title' ve 'content' öncelikli
+        const ozet = (h.content || h.icerik || h.ozet || '').substring(0, 100) + '...';
+        const baslik = h.title || h.baslik || 'Bahçelievler Haber';
         
         return `
-        <div class="cyber-card haber-card" onclick="openHaberDetail('${h.id}')">
+        <div class="cyber-card haber-card" onclick="openHaberDetail('${h.id}', 'haber')">
             <img src="${img}">
             <div class="haber-card-content">
                 <h4>${baslik}</h4>
@@ -1819,13 +1826,19 @@ function generateStructuredData(h) {
 }
 
 /* >> HABER DETAY MOTORU - REFERANS GÜNCELLEME V2 << */
-window.openHaberDetail = async function(id) {
+window.openHaberDetail = async function(id, type = 'haber') {
     // Kilit Kırma: Sayfa kaydırmayı dondur (Kullanıcı etkileşimi için şart)
     document.body.style.overflow = 'hidden'; 
 
+    const isDuyuru = type === 'duyuru';
+    const tableName = isDuyuru ? 'duyurular' : 'haberler';
+    const labelHtml = isDuyuru 
+        ? '<span style="display:block; font-size:0.75rem; color:#ff007f; font-weight:bold; margin-bottom:5px; letter-spacing:1px;">📢 RESMİ DUYURU</span>' 
+        : '<span style="display:block; font-size:0.75rem; color:#0056b3; font-weight:bold; margin-bottom:5px; letter-spacing:1px;">📰 SEMT HABERİ</span>';
+
     try {
         const { data: h, error } = await window.supabase
-            .from('haberler')
+            .from(tableName)
             .select('*')
             .eq('id', id)
             .single();
@@ -1853,24 +1866,29 @@ window.openHaberDetail = async function(id) {
         const modalImage = document.getElementById('haber-modal-image');
         
         if (modalImage) {
-            // Görsel yüklenene kadar bir yer tutucu (placeholder) ayarları
-            modalImage.style.backgroundColor = '#f0f4f8'; 
-            modalImage.style.minHeight = '200px'; 
-            
-            modalImage.onload = () => {
-                modalImage.style.backgroundColor = '';
-                modalImage.style.minHeight = '';
-            };
-            modalImage.onerror = () => {
-                modalImage.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-            };
-            
-            modalImage.src = h.image_url || '';
+            if (h.image_url) {
+                modalImage.style.display = 'block';
+                // Görsel yüklenene kadar bir yer tutucu (placeholder) ayarları
+                modalImage.style.backgroundColor = '#f0f4f8'; 
+                modalImage.style.minHeight = '200px'; 
+                
+                modalImage.onload = () => {
+                    modalImage.style.backgroundColor = '';
+                    modalImage.style.minHeight = '';
+                };
+                modalImage.onerror = () => {
+                    modalImage.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+                };
+                modalImage.src = h.image_url;
+            } else {
+                modalImage.style.display = 'none';
+            }
         }
 
         // 1. MADDE GÜNCELLEMESİ: Undefined ve İçerik Kontrolü
         if (document.getElementById('haber-modal-title')) {
-            document.getElementById('haber-modal-title').textContent = h.baslik || h.title || 'Bahçelievler Haber';
+            const rawTitle = h.baslik || h.title || (isDuyuru ? 'Duyuru Detayı' : 'Bahçelievler Haber');
+            document.getElementById('haber-modal-title').innerHTML = labelHtml + rawTitle;
         }
 
         if (document.getElementById('haber-modal-content')) {

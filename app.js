@@ -954,20 +954,20 @@ window.openAdDetail = function(id) {
     }
 
     document.getElementById("modal-delete-btn-inner").onclick = async () => {
-        // SÜPER KONTROL: Hashleme kaldırıldı, ham veri ile sorgulama yapılıyor
+        // SÜPER KONTROL: Şifreleme tamamen kaldırıldı, ham numerik eşleşme aktif
         const tcNo = prompt("Bu ilanı kaldırmak için TC Kimlik Numaranızı girin:");
         if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
             alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
             return;
         }
-        
+        // secureTC artık sadece ham veriyi temsil eder
         const secureTC = tcNo.trim();
 
         const { data, error } = await window.supabase
             .from('ilanlar')
             .update({ is_active: false })
             .eq('id', ad.id)
-            .eq('tc_no', secureTC)
+            .eq('tc_no', secureTC) // DB'deki numerik veriyle birebir eşleşir
             .select();
 
         if (error) {

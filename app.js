@@ -1712,6 +1712,29 @@ function renderHaberler(haberler) {
     }).join('');
 }
 
+/* >> SEO: GOOGLE NEWS SCHEMA MOTORU << */
+function generateStructuredData(h) {
+    const scriptId = 'dynamic-news-schema';
+    let script = document.getElementById(scriptId);
+    if (script) script.remove();
+
+    script = document.createElement('script');
+    script.id = scriptId;
+    script.type = 'application/ld+json';
+
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "headline": h.baslik || h.title || 'Bahçelievler Haber',
+        "image": [ h.image_url || 'https://via.placeholder.com/1200x675' ],
+        "datePublished": h.created_at || new Date().toISOString(),
+        "author": { "@type": "Organization", "name": "Bahçelievler Forum" }
+    };
+
+    script.textContent = JSON.stringify(schema);
+    document.head.appendChild(script);
+}
+
 /* >> HABER DETAY MOTORU - REFERANS GÜNCELLEME V2 << */
 window.openHaberDetail = async function(id) {
     // Kilit Kırma: Sayfa kaydırmayı dondur (Kullanıcı etkileşimi için şart)
@@ -1729,6 +1752,19 @@ window.openHaberDetail = async function(id) {
             document.body.style.overflow = 'auto'; // Hata durumunda kilidi aç
             return;
         }
+
+        // SEO MÜHÜRLERİ: Dinamik Başlık ve Meta Açıklama
+        const seoTitle = h.baslik || h.title || 'Bahçelievler Haber';
+        document.title = seoTitle;
+
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) {
+            const seoContent = (h.ozet || h.icerik || h.content || '').substring(0, 160);
+            metaDesc.setAttribute('content', seoContent);
+        }
+
+        // SEO: Schema.org verisini bas
+        generateStructuredData(h);
 
         const modal = document.getElementById('haber-detail-modal');
         const modalImage = document.getElementById('haber-modal-image');
@@ -1777,11 +1813,61 @@ window.openHaberDetail = async function(id) {
 
 /* >> HABER MODAL KAPATMA MOTORU << */
 window.closeHaberModal = function() {
+    document.title = 'Bahçelievler Forum';
+    
+    const schemaScript = document.getElementById('dynamic-news-schema');
+    if (schemaScript) schemaScript.remove();
+
     document.body.style.overflow = 'auto'; 
     const modal = document.getElementById('haber-detail-modal');
     if (modal) {
         modal.style.display = 'none';
         const img = document.getElementById('haber-modal-image');
         if (img) img.src = ''; 
+    }
+};
+
+/* >> YASAL BİLGİ MODAL MOTORU << */
+window.openLegalModal = function(type) {
+    const modal = document.getElementById('legal-modal');
+    const contentEl = document.getElementById('legal-modal-content');
+    
+    // İçerikler showLegal fonksiyonundan alınmıştır
+    const contents = {
+        'kvkk': `
+            <div style="text-align:left; font-size:0.8rem; line-height:1.4; color:#333; padding:5px;">
+                <h3 style="text-align:center; color:#000; border-bottom:1px solid #eee; padding-bottom:10px;">🛡️ KVKK AYDINLATMA METNİ</h3>
+                <p><b>1. VERİ SORUMLUSU:</b> 6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) uyarınca kişisel verileriniz, veri sorumlusu sıfatıyla <b>Bahçelievler Forum</b> tarafından işlenmektedir.</p>
+                <p><b>2. İŞLENEN VERİLER:</b> E-posta, IP adresi, konum bilgisi ve yüklenen görseller.</p>
+                <p><b>3. AMAÇLAR:</b> İlan doğrulama, güvenlik sağlama ve yasal bildirimler.</p>
+                <p><b>4. HAKLARINIZ:</b> Verilerinizi silme ve bilgi alma hakkına sahipsiniz.</p>
+                <p style="font-size:0.7rem; color:#888; margin-top:10px;"><i>Detaylı metin için İletişim sayfasını ziyaret ediniz.</i></p>
+            </div>`,
+        'disclaimer': `
+            <div style="text-align:left; font-size:0.8rem; line-height:1.4; color:#333; padding:5px;">
+                <h3 style="text-align:center; color:#d32f2f; border-bottom:1px solid #eee; padding-bottom:10px;">⚖️ KULLANIM KOŞULLARI</h3>
+                <p><b>1. SORUMLULUK REDDİ:</b> Platformda yayınlanan ilan ve içeriklerden kullanıcılar sorumludur. Bahçelievler Forum doğruluk garantisi vermez.</p>
+                <p><b>2. TİCARET:</b> Alışverişlerde oluşabilecek zararlardan platform sorumlu değildir.</p>
+                <p><b>3. GÜVENLİK:</b> Kişisel şifrelerinizi kimseyle paylaşmayınız.</p>
+                <p style="font-size:0.7rem; color:#d32f2f; font-weight:bold; margin-top:10px;"><i>Siteyi kullanan herkes bu şartları kabul etmiş sayılır.</i></p>
+            </div>`
+    };
+
+    if(contents[type]) {
+        contentEl.innerHTML = contents[type];
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.style.visibility = 'visible';
+            modal.style.opacity = '1';
+        }, 10);
+    }
+};
+
+window.closeLegalModal = function() {
+    const modal = document.getElementById('legal-modal');
+    if (modal) {
+        modal.style.opacity = '0';
+        modal.style.visibility = 'hidden';
+        setTimeout(() => { modal.style.display = 'none'; }, 300);
     }
 };

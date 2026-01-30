@@ -598,3 +598,25 @@ h1:not(.cyber-header) i {
     line-height: 1.4;
 }
 /* DOSYA SONU - FAZLADAN PARANTEZ SİLİNDİ */
+
+/* >> YASAL BİLGİ BARI (FOOTER ÜSTÜ) << */
+.legal-footer-bar {
+    position: fixed;
+    bottom: 70px; /* Footer yüksekliğine göre ayarlandı */
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 0.65rem;
+    z-index: 9990; /* Footer'ın (10000) altında kalmalı */
+    padding: 5px 0;
+    background: linear-gradient(to top, rgba(240, 244, 248, 0.9), rgba(240, 244, 248, 0));
+    pointer-events: none; /* Boşluklara tıklamayı engelleme */
+}
+.legal-footer-bar a {
+    color: #666;
+    text-decoration: none;
+    pointer-events: auto; /* Linklere tıklanabilsin */
+    font-weight: 600;
+    margin: 0 5px;
+    text-shadow: 0 1px 0 #fff;
+}

@@ -1702,7 +1702,7 @@ function renderHaberler(haberler) {
         const baslik = h.baslik || h.title || 'Haber';
         
         return `
-        <div class="cyber-card haber-card" onclick="openHaberDetail('${h.id}')" style="margin: 0; padding: 0; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; border: 1px solid #eee; scroll-snap-align: start;">
+        <div class="cyber-card haber-card" onclick="openHaberDetail('${h.id}')" style="margin: 0; padding: 0; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; border: 1px solid #eee;">
             <div style="height: 150px; overflow: hidden; position: relative;">
                 <img src="${img}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;">
             </div>
@@ -1761,7 +1761,7 @@ window.openHaberDetail = async function(id) {
         if (document.getElementById('haber-modal-content')) {
             // Hem 'icerik' hem 'content' sütunlarını tarar, boşsa hata vermez
             const icerik = h.icerik || h.content || '';
-            document.getElementById('haber-modal-content').innerHTML = icerik.replace(/\n/g, '<br>');
+            document.getElementById('haber-modal-content').textContent = icerik;
         }
 
         if (modal) {

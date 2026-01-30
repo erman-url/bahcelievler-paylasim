@@ -540,14 +540,11 @@ h1:not(.cyber-header) i {
     gap: 15px;
     padding: 15px;
     scroll-snap-type: x mandatory;
-    align-items: stretch;
     -webkit-overflow-scrolling: touch;
-    justify-content: center;
 }
 
 .haber-card {
-    flex: 0 0 85%;
-    max-width: 320px;
-    margin: 0 auto;
+    flex: 0 0 300px;
+    scroll-snap-align: center;
 }
 /* DOSYA SONU - FAZLADAN PARANTEZ SİLİNDİ */

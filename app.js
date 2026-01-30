@@ -1682,10 +1682,15 @@ window.deleteKesinti = async (id) => {
 /* >> RADAR ÖZEL MODAL MOTORU << */
 window.openRadarDetail = async function(id) {
     try {
+        // ID Güvenlik Kontrolü
+        const safeId = parseInt(id);
+        if (isNaN(safeId)) return;
+
         const { data: urun, error } = await window.supabase
             .from('piyasa_verileri')
             .select('id, urun_adi, fiyat, image_url, market_adi, tarih_etiketi')
             .eq('id', id)
+            .eq('id', safeId)
             .single();
 
         if (error || !urun) return;
@@ -1725,6 +1730,10 @@ window.softDeleteRadar = async (id) => {
     if (!userPass || !userPass.trim()) return;
     
     const finalPass = String(userPass).trim();
+
+    // Şifre Formatı Kontrolü (Mühür)
+    const passCheck = window.validateComplexPassword(finalPass);
+    if (passCheck) { alert(passCheck); return; }
 
     const { data, error } = await window.supabase
         .from('piyasa_verileri')

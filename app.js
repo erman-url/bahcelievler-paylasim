@@ -1747,7 +1747,7 @@ window.openHaberDetail = async function(id) {
             modalImage.onerror = () => {
                 modalImage.style.backgroundColor = '';
                 modalImage.style.minHeight = '';
-                modalImage.src = 'https://via.placeholder.com/400x200?text=Görsel+Yüklenemedi';
+                modalImage.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
             };
             
             modalImage.src = h.image_url || '';
@@ -1781,10 +1781,10 @@ window.openHaberDetail = async function(id) {
 
 /* >> HABER MODAL KAPATMA MOTORU << */
 window.closeHaberModal = function() {
+    document.body.style.overflow = 'auto'; 
     const modal = document.getElementById('haber-detail-modal');
     if (modal) {
         modal.style.display = 'none';
-        document.body.style.overflow = 'auto'; // Kaydırmayı anında aç
         const img = document.getElementById('haber-modal-image');
         if (img) img.src = ''; 
     }

@@ -542,10 +542,12 @@ h1:not(.cyber-header) i {
     scroll-snap-type: x mandatory;
     align-items: stretch;
     -webkit-overflow-scrolling: touch;
+    justify-content: center;
 }
 
 .haber-card {
     flex: 0 0 85%;
     max-width: 320px;
+    margin: 10px auto;
 }
 /* DOSYA SONU - FAZLADAN PARANTEZ SİLİNDİ */

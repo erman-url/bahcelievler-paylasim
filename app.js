@@ -1713,21 +1713,32 @@ function renderHaberler(haberler) {
     }).join('');
 }
 
+/* >> HABER DETAY MOTORU - REFERANS GÜNCELLEME V2 << */
 window.openHaberDetail = async function(id) {
-    document.body.style.overflow = 'hidden'; // Kilit Kırma: Sayfa kaydırmayı kilitle
+    // Kilit Kırma: Sayfa kaydırmayı dondur (Kullanıcı etkileşimi için şart)
+    document.body.style.overflow = 'hidden'; 
+
     try {
-        const { data: h, error } = await window.supabase.from('haberler').select('*').eq('id', id).single();
-        if (error || !h) return;
+        const { data: h, error } = await window.supabase
+            .from('haberler')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error || !h) {
+            console.error("Haber bulunamadı:", error);
+            document.body.style.overflow = 'auto'; // Hata durumunda kilidi aç
+            return;
+        }
 
         const modal = document.getElementById('haber-detail-modal');
         const modalImage = document.getElementById('haber-modal-image');
         
         if (modalImage) {
-            // Görsel yüklenene kadar bir yer tutucu göstererek kaymaları engelle.
-            modalImage.style.backgroundColor = '#f0f4f8'; // Placeholder rengi
-            modalImage.style.minHeight = '200px'; // Kaymayı önlemek için geçici yükseklik
+            // Görsel yüklenene kadar bir yer tutucu (placeholder) ayarları
+            modalImage.style.backgroundColor = '#f0f4f8'; 
+            modalImage.style.minHeight = '200px'; 
             
-            // Gerçek resmi yükle ve stilleri temizle
             modalImage.onload = () => {
                 modalImage.style.backgroundColor = '';
                 modalImage.style.minHeight = '';
@@ -1735,31 +1746,48 @@ window.openHaberDetail = async function(id) {
             modalImage.onerror = () => {
                 modalImage.style.backgroundColor = '';
                 modalImage.style.minHeight = '';
-                // Hata durumunda alternatif bir görsel göster
                 modalImage.src = 'https://via.placeholder.com/400x200?text=Görsel+Yüklenemedi';
             };
             
             modalImage.src = h.image_url || '';
         }
-        if (document.getElementById('haber-modal-title')) document.getElementById('haber-modal-title').textContent = h.title;
-        if (document.getElementById('haber-modal-content')) document.getElementById('haber-modal-content').innerHTML = (h.icerik || h.content || '').replace(/\n/g, '<br>');
+
+        // 1. MADDE GÜNCELLEMESİ: Undefined ve İçerik Kontrolü
+        if (document.getElementById('haber-modal-title')) {
+            document.getElementById('haber-modal-title').textContent = h.title || 'Başlıksız Haber';
+        }
+
+        if (document.getElementById('haber-modal-content')) {
+            // Hem 'icerik' hem 'content' sütunlarını tarar, boşsa hata vermez
+            const hamMetin = h.icerik || h.content || h.ozet || "İçerik henüz eklenmemiş.";
+            document.getElementById('haber-modal-content').innerHTML = hamMetin.replace(/\n/g, '<br>');
+        }
 
         if (modal) {
+            // Modal'ı görünür yap ve hiyerarşiyi tetikle
             modal.style.display = 'flex';
-            modal.style.opacity = '1';
-            modal.style.visibility = 'visible';
+            // CSS transition varsaOpacity ve Visibility tetikle
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                modal.style.visibility = 'visible';
+            }, 10);
         }
-    } catch (err) { console.error(err); }
+    } catch (err) { 
+        console.error("Portal Hatası:", err);
+        document.body.style.overflow = 'auto'; // Kritik hata durumunda kilit kırma
+    }
 };
 
 /* >> HABER MODAL KAPATMA MOTORU << */
 window.closeHaberModal = function() {
     const modal = document.getElementById('haber-detail-modal');
     if (modal) {
-        document.body.style.overflow = 'auto';
         modal.style.display = 'none';
         modal.style.opacity = '0';
         modal.style.visibility = 'hidden';
+        // KİLİT KIRICI: Sayfa kaydırmasını her koşulda geri açar
+        document.body.style.overflow = 'auto'; 
+        
         const modalImg = document.getElementById('haber-modal-image');
         if (modalImg) modalImg.src = '';
     }

@@ -4,6 +4,14 @@ let allAds = [];
 let isProcessing = false;
 let currentCategory = 'all'; 
 
+/* >> GÜVENLİK MOTORU: SHA-256 HASH << */
+async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 /* >> GÖRSEL OPTİMİZASYON MOTORU (STABİL) << */
 async function optimizeImage(file) {
     if (!file) return null;
@@ -380,9 +388,14 @@ function setupForms() {
                 return;
             }
 
-            // SÜPER KONTROL: Kayıt anında hashleme tamamen devre dışı bırakıldı
+            // SÜPER KONTROL: Maskeleme ve Token Motoru Devrede
             const tcInput = document.getElementById("ad-tc-no");
-            const secureTC = tcInput.value.trim(); // Sadece ham metni al
+            const rawTC = tcInput.value.trim(); 
+            
+            // 1. Maskeleme (DB'de görünecek - Yasal Güvenlik)
+            const maskedTC = rawTC.substring(0, 3) + "******" + rawTC.substring(9);
+            // 2. Token (Silme yetkisi için gizli anahtar - İşlem Güvenliği)
+            const deleteToken = await sha256(rawTC);
 
             const btn = document.getElementById("ad-submit-button");
             isProcessing = true;
@@ -400,7 +413,8 @@ function setupForms() {
                     category: document.getElementById("ad-category").value,
                     content: contentVal,
                     contact: document.getElementById("ad-contact").value,
-                    tc_no: secureTC, // ARINDILMIŞ HAM VERİ
+                    tc_no: maskedTC, // Maskeli Veri
+                    delete_token: deleteToken, // Hashli Token
                     is_active: true,
                     image_url: urls[0] || null,
                     image_url_2: urls[1] || null,
@@ -951,14 +965,15 @@ window.openAdDetail = function(id) {
             alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
             return;
         }
-        // secureTC artık sadece ham veriyi temsil eder
-        const secureTC = tcNo.trim();
+        
+        const rawInput = tcNo.trim();
+        const tokenHash = await sha256(rawInput);
 
         const { data, error } = await window.supabase
             .from('ilanlar')
             .update({ is_active: false })
             .eq('id', ad.id)
-            .eq('tc_no', secureTC) // DB'deki numerik veriyle birebir eşleşir
+            .eq('delete_token', tokenHash) // Hashlenmiş token ile güvenli eşleşme
             .select();
 
         if (error) {
@@ -1571,13 +1586,14 @@ window.deleteAd = async (id) => {
         return;
     }
     
-    const secureTC = tcNo.trim();
+    const rawInput = tcNo.trim();
+    const tokenHash = await sha256(rawInput);
 
     const { data, error } = await window.supabase
         .from('ilanlar')
         .update({ is_active: false })
         .eq('id', id)
-        .eq('tc_no', secureTC)
+        .eq('delete_token', tokenHash)
         .select();
 
     if (error) {

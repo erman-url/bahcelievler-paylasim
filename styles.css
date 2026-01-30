@@ -538,8 +538,14 @@ h1:not(.cyber-header) i {
     display: flex;
     overflow-x: auto;
     gap: 15px;
-    padding: 10px;
+    padding: 15px;
     scroll-snap-type: x mandatory;
+    align-items: stretch;
     -webkit-overflow-scrolling: touch;
+}
+
+.haber-card {
+    flex: 0 0 85%;
+    max-width: 320px;
 }
 /* DOSYA SONU - FAZLADAN PARANTEZ SİLİNDİ */

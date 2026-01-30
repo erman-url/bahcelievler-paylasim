@@ -709,6 +709,20 @@ window.openFirsatDetail = async function(id) {
                 buyBtn.textContent = "MAĞAZA BİLGİSİ";
                 buyBtn.onclick = () => alert("Yerel esnaf fırsatıdır.");
             }
+
+            // WhatsApp Paylaş Butonu Enjeksiyonu
+            const oldShare = document.getElementById("modal-share-btn");
+            if (oldShare) oldShare.remove();
+
+            const shareBtn = document.createElement("button");
+            shareBtn.id = "modal-share-btn";
+            shareBtn.className = "cyber-submit";
+            shareBtn.style.cssText = "background: #25D366 !important; margin-top: 5px; margin-bottom: 20px;";
+            shareBtn.innerHTML = '<i class="fab fa-whatsapp"></i> PAYLAŞ';
+            shareBtn.onclick = () => window.shareOnWhatsApp(f.title, 'firsat-' + f.id);
+            
+            buyBtn.style.marginBottom = "10px";
+            buyBtn.after(shareBtn);
         }
 
         // Modalı ekranda göster

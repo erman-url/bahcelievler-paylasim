@@ -91,11 +91,10 @@ async function submitPiyasaVerisi() {
         const barkodInput = document.getElementById("piyasa-barkod");
         const marketAdiInput = document.getElementById("piyasa-market");
         const passInput = document.getElementById("piyasa-pass");
-        const tcInput = document.getElementById("piyasa-tc");
 
         // Girdi Zorunluluğu Mühürü
-        if (!barkodInput.value.trim() || !urunAdiInput.value.trim() || !fiyatInput.value.trim() || !marketAdiInput.value || !passInput.value.trim() || !tcInput.value.trim()) {
-            alert("HATA: Lütfen tüm alanları doldurunuz (Barkod, Ürün, Fiyat, Market, TC, Şifre).");
+        if (!barkodInput.value.trim() || !urunAdiInput.value.trim() || !fiyatInput.value.trim() || !marketAdiInput.value || !passInput.value.trim()) {
+            alert("HATA: Lütfen tüm alanları doldurunuz (Barkod, Ürün, Fiyat, Market, Şifre).");
             return;
         }
 
@@ -103,13 +102,6 @@ async function submitPiyasaVerisi() {
             alert("HATA: Görsel yüklemek zorunludur.");
             return;
         }
-
-        const tcVal = tcInput.value.trim();
-        if (tcVal.length !== 11 || isNaN(tcVal)) {
-            alert("HATA: Radar kaydı için 11 haneli TC No zorunludur.");
-            return;
-        }
-        const secureTC = tcVal.trim();
 
         const fiyat = parseFloat(fiyatInput.value);
         const urunAdi = urunAdiInput.value;
@@ -153,7 +145,6 @@ async function submitPiyasaVerisi() {
             market_adi: marketAdi,
             image_url: publicUrl,
             delete_password: pass,
-            tc_no: secureTC,
             tarih_etiketi: bugun,
             is_active: true 
         }]);

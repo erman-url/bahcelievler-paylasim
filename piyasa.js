@@ -168,7 +168,6 @@ async function submitPiyasaVerisi() {
 async function fetchAndRenderPiyasa() {
     try {
         const { data: tumVeriler, error } = await window.supabase
-            .from('piyasa_analiz')
             .from('piyasa_verileri')
             .select('id,urun_adi,fiyat,market_adi,tarih_etiketi,image_url,is_active,created_at,barkod')
             .order('created_at', { ascending: false });
@@ -181,9 +180,6 @@ async function fetchAndRenderPiyasa() {
             // SÜPER KONTROL V2: Sadece aktif olan ve 45 günden yeni verileri listele
             const today = new Date();
             const aktifVeriler = tumVeriler.filter(u => {
-                const recordDate = new Date(u.created_at);
-                const ageInDays = (today - recordDate) / (1000 * 60 * 60 * 24);
-                return u.is_active === true && ageInDays <= 45;
                 return u.is_active === true;
             });
 

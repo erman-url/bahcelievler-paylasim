@@ -98,6 +98,10 @@ async function submitPiyasaVerisi() {
             return;
         }
 
+        // Şifre Kontrolü (Global Fonksiyon)
+        const passCheck = window.validateComplexPassword(passInput.value);
+        if (passCheck) { alert(passCheck); return; }
+
         if (!fileInput.files || fileInput.files.length === 0) {
             alert("HATA: Görsel yüklemek zorunludur.");
             return;

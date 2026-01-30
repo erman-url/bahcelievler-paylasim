@@ -12,6 +12,25 @@ async function sha256(message) {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+/* >> ŞİFRE DOĞRULAMA MOTORU (YENİ) << */
+window.validateComplexPassword = function(password) {
+    const errorMsg = "Şifre 1 harf ve 4 rakam olmalı (Örn: S1571). Aynı rakam 3 kez yan yana gelemez ve ardışık rakam (123) içeremez.";
+    if (!password) return errorMsg;
+    
+    // 1. Format: 1 Harf + 4 Rakam (Toplam 5 Karakter)
+    if (!/^[a-zA-Z]\d{4}$/.test(password)) return errorMsg;
+    
+    // 2. Tekrar: 3 aynı rakam yan yana (Örn: 111)
+    if (/(.)\1{2}/.test(password)) return errorMsg;
+    
+    // 3. Ardışık: 3 sıralı rakam (Artan/Azalan - Örn: 123, 321)
+    const d = password.slice(1).split('').map(Number);
+    for (let i = 0; i < d.length - 2; i++) {
+        if ((d[i] + 1 === d[i+1] && d[i+1] + 1 === d[i+2]) || (d[i] - 1 === d[i+1] && d[i+1] - 1 === d[i+2])) return errorMsg;
+    }
+    return null;
+};
+
 /* >> GÖRSEL OPTİMİZASYON MOTORU (STABİL) << */
 async function optimizeImage(file) {
     if (!file) return null;
@@ -456,6 +475,10 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
     const passVal = document.getElementById("rec-pass").value;
     const fileInput = document.getElementById("rec-file");
 
+    // Şifre Kontrolü
+    const passCheck = window.validateComplexPassword(passVal);
+    if (passCheck) { alert(passCheck); return; }
+
     isProcessing = true;
     btn.disabled = true;
     btn.textContent = "YAYINLANIYOR...";
@@ -500,6 +523,11 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
         
         const btn = document.getElementById("comp-submit-btn");
         const fileInput = document.getElementById("comp-files");
+        const passVal = document.getElementById("comp-pass").value;
+
+        // Şifre Kontrolü
+        const passCheck = window.validateComplexPassword(passVal);
+        if (passCheck) { alert(passCheck); return; }
         
         if (fileInput && fileInput.files.length > 2) {
             alert("En fazla 2 adet görsel ekleyebilirsiniz.");
@@ -519,7 +547,7 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
             const payload = {
                 title: document.getElementById("comp-title").value,
                 content: document.getElementById("comp-content").value,
-                delete_password: document.getElementById("comp-pass").value,
+                delete_password: passVal,
                 category: document.getElementById("comp-category") ? document.getElementById("comp-category").value : "Genel",
                 image_url: urls[0] || null,
                 image_url_2: urls[1] || null
@@ -594,6 +622,10 @@ async function setupFirsatForm() {
         const pass = document.getElementById("firsat-pass").value;
         const fileInput = document.getElementById("firsat-files");
         const files = fileInput.files;
+
+        // Şifre Kontrolü
+        const passCheck = window.validateComplexPassword(pass);
+        if (passCheck) { alert(passCheck); return; }
 
         if (type === "online") {
             if (!link) {
@@ -1166,6 +1198,11 @@ async function setupKesintiForm() {
         e.preventDefault();
         if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
+        const passVal = document.getElementById("kes-pass").value;
+        // Şifre Kontrolü
+        const passCheck = window.validateComplexPassword(passVal);
+        if (passCheck) { alert(passCheck); return; }
+
         const btn = document.getElementById("kes-submit-btn");
         isProcessing = true;
         btn.disabled = true;
@@ -1176,7 +1213,7 @@ async function setupKesintiForm() {
                 type: document.getElementById("kes-type").value,
                 location: document.getElementById("kes-location").value,
                 description: document.getElementById("kes-desc").value,
-                delete_password: document.getElementById("kes-pass").value
+                delete_password: passVal
             };
 
             const { error } = await window.supabase.from('kesintiler').insert([payload]);
@@ -1503,6 +1540,11 @@ async function setupHizmetForm() {
         const fileInput = document.getElementById("hizmet-file");
         const btn = document.getElementById("hizmet-submit-btn");
 
+        const passVal = document.getElementById("hizmet-pass").value;
+        // Şifre Kontrolü
+        const passCheck = window.validateComplexPassword(passVal);
+        if (passCheck) { alert(passCheck); return; }
+
         if (!fileInput.files || fileInput.files.length === 0) {
             alert("HATA: Hizmetinizi tanıtmak için lütfen bir görsel ekleyiniz.");
             fileInput.focus();
@@ -1529,7 +1571,7 @@ async function setupHizmetForm() {
                 title: document.getElementById("hizmet-firma").value, 
                 content: document.getElementById("hizmet-desc").value,
                 image_url: uploadedUrl,
-                delete_password: document.getElementById("hizmet-pass").value
+                delete_password: passVal
             };
 
             const { error } = await window.supabase.from('hizmetler').insert([payload]);
@@ -1642,7 +1684,6 @@ window.openRadarDetail = async function(id) {
     try {
         const { data: urun, error } = await window.supabase
             .from('piyasa_verileri')
-            .from('piyasa_verileri') // Mühürlendi: piyasa_verileri
             .select('id, urun_adi, fiyat, image_url, market_adi, tarih_etiketi')
             .eq('id', id)
             .single();

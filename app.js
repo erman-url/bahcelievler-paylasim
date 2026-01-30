@@ -954,13 +954,10 @@ window.openAdDetail = function(id) {
     }
 
     document.getElementById("modal-delete-btn-inner").onclick = async () => {
+        // SÜPER KONTROL: Hashleme kaldırıldı, ham veri ile sorgulama yapılıyor
         const tcNo = prompt("Bu ilanı kaldırmak için TC Kimlik Numaranızı girin:");
         if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
             alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
-            return;
-        }
-        if (!validateTC(tcNo)) {
-            alert("Girilen TC Kimlik Numarası geçersizdir. Lütfen kontrol ediniz.");
             return;
         }
         

@@ -1871,3 +1871,23 @@ window.closeLegalModal = function() {
         setTimeout(() => { modal.style.display = 'none'; }, 300);
     }
 };
+
+/* >> SOSYAL PAYLAŞIM MOTORU << */
+window.shareOnWhatsApp = function(title, path) {
+    const siteUrl = window.location.origin + window.location.pathname;
+    const shareUrl = `${siteUrl}#${path}`; // URL hash kullanarak hedefi belirtiyoruz
+    const message = `*${title}*\n\nDetaylar için Bahçelievler Forum'u ziyaret et:\n${shareUrl}`;
+    
+    // Eğer tarayıcı yerel paylaşımı destekliyorsa (Mobil cihazlar)
+    if (navigator.share) {
+        navigator.share({
+            title: title,
+            text: message,
+            url: shareUrl
+        }).catch(err => console.log('Paylaşım iptal edildi.'));
+    } else {
+        // Masaüstü veya desteklemeyen tarayıcılar için doğrudan WhatsApp
+        const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+        window.open(waUrl, '_blank');
+    }
+};

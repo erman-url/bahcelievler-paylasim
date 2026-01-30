@@ -380,18 +380,9 @@ function setupForms() {
                 return;
             }
 
-            // GÜVENLİK: TC No Kontrol ve Hashleme
+            // SÜPER KONTROL: Kayıt anında hashleme tamamen devre dışı bırakıldı
             const tcInput = document.getElementById("ad-tc-no");
-            if (!tcInput || tcInput.value.length !== 11 || isNaN(tcInput.value)) {
-                alert("HATA: Güvenlik gereği 11 haneli TC Kimlik No zorunludur.");
-                return;
-            }
-            if (!validateTC(tcInput.value)) {
-                alert('Geçersiz TC Kimlik No! Lütfen algoritmayı kontrol edin.');
-                alert('Girilen TC Kimlik Numarası geçersizdir. Lütfen kontrol ediniz.');
-                return;
-            }
-            const secureTC = tcInput.value.trim();
+            const secureTC = tcInput.value.trim(); // Sadece ham metni al
 
             const btn = document.getElementById("ad-submit-button");
             isProcessing = true;
@@ -409,7 +400,7 @@ function setupForms() {
                     category: document.getElementById("ad-category").value,
                     content: contentVal,
                     contact: document.getElementById("ad-contact").value,
-                    tc_no: secureTC,
+                    tc_no: secureTC, // ARINDILMIŞ HAM VERİ
                     is_active: true,
                     image_url: urls[0] || null,
                     image_url_2: urls[1] || null,

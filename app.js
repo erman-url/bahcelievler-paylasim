@@ -1701,6 +1701,7 @@ window.softDeleteRadar = async (id) => {
         alert("Radar panodan kaldırıldı (Veri analiz için saklandı).");
         if (typeof window.closeRadarModal === "function") window.closeRadarModal();
         if (typeof loadPortalData === "function") loadPortalData(); 
+        if (typeof fetchAndRenderPiyasa === "function") fetchAndRenderPiyasa(); // Veri Senkronu
     } else {
         alert("Hata: Şifre yanlış!");
     }

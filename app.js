@@ -1680,19 +1680,16 @@ window.closeRadarModal = () => {
 
 /* >> VERİ TOPLAMA ODAKLI SİLME (SOFT DELETE) - STABİLİZE EDİLDİ << */
 window.softDeleteRadar = async (id) => {
-    const userPass = prompt("Radarı kaldırmak için şifrenizi girin:");
+    const userPass = prompt("İlanı kaldırmak için 4 haneli şifrenizi giriniz");
     if (!userPass || !userPass.trim()) return;
     
     const finalPass = String(userPass).trim();
 
-    // SÜPER KONTROL: Veriyi SİLMİYORUZ, sadece is_active: false yapıyoruz [cite: 2026-01-19]
-    // .select() ekleyerek dönen veriyi kontrol ediyoruz (Şifre doğrulaması için)
-    // MÜHÜRLENDİ: TC No yok, sadece şifre ile is_active: false
     const { data, error } = await window.supabase
         .from('piyasa_verileri')
         .update({ is_active: false })
         .eq('id', id)
-        .or(`delete_password.eq."${finalPass}",delete_password.eq.${parseInt(finalPass) || 0}`)
+        .eq('delete_password', finalPass)
         .select();
 
     if (error) {
@@ -1701,7 +1698,6 @@ window.softDeleteRadar = async (id) => {
         alert("Radar panodan kaldırıldı (Veri analiz için saklandı).");
         if (typeof window.closeRadarModal === "function") window.closeRadarModal();
         if (typeof loadPortalData === "function") loadPortalData(); 
-        if (typeof fetchAndRenderPiyasa === "function") fetchAndRenderPiyasa(); // Veri Senkronu
     } else {
         alert("Hata: Şifre yanlış!");
     }

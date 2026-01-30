@@ -548,6 +548,6 @@ h1:not(.cyber-header) i {
 .haber-card {
     flex: 0 0 85%;
     max-width: 320px;
-    margin: 10px auto;
+    margin: 0 auto;
 }
 /* DOSYA SONU - FAZLADAN PARANTEZ SİLİNDİ */

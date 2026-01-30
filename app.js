@@ -1682,38 +1682,31 @@ window.deleteKesinti = async (id) => {
 /* >> RADAR ÖZEL MODAL MOTORU << */
 window.openRadarDetail = async function(id) {
     try {
-        // ID Güvenlik Kontrolü
-        const safeId = parseInt(id);
-        if (isNaN(safeId)) return;
-
+        // 1. Mükerrer .from() hatası temizlendi
         const { data: urun, error } = await window.supabase
             .from('piyasa_verileri')
-            .select('id, urun_adi, fiyat, image_url, market_adi, tarih_etiketi')
+            .select('*')
             .eq('id', id)
-            .eq('id', safeId)
             .single();
-
-        if (error || !urun) return;
-
-        // Radar Modalı Elementlerini Doldur
-        document.getElementById("radar-title").textContent = urun.urun_adi;
-        document.getElementById("radar-price").textContent = urun.fiyat + " TL";
-        document.getElementById("radar-image-gallery").innerHTML = `<img src="${urun.image_url}" style="width:100%; border-radius:12px;">`;
-        
-        document.getElementById("radar-info-content").innerHTML = `
-            <p><strong><i class="fas fa-store"></i> Market:</strong> ${urun.market_adi}</p>
-            <p><strong><i class="fas fa-calendar-alt"></i> Tarih:</strong> ${urun.tarih_etiketi || 'Belirtilmedi'}</p>
-        `;
-
-        // Radarı Kaldır Butonu (Soft Delete)
-        const delBtn = document.getElementById("radar-delete-btn");
-        delBtn.onclick = () => window.softDeleteRadar(urun.id);
-
-        // Modalı Göster
-        const modal = document.getElementById("radar-detail-modal");
-        modal.style.display = "block";
-        setTimeout(() => { modal.style.opacity = "1"; }, 10);
-    } catch (err) { console.error("Radar detay hatası:", err); }
+    if (error || !urun) return;
+    // 2. HTML Elementlerini Güvenli Doldur
+    document.getElementById("radar-title").textContent = urun.urun_adi;
+    document.getElementById("radar-price").textContent = urun.fiyat + " TL";
+    document.getElementById("radar-image-gallery").innerHTML = `<img src="${urun.image_url}" style="width:100%; border-radius:12px;">`;
+    
+    document.getElementById("radar-info-content").innerHTML = `
+        <p><strong>Market:</strong> ${urun.market_adi}</p>
+        <p><strong>Tarih:</strong> ${urun.tarih_etiketi || 'Belirtilmedi'}</p>`;
+    // 3. Silme Butonunu Bağla
+    document.getElementById("radar-delete-btn").onclick = () => window.softDeleteRadar(urun.id);
+    // 4. Modalı Fiziksel Olarak Tetikle
+    const modal = document.getElementById("radar-detail-modal");
+    modal.style.display = "flex";
+    setTimeout(() => { 
+        modal.style.visibility = "visible";
+        modal.style.opacity = "1"; 
+    }, 10);
+} catch (err) { console.error("Radar Hatası:", err); }
 };
 
 window.closeRadarModal = () => {

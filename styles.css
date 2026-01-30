@@ -177,6 +177,13 @@ h1:not(.cyber-header) i {
     transition: 0.3s;
 }
 
+.whatsapp-btn {
+    width: 100%; background: #25D366 !important; color: #fff; border: none; padding: 16px; 
+    font-weight: 700; border-radius: 12px; text-transform: uppercase; cursor: pointer; 
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
 /* MODAL - V3 STİLLERİ */
 .modal {
     position: fixed;

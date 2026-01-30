@@ -93,7 +93,7 @@ async function submitPiyasaVerisi() {
         const passInput = document.getElementById("piyasa-pass");
 
         // Girdi Zorunluluğu Mühürü
-        if (!barkodInput.value.trim() || !urunAdiInput.value.trim() || !fiyatInput.value.trim() || !marketAdiInput.value || !passInput.value.trim()) {
+        if (!barkodInput || !barkodInput.value.trim() || !urunAdiInput.value.trim() || !fiyatInput.value.trim() || !marketAdiInput.value || !passInput.value.trim()) {
             alert("HATA: Lütfen tüm alanları doldurunuz (Barkod, Ürün, Fiyat, Market, Şifre).");
             return;
         }

@@ -1721,7 +1721,7 @@ window.closeRadarModal = () => {
 
 /* >> VERİ TOPLAMA ODAKLI SİLME (SOFT DELETE) - STABİLİZE EDİLDİ << */
 window.softDeleteRadar = async (id) => {
-    const userPass = prompt("İlanı kaldırmak için 4 haneli şifrenizi giriniz");
+    const userPass = prompt("İlanı kaldırmak için şifrenizi giriniz (1 Harf + 4 Rakam)");
     if (!userPass || !userPass.trim()) return;
     
     const finalPass = String(userPass).trim();

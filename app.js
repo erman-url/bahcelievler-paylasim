@@ -1698,8 +1698,8 @@ function renderHaberler(haberler) {
 
     el.innerHTML = haberler.map(h => {
         const img = h.image_url || 'https://via.placeholder.com/400x200?text=Bahcelievler+Haber';
-        const ozet = (h.ozet || h.icerik || h.content || '').substring(0, 100) + '...';
-        const baslik = h.baslik || h.title || 'Haber';
+        const ozet = (h.icerik || h.content || '').substring(0, 100) + '...';
+        const baslik = h.baslik || h.title || 'Bahçelievler Haber';
         
         return `
         <div class="cyber-card haber-card" onclick="openHaberDetail('${h.id}')">
@@ -1743,8 +1743,6 @@ window.openHaberDetail = async function(id) {
                 modalImage.style.minHeight = '';
             };
             modalImage.onerror = () => {
-                modalImage.style.backgroundColor = '';
-                modalImage.style.minHeight = '';
                 modalImage.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
             };
             
@@ -1753,7 +1751,7 @@ window.openHaberDetail = async function(id) {
 
         // 1. MADDE GÜNCELLEMESİ: Undefined ve İçerik Kontrolü
         if (document.getElementById('haber-modal-title')) {
-            document.getElementById('haber-modal-title').textContent = h.baslik || h.title || 'Haber';
+            document.getElementById('haber-modal-title').textContent = h.baslik || h.title || 'Bahçelievler Haber';
         }
 
         if (document.getElementById('haber-modal-content')) {

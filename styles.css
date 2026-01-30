@@ -542,14 +542,14 @@ h1:not(.cyber-header) i {
     padding: 15px 20px;
     scroll-snap-type: x mandatory;
     /* KRİTİK: İçeriği her zaman yatayda ortalar */
-    justify-content: flex-start; 
+    justify-content: center; 
     align-items: center;
 }
 
 .haber-card {
     flex: 0 0 280px !important; /* Kart genişliğini sabitle */
     height: 320px !important; /* Kart yüksekliğini sabitle */
-    margin: 0 !important;
+    margin: 10px auto !important;
     scroll-snap-align: center;
     display: flex;
     flex-direction: column;

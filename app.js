@@ -906,6 +906,23 @@ window.openAdDetail = function(id) {
         }
     };
 
+    // WhatsApp Paylaş Butonu Enjeksiyonu
+    const buyBtn = document.getElementById("modal-buy-btn");
+    if (buyBtn) {
+        const oldShare = document.getElementById("modal-share-btn");
+        if (oldShare) oldShare.remove();
+
+        const shareBtn = document.createElement("button");
+        shareBtn.id = "modal-share-btn";
+        shareBtn.className = "cyber-submit";
+        shareBtn.style.cssText = "background: #25D366 !important; margin-top: 5px; margin-bottom: 20px;";
+        shareBtn.innerHTML = '<i class="fab fa-whatsapp"></i> PAYLAŞ';
+        shareBtn.onclick = () => window.shareOnWhatsApp(ad.title, 'ilan-' + ad.id);
+        
+        buyBtn.style.marginBottom = "10px";
+        buyBtn.after(shareBtn);
+    }
+
     document.getElementById("modal-delete-btn-inner").onclick = async () => {
         const tcNo = prompt("Bu ilanı kaldırmak için TC Kimlik Numaranızı girin:");
         if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {

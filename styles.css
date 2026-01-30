@@ -535,16 +535,21 @@ h1:not(.cyber-header) i {
 
 /* HABER BANNER STİLİ */
 #haber-listesi {
-    display: flex;
-    overflow-x: auto;
-    gap: 15px;
-    padding: 15px;
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    gap: 20px;
+    padding: 15px 20px;
     scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
+    /* KRİTİK: İçeriği her zaman yatayda ortalar */
+    justify-content: center; 
+    align-items: center;
 }
 
 .haber-card {
-    flex: 0 0 300px;
-    scroll-snap-align: center;
+    flex: 0 0 85% !important; /* Mobilde tam ortalı durması için altın oran */
+    max-width: 340px;
+    scroll-snap-align: center; /* Kaydırdığında ekrana mıknatıs gibi ortalı yapışır */
+    margin: 0 !important;
 }
 /* DOSYA SONU - FAZLADAN PARANTEZ SİLİNDİ */

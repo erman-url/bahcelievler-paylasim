@@ -1702,13 +1702,11 @@ function renderHaberler(haberler) {
         const baslik = h.baslik || h.title || 'Haber';
         
         return `
-        <div class="cyber-card haber-card" onclick="openHaberDetail('${h.id}')" style="margin: 0; padding: 0; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; border: 1px solid #eee;">
-            <div style="height: 150px; overflow: hidden; position: relative;">
-                <img src="${img}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;">
-            </div>
-            <div style="padding: 15px; flex: 1; display: flex; flex-direction: column;">
-                <h4 style="margin: 0 0 8px 0; font-size: 1rem; font-weight: 700; line-height: 1.3; color: var(--dark); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${baslik}</h4>
-                <p style="font-size: 0.85rem; color: #555; margin: 0; flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; line-height: 1.4;">${ozet}</p>
+        <div class="cyber-card haber-card" onclick="openHaberDetail('${h.id}')">
+            <img src="${img}">
+            <div class="haber-card-content">
+                <h4>${baslik}</h4>
+                <p>${ozet}</p>
             </div>
         </div>`;
     }).join('');

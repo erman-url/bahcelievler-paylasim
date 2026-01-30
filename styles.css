@@ -218,7 +218,7 @@ h1:not(.cyber-header) i {
 
 /* Görev: 'X' Kapatma Butonu */
 .close-detail {
-    position: absolute; 
+    position: absolute; /* fixed yerine absolute: Modal ile birlikte hareket eder */
     top: 15px; /* Daha içe alındı */
     right: 15px; /* Daha içe alındı */
     width: 32px;

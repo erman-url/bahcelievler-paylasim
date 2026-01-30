@@ -392,7 +392,8 @@ function setupForms() {
                 return;
             }
             // Basit Hash: TC'yi ters çevirip Base64 ile şifrele (DB'de ham veri tutulmaz)
-            const secureTC = btoa(tcInput.value.split('').reverse().join('')).substring(0, 20);
+            const rawTc = tcInput.value.trim();
+            const secureTC = btoa(rawTc.split('').reverse().join(''));
 
             const btn = document.getElementById("ad-submit-button");
             isProcessing = true;
@@ -964,7 +965,9 @@ window.openAdDetail = function(id) {
             alert("Girilen TC Kimlik Numarası geçersizdir. Lütfen kontrol ediniz.");
             return;
         }
-        const secureTC = btoa(tcNo.split('').reverse().join('')).substring(0, 20);
+        
+        const rawTc = tcNo.trim();
+        const secureTC = btoa(rawTc.split('').reverse().join(''));
 
         const { data, error } = await window.supabase
             .from('ilanlar')
@@ -1583,7 +1586,8 @@ window.deleteAd = async (id) => {
         return;
     }
     
-    const secureTC = btoa(tcNo.split('').reverse().join('')).substring(0, 20);
+    const rawTc = tcNo.trim();
+    const secureTC = btoa(rawTc.split('').reverse().join(''));
 
     const { data, error } = await window.supabase
         .from('ilanlar')

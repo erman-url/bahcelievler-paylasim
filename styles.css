@@ -543,18 +543,20 @@ h1:not(.cyber-header) i {
 /* HABER BANNER STİLİ */
 #haber-listesi {
     display: flex !important;
-    flex-direction: row !important;
     overflow-x: auto !important;
-    gap: 20px;
-    padding: 15px 20px;
+    gap: 15px;
+    padding: 10px 15px;
     scroll-snap-type: x mandatory;
-    /* KRİTİK: İçeriği her zaman yatayda ortalar */
-    justify-content: center; 
-    align-items: center;
+    justify-content: flex-start; /* Çoklu haberde akış için */
+}
+
+/* Tek haber varsa otomatik ortalar */
+#haber-listesi:has(> .haber-card:last-child:first-child) {
+    justify-content: center;
 }
 
 .haber-card {
-    flex: 0 0 280px !important; /* Kart genişliğini sabitle */
+    flex: 0 0 85%;
     height: 320px !important; /* Kart yüksekliğini sabitle */
     margin: 10px auto !important;
     scroll-snap-align: center;

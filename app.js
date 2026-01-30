@@ -1734,7 +1734,7 @@ function renderHaberler(haberler) {
 
     el.innerHTML = haberler.map(h => {
         const img = h.image_url || 'https://via.placeholder.com/400x200?text=Bahcelievler+Haber';
-        const ozet = (h.icerik || h.content || '').substring(0, 100) + '...';
+        const ozet = (h.ozet || h.icerik || h.content || '').substring(0, 100) + '...';
         const baslik = h.baslik || h.title || 'Bahçelievler Haber';
         
         return `
@@ -1829,7 +1829,7 @@ window.openHaberDetail = async function(id) {
         if (document.getElementById('haber-modal-content')) {
             // Hem 'icerik' hem 'content' sütunlarını tarar, boşsa hata vermez
             const icerik = h.icerik || h.content || '';
-            document.getElementById('haber-modal-content').textContent = icerik;
+            document.getElementById('haber-modal-content').innerHTML = icerik.replace(/\n/g, '<br>');
         }
 
         if (modal) {

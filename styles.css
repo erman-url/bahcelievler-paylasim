@@ -547,7 +547,7 @@ h1:not(.cyber-header) i {
     gap: 15px;
     padding: 10px 15px;
     scroll-snap-type: x mandatory;
-    justify-content: flex-start; /* Çoklu haberde akış için */
+    justify-content: center; /* Hizalama Mühürü */
 }
 
 /* Tek haber varsa otomatik ortalar */
@@ -558,7 +558,7 @@ h1:not(.cyber-header) i {
 .haber-card {
     flex: 0 0 85%;
     height: 320px !important; /* Kart yüksekliğini sabitle */
-    margin: 10px auto !important;
+    margin: 10px auto !important; /* Hizalama Mühürü */
     scroll-snap-align: center;
     display: flex;
     flex-direction: column;

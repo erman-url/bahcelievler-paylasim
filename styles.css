@@ -532,4 +532,14 @@ h1:not(.cyber-header) i {
     text-align: center;
 }
 #haber-modal-content { text-align: left; width: 100%; white-space: pre-wrap; }
+
+/* HABER BANNER STİLİ */
+#haber-listesi {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
 /* DOSYA SONU - FAZLADAN PARANTEZ SİLİNDİ */

@@ -196,7 +196,7 @@
                 <input type="text" id="kes-location" placeholder="Mahalle / Sokak" required>
                 <textarea id="kes-desc" maxlength="200" placeholder="Detaylar..." rows="2" required></textarea>
                 <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> Bildirimi bu şifre ile silebilirsiniz:</p>
-                <input type="password" id="kes-pass" maxlength="
+                <input type="password" id="kes-pass" maxlength="5" placeholder="Şifre (1 Harf + 4 Rakam)" required>
                 <button type="submit" id="kes-submit-btn" class="cyber-submit" style="background: #ffc107 !important; color: black !important;">BİLDİR</button>
             </form>
             <div id="kesinti-list" style="padding: 10px;"></div>
@@ -220,9 +220,12 @@
                 <input type="file" id="rec-file" accept="image/*">
                 <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> Yorumu bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="rec-pass" placeholder="Şifre (1 Harf + 4 Rakam)" maxlength="5" required>
-                <div style="display:none !important; visibility:hidde  k" tabindex="-1" autocomplete="off">
-                </div>pcound: #28a745 !important;">PAYLAŞ</button>
-            </form>mt
+                <div style="display:none !important; visibility:hidden !important;">
+                    <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
+                </div>
+                <button type="submit" class="cyber-submit" style="background: #28a745 !important;">PAYLAŞ</button>
+            </form>
+            <div id="recommend-list" style="padding: 10px;"></div>
         </section>
 
         <section id="sikayet-et" class="page">
@@ -246,11 +249,14 @@
                 <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold; margin-top:10px;"><i class="fas fa-key"></i> Şikayeti daha sonra bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="comp-pass" maxlength="5" placeholder="Şifre (1 Harf + 4 Rakam)" required>
                 <div style="display:none !important; visibility:hidden !important;">
-                    <input type="text" name="honeypot_field" id=p
+                    <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
+                </div>
                 <button type="submit" id="comp-submit-btn" class="cyber-submit" style="background:#ff4d4d !important;">BİLDİRİ YAYINLA</button>
-            </form>>
+            </form>
+            <div id="complaint-list" style="padding: 10px;"></div>
         </section>
 
+        <section id="firsat-indirim" class="page">
             <h1 class="cyber-header">🔥 FIRSAT & İNDİRİM EKLE</h1>
             <form id="firsat-form" class="cyber-form">
                 <select id="firsat-type" required onchange="toggleFirsatFields()">
@@ -270,13 +276,16 @@
                 <input type="password" id="firsat-pass" maxlength="5" placeholder="Şifre (1 Harf + 4 Rakam)" required>
                 <div style="display:none !important; visibility:hidden !important;">
                     <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
-                </div>"cyber-submit">GÖNDER</button>
+                </div>
+                <button type="submit" id="firsat-submit-btn" class="cyber-submit">GÖNDER</button>
             </form>
             <div id="firsat-list" style="padding: 10px;"></div>
         </section>
+
         <section id="fiyat-dedektifi" class="page">
             <h1 class="cyber-header">🔍 FİYAT DEDEKTİFİ</h1>
-            <div class="cyber-card" style="margin-bottom:20px; b3liom:10px;"><i class="fas fa-camera"></i> Etiket fotoğrafı çekerek fiyat bildirin, mahalle radarını güçlendirin.</p>
+            <div class="cyber-card" style="margin-bottom:20px;">
+                <p style="padding: 0 10px 10px; text-align: center;"><i class="fas fa-camera"></i> Etiket fotoğrafı çekerek fiyat bildirin, mahalle radarını güçlendirin.</p>
                 <button onclick="document.getElementById('piyasa-form-container').scrollIntoView({behavior: 'smooth'})" class="cyber-submit" style="background:var(--app-blue)!important;">YENİ FİYAT BİLDİR</button>
             </div>
 			
@@ -305,11 +314,9 @@
                     <input type="password" id="piyasa-pass" maxlength="5" placeholder="Şifre (1 Harf + 4 Rakam)" required>
                     <div style="display:none !important; visibility:hidden !important;">
                         <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
-                    </div>sA</>
+                    </div>
+                    <button type="submit" onclick="submitPiyasaVerisi(); return false;" class="cyber-submit" style="background:var(--cyber-pink)!important;">RADARA EKLE</button>
                 </form>
-            </div>
-            <div class='cyber-card' style='margin-top:20px; border-top:3px solid var(--cyber-pink);'>
-               <h3 style='font-size:0.9rem; color:var(--cyber-pink);'><
             </div>
         </section>
 
@@ -405,11 +412,11 @@
         </section>
 
         <section id="duyurular" class="page">
-            <div class="cyber-header-wrapper"><h1 class="cyber-header"><i class="fas fa-bullhorn"></i> MAHALLE DUYURULARI</h1></div>iyor...</p></div>
+            <div class="cyber-header-wrapper"><h1 class="cyber-header"><i class="fas fa-bullhorn"></i> MAHALLE DUYURULARI</h1></div>
+            <div id="duyuru-list"><p style="text-align:center; padding:20px; color:#888;">Duyurular yükleniyor...</p></div>
             <div style="height: 80px;"></div> 
         </section>
-    </div>
-
+    
     <div id="ad-detail-modal" class="modal" style="display:none;">
         <div class="modal-content cyber-card">
             <div id="modal-image-gallery"></div>

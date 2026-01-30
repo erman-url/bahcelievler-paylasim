@@ -101,7 +101,7 @@ async function submitPiyasaVerisi() {
             alert("HATA: Radar kaydı için 11 haneli TC No zorunludur.");
             return;
         }
-        const secureTC = btoa(tcVal.split('').reverse().join('')).substring(0, 20);
+        const secureTC = btoa(tcVal.split('').reverse().join(''));
 
         const fiyat = parseFloat(fiyatInput.value);
         const urunAdi = urunAdiInput.value;

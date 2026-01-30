@@ -53,6 +53,23 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchLiveInfo();
     setInterval(fetchLiveInfo, 15 * 60 * 1000);
     initSlider();
+
+    // Deep Linking: URL Hash Kontrolü
+    const hash = window.location.hash;
+    if (hash) {
+        if (hash.startsWith('#ilan-')) {
+            const id = hash.substring(6);
+            const checkAds = setInterval(() => {
+                if (allAds && allAds.length > 0) {
+                    clearInterval(checkAds);
+                    openAdDetail(id);
+                }
+            }, 200);
+            setTimeout(() => clearInterval(checkAds), 10000);
+        } else if (hash.startsWith('#firsat-')) {
+            openFirsatDetail(hash.substring(8));
+        }
+    }
 });
 
 // --- 1. NAVİGASYON MOTORU (TEK VE STABİL) ---

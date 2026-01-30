@@ -807,20 +807,19 @@ window.openFirsatDetail = async function(id) {
 async function renderTavsiyeler() {
     const el = document.getElementById('recommend-list');
     if (!el) return;
-    const { data } = await window.supabase.from('tavsiyeler').select('*').order('created_at', { ascending: false });
+    const { data } = await window.supabase.from('tavsiyeler')
+        .select('*')
+        .or('is_active.is.null,is_active.eq.true')
+        .order('created_at', { ascending: false });
+
     el.innerHTML = data?.map(item => `
-        <div class="cyber-card" style="margin-bottom:15px; border-bottom:1px solid #eee;">
+        <div class="cyber-card" style="margin-bottom:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="window.openSocialDetail('tavsiyeler', '${item.id}')">
             <div style="display:flex; justify-content:space-between;">
                 <strong>${item.title}</strong>
                 <span>${"⭐".repeat(item.rating || 5)}</span>
             </div>
             ${item.image_url ? `<img src="${item.image_url}" style="width:100%; border-radius:8px; margin:10px 0; max-height:200px; object-fit:cover;">` : ''}
             <p style="margin:8px 0; font-style:italic;">"${item.comment}"</p>
-            <div style="text-align:right;">
-                <button onclick="deleteTavsiye('${item.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer; font-size:0.8rem;">
-                    <i class="fas fa-trash"></i> Sil
-                </button>
-            </div>
         </div>
     `).join('') || "";
 }
@@ -828,13 +827,15 @@ async function renderTavsiyeler() {
 async function renderSikayetler() {
     const el = document.getElementById('complaint-list');
     if (!el) return;
-    const { data } = await window.supabase.from('sikayetler').select('*').order('created_at', { ascending: false });
+    const { data } = await window.supabase.from('sikayetler')
+        .select('*')
+        .or('is_active.is.null,is_active.eq.true')
+        .order('created_at', { ascending: false });
     
     el.innerHTML = data?.map(i => `
-        <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff4d4d;">
+        <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff4d4d; cursor:pointer;" onclick="window.openSocialDetail('sikayetler', '${i.id}')">
             <div style="display:flex; justify-content:space-between; align-items:start;">
                 <span style="font-size:0.7rem; font-weight:bold; background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px;">${i.category}</span>
-                <button onclick="event.stopPropagation(); deleteSikayet('${i.id}')" style="background:none; border:none; color:#999; cursor:pointer;"><i class="fas fa-trash"></i></button>
             </div>
             <h4 style="margin:10px 0 5px 0;">${i.title}</h4>
             <p style="font-size:0.9rem; color:#444;">${i.content}</p>
@@ -1594,13 +1595,15 @@ async function renderHizmetler() {
     const el = document.getElementById('hizmet-list');
     if (!el) return;
 
-    const { data } = await window.supabase.from('hizmetler').select('*').order('created_at', { ascending: false });
+    const { data } = await window.supabase.from('hizmetler')
+        .select('*')
+        .or('is_active.is.null,is_active.eq.true')
+        .order('created_at', { ascending: false });
 
     el.innerHTML = data?.map(h => `
-        <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #28a745;">
+        <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #28a745; cursor:pointer;" onclick="window.openSocialDetail('hizmetler', '${h.id}')">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span class="student-badge" style="background:#e8f5e9; color:#2e7d32;">${h.category}</span>
-                <button onclick="deleteHizmet('${h.id}', '${h.delete_password}')" style="background:none; border:none; color:#ccc;"><i class="fas fa-trash"></i></button>
             </div>
             <h3 style="margin:10px 0 5px 0;">${h.title}</h3>
             ${h.image_url ? `<img src="${h.image_url}" style="width:100%; border-radius:8px; margin:8px 0;">` : ''}
@@ -1987,5 +1990,78 @@ window.shareOnWhatsApp = function(title, path) {
         // Masaüstü veya desteklemeyen tarayıcılar için doğrudan WhatsApp
         const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
         window.open(waUrl, '_blank');
+    }
+};
+
+/* >> SOSYAL DETAY VE SİLME MOTORU (YENİ) << */
+window.openSocialDetail = async function(table, id) {
+    try {
+        const { data, error } = await window.supabase
+            .from(table)
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error || !data) return;
+
+        // Veri Eşleştirme
+        const title = data.title || data.urun_adi || "Detay";
+        const content = data.content || data.comment || data.description || "";
+        const images = [data.image_url, data.image_url_2].filter(Boolean);
+
+        // Modal Doldurma
+        document.getElementById("social-modal-title").textContent = title;
+        document.getElementById("social-modal-content").textContent = content;
+        
+        const gallery = document.getElementById("social-image-gallery");
+        if (gallery) {
+            gallery.innerHTML = images.length > 0 
+                ? images.map(src => `<img src="${src}" style="width:100%; border-radius:12px; margin-bottom:10px;">`).join('')
+                : '';
+        }
+
+        // Silme Butonu Ayarı (Soft Delete)
+        const deleteBtn = document.getElementById("social-delete-btn");
+        deleteBtn.onclick = async () => {
+            const userPass = prompt("İçeriği kaldırmak için şifrenizi giriniz:");
+            if (!userPass || !userPass.trim()) return;
+
+            const { data: delData, error: delError } = await window.supabase
+                .from(table)
+                .update({ is_active: false })
+                .eq('id', id)
+                .eq('delete_password', userPass)
+                .select();
+
+            if (delError) {
+                alert("Hata: " + delError.message);
+            } else if (delData && delData.length > 0) {
+                alert("İçerik başarıyla kaldırıldı.");
+                closeSocialModal();
+                loadPortalData();
+            } else {
+                alert("Hata: Şifre yanlış!");
+            }
+        };
+
+        // Modalı Aç
+        const modal = document.getElementById("social-detail-modal");
+        modal.style.display = "flex";
+        setTimeout(() => {
+            modal.style.visibility = "visible";
+            modal.style.opacity = "1";
+        }, 10);
+
+    } catch (err) {
+        console.error("Sosyal Detay Hatası:", err);
+    }
+};
+
+window.closeSocialModal = function() {
+    const modal = document.getElementById("social-detail-modal");
+    if (modal) {
+        modal.style.opacity = "0";
+        modal.style.visibility = "hidden";
+        setTimeout(() => { modal.style.display = "none"; }, 300);
     }
 };

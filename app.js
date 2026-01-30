@@ -1702,17 +1702,11 @@ window.softDeleteRadar = async (id) => {
         if (typeof window.closeRadarModal === "function") window.closeRadarModal();
         if (typeof loadPortalData === "function") loadPortalData(); 
     } else {
-        Hata: Girdiğiniz || isNaN(tc) şifre yanlış!"); || /^(\d)\1{10}$/.test(tc)
-    le
-1
-funcle vste2TC(tc) {
-    ifte(s !1== 11 |s0]2 ==ngits = tc.split('').map(Number);
-    if ((gits[0] + digits[2] + digits[4] + digits[6] +) m = digits[1] + digits[3] + digits[5] + digits[7];
-    const step10 = (oddSum * 7 - evenSum) % 10;
-    if (step10 !== digits[9]) return false;
-    // 11. Hane Kontrolü: (İlk 10 hane toplamı) % 10
-    const totalSum = digits.slice(0, 10).reduce((a, b) => a + b, 0);
-    if (totalSum % 10 !== digits[10]) return false;
+        alert("Hata: Şifre yanlış!");
+    }
+};
+
+function validateTC(tc) {
     if (tc.length !== 11 || isNaN(tc) || tc[0] === '0' || /^(\d)\1{10}$/.test(tc)) return false;
     let digits = tc.split('').map(Number);
     let sum1 = digits[0] + digits[2] + digits[4] + digits[6] + digits[8];

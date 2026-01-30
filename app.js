@@ -407,24 +407,18 @@ function setupForms() {
                 return;
             }
 
-            // SÜPER KONTROL: Maskeleme ve Token Motoru Devrede
-            const tcInput = document.getElementById("ad-tc-no");
-            const rawTC = tcInput.value.trim(); 
+            // SÜPER KONTROL: Şifreleme ve Token Motoru Devrede
+            const passInput = document.getElementById("ad-tc-no");
+            const rawPass = passInput.value.trim(); 
             
-            if (!validateTC(rawTC)) {
-                alert("HATA: Girdiğiniz TC Kimlik Numarası geçersizdir. Lütfen kontrol ediniz.");
+            const passCheck = window.validateComplexPassword(rawPass);
+            if (passCheck) {
+                alert(passCheck);
                 return;
             }
 
-            if (!validateTC(rawTC)) {
-                alert("HATA: Girdiğiniz TC Kimlik Numarası geçersizdir. Lütfen kontrol ediniz.");
-                return;
-            }
-
-            // 1. Maskeleme (DB'de görünecek - Yasal Güvenlik)
-            const maskedTC = rawTC.substring(0, 3) + "******" + rawTC.substring(9);
             // 2. Token (Silme yetkisi için gizli anahtar - İşlem Güvenliği)
-            const deleteToken = await sha256(rawTC);
+            const deleteToken = await sha256(rawPass);
 
             const btn = document.getElementById("ad-submit-button");
             isProcessing = true;
@@ -442,7 +436,6 @@ function setupForms() {
                     category: document.getElementById("ad-category").value,
                     content: contentVal,
                     contact: document.getElementById("ad-contact").value,
-                    tc_no: maskedTC, // Maskeli Veri
                     delete_token: deleteToken, // Hashli Token
                     is_active: true,
                     image_url: urls[0] || null,
@@ -1002,14 +995,10 @@ window.openAdDetail = function(id) {
     }
 
     document.getElementById("modal-delete-btn-inner").onclick = async () => {
-        // SÜPER KONTROL: Şifreleme tamamen kaldırıldı, ham numerik eşleşme aktif
-        const tcNo = prompt("Bu ilanı kaldırmak için TC Kimlik Numaranızı girin:");
-        if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
-            alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
-            return;
-        }
+        const userPass = prompt("İlanı kaldırmak için Silme Şifresini girin (Örn: S1571):");
+        if (!userPass || !userPass.trim()) return;
         
-        const rawInput = tcNo.trim();
+        const rawInput = userPass.trim();
         const tokenHash = await sha256(rawInput);
 
         const { data, error } = await window.supabase
@@ -1026,7 +1015,7 @@ window.openAdDetail = function(id) {
             closeModal();
             loadPortalData();
         } else {
-            alert("Hata: TC Kimlik No yanlış veya bu ilanı silme yetkiniz yok.");
+            alert("Hata: Şifre yanlış veya bu ilanı silme yetkiniz yok.");
         }
     };
 
@@ -1631,17 +1620,10 @@ window.deleteHizmet = async (id, correctPass) => {
 };
 /* >> MERKEZİ İLAN SİLME MOTORU - RLS UYUMLU << */
 window.deleteAd = async (id) => {
-    const tcNo = prompt("İlanı kaldırmak için TC Kimlik Numaranızı girin:");
-    if (!tcNo || tcNo.length !== 11 || isNaN(tcNo)) {
-        alert("HATA: Geçerli bir TC Kimlik No girmelisiniz.");
-        return;
-    }
-    if (!validateTC(tcNo)) {
-        alert("Girilen TC Kimlik Numarası geçersizdir. Lütfen kontrol ediniz.");
-        return;
-    }
+    const userPass = prompt("İlanı kaldırmak için Silme Şifresini girin (Örn: S1571):");
+    if (!userPass || !userPass.trim()) return;
     
-    const rawInput = tcNo.trim();
+    const rawInput = userPass.trim();
     const tokenHash = await sha256(rawInput);
 
     const { data, error } = await window.supabase
@@ -1658,7 +1640,7 @@ window.deleteAd = async (id) => {
         if (typeof closeModal === "function") closeModal(); 
         loadPortalData(); 
     } else {
-        alert("Hata: TC Kimlik No yanlış veya bu ilanı silme yetkiniz yok.");
+        alert("Hata: Şifre yanlış veya bu ilanı silme yetkiniz yok.");
     }
 };
 

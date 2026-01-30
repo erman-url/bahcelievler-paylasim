@@ -391,9 +391,7 @@ function setupForms() {
                 alert('Girilen TC Kimlik Numarası geçersizdir. Lütfen kontrol ediniz.');
                 return;
             }
-            // Basit Hash: TC'yi ters çevirip Base64 ile şifrele (DB'de ham veri tutulmaz)
-            const rawTc = tcInput.value.trim();
-            const secureTC = btoa(rawTc.split('').reverse().join(''));
+            const secureTC = tcInput.value.trim();
 
             const btn = document.getElementById("ad-submit-button");
             isProcessing = true;
@@ -966,8 +964,7 @@ window.openAdDetail = function(id) {
             return;
         }
         
-        const rawTc = tcNo.trim();
-        const secureTC = btoa(rawTc.split('').reverse().join(''));
+        const secureTC = tcNo.trim();
 
         const { data, error } = await window.supabase
             .from('ilanlar')
@@ -1586,8 +1583,7 @@ window.deleteAd = async (id) => {
         return;
     }
     
-    const rawTc = tcNo.trim();
-    const secureTC = btoa(rawTc.split('').reverse().join(''));
+    const secureTC = tcNo.trim();
 
     const { data, error } = await window.supabase
         .from('ilanlar')

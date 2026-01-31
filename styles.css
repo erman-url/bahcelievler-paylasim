@@ -438,7 +438,7 @@ h1:not(.cyber-header) i {
 .ad-card.cyber-card { 
     background: #ffffff !important; 
     border-radius: 12px !important; 
-    border: 1px solid rgba(0,0,0,0.08) !important; 
+    border: 1px solid rgba(0,0,0,0.06) !important; 
     box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important; 
     overflow: hidden; 
     display: flex; 
@@ -698,76 +698,43 @@ h1:not(.cyber-header) i {
     }
 }
 
-/* MASAÜSTÜ: Sadece ekran 1024px'den büyükse çalışır */
+/* MASAÜSTÜ VE NORMAL WEB OPTİMİZASYONU (1024px+) */
 @media (min-width: 1024px) {
-    
     .page {
-        padding: 0 10% !important; /* Sağdan soldan %10 ferahlık payı */
+        max-width: 1200px !important;
+        margin: 0 auto !important;
+        padding: 40px 10% !important;
     }
-/* Alt menüyü masaüstünde ortada tut */
-.app-footer-nav {
-    max-width: 800px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 20px 20px 0 0;
-}
-}
 
-.haber-card {
-    flex: 0 0 30% !important;
-    margin: 0 10px !important;
-}
-
-
-/* --- NORMAL WEB (MASAÜSTÜ) OPTİMİZASYON MÜHÜRÜ --- */
-@media (min-width: 1024px) {
-    /* İlanları gerçek bir portal gibi yan yana diz */
+    /* İlanları yan yana 4 tane diz (Letgo stili) */
     #ads-list {
         grid-template-columns: repeat(4, 1fr) !important; 
         gap: 25px !important;
         max-width: 1200px;
         margin: 0 auto;
     }
-    
-    /* Kartların o basit 'yayvan' halini bitir */
+
     .ad-card.cyber-card {
         max-width: 280px !important;
         height: 380px !important;
     }
-/* 3. Sayfa Kenar Boşluklarını Ayarla */
-.page {
-    padding: 40px 10% !important;
-}
-/* 4. Haberleri 3'lü Blok Yap */
-.haber-card {
-    flex: 0 0 31% !important;
-    margin: 0 !important;
-}
-#haber-listesi { justify-content: center !important; gap: 20px; }
-}
 
-/* --- SADECE NORMAL WEB (PC) İYİLEŞTİRMESİ --- */
-@media (min-width: 1024px) {
-    /* İçeriği ekranın ortasına topla, devasa yayılmayı engelle */
-    .page {
-        max-width: 1200px !important;
-        margin: 0 auto !important;
-        padding: 20px 5% !important;
+    /* Haberleri yan yana 3'lü blok yap */
+    .haber-card {
+        flex: 0 0 31% !important;
+        margin: 0 1% !important;
     }
-/* İlanları yan yana 4 tane diz (Letgo stili) */
-#ads-list {
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 25px !important;
-}
-/* Haberleri yan yana 3'lü blok yap */
-.haber-card {
-    flex: 0 0 31% !important;
-    margin: 0 1% !important;
-}
-/* Alt menüyü (nav) webde ortala */
-.app-footer-nav {
-    max-width: 600px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 20px 20px 0 0;
+    
+    #haber-listesi { 
+        justify-content: center !important; 
+        gap: 20px; 
+    }
+
+    /* Alt menüyü (nav) webde ortala */
+    .app-footer-nav {
+        max-width: 600px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 20px 20px 0 0;
+    }
 }

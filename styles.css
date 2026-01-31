@@ -222,6 +222,13 @@ h1:not(.cyber-header) i {
     box-sizing: border-box;
 }
 
+.modal-footer {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    justify-content: center !important;
+}
+
 /* Görev: 'X' Kapatma Butonu */
 .close-detail {
     position: fixed; /* İçerikten bağımsız, ekrana çakılı */
@@ -736,7 +743,6 @@ h1:not(.cyber-header) i {
     margin: 0 !important;
 }
 #haber-listesi { justify-content: center !important; gap: 20px; }
-}
 }
 
 /* --- SADECE NORMAL WEB (PC) İYİLEŞTİRMESİ --- */

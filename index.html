@@ -134,6 +134,19 @@
                 <option value="Diğer">Diğer</option>
             </select>
 
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <select id="ad-condition" class="cyber-input" style="flex: 1;" required>
+                    <option value="" disabled selected>Durumu</option>
+                    <option value="2.el">2. El</option>
+                    <option value="Yeni">Yeni</option>
+                </select>
+                <select id="ad-warranty" class="cyber-input" style="flex: 1;" required>
+                    <option value="" disabled selected>Garanti</option>
+                    <option value="Var">Garanti Var</option>
+                    <option value="Yok">Garanti Yok</option>
+                </select>
+            </div>
+
             <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması (Maks 350 Karakter)"></textarea>
 
             <div id="ad-photo-warning" style="margin: 10px 0; text-align: center;">

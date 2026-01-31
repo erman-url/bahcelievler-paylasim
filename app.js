@@ -434,6 +434,8 @@ function setupForms() {
                     title: titleVal,
                     price: priceVal,
                     category: document.getElementById("ad-category").value,
+                    condition: document.getElementById("ad-condition").value,
+                    warranty: document.getElementById("ad-warranty").value,
                     content: contentVal,
                     contact: document.getElementById("ad-contact").value,
                     delete_token: deleteToken, // Hashli Token
@@ -919,6 +921,7 @@ async function fetchAndRenderAds() {
     const { data } = await window.supabase.from('ilanlar')
         .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, telegram_username')
         .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username')
+        .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, condition, warranty')
         .or('is_active.is.null,is_active.eq.true')
         .order('created_at', {ascending: false});
     allAds = data || [];
@@ -936,6 +939,18 @@ window.openAdDetail = function(id) {
 
     const adDate = new Date(ad.created_at).toLocaleDateString('tr-TR');
     document.getElementById("modal-title").innerHTML = `<div style='display:flex; justify-content:space-between; font-size:0.8rem; color:#888; margin-bottom:5px;'><span>#${ad.id.toString().slice(-5)}</span><span>${adDate}</span></div>${ad.title}`;
+    
+    // İlan Detayına Durum ve Garanti Rozetleri
+    const existingBadges = document.getElementById("ad-badges-row");
+    if (existingBadges) existingBadges.remove();
+
+    const detailInfo = `
+    <div id="ad-badges-row" style="display: flex; gap: 8px; margin-bottom: 15px;">
+        <span style="background: #e3f2fd; color: #0056b3; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">${ad.condition || '2.el'}</span>
+        <span style="background: #f0f4f8; color: #666; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">Garanti: ${ad.warranty || 'Yok'}</span>
+    </div>`;
+    document.getElementById("modal-title").insertAdjacentHTML('afterend', detailInfo);
+
     document.getElementById("modal-price").textContent = `Fiyat: ${new Intl.NumberFormat('tr-TR').format(ad.price)} TL`;
 
     const descriptionEl = document.getElementById("modal-description");

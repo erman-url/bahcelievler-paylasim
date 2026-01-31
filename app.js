@@ -434,11 +434,12 @@ function setupForms() {
                     title: titleVal,
                     price: priceVal,
                     category: document.getElementById("ad-category").value,
-                    condition: document.getElementById("ad-condition").value,
-                    warranty: document.getElementById("ad-warranty").value,
+                    condition: document.getElementById("ad-condition")?.value || '2.el', // Yeni
+                    warranty: document.getElementById("ad-warranty")?.value || 'Yok',    // Yeni
+                    telegram_username: document.getElementById("ad-telegram")?.value || '', // Yeni
                     content: contentVal,
                     contact: document.getElementById("ad-contact").value,
-                    delete_token: deleteToken, // Hashli Token
+                    delete_token: deleteToken,
                     is_active: true,
                     image_url: urls[0] || null,
                     image_url_2: urls[1] || null,

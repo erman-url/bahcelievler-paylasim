@@ -435,6 +435,7 @@ function setupForms() {
                     title: titleVal,
                     price: priceVal,
                     category: document.getElementById("ad-category").value,
+                    district: document.getElementById("ad-district").value,
                     condition: document.getElementById("ad-condition")?.value || '2.el', // Yeni
                     warranty: document.getElementById("ad-warranty")?.value || 'Yok',    // Yeni
                     telegram_username: document.getElementById("ad-telegram")?.value || '', // Yeni
@@ -921,9 +922,7 @@ async function fetchAndRenderAds() {
     const list = document.getElementById("ads-list");
     if (!list) return;
     const { data } = await window.supabase.from('ilanlar')
-        .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, telegram_username')
-        .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username')
-        .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, condition, warranty')
+        .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, condition, warranty, district')
         .or('is_active.is.null,is_active.eq.true')
         .order('created_at', {ascending: false});
     allAds = data || [];
@@ -947,9 +946,10 @@ window.openAdDetail = function(id) {
     if (existingBadges) existingBadges.remove();
 
     const detailInfo = `
-    <div id="ad-badges-row" style="display: flex; gap: 8px; margin-bottom: 15px;">
+    <div id="ad-badges-row" style="display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;">
         <span style="background: #e3f2fd; color: #0056b3; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">${ad.condition || '2.el'}</span>
         <span style="background: #f0f4f8; color: #666; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">Garanti: ${ad.warranty || 'Yok'}</span>
+        <span style="background: #fff3e0; color: #e65100; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;"><i class='fas fa-map-marker-alt'></i> ${ad.district || 'Bahçelievler'}</span>
     </div>`;
     document.getElementById("modal-title").insertAdjacentHTML('afterend', detailInfo);
 

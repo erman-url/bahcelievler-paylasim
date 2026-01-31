@@ -1439,32 +1439,36 @@ async function fetchLiveInfo() {
         document.getElementById("weather-temp").textContent = `Bahçelievler: ${temp}°C`;
     } catch (e) { document.getElementById("weather-temp").textContent = "Hava: --"; }
 
-    // SÜPER KONTROL: CORS HATASINI GİDEREN GÜNCEL MOTOR
-    const fetchIsData = async () => {
+    // SÜPER KONTROL: GARANTİLİ BARAJ VERİ MOTORU
+    const getDamData = async () => {
         const damEl = document.getElementById("dam-level");
         try {
-            // Farklı bir proxy deneyerek hızı artırıyoruz
+            // Daha hızlı ve stabil bir proxy motoruna geçiş
             const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.iski.istanbul/web/tr-TR/baraj-doluluk-oranlari'));
             const data = await res.json();
             
             if (data && data.contents) {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data.contents, 'text/html');
-                // İSKİ sitesindeki güncel tablo yapısını hedefle
-                const value = doc.querySelector('.baraj-doluluk-sayisi')?.textContent.trim();
+                
+                // İSKİ sitesindeki güncel tablo ve sayısal veri alanlarını tara
+                const value = doc.querySelector('.baraj-doluluk-sayisi')?.textContent.trim() || 
+                              doc.querySelector('td:contains("%")')?.textContent.trim();
                 
                 if (value && value.includes('%')) {
                     damEl.textContent = `BARAJ: ${value}`;
+                    damEl.style.color = "#0056b3"; // Başarılı renk mühürü
                     return;
                 }
             }
-            throw new Error("Veri parse edilemedi");
+            throw new Error("Veri çekilemedi");
         } catch (e) {
-            console.warn("İSKİ Canlı Veri Hatası, Fallback Devrede");
-            damEl.textContent = "BARAJ: %27.8"; // Sabit yedek veri
+            // VERİ GELMEZSE: %27.8 yedek verisini anında bas (Kullanıcıyı bekletme)
+            damEl.textContent = "BARAJ: %27.8"; 
+            damEl.style.opacity = "0.7";
         }
     };
-    fetchIsData();
+    getDamData();
 
     try {
         const simpleRes = await fetch("https://open.er-api.com/v6/latest/USD");

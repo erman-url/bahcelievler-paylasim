@@ -430,6 +430,7 @@ function setupForms() {
                 const optimizedFiles = await Promise.all(rawFiles.map(file => optimizeImage(file)));
                 let urls = await handleMultipleUploads(optimizedFiles);
 
+                // Yeni sütunları ekleme motoruna dahil ediyoruz
                 const { error } = await window.supabase.from('ilanlar').insert([{
                     title: titleVal,
                     price: priceVal,

@@ -986,7 +986,6 @@ window.openAdDetail = function(id) {
     };
 
     // WhatsApp Paylaş Butonu Enjeksiyonu
-    const buyBtn = document.getElementById("modal-buy-btn");
     if (buyBtn) {
         const oldShare = document.getElementById("modal-share-btn");
         if (oldShare) oldShare.remove();

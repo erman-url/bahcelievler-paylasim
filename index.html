@@ -35,22 +35,14 @@
         </div>
     </section>
     
-            <div id="info-bar" class="cyber-card" style="display: flex; flex-direction: column; gap: 10px; padding: 12px; border-left: 5px solid #00d2ff; background: #fff;">
-                <div style="display: flex; justify-content: space-around; align-items: center; width: 100%;">
-                    <div id="weather-widget" style="display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-cloud-sun" style="color: #ffc107;"></i>
-                        <span id="weather-temp" style="font-weight: bold; font-size: 0.85rem;">YÜKLENİYOR...</span>
-                    </div>
-                    <div style="width: 1px; height: 15px; background: #eee;"></div>
-                    <div id="iski-widget" style="display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-tint" style="color: #00d2ff;"></i>
-                        <span id="dam-level" style="font-weight: bold; font-size: 0.85rem; color: var(--app-blue);">BARAJ: %27.8</span>
-                    </div>
+            <div id="info-bar" class="cyber-card" style="display: flex; flex-direction: column; gap: 8px; padding: 12px; border-left: 5px solid #00d2ff;">
+                <div style="display: flex; justify-content: space-around; width: 100%; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                    <div id="weather-widget"><i class="fas fa-sun"></i> <span id="weather-temp">Yükleniyor...</span></div>
+                    <div id="iski-widget"><i class="fas fa-tint"></i> <span id="dam-level">BARAJ: %27.8</span></div>
                 </div>
-                <div style="width: 100%; height: 1px; background: #f0f4f8;"></div>
-                <div id="currency-widget" style="display: flex; justify-content: space-around; align-items: center; width: 100%; font-size: 0.8rem; font-weight: bold;">
-                    <div style="color: #28a745;"><i class="fas fa-dollar-sign"></i> USD: <span id="usd-rate">...</span></div>
-                    <div style="color: #6f42c1;"><i class="fas fa-euro-sign"></i> EUR: <span id="eur-rate">...</span></div>
+                <div id="currency-widget" style="display: flex; justify-content: space-around; font-size: 0.8rem; font-weight: bold;">
+                    <div style="color:#28a745;">USD: <span id="usd-rate">...</span></div>
+                    <div style="color:#6f42c1;">EUR: <span id="eur-rate">...</span></div>
                 </div>
             </div>
 
@@ -469,7 +461,7 @@
                     <button id="modal-buy-btn" class="cyber-submit" style="background:#00d2ff !important;">SATIN ALMA TALEBİ</button>
                 </div>
             </div>
-            <div style="padding: 0 20px 20px;">
+            <div class="modal-footer">
                 <button id="modal-delete-btn-inner">İlanı Kaldır</button>
             </div>
         </div>

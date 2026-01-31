@@ -410,7 +410,7 @@ h1:not(.cyber-header) i {
 .filter-btn.active { background: var(--app-blue); color: white; border-color: var(--app-blue); }
 
 /* GRID VE WIDGETS */
-#ads-list { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 15px !important; padding: 5px !important; }
+#ads-list { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important; gap: 15px !important; padding: 5px !important; }
 .ad-card.cyber-card { transition: 0.3s; border: none !important; background: #fff; box-shadow: var(--card-shadow) !important; position: relative; max-width: 300px; margin: 0 auto; width: 100%; }
 .ad-card img { width: 100% !important; height: 135px !important; object-fit: cover !important; background: #e2e8f0; }
 
@@ -643,9 +643,8 @@ h1:not(.cyber-header) i {
 
 /* MASAÜSTÜ ÖZEL DÜZENİ (Ekran 768px'den büyükse) */
 @media (min-width: 768px) {
-    #ads-list, .grid-container {
+    .grid-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important; /* Bilgisayarda yan yana dizilir */
         gap: 20px !important;
         padding: 20px !important;
     }
@@ -657,11 +656,6 @@ h1:not(.cyber-header) i {
 
 /* MASAÜSTÜ: Sadece ekran 1024px'den büyükse çalışır */
 @media (min-width: 1024px) {
-    #ads-list {
-        grid-template-columns: repeat(4, 1fr) !important; /* Yan yana 4 ilan */
-        gap: 25px !important;
-        padding: 30px !important;
-    }
     
     .page {
         padding: 0 10% !important; /* Sağdan soldan %10 ferahlık payı */
@@ -672,5 +666,10 @@ h1:not(.cyber-header) i {
     left: 50%;
     transform: translateX(-50%);
     border-radius: 20px 20px 0 0;
+}
+
+.haber-card {
+    flex: 0 0 30% !important;
+    margin: 0 10px !important;
 }
 }

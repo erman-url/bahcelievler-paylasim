@@ -369,6 +369,35 @@ async function handleMultipleUploads(files) {
     return urls;
 }
 
+window.handleAdEdit = async function(ad) {
+    const pass = prompt("İlanı düzenlemek için şifrenizi girin:");
+    if (!pass) return;
+    
+    const hash = await sha256(pass.trim());
+    const { data } = await window.supabase.from('ilanlar').select('id').eq('id', ad.id).eq('delete_token', hash);
+    
+    if (data && data.length > 0) {
+        editingAdId = ad.id;
+        
+        document.getElementById("ad-title").value = ad.title;
+        document.getElementById("ad-price").value = ad.price;
+        document.getElementById("ad-content").value = ad.content;
+        document.getElementById("ad-category").value = ad.category;
+        document.getElementById("ad-district").value = ad.district || 'Bahçelievler';
+        document.getElementById("ad-contact").value = ad.contact;
+        if(document.getElementById("ad-condition")) document.getElementById("ad-condition").value = ad.condition || '2.el';
+        if(document.getElementById("ad-warranty")) document.getElementById("ad-warranty").value = ad.warranty || 'Yok';
+        if(document.getElementById("ad-telegram")) document.getElementById("ad-telegram").value = ad.telegram_username || '';
+        document.getElementById("ad-tc-no").value = pass.trim();
+        
+        closeModal();
+        window.scrollToIlanForm();
+        alert("Düzenleme modu aktif. Bilgileri güncelleyip 'YAYINLA' butonuna basınız.");
+    } else {
+        alert("Hata: Şifre yanlış!");
+    }
+};
+
 function setupForms() {
     const adForm = document.getElementById("new-ad-form");
     if (adForm) {
@@ -381,7 +410,7 @@ function setupForms() {
             const contentVal = document.getElementById("ad-content").value;
             const fileInput = document.getElementById("ads-files");
             
-            if (!fileInput.files || fileInput.files.length === 0) {
+            if (!editingAdId && (!fileInput.files || fileInput.files.length === 0)) {
                 alert("HATA: İlan yayınlamak için en az 1 adet fotoğraf yüklemek zorunludur!");
                 return;
             }
@@ -2138,4 +2167,3 @@ window.closeSocialModal = function() {
         setTimeout(() => { modal.style.display = "none"; }, 300);
     }
 };
-

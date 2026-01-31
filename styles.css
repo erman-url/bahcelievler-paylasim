@@ -598,9 +598,9 @@ h1:not(.cyber-header) i {
     display: flex !important;
     overflow-x: auto !important;
     gap: 15px;
-    padding: 10px 5px;
+    padding: 10px 0 !important;
     scroll-snap-type: x mandatory;
-    justify-content: flex-start; /* Haber Ortalaması */
+    justify-content: flex-start !important; /* Haber Ortalaması */
 }
 
 /* Tek haber varsa otomatik ortalar */
@@ -710,6 +710,7 @@ h1:not(.cyber-header) i {
     left: 50%;
     transform: translateX(-50%);
     border-radius: 20px 20px 0 0;
+}
 }
 
 .haber-card {

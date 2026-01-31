@@ -460,65 +460,48 @@ function setupForms() {
                 const optimizedFiles = await Promise.all(rawFiles.map(file => optimizeImage(file)));
                 let urls = await handleMultipleUploads(optimizedFiles);
 
-                // Yeni sütunları ekleme motoruna dahil ediyoruz
-                const { error } = await window.supabase.from('ilanlar').insert([{
+                // Veri objesini hazırla
+                const adData = {
                     title: titleVal,
                     price: priceVal,
                     category: document.getElementById("ad-category").value,
                     district: document.getElementById("ad-district").value,
-                    condition: document.getElementById("ad-condition")?.value || '2.el', // Yeni
-                    warranty: document.getElementById("ad-warranty")?.value || 'Yok',    // Yeni
-                    telegram_username: document.getElementById("ad-telegram")?.value || '', // Yeni
+                    condition: document.getElementById("ad-condition")?.value || '2.el',
+                    warranty: document.getElementById("ad-warranty")?.value || 'Yok',
+                    telegram_username: document.getElementById("ad-telegram")?.value || '',
                     content: contentVal,
                     contact: document.getElementById("ad-contact").value,
                     delete_token: deleteToken,
                     is_active: true,
-                    image_url: urls[0] || null,
-                    image_url_2: urls[1] || null,
-                    image_url_3: urls[2] || null
-                }]);
+                };
+
+                // Eğer yeni resim yüklendiyse veriye ekle
+                if (urls.length > 0) {
+                    adData.image_url = urls[0] || null;
+                    adData.image_url_2 = urls[1] || null;
+                    adData.image_url_3 = urls[2] || null;
+                }
+
+                let error;
                 if (editingAdId) {
-                    const { error } = await window.supabase.from('ilanlar').update({ 
-                        title: titleVal, price: priceVal, content: contentVal,
-                        category: document.getElementById("ad-category").value,
-                        district: document.getElementById("ad-district").value,
-                        condition: document.getElementById("ad-condition")?.value || '2.el',
-                        warranty: document.getElementById("ad-warranty")?.value || 'Yok'
-                    }).eq('id', editingAdId);
+                    // GÜNCELLEME MODU
+                    const response = await window.supabase.from('ilanlar').update(adData).eq('id', editingAdId);
+                    error = response.error;
+                    if (!error) {
+                        alert("İlan başarıyla güncellendi!");
+                        editingAdId = null;
+                    }
+                } else {
+                    // YENİ İLAN MODU
+                    const response = await window.supabase.from('ilanlar').insert([adData]);
+                    error = response.error;
+                    if (!error) alert("İlan yayınlandı!");
+                }
 
                 if (error) throw error;
-                alert("İlan yayınlandı!");
+                
                 adForm.reset();
                 loadPortalData();
-                    if (error) throw error;
-                    alert("İlan başarıyla güncellendi!"); 
-                    editingAdId = null;
-                    adForm.reset();
-                    loadPortalData();
-                } else {
-                    // Yeni sütunları ekleme motoruna dahil ediyoruz
-                    const { error } = await window.supabase.from('ilanlar').insert([{
-                        title: titleVal,
-                        price: priceVal,
-                        category: document.getElementById("ad-category").value,
-                        district: document.getElementById("ad-district").value,
-                        condition: document.getElementById("ad-condition")?.value || '2.el', // Yeni
-                        warranty: document.getElementById("ad-warranty")?.value || 'Yok',    // Yeni
-                        telegram_username: document.getElementById("ad-telegram")?.value || '', // Yeni
-                        content: contentVal,
-                        contact: document.getElementById("ad-contact").value,
-                        delete_token: deleteToken,
-                        is_active: true,
-                        image_url: urls[0] || null,
-                        image_url_2: urls[1] || null,
-                        image_url_3: urls[2] || null
-                    }]);
-
-                    if (error) throw error;
-                    alert("İlan yayınlandı!");
-                    adForm.reset();
-                    loadPortalData();
-                }
             } catch (err) {
                 alert("Hata: " + err.message);
             } finally {
@@ -1071,18 +1054,19 @@ window.openAdDetail = function(id) {
         buyBtn.after(shareBtn);
     }
 
-    // SÜPER KONTROL: PREMİUM DÜZENLEME BUTONU STİLİ
+    // MODERN DÜZENLEME BUTONU VE GÜVENLİ YERLEŞİM
     const editBtn = document.createElement('button');
-    editBtn.className = 'cyber-submit'; // Ana site buton stilini miras al
-    editBtn.style.cssText = "background: #f8f9fa !important; color: #333 !important; border: 1.5px solid #dee2e6 !important; margin-bottom: 5px; font-size: 0.85rem;";
+    editBtn.className = 'cyber-submit';
+    editBtn.style.cssText = "background: #f8f9fa !important; color: #333 !important; border: 1.5px solid #dee2e6 !important; margin-bottom: 8px; font-weight: bold;";
     editBtn.innerHTML = '<i class="fas fa-edit"></i> BU İLANI DÜZENLE';
     editBtn.onclick = () => window.handleAdEdit(ad);
 
-    // Butonları modal-footer içine düzgünce yerleştir 
     const footer = document.querySelector('.modal-footer'); 
     if (footer) { 
         footer.innerHTML = ''; // Eski butonları temizle 
-        footer.appendChild(editBtn); // Düzenle en üstte
+        
+        // İstenen mühür: prepend
+        footer.prepend(editBtn); 
 
         const deleteBtn = document.createElement('button');
         deleteBtn.id = 'modal-delete-btn-inner';

@@ -1071,42 +1071,25 @@ window.openAdDetail = function(id) {
         buyBtn.after(shareBtn);
     }
 
-    const footer = document.querySelector('.modal-footer');
-    if (footer) {
-        const oldEditBtn = footer.querySelector('.cyber-btn-outline');
-        if (oldEditBtn) oldEditBtn.remove();
+    // SÜPER KONTROL: PREMİUM DÜZENLEME BUTONU STİLİ
+    const editBtn = document.createElement('button');
+    editBtn.className = 'cyber-submit'; // Ana site buton stilini miras al
+    editBtn.style.cssText = "background: #f8f9fa !important; color: #333 !important; border: 1.5px solid #dee2e6 !important; margin-bottom: 5px; font-size: 0.85rem;";
+    editBtn.innerHTML = '<i class="fas fa-edit"></i> BU İLANI DÜZENLE';
+    editBtn.onclick = () => window.handleAdEdit(ad);
 
-        const editBtn = document.createElement('button');
-        editBtn.className = 'cyber-btn-outline';
-        editBtn.innerHTML = '<i class="fas fa-edit"></i> DÜZENLE';
-        editBtn.onclick = () => window.handleAdEdit(ad);
-        footer.prepend(editBtn);
+    // Butonları modal-footer içine düzgünce yerleştir 
+    const footer = document.querySelector('.modal-footer'); 
+    if (footer) { 
+        footer.innerHTML = ''; // Eski butonları temizle 
+        footer.appendChild(editBtn); // Düzenle en üstte
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.id = 'modal-delete-btn-inner';
+        deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> İlanı Kalıcı Olarak Kaldır';
+        deleteBtn.onclick = () => window.deleteAd(ad.id);
+        footer.appendChild(deleteBtn);
     }
-
-    document.getElementById("modal-delete-btn-inner").onclick = async () => {
-        const userPass = prompt("İlanı kaldırmak için Silme Şifresini girin (Örn: S1571):");
-        if (!userPass || !userPass.trim()) return;
-        
-        const rawInput = userPass.trim();
-        const tokenHash = await sha256(rawInput);
-
-        const { data, error } = await window.supabase
-            .from('ilanlar')
-            .update({ is_active: false })
-            .eq('id', ad.id)
-            .eq('delete_token', tokenHash) // Hashlenmiş token ile güvenli eşleşme
-            .select();
-
-        if (error) {
-            alert("Hata: " + error.message);
-        } else if (data && data.length > 0) {
-            alert("İlan başarıyla kaldırıldı.");
-            closeModal();
-            loadPortalData();
-        } else {
-            alert("Hata: Şifre yanlış veya bu ilanı silme yetkiniz yok.");
-        }
-    };
 
     const modal = document.getElementById("ad-detail-modal");
     if (modal) {

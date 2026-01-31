@@ -410,9 +410,29 @@ h1:not(.cyber-header) i {
 .filter-btn.active { background: var(--app-blue); color: white; border-color: var(--app-blue); }
 
 /* GRID VE WIDGETS */
-#ads-list { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important; gap: 15px !important; padding: 10px !important; }
-.ad-card.cyber-card { transition: 0.3s; border: 1px solid rgba(0, 0, 0, 0.08) !important; background: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important; position: relative; max-width: 300px; margin: 0 auto; width: 100%; }
-.ad-card img { width: 100% !important; aspect-ratio: 1 / 1 !important; object-fit: cover !important; background: #e2e8f0; }
+#ads-list { 
+    display: grid !important; 
+    grid-template-columns: 1fr 1fr !important; 
+    gap: 16px !important; 
+    padding: 15px !important; 
+    background: #f0f4f8; 
+}
+.ad-card.cyber-card { 
+    background: #ffffff !important; 
+    border-radius: 12px !important; 
+    border: 1px solid rgba(0,0,0,0.06) !important; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important; 
+    overflow: hidden; 
+    margin: 0 !important; 
+    display: flex; 
+    flex-direction: column; 
+}
+.ad-card img { 
+    width: 100% !important; 
+    aspect-ratio: 1 / 1 !important; 
+    object-fit: cover !important; 
+    border-bottom: 1px solid #f0f0f0; 
+}
 
 #home-dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 5px; }
 .home-widget {

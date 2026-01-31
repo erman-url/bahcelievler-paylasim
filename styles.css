@@ -428,6 +428,12 @@ h1:not(.cyber-header) i {
 
 /* BİLGİ VE RADAR */
 #info-bar { background: rgba(255, 255, 255, 0.9) !important; backdrop-filter: blur(10px); border-radius: 14px !important; border: none !important; box-shadow: var(--card-shadow) !important; }
+
+#iski-widget {
+    min-width: 90px;
+    transition: opacity 0.5s ease;
+}
+
 .neon-text { 
   display: inline-block; 
   animation: pulsate 1.5s infinite alternate; 

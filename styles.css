@@ -654,3 +654,23 @@ h1:not(.cyber-header) i {
         padding: 0 10%; /* Bilgisayarda sağdan soldan çok az boşluk bırakır, şık durur */
     }
 }
+
+/* MASAÜSTÜ: Sadece ekran 1024px'den büyükse çalışır */
+@media (min-width: 1024px) {
+    #ads-list {
+        grid-template-columns: repeat(4, 1fr) !important; /* Yan yana 4 ilan */
+        gap: 25px !important;
+        padding: 30px !important;
+    }
+    
+    .page {
+        padding: 0 10% !important; /* Sağdan soldan %10 ferahlık payı */
+    }
+/* Alt menüyü masaüstünde ortada tut */
+.app-footer-nav {
+    max-width: 800px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 20px 20px 0 0;
+}
+}

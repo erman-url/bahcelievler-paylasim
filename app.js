@@ -1696,26 +1696,6 @@ window.deleteAd = async (id) => {
     }
 };
 
-/* >> KESİNTİ BİLDİRİMİ SİLME MOTORU << */
-window.deleteKesinti = async (id) => {
-    const userPass = prompt("Bu bildirimi silmek için şifrenizi girin:");
-    if (!userPass || !userPass.trim()) return;
-
-    const { data, error } = await window.supabase
-        .from('kesintiler')
-        .delete()
-        .or(`delete_password.eq."${userPass}",delete_password.eq.${parseInt(userPass)}`)
-        .eq('id', id)
-        .select();
-
-    if (data && data.length > 0) {
-        alert("Bildirim kaldırıldı.");
-        loadPortalData();
-    } else {
-        alert("Hata: Şifre yanlış.");
-    }
-};
-
 /* >> RADAR ÖZEL MODAL MOTORU << */
 window.openRadarDetail = async function(id) {
     try {

@@ -459,7 +459,8 @@ function setupForms() {
                 btn.textContent = "YAYINLA";
             }
         }); 
-    } 
+    }
+}
 
 document.getElementById("recommend-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -564,7 +565,6 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
             btn.textContent = "BİLDİRİ YAYINLA";
         }
     });
-}
 
 /* >> FIRSAT ALANLARINI TETİKLEME MOTORU << */
 function toggleFirsatFields() {
@@ -2100,17 +2100,6 @@ window.openSocialDetail = async function(table, id) {
 
     } catch (err) {
         console.error("Sosyal Detay Hatası:", err);
-    }
-};
-
-window.closeSocialModal = function() {
-    const modal = document.getElementById("social-detail-modal");
-    if (modal) {
-        modal.style.opacity = "0";
-        modal.style.visibility = "hidden";
-        setTimeout(() => { modal.style.display = "none"; }, 300);
-    }
-};      console.error("Sosyal Detay Hatası:", err);
     }
 };
 

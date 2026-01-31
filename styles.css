@@ -737,6 +737,7 @@ h1:not(.cyber-header) i {
 }
 #haber-listesi { justify-content: center !important; gap: 20px; }
 }
+}
 
 /* --- SADECE NORMAL WEB (PC) İYİLEŞTİRMESİ --- */
 @media (min-width: 1024px) {

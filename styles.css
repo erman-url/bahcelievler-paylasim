@@ -717,7 +717,7 @@ h1:not(.cyber-header) i {
     flex: 0 0 30% !important;
     margin: 0 10px !important;
 }
-}
+
 
 /* --- NORMAL WEB (MASAÜSTÜ) OPTİMİZASYON MÜHÜRÜ --- */
 @media (min-width: 1024px) {

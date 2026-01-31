@@ -18,8 +18,7 @@ html {
 
 body {
     background: var(--bg);
-    margin: 0 auto;
-    max-width: 600px;
+    width: 100%;
     position: relative;
     min-height: 100vh;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -640,4 +639,18 @@ h1:not(.cyber-header) i {
     font-weight: 600;
     margin: 0 5px;
     text-shadow: 0 1px 0 #fff;
+}
+
+/* MASAÜSTÜ ÖZEL DÜZENİ (Ekran 768px'den büyükse) */
+@media (min-width: 768px) {
+    #ads-list, .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important; /* Bilgisayarda yan yana dizilir */
+        gap: 20px !important;
+        padding: 20px !important;
+    }
+    
+    .page {
+        padding: 0 10%; /* Bilgisayarda sağdan soldan çok az boşluk bırakır, şık durur */
+    }
 }

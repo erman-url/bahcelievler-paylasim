@@ -1535,6 +1535,7 @@ function applyFilters(category, searchTerm) {
                 <div class="ad-card-info">
                     <div class="ad-card-id">#${ad.id.toString().slice(-5).toUpperCase()} | ${new Date(ad.created_at).toLocaleDateString('tr-TR')}</div>
                     <div style="font-weight:bold; font-size:1.1rem; color:var(--dark); margin:2px 0;">${new Intl.NumberFormat('tr-TR').format(ad.price)} TL</div>
+                    <div class="ad-card-id">#${ad.id.toString().slice(-5).toUpperCase()} | ${new Date(ad.created_at).toLocaleDateString('tr-TR')} | Fiyat: ${new Intl.NumberFormat('tr-TR').format(ad.price)} TL</div>
                     <div style="font-size:0.85rem; color:#444; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ad.title}</div>
                 </div>
             </div>

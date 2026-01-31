@@ -936,6 +936,9 @@ window.openAdDetail = function(id) {
     document.getElementById("modal-title").textContent = ad.title;
     // Fiyat formatı tr-TR (1.000.000 TL) olarak korunuyor
     document.getElementById("modal-price").textContent = new Intl.NumberFormat('tr-TR').format(ad.price) + ' TL';
+    const adDate = new Date(ad.created_at).toLocaleDateString('tr-TR');
+    document.getElementById("modal-title").innerHTML = `<div style='display:flex; justify-content:space-between; font-size:0.8rem; color:#888; margin-bottom:5px;'><span>#${ad.id.toString().slice(-5)}</span><span>${adDate}</span></div>${ad.title}`;
+    document.getElementById("modal-price").textContent = `Fiyat: ${new Intl.NumberFormat('tr-TR').format(ad.price)} TL`;
 
     const descriptionEl = document.getElementById("modal-description");
     const content = ad.content || '';

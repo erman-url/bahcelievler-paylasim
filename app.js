@@ -1439,6 +1439,31 @@ async function fetchLiveInfo() {
         document.getElementById("weather-temp").textContent = `Bahçelievler: ${temp}°C`;
     } catch (e) { document.getElementById("weather-temp").textContent = "Hava: --"; }
 
+    // İSKİ BARAJ DOLULUK MOTORU (Seviye 2 - Otomatik Ayıklama)
+    try {
+        const iskiUrl = 'https://www.iski.istanbul/web/tr-TR/baraj-doluluk-oranlari';
+        const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(iskiUrl);
+        
+        const response = await fetch(proxyUrl);
+        const data = await response.json();
+        
+        // HTML içeriğini parse et ve oranı bul
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data.contents, 'text/html');
+        
+        // İSKİ sayfasındaki baraj doluluk değerini içeren hücreyi hedefle
+        const damLevelElement = doc.querySelector('.baraj-doluluk-sayisi') || doc.querySelector('td'); 
+        const damText = damLevelElement ? damLevelElement.textContent.trim() : null;
+        
+        if (damText && damText.includes('%')) {
+            document.getElementById("dam-level").textContent = `BARAJ: ${damText}`;
+            console.log("İSKİ Verisi Başarıyla Güncellendi:", damText);
+        }
+    } catch (e) { 
+        console.error("İSKİ verisi şu an çekilemiyor");
+        document.getElementById("dam-level").textContent = "BARAJ: %27.8"; // Fallback
+    }
+
     try {
         const simpleRes = await fetch("https://open.er-api.com/v6/latest/USD");
         const sData = await simpleRes.json();

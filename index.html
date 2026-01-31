@@ -35,20 +35,22 @@
         </div>
     </section>
     
-            <div id="info-bar" class="cyber-card" style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 20px; padding: 10px; border-left: 5px solid #00d2ff; background: #fff;">
-                <div id="weather-widget" style="display: flex; align-items: center; gap: 8px;">
-                    <i class="fas fa-cloud-sun" style="color: #ffc107;"></i>
-                    <span id="weather-temp" style="font-weight: bold; font-size: 0.8rem;">YÜKLENİYOR...</span>
+            <div id="info-bar" class="cyber-card" style="display: flex; flex-direction: column; gap: 10px; padding: 12px; border-left: 5px solid #00d2ff; background: #fff;">
+                <div style="display: flex; justify-content: space-around; align-items: center; width: 100%;">
+                    <div id="weather-widget" style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-cloud-sun" style="color: #ffc107;"></i>
+                        <span id="weather-temp" style="font-weight: bold; font-size: 0.85rem;">YÜKLENİYOR...</span>
+                    </div>
+                    <div style="width: 1px; height: 15px; background: #eee;"></div>
+                    <div id="iski-widget" style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-tint" style="color: #00d2ff;"></i>
+                        <span id="dam-level" style="font-weight: bold; font-size: 0.85rem; color: var(--app-blue);">BARAJ: %27.8</span>
+                    </div>
                 </div>
-                <div style="width: 1px; height: 20px; background: #eee;"></div>
-                <div id="iski-widget" style="display: flex; align-items: center; gap: 8px;">
-                    <i class="fas fa-tint" style="color: #00d2ff;"></i>
-                    <span id="dam-level" style="font-weight: bold; font-size: 0.75rem; color: var(--app-blue); white-space: nowrap;">BARAJ: %--</span>
-                </div>
-                <div style="width: 1px; height: 20px; background: #eee;"></div>
-                <div id="currency-widget" style="display: flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: bold;">
-                    <div style="color: #28a745;">USD: <span id="usd-rate">...</span></div>
-                    <div style="color: #6f42c1;">EUR: <span id="eur-rate">...</span></div>
+                <div style="width: 100%; height: 1px; background: #f0f4f8;"></div>
+                <div id="currency-widget" style="display: flex; justify-content: space-around; align-items: center; width: 100%; font-size: 0.8rem; font-weight: bold;">
+                    <div style="color: #28a745;"><i class="fas fa-dollar-sign"></i> USD: <span id="usd-rate">...</span></div>
+                    <div style="color: #6f42c1;"><i class="fas fa-euro-sign"></i> EUR: <span id="eur-rate">...</span></div>
                 </div>
             </div>
 

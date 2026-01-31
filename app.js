@@ -1073,12 +1073,22 @@ window.openAdDetail = function(id) {
 
     const oldEditBtn = document.querySelector('.modal-footer .cyber-btn-outline');
     if (oldEditBtn) oldEditBtn.remove();
+    const footer = document.querySelector('.modal-footer');
+    if (footer) {
+        const oldEditBtn = footer.querySelector('.cyber-btn-outline');
+        if (oldEditBtn) oldEditBtn.remove();
 
     const editBtn = document.createElement('button');
     editBtn.className = 'cyber-btn-outline';
     editBtn.innerHTML = '<i class="fas fa-edit"></i> DÜZENLE';
     editBtn.onclick = () => window.handleAdEdit(ad);
     document.querySelector('.modal-footer').prepend(editBtn);
+        const editBtn = document.createElement('button');
+        editBtn.className = 'cyber-btn-outline';
+        editBtn.innerHTML = '<i class="fas fa-edit"></i> DÜZENLE';
+        editBtn.onclick = () => window.handleAdEdit(ad);
+        footer.prepend(editBtn);
+    }
 
     document.getElementById("modal-delete-btn-inner").onclick = async () => {
         const userPass = prompt("İlanı kaldırmak için Silme Şifresini girin (Örn: S1571):");
@@ -1522,6 +1532,9 @@ async function fetchLiveInfo() {
     const updateDamLevel = async () => {
         const damEl = document.getElementById("dam-level");
         // 1. ADIM: Hemen bir 'Fallback' (Yedek) değer basarak boşluğu doldur [cite: 2026-01-31]
+        if (!damEl) return;
+        
+        // 1. ADIM: Hemen bir 'Fallback' (Yedek) değer basarak boşluğu doldur
         damEl.textContent = "BARAJ: %27.8"; 
         damEl.style.opacity = "0.6";
         try {
@@ -1547,6 +1560,8 @@ async function fetchLiveInfo() {
             }
         } catch (e) {
             console.warn("Canlı veri çekilemedi, yedek değer korunuyor.");
+            damEl.textContent = "BARAJ: %27.8";
+            damEl.style.opacity = "1";
         }
     }; updateDamLevel();
 

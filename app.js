@@ -2101,3 +2101,4 @@ window.closeSocialModal = function() {
         setTimeout(() => { modal.style.display = "none"; }, 300);
     }
 };
+

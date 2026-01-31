@@ -676,17 +676,18 @@ h1:not(.cyber-header) i {
 
 /* --- NORMAL WEB (MASAÜSTÜ) OPTİMİZASYON MÜHÜRÜ --- */
 @media (min-width: 1024px) {
-    /* 1. İlanları Yan Yana Diz (Letgo Stili) */
+    /* İlanları gerçek bir portal gibi yan yana diz */
     #ads-list {
         grid-template-columns: repeat(4, 1fr) !important; 
-        max-width: 1200px !important;
-        margin: 0 auto !important;
         gap: 25px !important;
+        max-width: 1200px;
+        margin: 0 auto;
     }
     
-    /* 2. Kartların Genişlik Engelini Kaldır */
-    .ad-card.cyber-card, .home-widget {
-        max-width: 100% !important; 
+    /* Kartların o basit 'yayvan' halini bitir */
+    .ad-card.cyber-card {
+        max-width: 280px !important;
+        height: 380px !important;
     }
 /* 3. Sayfa Kenar Boşluklarını Ayarla */
 .page {

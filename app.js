@@ -448,11 +448,48 @@ function setupForms() {
                     image_url_2: urls[1] || null,
                     image_url_3: urls[2] || null
                 }]);
+                if (editingAdId) {
+                    const { error } = await window.supabase.from('ilanlar').update({ 
+                        title: titleVal, price: priceVal, content: contentVal,
+                        category: document.getElementById("ad-category").value,
+                        district: document.getElementById("ad-district").value,
+                        condition: document.getElementById("ad-condition")?.value || '2.el',
+                        warranty: document.getElementById("ad-warranty")?.value || 'Yok'
+                    }).eq('id', editingAdId);
 
                 if (error) throw error;
                 alert("İlan yayınlandı!");
                 adForm.reset();
                 loadPortalData();
+                    if (error) throw error;
+                    alert("İlan başarıyla güncellendi!"); 
+                    editingAdId = null;
+                    adForm.reset();
+                    loadPortalData();
+                } else {
+                    // Yeni sütunları ekleme motoruna dahil ediyoruz
+                    const { error } = await window.supabase.from('ilanlar').insert([{
+                        title: titleVal,
+                        price: priceVal,
+                        category: document.getElementById("ad-category").value,
+                        district: document.getElementById("ad-district").value,
+                        condition: document.getElementById("ad-condition")?.value || '2.el', // Yeni
+                        warranty: document.getElementById("ad-warranty")?.value || 'Yok',    // Yeni
+                        telegram_username: document.getElementById("ad-telegram")?.value || '', // Yeni
+                        content: contentVal,
+                        contact: document.getElementById("ad-contact").value,
+                        delete_token: deleteToken,
+                        is_active: true,
+                        image_url: urls[0] || null,
+                        image_url_2: urls[1] || null,
+                        image_url_3: urls[2] || null
+                    }]);
+
+                    if (error) throw error;
+                    alert("İlan yayınlandı!");
+                    adForm.reset();
+                    loadPortalData();
+                }
             } catch (err) {
                 alert("Hata: " + err.message);
             } finally {

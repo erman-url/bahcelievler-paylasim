@@ -917,7 +917,8 @@ async function fetchAndRenderAds() {
     const list = document.getElementById("ads-list");
     if (!list) return;
     const { data } = await window.supabase.from('ilanlar')
-        .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3')
+        .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, telegram_username')
+        .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username')
         .or('is_active.is.null,is_active.eq.true')
         .order('created_at', {ascending: false});
     allAds = data || [];
@@ -959,35 +960,17 @@ window.openAdDetail = function(id) {
             ? images.map(src => `<img src="${src}" alt="İlan görseli" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">`).join('')
             : '<p style="text-align: center; color: #888; padding: 20px 0;">Bu ilan için görsel mevcut değil.</p>';
     }
-
+TELEGRAMYÖNLENDRMEMOTOTELEGRAMYÖNLENDRMEMOTORU
     // SÜPER KONTROL: İlan detayında butonu 'İletişim' olarak sıfırla
-    const buyBtn = document.getElementById("modal-buy-btn");
-    if (buyBtn) {
-        buyBtn.textContent = "İLETİŞİM BİLGİSİNİ KOPYALA";
-        buyBtn.style.display = "block";
-        // Mevcut onclick kopyalama mantığının korunduğundan emin ol
-    }
-
-    document.getElementById("modal-buy-btn").onclick = () => {
-        if (ad.contact) {
-            const copyText = ad.contact;
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(copyText).then(() => {
-                    alert("İletişim bilgisi panoya kopyalandı: " + copyText);
-                }, () => {
-                    alert("Kopyalanamadı. İletişim Bilgisi: " + copyText);
-                });
-            } else {
-                alert("İletişim Bilgisi: " + copyText);
-            }
-        } else {
-            alert("Bu ilanda iletişim bilgisi bulunmuyor.");
-        }
-    };
-
-    // WhatsApp Paylaş Butonu Enjeksiyonu
-    if (buyBtn) {
-        const oldShare = document.getElementById("modal-share-btn");
+    // SÜPER KONTROL: TELEGRAM YÖNLENDİRME MOTORU
+    const buyBtn = document.geTEEEGRAtBdEE)SR
+    if (buyBtn)oncc ck() => {
+               EğbrtENİsr vere raişi şsersımk bırakmışsaışna, bırakma ışsa g  el dnsd.k hpsabı / /ö}nend rt("İletişim bilgisi panoya kopyalandı: " + copyText);
+               }, tgUs relearlm_usetnlme || "BhevlrFrumDsk";
+            const}messg=eceURICmonn(`Merhaball$ed.tit} inıızliglbaktorum.`
+    };window.opn(`http://t.m/$tgUsp }?Pnxj=${iessae}`,'_ak'
+    if (b;uyBtn) {
+       const oldShare = document.getElementById("modal-share-btn");
         if (oldShare) oldShare.remove();
 
         const shareBtn = document.createElement("button");
@@ -1520,7 +1503,7 @@ function applyFilters(category, searchTerm) {
             </div>
         `;
     } else {
-        // 2. LETGO KART TASARIMI: İçerik hiyerarşisi
+       
         list.innerHTML = filtered.map(ad => `
             <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')">
                 <img src="${ad.image_url || 'https://via.placeholder.com/300'}">

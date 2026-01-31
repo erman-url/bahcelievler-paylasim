@@ -1071,18 +1071,11 @@ window.openAdDetail = function(id) {
         buyBtn.after(shareBtn);
     }
 
-    const oldEditBtn = document.querySelector('.modal-footer .cyber-btn-outline');
-    if (oldEditBtn) oldEditBtn.remove();
     const footer = document.querySelector('.modal-footer');
     if (footer) {
         const oldEditBtn = footer.querySelector('.cyber-btn-outline');
         if (oldEditBtn) oldEditBtn.remove();
 
-    const editBtn = document.createElement('button');
-    editBtn.className = 'cyber-btn-outline';
-    editBtn.innerHTML = '<i class="fas fa-edit"></i> DÜZENLE';
-    editBtn.onclick = () => window.handleAdEdit(ad);
-    document.querySelector('.modal-footer').prepend(editBtn);
         const editBtn = document.createElement('button');
         editBtn.className = 'cyber-btn-outline';
         editBtn.innerHTML = '<i class="fas fa-edit"></i> DÜZENLE';

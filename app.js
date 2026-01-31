@@ -960,6 +960,14 @@ window.openAdDetail = function(id) {
             : '<p style="text-align: center; color: #888; padding: 20px 0;">Bu ilan için görsel mevcut değil.</p>';
     }
 
+    // SÜPER KONTROL: İlan detayında butonu 'İletişim' olarak sıfırla
+    const buyBtn = document.getElementById("modal-buy-btn");
+    if (buyBtn) {
+        buyBtn.textContent = "İLETİŞİM BİLGİSİNİ KOPYALA";
+        buyBtn.style.display = "block";
+        // Mevcut onclick kopyalama mantığının korunduğundan emin ol
+    }
+
     document.getElementById("modal-buy-btn").onclick = () => {
         if (ad.contact) {
             const copyText = ad.contact;

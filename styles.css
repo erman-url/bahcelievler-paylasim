@@ -431,7 +431,8 @@ h1:not(.cyber-header) i {
 #ads-list { 
     display: grid !important; 
     grid-template-columns: 1fr 1fr !important; 
-    gap: 16px !important; 
+    column-gap: 16px !important; /* Yan yana boşluk */
+    row-gap: 25px !important;    /* ALT ALTA BOŞLUĞU ARTIRDIK */
     padding: 15px !important; 
     background: #f8f9fa; 
 }

@@ -1,5 +1,6 @@
 /* >> BAHÇELİEVLER PRO ENGINE V4.3 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
 let slideIndex = 0;
+let editingAdId = null;
 let allAds = [];
 let isProcessing = false;
 let currentCategory = 'all'; 
@@ -1003,6 +1004,15 @@ window.openAdDetail = function(id) {
         buyBtn.style.marginBottom = "10px";
         buyBtn.after(shareBtn);
     }
+
+    const oldEditBtn = document.querySelector('.modal-footer .cyber-btn-outline');
+    if (oldEditBtn) oldEditBtn.remove();
+
+    const editBtn = document.createElement('button');
+    editBtn.className = 'cyber-btn-outline';
+    editBtn.innerHTML = '<i class="fas fa-edit"></i> DÜZENLE';
+    editBtn.onclick = () => window.handleAdEdit(ad);
+    document.querySelector('.modal-footer').prepend(editBtn);
 
     document.getElementById("modal-delete-btn-inner").onclick = async () => {
         const userPass = prompt("İlanı kaldırmak için Silme Şifresini girin (Örn: S1571):");

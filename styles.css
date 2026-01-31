@@ -224,9 +224,10 @@ h1:not(.cyber-header) i {
 
 .modal-footer {
     display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 10px !important;
-    justify-content: center !important;
+    flex-direction: column !important; /* Butonları alt alta, düzenli dizer */
+    gap: 12px !important;
+    padding: 20px !important;
+    width: 100% !important;
 }
 
 /* Görev: 'X' Kapatma Butonu */
@@ -432,7 +433,7 @@ h1:not(.cyber-header) i {
     display: grid !important; 
     grid-template-columns: 1fr 1fr !important; 
     column-gap: 16px !important; /* Yan yana boşluk */
-    row-gap: 25px !important;    /* ALT ALTA BOŞLUĞU ARTIRDIK */
+    row-gap: 30px !important;    /* ALT ALTA BOŞLUĞU ARTIRDIK */
     padding: 15px !important; 
     background: #f8f9fa; 
 }
@@ -445,6 +446,7 @@ h1:not(.cyber-header) i {
     display: flex; 
     flex-direction: column; 
     height: 100%; 
+    margin-bottom: 5px !important; 
 }
 .ad-card img { 
     width: 100% !important; 

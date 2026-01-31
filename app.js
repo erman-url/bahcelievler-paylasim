@@ -1498,23 +1498,18 @@ function setupAdSearch() {
     });
 }
 
+// 1. AKILLI ARAMA: Başlık ve açıklamada arama yapar
 function applyFilters(category, searchTerm) {
     const list = document.getElementById("ads-list");
     if (!list) return;
     
-    let filtered = allAds;
-    
-    if (category !== 'all') {
-        filtered = filtered.filter(ad => ad.category === category);
-    }
-    
-    if (searchTerm && searchTerm.length > 0) {
-        const searchLower = searchTerm.toLowerCase();
-        filtered = filtered.filter(ad => {
-            const titleLower = (ad.title || '').toLowerCase();
-            return titleLower.includes(searchLower);
-        });
-    }
+    let filtered = allAds.filter(ad => {
+        const matchesCategory = category === 'all' || ad.category === category;
+        const searchLower = (searchTerm || "").toLowerCase();
+        const matchesSearch = (ad.title || "").toLowerCase().includes(searchLower) || 
+                              (ad.content || "").toLowerCase().includes(searchLower);
+        return matchesCategory && matchesSearch;
+    });
     
     if (filtered.length === 0) {
         list.innerHTML = `
@@ -1525,19 +1520,16 @@ function applyFilters(category, searchTerm) {
             </div>
         `;
     } else {
+        // 2. LETGO KART TASARIMI: İçerik hiyerarşisi
         list.innerHTML = filtered.map(ad => `
             <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')">
-                <div style="position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.6); color:white; padding:2px 8px; border-radius:10px; font-size:0.6rem; z-index:1;">${ad.category}</div>
-                <img src="${ad.image_url || 'https://via.placeholder.com/150'}">
-                <div class="ad-card-info" style="padding: 10px;">
-                    <div style="font-weight: 800; font-size: 1rem; color: #212529; margin-bottom: 4px;">
-                        ${new Intl.NumberFormat('tr-TR').format(ad.price)} TL
-                    </div>
-                    <div style="font-size: 0.85rem; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        ${ad.title}
-                    </div>
-                    <div style="font-size: 0.7rem; color: #aaa; margin-top: 8px;">
-                        <i class="fas fa-map-marker-alt"></i> Bahçelievler
+                <img src="${ad.image_url || 'https://via.placeholder.com/300'}">
+                <div style="padding: 10px;">
+                    <div style="font-weight: 800; font-size: 1.1rem; color: #212529;">${new Intl.NumberFormat('tr-TR').format(ad.price)} TL</div>
+                    <div style="font-size: 0.85rem; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 4px 0;">${ad.title}</div>
+                    <div style="display:flex; justify-content:space-between; font-size: 0.65rem; color: #aaa; margin-top: 8px;">
+                        <span><i class="fas fa-map-marker-alt"></i> Bahçelievler</span>
+                        <span>${new Date(ad.created_at).toLocaleDateString('tr-TR')}</span>
                     </div>
                 </div>
             </div>

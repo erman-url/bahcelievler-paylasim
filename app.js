@@ -1507,19 +1507,25 @@ function applyFilters(category, searchTerm) {
         `;
     } else {
        
-        list.innerHTML = filtered.map(ad => `
+        list.innerHTML = filtered.map(ad => {
+            const adDate = new Date(ad.created_at).toLocaleDateString('tr-TR');
+            return `
             <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')">
                 <img src="${ad.image_url || 'https://via.placeholder.com/300'}">
                 <div style="padding: 10px;">
                     <div style="font-weight: 800; font-size: 1.1rem; color: #212529;">${new Intl.NumberFormat('tr-TR').format(ad.price)} TL</div>
                     <div style="font-size: 0.85rem; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 4px 0;">${ad.title}</div>
-                    <div style="display:flex; justify-content:space-between; font-size: 0.65rem; color: #aaa; margin-top: 8px;">
-                        <span><i class="fas fa-map-marker-alt"></i> Bahçelievler</span>
-                        <span>${new Date(ad.created_at).toLocaleDateString('tr-TR')}</span>
+                    <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #f0f0f0;">
+                        <div style="font-size: 0.75rem; color: #555; display: flex; align-items: center; gap: 4px; margin-bottom: 4px;">
+                            <i class="fas fa-map-marker-alt" style="color: #888;"></i> Bahçelievler
+                        </div>
+                        <div style="font-size: 0.65rem; color: #aaa; font-weight: 500;">
+                            ${adDate}
+                        </div>
                     </div>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
     }
 }
 
@@ -2077,6 +2083,17 @@ window.openSocialDetail = async function(table, id) {
 
     } catch (err) {
         console.error("Sosyal Detay Hatası:", err);
+    }
+};
+
+window.closeSocialModal = function() {
+    const modal = document.getElementById("social-detail-modal");
+    if (modal) {
+        modal.style.opacity = "0";
+        modal.style.visibility = "hidden";
+        setTimeout(() => { modal.style.display = "none"; }, 300);
+    }
+};      console.error("Sosyal Detay Hatası:", err);
     }
 };
 

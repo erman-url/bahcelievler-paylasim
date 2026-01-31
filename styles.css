@@ -12,9 +12,16 @@
     --border-radius: 16px;
 }
 
+html {
+    background: #d1d9e6;
+}
+
 body {
     background: var(--bg);
-    margin: 0;
+    margin: 0 auto;
+    max-width: 600px;
+    position: relative;
+    min-height: 100vh;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     color: var(--dark-text);
     padding-bottom: 80px;
@@ -301,8 +308,9 @@ h1:not(.cyber-header) i {
 /* ALT MENÜ (FOOTER) - RENK MANTIĞI */
 .app-footer-nav {
     position: fixed;
-    bottom: 0; left: 0; right: 0;
+    bottom: 0; left: 50%;
     width: 100%;
+    max-width: 600px;
     background: var(--app-blue) !important; /* Her zaman kurumsal mavi */
     display: -webkit-flex;
     display: flex;
@@ -312,8 +320,7 @@ h1:not(.cyber-header) i {
     padding-bottom: env(safe-area-inset-bottom);
     z-index: 10000;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
+    transform: translateX(-50%);
 }
 
 .nav-item {
@@ -405,7 +412,7 @@ h1:not(.cyber-header) i {
 
 /* GRID VE WIDGETS */
 #ads-list { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 15px !important; padding: 5px !important; }
-.ad-card.cyber-card { transition: 0.3s; border: none !important; background: #fff; box-shadow: var(--card-shadow) !important; position: relative; }
+.ad-card.cyber-card { transition: 0.3s; border: none !important; background: #fff; box-shadow: var(--card-shadow) !important; position: relative; max-width: 300px; margin: 0 auto; width: 100%; }
 .ad-card img { width: 100% !important; height: 135px !important; object-fit: cover !important; background: #e2e8f0; }
 
 #home-dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 5px; }
@@ -414,6 +421,7 @@ h1:not(.cyber-header) i {
     background: #ffffff !important; box-shadow: var(--card-shadow) !important;
     border-radius: var(--border-radius) !important; padding: 18px;
     border: 1px solid rgba(0, 86, 179, 0.02);
+    max-width: 300px; margin: 0 auto; width: 100%;
 }
 .home-widget[data-target="duyurular"] { background: var(--azure-light) !important; border-left: 5px solid var(--app-blue) !important; }
 .home-widget:active { -webkit-transform: scale(0.95); transform: scale(0.95); }
@@ -614,7 +622,9 @@ h1:not(.cyber-header) i {
 .legal-footer-bar {
     position: fixed;
     bottom: 70px; /* Footer yüksekliğine göre ayarlandı */
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 600px;
     width: 100%;
     text-align: center;
     font-size: 0.65rem;

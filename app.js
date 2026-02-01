@@ -1008,8 +1008,8 @@ async function fetchAndRenderAds() {
     if (!list) return;
     const { data } = await window.supabase.from('ilanlar')
         .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, condition, warranty, district, is_sold')
-        .or('is_active.is.null,is_active.eq.true')
-        .or('is_sold.is.null,is_sold.eq.false')
+        .or('is_active.is.null,is_active.eq.true') // MÜHÜRLENDİ: Aktif İlanlar
+        .or('is_sold.is.null,is_sold.eq.false')   // MÜHÜRLENDİ: Satılmamış İlanlar
         .order('created_at', {ascending: false});
     allAds = data || [];
     
@@ -1103,7 +1103,7 @@ window.openAdDetail = function(id) {
     editBtn.innerHTML = '<i class="fas fa-edit"></i> BU İLANI DÜZENLE';
     editBtn.onclick = () => window.handleAdEdit(ad);
 
-    const footer = document.getElementById('modal-footer');
+    const footer = document.getElementById('modal-footer'); // MÜHÜRLENDİ: Tek Tanım
     if (footer) { 
         footer.innerHTML = ''; // Eski butonları temizle 
         
@@ -2201,7 +2201,7 @@ window.loadComments = async function(ilanId) {
     list.innerHTML = data.map(c => `
         <div style="margin-bottom:10px; padding-bottom:5px; border-bottom:1px solid #eee;">
             <strong style="color:var(--app-blue); font-size:0.85rem;">${c.nickname}</strong>
-            <p style="margin:2px 0; font-size:0.9rem;">${c.mesaj}</p>
+            <p style="margin:2px 0; font-size:0.9rem;">${c.mesaj}</p> <!-- MÜHÜRLENDİ: DB Sütunu 'mesaj' -->
         </div>
     `).join('');
     list.scrollTop = list.scrollHeight;

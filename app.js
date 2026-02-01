@@ -1104,6 +1104,7 @@ window.openAdDetail = function(id) {
     editBtn.onclick = () => window.handleAdEdit(ad);
 
     const footer = document.querySelector('.modal-footer'); 
+    const footer = document.getElementById('modal-action-buttons'); 
     if (footer) { 
         footer.innerHTML = ''; // Eski butonları temizle 
         

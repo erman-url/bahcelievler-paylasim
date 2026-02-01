@@ -432,21 +432,21 @@ h1:not(.cyber-header) i {
 #ads-list { 
     display: grid !important; 
     grid-template-columns: 1fr 1fr !important; 
-    column-gap: 16px !important; /* Yan yana boşluk */
-    row-gap: 30px !important;    /* ALT ALTA BOŞLUĞU ARTIRDIK */
-    padding: 15px !important; 
-    background: #f8f9fa; 
+    column-gap: 16px !important; 
+    row-gap: 30px !important; /* ALT ALTA KESİN BOŞLUĞU BURADA MÜHÜRLER */
+    padding: 20px 15px !important; 
+    background: #f0f4f8 !important; /* Arka plan rengiyle kartları ayırır */
 }
 .ad-card.cyber-card { 
     background: #ffffff !important; 
-    border-radius: 12px !important; 
-    border: 1px solid rgba(0,0,0,0.06) !important; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important; 
-    overflow: hidden; 
+    border-radius: 16px !important; 
+    border: none !important; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important; 
+    margin: 0 !important; /* Grid gap kullanıldığı için margin'i sıfırlıyoruz */
     display: flex; 
     flex-direction: column; 
-    height: 100%; 
-    margin-bottom: 5px !important; 
+    height: auto !important; /* Kartın yüksekliğini içeriğe göre ayarlar */
+    overflow: hidden; 
 }
 .ad-card img { 
     width: 100% !important; 

@@ -431,17 +431,14 @@
                     <button id="modal-buy-btn" class="cyber-submit" style="background:#00d2ff !important;">SATIN ALMA TALEBİ</button>
                 </div>
 
-                <!-- YORUM ALANI (Soru & Cevap) -->
-                <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee;">
-                    <h4 style="margin: 0 0 10px 0; color: var(--dark); font-size: 1rem;"><i class="far fa-comments"></i> Soru & Cevap</h4>
-                    <div id="ad-comments-list" style="max-height: 200px; overflow-y: auto; background: #f8f9fa; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e9ecef;"></div>
-                    <form id="ad-comment-form" class="cyber-form" style="margin: 0;">
-                        <div style="display: flex; gap: 8px;">
-                            <input type="text" id="comment-nickname" placeholder="İsim / Rumuz" maxlength="20" required style="flex: 1; margin-bottom: 8px;">
-                            <button type="submit" class="cyber-submit" style="flex: 0 0 80px; padding: 0; margin-bottom: 8px; font-size: 0.8rem;">GÖNDER</button>
-                        </div>
-                        <textarea id="comment-text" placeholder="İlan sahibine soru sor..." rows="2" maxlength="200" required style="margin-bottom: 0;"></textarea>
-                    </form>
+                <div id="comment-section" style="padding: 20px; border-top: 1px solid #eee; background: #f9f9f9;">
+                    <h4 style="margin-bottom:10px;"><i class="fas fa-comments"></i> Sorular & Yorumlar</h4>
+                    <div id="comment-list" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;"></div>
+                    <div style="display:flex; gap:5px;">
+                        <input type="text" id="comment-nick" placeholder="Adınız" style="width: 30%; font-size: 0.8rem;">
+                        <input type="text" id="comment-text" placeholder="Bir şey sor..." style="flex:1; font-size: 0.8rem;">
+                        <button onclick="window.sendComment()" class="cyber-submit" style="width:auto; padding:5px 10px;"><i class="fas fa-paper-plane"></i></button>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">

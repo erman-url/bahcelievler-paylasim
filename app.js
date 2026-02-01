@@ -274,8 +274,16 @@ function initSlider() {
 
 
 /* >> BOT KORUMA MOTORU << */
-function isBotDetected(fieldId = "hp_check") {
-    const hpField = document.getElementById(fieldId);
+function isBotDetected(formId) {
+    const hpMap = {
+        "new-ad-form": "hp_ilan",
+        "recommend-form": "hp_tavsiye",
+        "complaint-form": "hp_sikayet",
+        "quote-request-form": "hp_teklif",
+        "piyasa-form": "hp_radar",
+        "hizmet-form": "hp_hizmet"
+    };
+    const hpField = document.getElementById(hpMap[formId]);
     if (hpField && hpField.value !== "") {
         console.warn("Süper Kontrol: Bot algılandı, işlem reddedildi.");
         return true;
@@ -1692,7 +1700,7 @@ async function setupHizmetForm() {
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+        if (isBotDetected("hizmet-form") || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
         const fileInput = document.getElementById("hizmet-file");
         const btn = document.getElementById("hizmet-submit-btn");

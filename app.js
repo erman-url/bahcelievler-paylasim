@@ -1803,6 +1803,8 @@ window.openAddAdModal = function() {
             modal.style.opacity = '1';
         }, 10);
     }
+    document.getElementById('add-ad-modal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
 };
 
 window.closeAddAdModal = function() {
@@ -1812,6 +1814,8 @@ window.closeAddAdModal = function() {
         modal.style.visibility = 'hidden';
         setTimeout(() => { modal.style.display = 'none'; }, 300);
     }
+    document.getElementById('add-ad-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
 };
 
 /* >> HABER MOTORU (GÜNDEM & HABER) << */

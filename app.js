@@ -1490,43 +1490,6 @@ async function fetchLiveInfo() {
         document.getElementById("weather-temp").textContent = `Bahçelievler: ${temp}°C`;
     } catch (e) { document.getElementById("weather-temp").textContent = "Hava: --"; }
 
-    // SÜPER KONTROL: GARANTİLİ VE HIZLI BARAJ VERİSİ
-    const updateDamLevel = async () => {
-        const damEl = document.getElementById("dam-level");
-        // 1. ADIM: Hemen bir 'Fallback' (Yedek) değer basarak boşluğu doldur [cite: 2026-01-31]
-        if (!damEl) return;
-        
-        // 1. ADIM: Hemen bir 'Fallback' (Yedek) değer basarak boşluğu doldur
-        damEl.textContent = "BARAJ: %26.4"; 
-        damEl.style.opacity = "0.6";
-        try {
-            // 2. ADIM: Farklı bir proxy motoru ile şansımızı deniyoruz
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 saniye sınırı
-            const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.iski.istanbul/web/tr-TR/baraj-doluluk-oranlari'), { signal: controller.signal });
-            const data = await res.json();
-            
-            if (data && data.contents) {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data.contents, 'text/html');
-                // İSKİ'nin tablo hücresini kesin yakalamak için çoklu seçici
-                const value = doc.querySelector('.baraj-doluluk-sayisi')?.textContent.trim() || 
-                              doc.querySelector('.iski-dam-level')?.textContent.trim();
-                
-                if (value && value.includes('%')) {
-                    damEl.textContent = `BARAJ: ${value}`;
-                    damEl.style.opacity = "1";
-                    damEl.style.color = "#0056b3";
-                    console.log("İSKİ Canlı Veri Mühürlendi:", value);
-                }
-            }
-        } catch (e) {
-            // Sessiz mod: Hata gösterme, yedek değeri koru
-            damEl.textContent = "BARAJ: %26.4";
-            damEl.style.opacity = "1";
-        }
-    }; updateDamLevel();
-
     try {
         const simpleRes = await fetch("https://open.er-api.com/v6/latest/USD");
         const sData = await simpleRes.json();

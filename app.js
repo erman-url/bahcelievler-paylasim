@@ -1044,6 +1044,9 @@ window.openAdDetail = function(id) {
 
     const gallery = document.getElementById("modal-image-gallery");
     if (gallery) {
+        // Galeri her açıldığında başa sar
+        gallery.scrollLeft = 0;
+
         const images = [ad.image_url, ad.image_url_2, ad.image_url_3].filter(Boolean);
 
         gallery.innerHTML = images.length

@@ -1009,7 +1009,7 @@ async function fetchAndRenderAds() {
     const { data } = await window.supabase.from('ilanlar')
         .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, condition, warranty, district, is_sold')
         .or('is_active.is.null,is_active.eq.true')
-        .neq('is_sold', true)
+        .or('is_sold.is.null,is_sold.eq.false')
         .order('created_at', {ascending: false});
     allAds = data || [];
     
@@ -1103,7 +1103,7 @@ window.openAdDetail = function(id) {
     editBtn.innerHTML = '<i class="fas fa-edit"></i> BU İLANI DÜZENLE';
     editBtn.onclick = () => window.handleAdEdit(ad);
 
-    const footer = document.getElementById('modal-footer') || document.getElementById('modal-action-buttons');
+    const footer = document.getElementById('modal-footer');
     if (footer) { 
         footer.innerHTML = ''; // Eski butonları temizle 
         

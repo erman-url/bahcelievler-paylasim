@@ -436,7 +436,7 @@ h1:not(.cyber-header) i {
     display: grid !important; 
     grid-template-columns: 1fr 1fr !important; 
     column-gap: 16px !important; 
-    row-gap: 30px !important; /* ALT ALTA KESİN BOŞLUĞU BURADA MÜHÜRLER */
+    row-gap: 35px !important; /* ALT ALTA KESİN BOŞLUĞU BURADA MÜHÜRLER */
     padding: 20px 15px !important; 
     background: #f0f4f8 !important; /* Arka plan rengiyle kartları ayırır */
 }
@@ -741,4 +741,3 @@ h1:not(.cyber-header) i {
         transform: translateX(-50%);
         border-radius: 20px 20px 0 0;
     }
-}

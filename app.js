@@ -1612,10 +1612,14 @@ window.filterAds = function(category, clickedButton) {
     }
     
     currentCategory = category;
+    if (category === 'latest') {
+        allAds.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+
     const searchInput = document.getElementById("ad-search-input");
     const searchTerm = searchInput ? searchInput.value.trim() : '';
     
-    applyFilters(category, searchTerm);
+    applyFilters(category === 'latest' ? 'all' : category, searchTerm);
 };
 
 window.searchOnMap = function() {

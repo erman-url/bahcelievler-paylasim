@@ -1,4 +1,18 @@
 /* >> BAHÇELİEVLER PRO ENGINE V4.3 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
+/* >> XSS GÜVENLİK FİLTRESİ << */
+window.escapeHTML = function(str) {
+    if (!str) return "";
+    return str.replace(/[&<>"']/g, function(m) {
+        return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        }[m];
+    });
+};
+
 /* >> KÜFÜR VE ARGO FİLTRELEME MOTORU (MÜHÜRLENDİ) << */
 window.badWords = ['küfür1', 'küfür2', 'hakaret1', 'argo1', 'aptal', 'salak', 'gerizekalı', 'şerefsiz']; // Genişletilebilir liste
 window.filterContent = function(text) { let cleanText = text; window.badWords.forEach(word => { const regex = new RegExp(word, 'gi'); cleanText = cleanText.replace(regex, '***'); }); return cleanText; };
@@ -794,12 +808,12 @@ async function renderFirsatlar() {
         return `
         <div class="cyber-card ad-card" style="margin-bottom:15px; cursor:pointer; border-left: 5px solid ${borderColor};" onclick="openFirsatDetail('${f.id}')">
             <div style="display:flex; justify-content:space-between; align-items:start;">
-                <span style="font-size:0.6rem; font-weight:bold; text-transform:uppercase; background:#eee; padding:2px 5px; border-radius:3px;">${f.category}</span>
+                <span style="font-size:0.6rem; font-weight:bold; text-transform:uppercase; background:#eee; padding:2px 5px; border-radius:3px;">${window.escapeHTML(f.category)}</span>
                 <button onclick="event.stopPropagation(); window.deleteFirsat('${f.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer; padding:10px;"><i class="fas fa-trash"></i></button>
             </div>
-            <h4 style="margin:5px 0;">${f.title}</h4>
+            <h4 style="margin:5px 0;">${window.escapeHTML(f.title)}</h4>
             <img src="${displayImg}" style="width:100%; height:150px; object-fit:contain; background:#f9f9f9; border-radius:8px; margin:5px 0; padding:10px;">
-            <p style="font-size:0.8rem; color:#444; margin-top:5px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${f.content}</p>
+            <p style="font-size:0.8rem; color:#444; margin-top:5px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${window.escapeHTML(f.content)}</p>
         </div>`;
     }).join('') || "";
 }
@@ -814,13 +828,13 @@ window.openFirsatDetail = async function(id) {
         document.getElementById("modal-title").textContent = f.title;
         document.getElementById("modal-price").innerHTML = `
             <div style="display:flex; justify-content:space-between; width:100%; font-size:0.85rem; color:#666;">
-                <span style="font-weight:bold; color:#28a745;">${f.category}</span>
+                <span style="font-weight:bold; color:#28a745;">${window.escapeHTML(f.category)}</span>
                 <span><i class="far fa-calendar-alt"></i> ${dateStr}</span>
             </div>`;
         
         const descriptionEl = document.getElementById("modal-description");
         if (descriptionEl) {
-            descriptionEl.innerHTML = `<div style="white-space: pre-wrap; color: #333; margin-top:15px; font-size:1rem; line-height:1.5;">${f.content}</div>`;
+            descriptionEl.innerHTML = `<div style="white-space: pre-wrap; color: #333; margin-top:15px; font-size:1rem; line-height:1.5;">${window.escapeHTML(f.content)}</div>`;
         }
 
         const gallery = document.getElementById("modal-image-gallery");
@@ -897,11 +911,11 @@ async function renderTavsiyeler() {
     el.innerHTML = data?.map(item => `
         <div class="cyber-card" style="margin-bottom:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="window.openSocialDetail('tavsiyeler', '${item.id}')">
             <div style="display:flex; justify-content:space-between;">
-                <strong>${item.title}</strong>
+                <strong>${window.escapeHTML(item.title)}</strong>
                 <span>${"⭐".repeat(item.rating || 5)}</span>
             </div>
             ${item.image_url ? `<img src="${item.image_url}" style="width:100%; border-radius:8px; margin:10px 0; max-height:200px; object-fit:cover;">` : ''}
-            <p style="margin:8px 0; font-style:italic;">"${item.comment}"</p>
+            <p style="margin:8px 0; font-style:italic;">"${window.escapeHTML(item.comment)}"</p>
         </div>
     `).join('') || "";
 }
@@ -917,10 +931,10 @@ async function renderSikayetler() {
     el.innerHTML = data?.map(i => `
         <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff4d4d; cursor:pointer;" onclick="window.openSocialDetail('sikayetler', '${i.id}')">
             <div style="display:flex; justify-content:space-between; align-items:start;">
-                <span style="font-size:0.7rem; font-weight:bold; background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px;">${i.category}</span>
+                <span style="font-size:0.7rem; font-weight:bold; background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px;">${window.escapeHTML(i.category)}</span>
             </div>
-            <h4 style="margin:10px 0 5px 0;">${i.title}</h4>
-            <p style="font-size:0.9rem; color:#444;">${i.content}</p>
+            <h4 style="margin:10px 0 5px 0;">${window.escapeHTML(i.title)}</h4>
+            <p style="font-size:0.9rem; color:#444;">${window.escapeHTML(i.content)}</p>
             <div style="display:flex; gap:5px; margin:10px 0;">
                 ${i.image_url ? `<img src="${i.image_url}" style="width:48%; height:120px; object-fit:cover; border-radius:8px;">` : ''}
                 ${i.image_url_2 ? `<img src="${i.image_url_2}" style="width:48%; height:120px; object-fit:cover; border-radius:8px;">` : ''}
@@ -1025,7 +1039,7 @@ window.openAdDetail = function(id) {
     document.body.style.overflow = 'hidden'; // Arka plan kaydırmasını engelle
 
     const adDate = new Date(ad.created_at).toLocaleDateString('tr-TR');
-    document.getElementById("modal-title").innerHTML = `<div style='display:flex; justify-content:space-between; font-size:0.8rem; color:#888; margin-bottom:5px;'><span>#${ad.id.toString().slice(-5)}</span><span>${adDate}</span></div>${ad.title}`;
+    document.getElementById("modal-title").innerHTML = `<div style='display:flex; justify-content:space-between; font-size:0.8rem; color:#888; margin-bottom:5px;'><span>#${ad.id.toString().slice(-5)}</span><span>${adDate}</span></div>${window.escapeHTML(ad.title)}`;
     
     // İlan Detayına Durum ve Garanti Rozetleri
     const existingBadges = document.getElementById("ad-badges-row");
@@ -1033,10 +1047,10 @@ window.openAdDetail = function(id) {
 
     const detailInfo = `
     <div id="ad-badges-row" style="display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;">
-        <span style="background: #e8f5e9; color: #2e7d32; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">${ad.category}</span>
-        <span style="background: #e3f2fd; color: #0056b3; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">${ad.condition || '2.el'}</span>
-        <span style="background: #f0f4f8; color: #666; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">Garanti: ${ad.warranty || 'Yok'}</span>
-        <span style="background: #fff3e0; color: #e65100; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;"><i class='fas fa-map-marker-alt'></i> ${ad.district || 'Bahçelievler'}</span>
+        <span style="background: #e8f5e9; color: #2e7d32; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">${window.escapeHTML(ad.category)}</span>
+        <span style="background: #e3f2fd; color: #0056b3; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">${window.escapeHTML(ad.condition || '2.el')}</span>
+        <span style="background: #f0f4f8; color: #666; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">Garanti: ${window.escapeHTML(ad.warranty || 'Yok')}</span>
+        <span style="background: #fff3e0; color: #e65100; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;"><i class='fas fa-map-marker-alt'></i> ${window.escapeHTML(ad.district || 'Bahçelievler')}</span>
     </div>`;
     document.getElementById("modal-title").insertAdjacentHTML('afterend', detailInfo);
 
@@ -1046,11 +1060,11 @@ window.openAdDetail = function(id) {
     const content = ad.content || '';
     const contact = ad.contact || '';
 
-    // Güvenlik Düzeltmesi: Olası XSS saldırılarını engellemek için kullanıcı girdilerini güvenli hale getiriyoruz.
-    const safeContent = content.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
+    // Güvenlik Düzeltmesi: XSS filtresi ve satır sonu dönüşümü
+    const safeContent = window.escapeHTML(content).replace(/\n/g, "<br>");
 
     if (contact) {
-        const safeContact = contact.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const safeContact = window.escapeHTML(contact);
         descriptionEl.innerHTML = safeContent + `<br><br><strong style="color:#007bff;"><i class="fas fa-phone"></i> İletişim:</strong> ${safeContact}`;
     } else {
         descriptionEl.innerHTML = safeContent;
@@ -1198,7 +1212,7 @@ if (lastPiyasa?.[0]) {
             const previewPiyasa = document.getElementById("preview-piyasa");
             if (previewPiyasa) {
                 // Yazıyı güncelle ve ortala
-                previewPiyasa.innerHTML = `${lastPiyasa[0].urun_adi}<br><span style="color:var(--cyber-pink);">${lastPiyasa[0].fiyat} TL</span> <small style="color:#888;">@${lastPiyasa[0].market_adi}</small>`;
+                previewPiyasa.innerHTML = `${window.escapeHTML(lastPiyasa[0].urun_adi)}<br><span style="color:var(--cyber-pink);">${window.escapeHTML(String(lastPiyasa[0].fiyat))} TL</span> <small style="color:#888;">@${window.escapeHTML(lastPiyasa[0].market_adi)}</small>`;
                 previewPiyasa.style.width = "100%";
                 previewPiyasa.style.textAlign = "center";
             }
@@ -1285,8 +1299,8 @@ async function fetchDuyurular() {
                     <small style="color:#888;">${new Date(d.created_at).toLocaleDateString('tr-TR')}</small>
                     <i class="fas fa-bullhorn" style="color:#ff007f;"></i>
                 </div>
-                <h3 style="margin:10px 0 5px 0; color:var(--dark);">${baslik}</h3>
-                <p style="font-size:0.9rem; color:#444; line-height:1.4;">${ozet}</p>
+                <h3 style="margin:10px 0 5px 0; color:var(--dark);">${window.escapeHTML(baslik)}</h3>
+                <p style="font-size:0.9rem; color:#444; line-height:1.4;">${window.escapeHTML(ozet)}</p>
             </div>
         `}).join('') || "<p style='text-align:center; padding:20px;'>Aktif duyuru bulunmuyor.</p>";
     }
@@ -1344,23 +1358,19 @@ async function renderKesintiler() {
     el.innerHTML = data?.map(k => `
         <div class="cyber-card" style="margin-bottom:12px; border-left: 5px solid ${k.type === 'Elektrik' ? '#ffc107' : k.type === 'Su' ? '#00d2ff' : '#ff4d4d'};">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <strong style="color:${k.type === 'Elektrik' ? '#b8860b' : '#007bff'};">${k.type} Kesintisi</strong>
-                <button onclick="deleteKesinti('${k.id}', '${k.delete_password}')" style="background:none; border:none; color:#ccc;"><i class="fas fa-trash"></i></button>
+                <strong style="color:${k.type === 'Elektrik' ? '#b8860b' : '#007bff'};">${window.escapeHTML(k.type)} Kesintisi</strong>
                 <button onclick="deleteKesinti('${k.id}')" style="background:none; border:none; color:#ccc;"><i class="fas fa-trash"></i></button>
             </div>
-            <p style="margin:5px 0; font-weight:bold; font-size:0.9rem;"><i class="fas fa-map-marker-alt"></i> ${k.location}</p>
-            <p style="margin:0; font-size:0.85rem; color:#555;">${k.description}</p>
+            <p style="margin:5px 0; font-weight:bold; font-size:0.9rem;"><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(k.location)}</p>
+            <p style="margin:0; font-size:0.85rem; color:#555;">${window.escapeHTML(k.description)}</p>
             <div style="text-align:right; font-size:0.6rem; color:#999; margin-top:5px;">${new Date(k.created_at).toLocaleTimeString('tr-TR')}</div>
         </div>
     `).join('') || "<p style='text-align:center;'>Şu an bildirilmiş bir kesinti yok.</p>";
 }
 
-window.deleteKesinti = async (id, correctPass) => {
 /* >> GÜVENLİ KESİNTİ SİLME MOTORU << */
 window.deleteKesinti = async (id) => {
     const userPass = prompt("Silmek için şifre:");
-    if (userPass === correctPass) {
-        await window.supabase.from('kesintiler').delete().eq('id', id);
     if (!userPass) return;
 
     // Şifreyi client-side karşılaştırmak yerine Supabase sorgusuna dahil ediyoruz
@@ -1610,7 +1620,7 @@ window.renderAds = async function(ads) {
                 <img src="${ad.image_url || 'https://via.placeholder.com/300'}">
                 <div style="padding: 10px;">
                     <div style="font-weight: 800; font-size: 1.1rem; color: #212529;">${new Intl.NumberFormat('tr-TR').format(ad.price)} TL</div>
-                    <div style="font-size: 0.85rem; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 4px 0;">${ad.title}</div>
+                    <div style="font-size: 0.85rem; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 4px 0;">${window.escapeHTML(ad.title)}</div>
                     <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #f0f0f0;">
                         <div style="font-size: 0.75rem; color: #555; display: flex; align-items: center; gap: 4px; margin-bottom: 4px;">
                             <i class="fas fa-map-marker-alt" style="color: #888;"></i> Bahçelievler
@@ -1746,11 +1756,11 @@ async function renderHizmetler() {
     el.innerHTML = data?.map(h => `
         <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #28a745; cursor:pointer;" onclick="window.openSocialDetail('hizmetler', '${h.id}')">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span class="student-badge" style="background:#e8f5e9; color:#2e7d32;">${h.category}</span>
+                <span class="student-badge" style="background:#e8f5e9; color:#2e7d32;">${window.escapeHTML(h.category)}</span>
             </div>
-            <h3 style="margin:10px 0 5px 0;">${h.title}</h3>
+            <h3 style="margin:10px 0 5px 0;">${window.escapeHTML(h.title)}</h3>
             ${h.image_url ? `<img src="${h.image_url}" style="width:100%; border-radius:8px; margin:8px 0;">` : ''}
-            <p style="font-size:0.9rem; color:#444;">${h.content}</p>
+            <p style="font-size:0.9rem; color:#444;">${window.escapeHTML(h.content)}</p>
         </div>
     `).join('') || "<p style='text-align:center;'>Henüz bir hizmet tanıtımı yok.</p>";
 }
@@ -1814,7 +1824,7 @@ window.openRadarDetail = async function(id) {
     document.getElementById("radar-image-gallery").innerHTML = `<img src="${urun.image_url}" style="width:100%; border-radius:12px;">`;
     
     document.getElementById("radar-info-content").innerHTML = `
-        <p><strong>Market:</strong> ${urun.market_adi}</p>
+        <p><strong>Market:</strong> ${window.escapeHTML(urun.market_adi)}</p>
         <p><strong>Tarih:</strong> ${urun.tarih_etiketi || 'Belirtilmedi'}</p>`;
     // 3. Silme Butonunu Bağla
     document.getElementById("radar-delete-btn").onclick = () => window.softDeleteRadar(urun.id);
@@ -1944,8 +1954,8 @@ function renderHaberler(haberler) {
         <div class="cyber-card haber-card" onclick="openHaberDetail('${h.id}', 'haber')">
             <img src="${img}">
             <div class="haber-card-content">
-                <h4>${baslik}</h4>
-                <p>${ozet}</p>
+                <h4>${window.escapeHTML(baslik)}</h4>
+                <p>${window.escapeHTML(ozet)}</p>
             </div>
         </div>`;
     }).join('');
@@ -2244,10 +2254,10 @@ window.loadComments = async function(ilanId) {
         return `
         <div style="margin-bottom:12px; padding:8px; border-bottom:1px solid #f1f1f1;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <strong style="color:var(--app-blue); font-size:0.85rem;">${c.nickname}</strong>
+                <strong style="color:var(--app-blue); font-size:0.85rem;">${window.escapeHTML(c.nickname)}</strong>
                 <span style="font-size:0.7rem; color:#999;">${date}</span>
             </div>
-            <p style="margin:4px 0 0 0; font-size:0.9rem; color:#444;">${c.mesaj}</p>
+            <p style="margin:4px 0 0 0; font-size:0.9rem; color:#444;">${window.escapeHTML(c.mesaj)}</p>
         </div>
     `;
     }).join('');

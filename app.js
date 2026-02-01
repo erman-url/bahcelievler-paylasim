@@ -1502,7 +1502,6 @@ async function fetchLiveInfo() {
             // 2. ADIM: Farklı bir proxy motoru ile şansımızı deniyoruz
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 saniye sınırı
-            const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 saniye sınırı
             const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.iski.istanbul/web/tr-TR/baraj-doluluk-oranlari'), { signal: controller.signal });
             const data = await res.json();
             

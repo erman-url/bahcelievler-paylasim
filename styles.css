@@ -181,7 +181,6 @@ h1:not(.cyber-header) i {
     width: 100%; background: var(--app-blue); color: #fff; border: none; padding: 16px; 
     font-weight: 700; border-radius: 12px; text-transform: uppercase; cursor: pointer; 
     transition: 0.3s;
-    box-sizing: border-box;
 }
 
 .whatsapp-btn {
@@ -437,7 +436,7 @@ h1:not(.cyber-header) i {
     display: grid !important; 
     grid-template-columns: 1fr 1fr !important; 
     column-gap: 16px !important; 
-    row-gap: 35px !important; /* MÜHÜRLENDİ: Satır Boşluğu */
+    row-gap: 35px !important; /* ALT ALTA KESİN BOŞLUĞU BURADA MÜHÜRLER */
     padding: 20px 15px !important; 
     background: #f0f4f8 !important; /* Arka plan rengiyle kartları ayırır */
 }
@@ -666,15 +665,17 @@ h1:not(.cyber-header) i {
 
 /* >> YASAL BİLGİ BARI (FOOTER ÜSTÜ) << */
 .legal-footer-bar {
-    position: relative !important; /* MÜHÜRLENDİ: Sabitlik Kaldırıldı */
-    margin-top: 40px !important;
+    position: relative !important; /* Ekrana çakılı olmayacak */
+    bottom: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    margin-top: 30px !important;
     margin-bottom: 20px !important;
     padding: 15px 0 !important;
     text-align: center !important;
     width: 100% !important;
     background: transparent !important;
     display: block !important;
-    z-index: 1 !important;
 }
 .legal-footer-bar a {
     color: #666;
@@ -766,20 +767,20 @@ h1:not(.cyber-header) i {
 #modal-buy-btn { background: #00d2ff !important; color: #fff !important; } /* Telegram Turkuaz */
 #modal-share-btn { background: #25D366 !important; color: #fff !important; } /* WhatsApp Yeşil */
 .edit-btn-style { background: #0056b3 !important; color: #fff !important; } /* Kurumsal Mavi */
-.delete-btn-style { background: #fff5f5 !important; color: #d32f2f !important; border: 1.5px solid #d32f2f !important; } /* MÜHÜRLENDİ: Beyaz-Kırmızı */
+.delete-btn-style { background: #fff !important; color: #ff4d4d !important; border: 1.5px solid #ff4d4d !important; } /* Beyaz-Kırmızı */
 
 /* 3. Yorum Alanı Temizliği */
+#comment-section { background: #f8fafc !important; border-radius: 15px !important; padding: 15px !important; margin: 15px 0 !important; }
 #comment-list div { background: #fff; padding: 10px; border-radius: 8px; margin-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
 
 /* 1. Buton Genişlik ve Hizalama Mührü */
 .modal-content { padding: 20px !important; }
 #modal-buy-btn, #modal-share-btn, .edit-btn-style, .delete-btn-style { width: 100% !important; box-sizing: border-box !important; margin-left: 0 !important; margin-right: 0 !important; height: 50px !important; display: flex !important; justify-content: center !important; align-items: center !important; }
 
+/* 2. Kırmızı Buton Görünürlük Fix */
+.delete-btn-style { background: #fff5f5 !important; /* Açık kırmızı arka plan */ color: #d32f2f !important; /* Koyu kırmızı yazı */ border: 2px solid #d32f2f !important; }
+
 /* 3. Yorum Alanı Ortak Stil Mührü */
 #comment-section { width: 100% !important; box-sizing: border-box !important; background: #f8fafc !important; border-radius: 12px !important; padding: 15px !important; margin: 20px 0 !important; }
 
 #comment-section input { border: 1.5px solid #cbd5e1 !important; border-radius: 8px !important; padding: 10px !important; font-size: 0.9rem !important; height: 40px !important; background: #fff !important; }
-
-/* ŞİKAYET BUTONU STİLİ */
-.report-btn { transition: 0.3s; opacity: 0.8; } 
-.report-btn:hover { opacity: 1; background: #fee2e2 !important; }

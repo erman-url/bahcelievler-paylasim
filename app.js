@@ -396,26 +396,6 @@ window.handleAdEdit = async function(ad) {
         if(document.getElementById("ad-telegram")) document.getElementById("ad-telegram").value = ad.telegram_username || '';
         document.getElementById("ad-tc-no").value = pass.trim();
         
-        // >> SATILDI KONTROLÜ (CHECKBOX ENJEKSİYONU) <<
-        let soldWrapper = document.getElementById("edit-sold-wrapper");
-        if (!soldWrapper) {
-            soldWrapper = document.createElement("div");
-            soldWrapper.id = "edit-sold-wrapper";
-            soldWrapper.style.margin = "15px 0";
-            soldWrapper.style.padding = "10px";
-            soldWrapper.style.background = "#fff3cd";
-            soldWrapper.style.borderRadius = "8px";
-            soldWrapper.innerHTML = `
-                <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-weight:bold; color:#856404;">
-                    <input type="checkbox" id="ad-is-sold" style="width:20px; height:20px;">
-                    Bu ürün satıldı mı? (İlan yayından kalkar)
-                </label>`;
-            const formContent = document.getElementById("ad-content");
-            if (formContent) formContent.parentNode.insertBefore(soldWrapper, formContent.nextSibling);
-        }
-        const soldBox = document.getElementById("ad-is-sold");
-        if (soldBox) soldBox.checked = ad.is_sold === true;
-
         closeModal();
         window.scrollToIlanForm();
         alert("Düzenleme modu aktif. Bilgileri güncelleyip 'YAYINLA' butonuna basınız.");
@@ -506,7 +486,6 @@ function setupForms() {
                     contact: document.getElementById("ad-contact").value,
                     delete_token: deleteToken,
                     is_active: true,
-                    is_sold: document.getElementById("ad-is-sold")?.checked || false
                 };
 
                 // Eğer yeni resim yüklendiyse veriye ekle
@@ -1007,9 +986,8 @@ async function fetchAndRenderAds() {
     const list = document.getElementById("ads-list");
     if (!list) return;
     const { data } = await window.supabase.from('ilanlar')
-        .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, condition, warranty, district, is_sold')
-        .or('is_active.is.null,is_active.eq.true') // MÜHÜRLENDİ: Aktif İlanlar
-        .or('is_sold.is.null,is_sold.eq.false')   // MÜHÜRLENDİ: Satılmamış İlanlar
+        .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, condition, warranty, district')
+        .or('is_active.is.null,is_active.eq.true')
         .order('created_at', {ascending: false});
     allAds = data || [];
     
@@ -1103,7 +1081,7 @@ window.openAdDetail = function(id) {
     editBtn.innerHTML = '<i class="fas fa-edit"></i> BU İLANI DÜZENLE';
     editBtn.onclick = () => window.handleAdEdit(ad);
 
-    const footer = document.getElementById('modal-footer'); // MÜHÜRLENDİ: Tek Tanım
+    const footer = document.querySelector('.modal-footer'); 
     if (footer) { 
         footer.innerHTML = ''; // Eski butonları temizle 
         
@@ -1118,14 +1096,6 @@ window.openAdDetail = function(id) {
         deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> İlanı Kalıcı Olarak Kaldır';
         deleteBtn.onclick = () => window.deleteAd(ad.id);
         footer.appendChild(deleteBtn);
-
-        // ŞİKAYET BUTONU
-        const reportBtn = document.createElement('button');
-        reportBtn.className = 'cyber-submit';
-        reportBtn.style.cssText = "background: #6c757d !important; margin-top: 10px;";
-        reportBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> İLANI ŞİKAYET ET';
-        reportBtn.onclick = () => window.reportAd(ad.id);
-        footer.appendChild(reportBtn);
     }
 
     const modal = document.getElementById("ad-detail-modal");
@@ -2201,7 +2171,7 @@ window.loadComments = async function(ilanId) {
     list.innerHTML = data.map(c => `
         <div style="margin-bottom:10px; padding-bottom:5px; border-bottom:1px solid #eee;">
             <strong style="color:var(--app-blue); font-size:0.85rem;">${c.nickname}</strong>
-            <p style="margin:2px 0; font-size:0.9rem;">${c.mesaj}</p> <!-- MÜHÜRLENDİ: DB Sütunu 'mesaj' -->
+            <p style="margin:2px 0; font-size:0.9rem;">${c.mesaj}</p>
         </div>
     `).join('');
     list.scrollTop = list.scrollHeight;

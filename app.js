@@ -1334,6 +1334,7 @@ async function setupKesintiForm() {
     });
 }
 
+/* >> GÜVENLİ KESİNTİ RENDER MOTORU << */
 async function renderKesintiler() {
     const el = document.getElementById('kesinti-list');
     if (!el) return;
@@ -1345,6 +1346,7 @@ async function renderKesintiler() {
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <strong style="color:${k.type === 'Elektrik' ? '#b8860b' : '#007bff'};">${k.type} Kesintisi</strong>
                 <button onclick="deleteKesinti('${k.id}', '${k.delete_password}')" style="background:none; border:none; color:#ccc;"><i class="fas fa-trash"></i></button>
+                <button onclick="deleteKesinti('${k.id}')" style="background:none; border:none; color:#ccc;"><i class="fas fa-trash"></i></button>
             </div>
             <p style="margin:5px 0; font-weight:bold; font-size:0.9rem;"><i class="fas fa-map-marker-alt"></i> ${k.location}</p>
             <p style="margin:0; font-size:0.85rem; color:#555;">${k.description}</p>
@@ -1354,10 +1356,26 @@ async function renderKesintiler() {
 }
 
 window.deleteKesinti = async (id, correctPass) => {
+/* >> GÜVENLİ KESİNTİ SİLME MOTORU << */
+window.deleteKesinti = async (id) => {
     const userPass = prompt("Silmek için şifre:");
     if (userPass === correctPass) {
         await window.supabase.from('kesintiler').delete().eq('id', id);
+    if (!userPass) return;
+
+    // Şifreyi client-side karşılaştırmak yerine Supabase sorgusuna dahil ediyoruz
+    const { data, error } = await window.supabase
+        .from('kesintiler')
+        .delete()
+        .eq('id', id)
+        .eq('delete_password', userPass.trim())
+        .select();
+
+    if (data && data.length > 0) {
+        alert("Bildirim başarıyla silindi.");
         renderKesintiler();
+    } else {
+        alert("Hata: Şifre yanlış!");
     }
 };
 

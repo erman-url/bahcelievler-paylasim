@@ -1,5 +1,5 @@
 /* >> BAHÇELİEVLER PRO ENGINE V4.3 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
-/* >> XSS GÜVENLİK FİLTRESİ << */
+/* >> XSS GÜVENLİK FİLTRESİ (MÜHÜRLENDİ) << */
 window.escapeHTML = function(str) {
     if (!str) return "";
     return str.replace(/[&<>"']/g, function(m) {

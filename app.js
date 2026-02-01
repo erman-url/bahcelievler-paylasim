@@ -1056,6 +1056,13 @@ window.openAdDetail = function(id) {
         buyBtn.after(shareBtn);
     }
 
+    // >> YORUM SİSTEMİ ENTEGRASYONU <<
+    if (typeof loadAdComments === "function") loadAdComments(ad.id);
+    const commentForm = document.getElementById("ad-comment-form");
+    if (commentForm) {
+        commentForm.onsubmit = (e) => handleCommentSubmit(e, ad.id);
+    }
+
     // MODERN DÜZENLEME BUTONU VE GÜVENLİ YERLEŞİM
     const editBtn = document.createElement('button');
     editBtn.className = 'cyber-submit';
@@ -2128,3 +2135,56 @@ window.closeSocialModal = function() {
         setTimeout(() => { modal.style.display = "none"; }, 300);
     }
 };
+
+/* >> YORUM VE SORU SİSTEMİ MOTORU (RATE LIMIT KORUMALI) << */
+async function loadAdComments(adId) {
+    const list = document.getElementById("ad-comments-list");
+    if (!list) return;
+    
+    list.innerHTML = '<p style="color:#888; text-align:center; font-size:0.8rem;">Yükleniyor...</p>';
+    
+    const { data, error } = await window.supabase
+        .from('ilan_yorumlar')
+        .select('*')
+        .eq('ilan_id', adId)
+        .order('created_at', { ascending: true });
+        
+    if (error || !data || data.length === 0) {
+        list.innerHTML = '<p style="color:#999; text-align:center; font-size:0.8rem; padding:10px;">Henüz soru sorulmamış. İlk soran sen ol!</p>';
+        return;
+    }
+    
+    list.innerHTML = data.map(c => `
+        <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
+                <strong style="color: var(--app-blue);">${c.nickname}</strong>
+                <span style="color: #aaa;">${new Date(c.created_at).toLocaleDateString('tr-TR')}</span>
+            </div>
+            <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: #333; line-height:1.4;">${c.yorum}</p>
+        </div>
+    `).join('');
+    list.scrollTop = list.scrollHeight;
+}
+
+async function handleCommentSubmit(e, adId) {
+    e.preventDefault();
+    // 30 Saniye Rate Limit Mühürü
+    const lastTime = localStorage.getItem('last_comment_time');
+    if (lastTime && (Date.now() - parseInt(lastTime)) < 30000) {
+        alert("Lütfen spam yapmayınız. 30 saniyede bir yorum atabilirsiniz.");
+        return;
+    }
+    
+    const nickname = document.getElementById("comment-nickname").value.trim();
+    const comment = document.getElementById("comment-text").value.trim();
+    if (!nickname || !comment) return;
+
+    const { error } = await window.supabase.from('ilan_yorumlar').insert([{ ilan_id: adId, nickname, yorum: comment }]);
+    if (!error) {
+        localStorage.setItem('last_comment_time', Date.now());
+        document.getElementById("comment-text").value = "";
+        loadAdComments(adId);
+    } else {
+        alert("Yorum gönderilemedi.");
+    }
+}

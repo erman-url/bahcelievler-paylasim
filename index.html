@@ -109,9 +109,9 @@
         <p style="text-align:center; padding:20px; color:#888;">İlanlar yükleniyor...</p>
     </div>
 
-    <div id="add-ad-modal" class="modal" style="display:none;">
-        <span class="close-detail" onclick="window.closeAddAdModal()">&times;</span>
-        <div class="modal-content cyber-card" style="margin-top: 50px;">
+    <div id="add-ad-modal" class="modal" style="display:none; align-items: flex-start; overflow-y: auto; padding-top: 20px;">
+        <span class="close-detail" onclick="window.closeAddAdModal()" style="position: sticky; float: right; margin-right: 15px;">&times;</span>
+        <div class="modal-content cyber-card" style="margin: 20px auto 60px auto; width: 95%; max-width: 500px;">
         <h3 style="text-align: center; margin-bottom: 20px;"><i class="fas fa-edit"></i> Yeni İlan Yayınla</h3>
         <form id="new-ad-form" class="cyber-form">
             <input type="text" id="ad-title" maxlength="25" placeholder="İlan Başlığı" required>
@@ -131,9 +131,6 @@
             <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması"></textarea>
             <input type="file" id="ads-files" multiple accept="image/*" required>
             <input type="text" id="ad-tc-no" maxlength="5" placeholder="Silme Şifresi (Örn: S1571)" required>
-            <div style="display:none !important; visibility:hidden !important;">
-                <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
-            </div>
             <button type="submit" id="ad-submit-button" class="cyber-submit">İLANINI YAYINLA</button> 
         </form>
     </div>

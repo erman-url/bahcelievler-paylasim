@@ -1552,7 +1552,7 @@ function setupAdSearch() {
 }
 
 // 1. AKILLI ARAMA: Başlık ve açıklamada arama yapar
-function applyFilters(category, searchTerm) {
+async function applyFilters(category, searchTerm) {
     const list = document.getElementById("ads-list");
     if (!list) return;
     
@@ -1573,8 +1573,13 @@ function applyFilters(category, searchTerm) {
             </div>
         `;
     } else {
-       
-        list.innerHTML = filtered.map(ad => {
+        const adsHtml = await Promise.all(filtered.map(async ad => {
+            const { count } = await window.supabase
+                .from('ilan_yorumlar')
+                .select('*', { count: 'exact', head: true })
+                .eq('ilan_id', ad.id);
+
+            const commentCount = count || 0;
             const adDate = new Date(ad.created_at).toLocaleDateString('tr-TR');
             return `
             <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')">
@@ -1589,10 +1594,14 @@ function applyFilters(category, searchTerm) {
                         <div style="font-size: 0.65rem; color: #aaa; font-weight: 500;">
                             ${adDate}
                         </div>
+                        <div style="font-size: 0.7rem; color: var(--app-blue); font-weight: 700; margin-top: 3px;">
+                            <i class='far fa-comment-dots'></i> ${commentCount} Yorum
+                        </div>
                     </div>
                 </div>
             </div>
-        `}).join('');
+        `}));
+        list.innerHTML = adsHtml.join('');
     }
 }
 

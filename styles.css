@@ -749,3 +749,24 @@ h1:not(.cyber-header) i {
     border-bottom: 1px solid #eee; 
     padding-bottom: 5px; 
 }
+
+/* Tüm Modal Butonlarını Eşitle */
+.modal-footer button, 
+.modal-content .cyber-submit,
+#modal-buy-btn,
+#modal-share-btn {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 45px !important; /* Standart Yükseklik */
+    margin-bottom: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.9rem !important;
+    font-weight: bold !important;
+    border-radius: 12px !important;
+    padding: 0 15px !important;
+}
+/* Düzenle ve Kaldır Butonlarına Özel Stil */ .edit-btn-style { background: #f8f9fa !important; color: #333 !important; border: 1.5px solid #dee2e6 !important; }
+
+.delete-btn-style { background: #fff5f5 !important; color: #e53e3e !important; border: 1.5px solid #feb2b2 !important; }

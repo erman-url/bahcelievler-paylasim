@@ -431,13 +431,16 @@
                     <button id="modal-buy-btn" class="cyber-submit" style="background:#00d2ff !important;">SATIN ALMA TALEBİ</button>
                 </div>
 
-                <div id="comment-section" style="padding: 20px; border-top: 1px solid #eee; background: #f9f9f9;">
-                    <h4 style="margin-bottom:10px;"><i class="fas fa-comments"></i> Sorular & Yorumlar</h4>
+                <div id="comment-section" style="padding: 15px; border-top: 1px solid #eee; background: #f8fafc; border-radius: 12px; margin: 15px 0;">
+                    <h4 style="margin-bottom:12px; font-size: 0.9rem;"><i class="fas fa-comments"></i> Sorular & Yorumlar</h4>
                     <div id="comment-list" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;"></div>
-                    <div style="display:flex; gap:5px;">
-                        <input type="text" id="comment-nick" placeholder="Adınız" style="width: 30%; font-size: 0.8rem;">
-                        <input type="text" id="comment-text" placeholder="Bir şey sor..." style="flex:1; font-size: 0.8rem;">
-                        <button type="button" onclick="window.sendComment()" class="cyber-submit" style="width:auto; padding:5px 10px;"><i class="fas fa-paper-plane"></i></button>
+                    
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <input type="text" id="comment-nick" placeholder="Takma Adınız" class="cyber-form" style="margin-bottom:0 !important; height: 45px;">
+                        <textarea id="comment-text" placeholder="Bir şey sor..." class="cyber-form" style="margin-bottom:0 !important; height: 80px; padding:10px;"></textarea>
+                        <button type="button" onclick="window.sendComment()" class="cyber-submit" style="background:var(--app-blue)!important; margin:0; height: 45px;">
+                            <i class="fas fa-paper-plane"></i> YORUMU GÖNDER
+                        </button>
                     </div>
                 </div>
             </div>

@@ -111,8 +111,11 @@
 
     <div id="add-ad-modal" class="modal" style="display:none; align-items: flex-start; overflow-y: auto; padding-top: 20px;">
         <span class="close-detail" onclick="window.closeAddAdModal()" style="position: sticky; float: right; margin-right: 15px;">&times;</span>
-        <div class="modal-content cyber-card" style="margin: 20px auto 60px auto; width: 95%; max-width: 500px;">
-        <h3 style="text-align: center; margin-bottom: 20px;"><i class="fas fa-edit"></i> Yeni İlan Yayınla</h3>
+        <div class="modal-content cyber-card" style="margin: 20px auto 60px auto; width: 95%; max-width: 500px; padding-bottom: 80px !important;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; position:sticky; top:0; background:#fff; z-index:10; padding:10px 0; border-bottom:1px solid #eee;">
+            <h3 style="margin:0;"><i class="fas fa-edit"></i> Yeni İlan</h3>
+            <button type="button" onclick="document.getElementById('ad-submit-button').click()" class="cyber-submit" style="width:auto; padding:8px 15px; font-size:0.8rem; margin:0;">ŞİMDİ YAYINLA</button>
+        </div>
         <form id="new-ad-form" class="cyber-form">
             <input type="text" id="ad-title" maxlength="25" placeholder="İlan Başlığı" required>
             <input type="number" id="ad-price" placeholder="Fiyat (TL)" required>

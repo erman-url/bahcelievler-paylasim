@@ -672,6 +672,12 @@ async function setupFirsatForm() {
     const form = document.getElementById("firsat-form");
     if (!form) return;
 
+    // Fırsat türü değiştiğinde alanları güncelle
+    const typeSelect = document.getElementById("firsat-type");
+    if (typeSelect) {
+        typeSelect.addEventListener("change", toggleFirsatFields);
+    }
+
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
         if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
@@ -925,6 +931,7 @@ window.deleteFirsat = async (id) => {
         .delete()
         .eq('id', id)
         .or(`delete_password.eq.${finalPass},delete_password.eq."${finalPass}"`)
+        .eq('delete_password', finalPass)
         .select();
 
     if (error) {
@@ -1084,6 +1091,9 @@ window.openAdDetail = function(id) {
     const footer = document.querySelector('.modal-footer'); 
     if (footer) { 
         footer.innerHTML = ''; // Eski butonları temizle 
+        // Eski admin butonlarını temizle (Buy/Share butonlarını koru)
+        const oldAdminBtns = footer.querySelectorAll('.edit-btn-style, .delete-btn-style');
+        oldAdminBtns.forEach(b => b.remove());
         
         // İstenen mühür: prepend
         footer.prepend(editBtn); 

@@ -665,18 +665,17 @@ h1:not(.cyber-header) i {
 
 /* >> YASAL BİLGİ BARI (FOOTER ÜSTÜ) << */
 .legal-footer-bar {
-    position: fixed;
-    bottom: 70px; /* Footer yüksekliğine göre ayarlandı */
-    left: 50%;
-    transform: translateX(-50%);
-    max-width: 600px;
-    width: 100%;
-    text-align: center;
-    font-size: 0.65rem;
-    z-index: 9990; /* Footer'ın (10000) altında kalmalı */
-    padding: 5px 0;
-    background: linear-gradient(to top, rgba(240, 244, 248, 0.9), rgba(240, 244, 248, 0));
-    pointer-events: none; /* Boşluklara tıklamayı engelleme */
+    position: relative !important; /* Ekrana çakılı olmayacak */
+    bottom: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    margin-top: 30px !important;
+    margin-bottom: 20px !important;
+    padding: 15px 0 !important;
+    text-align: center !important;
+    width: 100% !important;
+    background: transparent !important;
+    display: block !important;
 }
 .legal-footer-bar a {
     color: #666;

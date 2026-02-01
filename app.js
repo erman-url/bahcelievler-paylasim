@@ -2181,7 +2181,7 @@ window.sendComment = async function() {
     if (!nick || !text) return alert("Lütfen adınızı ve mesajınızı yazın.");
     if (window.hasBadWords(nick) || window.hasBadWords(text)) return alert("Lütfen uygunsuz ifadeler kullanmayın.");
 
-    const { error } = await window.supabase.from('ilan_yorumlar').insert([{ ilan_id: ilanId, nickname: nick, yorum: text }]);
+    const { error } = await window.supabase.from('ilan_yorumlar').insert([{ ilan_id: ilanId, nickname: nick, mesaj: text }]);
     if (!error) {
         document.getElementById("comment-text").value = "";
         window.loadComments(ilanId);

@@ -1103,8 +1103,7 @@ window.openAdDetail = function(id) {
     editBtn.innerHTML = '<i class="fas fa-edit"></i> BU İLANI DÜZENLE';
     editBtn.onclick = () => window.handleAdEdit(ad);
 
-    const footer = document.querySelector('.modal-footer'); 
-    const footer = document.getElementById('modal-action-buttons'); 
+    const footer = document.getElementById('modal-footer') || document.getElementById('modal-action-buttons');
     if (footer) { 
         footer.innerHTML = ''; // Eski butonları temizle 
         

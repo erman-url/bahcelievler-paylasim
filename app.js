@@ -997,6 +997,7 @@ window.openAdDetail = function(id) {
 
     const detailInfo = `
     <div id="ad-badges-row" style="display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;">
+        <span style="background: #e8f5e9; color: #2e7d32; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">${ad.category}</span>
         <span style="background: #e3f2fd; color: #0056b3; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">${ad.condition || '2.el'}</span>
         <span style="background: #f0f4f8; color: #666; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">Garanti: ${ad.warranty || 'Yok'}</span>
         <span style="background: #fff3e0; color: #e65100; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;"><i class='fas fa-map-marker-alt'></i> ${ad.district || 'Bahçelievler'}</span>
@@ -1520,7 +1521,7 @@ async function fetchLiveInfo() {
                 }
             }
         } catch (e) {
-            console.warn("Canlı veri çekilemedi, yedek değer korunuyor.");
+            // Sessiz mod: Hata gösterme, yedek değeri koru
             damEl.textContent = "BARAJ: %26.4";
             damEl.style.opacity = "1";
         }

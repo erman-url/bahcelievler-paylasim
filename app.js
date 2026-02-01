@@ -1,4 +1,9 @@
 /* >> BAHÇELİEVLER PRO ENGINE V4.3 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
+/* >> KÜFÜR VE ARGO FİLTRELEME MOTORU (MÜHÜRLENDİ) << */
+window.badWords = ['küfür1', 'küfür2', 'hakaret1', 'argo1', 'aptal', 'salak', 'gerizekalı', 'şerefsiz']; // Genişletilebilir liste
+window.filterContent = function(text) { let cleanText = text; window.badWords.forEach(word => { const regex = new RegExp(word, 'gi'); cleanText = cleanText.replace(regex, '***'); }); return cleanText; };
+window.hasBadWords = function(text) { return window.badWords.some(word => text.toLowerCase().includes(word.toLowerCase())); };
+
 let slideIndex = 0;
 let editingAdId = null;
 let allAds = [];
@@ -408,6 +413,13 @@ function setupForms() {
             const titleVal = document.getElementById("ad-title").value;
             const priceVal = document.getElementById("ad-price").value;
             const contentVal = document.getElementById("ad-content").value;
+
+            // >> KÜFÜR KONTROLÜ <<
+            if (window.hasBadWords(titleVal) || window.hasBadWords(contentVal)) {
+                alert('Lütfen topluluk kurallarına uygun bir dil kullanın.');
+                return;
+            }
+
             const fileInput = document.getElementById("ads-files");
             
             if (!editingAdId && (!fileInput.files || fileInput.files.length === 0)) {

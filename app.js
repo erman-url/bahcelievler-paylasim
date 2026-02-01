@@ -1826,10 +1826,27 @@ function validateTC(tc) {
 }
 
 window.scrollToIlanForm = function() {
-    const formBolumu = document.getElementById('new-ad-form-container');
-    if (formBolumu) {
-        formBolumu.scrollIntoView({ behavior: 'smooth' });
-        setTimeout(() => { document.getElementById('ad-title')?.focus(); }, 800);
+    window.openAddAdModal();
+    setTimeout(() => { document.getElementById('ad-title')?.focus(); }, 300);
+};
+
+window.openAddAdModal = function() {
+    const modal = document.getElementById('add-ad-modal');
+    if (modal) {
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.style.visibility = 'visible';
+            modal.style.opacity = '1';
+        }, 10);
+    }
+};
+
+window.closeAddAdModal = function() {
+    const modal = document.getElementById('add-ad-modal');
+    if (modal) {
+        modal.style.opacity = '0';
+        modal.style.visibility = 'hidden';
+        setTimeout(() => { modal.style.display = 'none'; }, 300);
     }
 };
 

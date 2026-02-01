@@ -89,7 +89,7 @@
     <h1 class="cyber-header"><i class="fas fa-bullhorn"></i> İLAN PANOSU</h1>
 
     <div style="padding: 0 15px 15px 15px;">
-        <button onclick="document.getElementById('new-ad-form-container').scrollIntoView({behavior: 'smooth'})" class="cyber-submit" style="background:var(--app-blue)!important; width: 100%; border-radius: 12px; font-weight: bold;">
+        <button onclick="window.openAddAdModal()" class="cyber-submit" style="background:var(--app-blue)!important; width: 100%; border-radius: 12px; font-weight: bold;">
             <i class="fas fa-plus-circle"></i> YENİ İLAN EKLE
         </button>
     </div>
@@ -110,74 +110,36 @@
         <p style="text-align:center; padding:20px; color:#888;">İlanlar yükleniyor...</p>
     </div>
 
-    <div id="new-ad-form-container" class="cyber-card" style="margin: 30px 15px; border-top: 5px solid var(--app-blue);">
-        <h3 style="text-align: center; margin-bottom: 15px;"><i class="fas fa-edit"></i> İlan Detaylarını Yazın</h3>
+    <div id="add-ad-modal" class="modal" style="display:none;">
+        <span class="close-detail" onclick="window.closeAddAdModal()">&times;</span>
+        <div class="modal-content cyber-card" style="margin-top: 50px;">
+        <h3 style="text-align: center; margin-bottom: 20px;"><i class="fas fa-edit"></i> Yeni İlan Yayınla</h3>
         <form id="new-ad-form" class="cyber-form">
-            <input type="text" id="ad-title" maxlength="25" pattern="^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$" placeholder="İlan Başlığı" required>
+            <input type="text" id="ad-title" maxlength="25" placeholder="İlan Başlığı" required>
             <input type="number" id="ad-price" placeholder="Fiyat (TL)" required>
-            <input type="text" id="ad-contact" maxlength="50" placeholder="İletişim Bilgisi (Telefon / E-posta)" required>
-            
-            <select id="ad-category" class="cyber-input" required>
-                <option value="" disabled selected>Kategori Seçiniz</option>
-                <option value="Elektronik">Elektronik & Teknoloji</option>
-                <option value="Vasıta">Vasıta (Oto, Motosiklet)</option>
-                <option value="Gayrimenkul">Emlak (Konut, İşyeri)</option>
-                <option value="Mobilya">Ev Eşyası & Mobilya</option>
-                <option value="Moda">Saat, Giyim, Aksesuar</option>
-                <option value="Oyuncak">Oyuncak & Hobi</option>
-                <option value="Kitap">Kitap & Müzik</option>
-                <option value="Diger">Diğer Her Şey</option>
+            <input type="text" id="ad-contact" placeholder="İletişim (Telefon / E-post)" required>
+            <select id="ad-category" required>
+                <option value="" disabled selected>Kategori Seçiniz</option><option value="Elektronik">Elektronik & Teknoloji</option><option value="Vasıta">Vasıta (Oto, Motosiklet)</option><option value="Gayrimenkul">Emlak (Konut, İşyeri)</option><option value="Mobilya">Ev Eşyası & Mobilya</option><option value="Moda">Saat, Giyim, Aksesuar</option><option value="Oyuncak">Oyuncak & Hobi</option><option value="Kitap">Kitap & Müzik</option><option value="Diger">Diğer Her Şey</option>
             </select>
-
-            <select id="ad-district" class="cyber-input" required>
-                <option value="" disabled selected>Mahalle Seçiniz (Zorunlu)</option>
-                <option value="Bahçelievler Mah.">Bahçelievler Mahallesi</option>
-                <option value="Cumhuriyet Mah.">Cumhuriyet Mahallesi</option>
-                <option value="Çobançeşme Mah.">Çobançeşme Mahallesi</option>
-                <option value="Fevzi Çakmak Mah.">Fevzi Çakmak Mahallesi</option>
-                <option value="Hürriyet Mah.">Hürriyet Mahallesi</option>
-                <option value="Kocasinan Merkez Mah.">Kocasinan Merkez Mahallesi</option>
-                <option value="Siyavuşpaşa Mah.">Siyavuşpaşa Mahallesi</option>
-                <option value="Soğanlı Mah.">Soğanlı Mahallesi</option>
-                <option value="Şirinevler Mah.">Şirinevler Mahallesi</option>
-                <option value="Yenibosna Merkez Mah.">Yenibosna Merkez Mahallesi</option>
-                <option value="Zafer Mah.">Zafer Mahallesi</option>
+            <select id="ad-district" required>
+                <option value="" disabled selected>Mahalle Seçiniz (Zorunlu)</option><option value="Bahçelievler Mah.">Bahçelievler Mahallesi</option><option value="Cumhuriyet Mah.">Cumhuriyet Mahallesi</option><option value="Çobançeşme Mah.">Çobançeşme Mahallesi</option><option value="Fevzi Çakmak Mah.">Fevzi Çakmak Mahallesi</option><option value="Hürriyet Mah.">Hürriyet Mahallesi</option><option value="Kocasinan Merkez Mah.">Kocasinan Merkez Mahallesi</option><option value="Siyavuşpaşa Mah.">Siyavuşpaşa Mahallesi</option><option value="Soğanlı Mah.">Soğanlı Mahallesi</option><option value="Şirinevler Mah.">Şirinevler Mahallesi</option><option value="Yenibosna Merkez Mah.">Yenibosna Merkez Mahallesi</option><option value="Zafer Mah.">Zafer Mahallesi</option>
             </select>
-
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <select id="ad-condition" class="cyber-input" style="flex: 1;" required>
-                    <option value="" disabled selected>Durumu</option>
-                    <option value="2.el">2. El</option>
-                    <option value="Yeni">Yeni</option>
-                    <option value="Outlet">Outlet</option>
-                </select>
-                <select id="ad-warranty" class="cyber-input" style="flex: 1;" required>
-                    <option value="" disabled selected>Garanti</option>
-                    <option value="Var">Garanti Var</option>
-                    <option value="Yok">Garanti Yok</option>
-                </select>
+            <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                <select id="ad-condition" style="flex: 1;" required><option value="2.el">2. El</option><option value="Yeni">Yeni</option></select>
+                <select id="ad-warranty" style="flex: 1;" required><option value="Yok">Garanti Yok</option><option value="Var">Garanti Var</option></select>
             </div>
-
-            <input type="text" id="ad-telegram" placeholder="Telegram Kullanıcı Adı (Opsiyonel)">
-
-            <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması (Maks 350 Karakter)"></textarea>
-
-            <div id="ad-photo-warning" style="margin: 10px 0; text-align: center;">
-                <p style="font-size:0.75rem; color:#d32f2f; margin-bottom:5px; font-weight:bold;"><i class="fas fa-camera"></i> FOTOĞRAF EKLEMEK ZORUNLUDUR! </p>
-                <p style="font-size:0.65rem; color:#666;">(Maksimum 4 adet fotoğraf)</p>
-            </div>
-
-            <input type="file" id="ads-files" multiple accept="image/png, image/jpeg" required>
-            <input type="text" id="ad-tc-no" maxlength="5" placeholder="Şifre Örn: S1571" required title="Silme Şifresi">
-
+            <input type="text" id="ad-telegram" placeholder="Telegram @kullanici">
+            <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması"></textarea>
+            <input type="file" id="ads-files" multiple accept="image/*" required>
+            <input type="text" id="ad-tc-no" maxlength="5" placeholder="Silme Şifresi (Örn: S1571)" required>
             <div style="display:none !important; visibility:hidden !important;">
                 <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
             </div>
-
             <button type="submit" id="ad-submit-button" class="cyber-submit">İLANINI YAYINLA</button> 
         </form>
     </div>
-</section>
+    </div>
+    </section>
 
         <section id="sosyal" class="page">
             <h1>SOSYAL ALAN</h1>

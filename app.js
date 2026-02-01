@@ -1551,20 +1551,12 @@ function setupAdSearch() {
     });
 }
 
-// 1. AKILLI ARAMA: Başlık ve açıklamada arama yapar
-async function applyFilters(category, searchTerm) {
+// YENİ: İlanları ekrana basan render fonksiyonu
+window.renderAds = async function(ads) {
     const list = document.getElementById("ads-list");
     if (!list) return;
     
-    let filtered = allAds.filter(ad => {
-        const matchesCategory = category === 'all' || ad.category === category;
-        const searchLower = (searchTerm || "").toLowerCase();
-        const matchesSearch = (ad.title || "").toLowerCase().includes(searchLower) || 
-                              (ad.content || "").toLowerCase().includes(searchLower);
-        return matchesCategory && matchesSearch;
-    });
-    
-    if (filtered.length === 0) {
+    if (ads.length === 0) {
         list.innerHTML = `
             <div style="text-align: center; padding: 40px; color: #999;">
                 <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
@@ -1573,7 +1565,7 @@ async function applyFilters(category, searchTerm) {
             </div>
         `;
     } else {
-        const adsHtml = await Promise.all(filtered.map(async ad => {
+        const adsHtml = await Promise.all(ads.map(async ad => {
             const { count } = await window.supabase
                 .from('ilan_yorumlar')
                 .select('*', { count: 'exact', head: true })
@@ -1603,23 +1595,38 @@ async function applyFilters(category, searchTerm) {
         `}));
         list.innerHTML = adsHtml.join('');
     }
+};
+
+// 1. AKILLI ARAMA: Başlık ve açıklamada arama yapar
+async function applyFilters(category, searchTerm) {
+    let filtered = allAds.filter(ad => {
+        const matchesCategory = category === 'all' || ad.category === category;
+        const searchLower = (searchTerm || "").toLowerCase();
+        const matchesSearch = (ad.title || "").toLowerCase().includes(searchLower) || 
+                              (ad.content || "").toLowerCase().includes(searchLower);
+        return matchesCategory && matchesSearch;
+    });
+    
+    renderAds(filtered);
 }
 
-window.filterAds = function(category, clickedButton) {
+window.filterAds = function(category, btn) {
     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-    if (clickedButton) {
-        clickedButton.classList.add('active');
+    if (btn) {
+        btn.classList.add('active');
     }
     
     currentCategory = category;
-    if (category === 'latest') {
-        allAds.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    }
-
     const searchInput = document.getElementById("ad-search-input");
     const searchTerm = searchInput ? searchInput.value.trim() : '';
     
-    applyFilters(category === 'latest' ? 'all' : category, searchTerm);
+    if (category === 'latest') {
+        // İlanları tarihe göre (yeni -> eski) sırala
+        const sortedAds = [...allAds].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        renderAds(sortedAds); 
+    } else {
+        applyFilters(category, searchTerm);
+    }
 };
 
 window.searchOnMap = function() {

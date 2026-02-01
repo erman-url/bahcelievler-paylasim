@@ -275,13 +275,15 @@ function initSlider() {
 
 /* >> BOT KORUMA MOTORU << */
 function isBotDetected(formId) {
+    /* >> BOT KORUMA HARİTASI (TAM LİSTE) << */
     const hpMap = {
         "new-ad-form": "hp_ilan",
         "recommend-form": "hp_tavsiye",
         "complaint-form": "hp_sikayet",
         "quote-request-form": "hp_teklif",
         "piyasa-form": "hp_radar",
-        "hizmet-form": "hp_hizmet"
+        "hizmet-form": "hp_hizmet",
+        "firsat-form": "hp_firsat" // Eksik olan mühür eklendi
     };
     const hpField = document.getElementById(hpMap[formId]);
     if (hpField && hpField.value !== "") {
@@ -717,6 +719,8 @@ async function setupFirsatForm() {
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
         if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+        // Süper Kontrol: Form ID parametresi eklendi
+        if (isBotDetected("firsat-form") || isProcessing) return;
 
         const type = document.getElementById("firsat-type").value;
         const title = document.getElementById("firsat-title").value;

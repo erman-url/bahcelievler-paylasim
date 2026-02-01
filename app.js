@@ -1639,13 +1639,16 @@ window.renderAds = async function(ads) {
     }
 };
 
-// 1. AKILLI ARAMA: Başlık ve açıklamada arama yapar
+/* >> TÜRKÇE KARAKTER UYUMLU FİLTRE MOTORU << */
 async function applyFilters(category, searchTerm) {
     let filtered = allAds.filter(ad => {
         const matchesCategory = category === 'all' || ad.category === category;
-        const searchLower = (searchTerm || "").toLowerCase();
-        const matchesSearch = (ad.title || "").toLowerCase().includes(searchLower) || 
-                              (ad.content || "").toLowerCase().includes(searchLower);
+        // toLocaleLowerCase('tr-TR') kullanarak Türkçe karakter sorununu mühürlüyoruz
+        const searchLower = (searchTerm || "").toLocaleLowerCase('tr-TR');
+        const adTitleLower = (ad.title || "").toLocaleLowerCase('tr-TR');
+        const adContentLower = (ad.content || "").toLocaleLowerCase('tr-TR');
+        
+        const matchesSearch = adTitleLower.includes(searchLower) || adContentLower.includes(searchLower);
         return matchesCategory && matchesSearch;
     });
     

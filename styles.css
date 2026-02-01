@@ -645,6 +645,7 @@ h1:not(.cyber-header) i {
     color: var(--dark);
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -657,6 +658,7 @@ h1:not(.cyber-header) i {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     line-height: 1.4;
 }

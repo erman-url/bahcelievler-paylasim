@@ -261,9 +261,6 @@ h1:not(.cyber-header) i {
 }
 
 #modal-image-gallery {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
     position: relative !important;
     display: flex !important;
     overflow-x: auto !important;

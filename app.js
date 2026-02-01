@@ -1057,7 +1057,7 @@ window.openAdDetail = function(id) {
     // MODERN DÜZENLEME BUTONU VE GÜVENLİ YERLEŞİM
     const editBtn = document.createElement('button');
     editBtn.className = 'cyber-submit';
-    editBtn.style.cssText = "background: #f8f9fa !important; color: #333 !important; border: 1.5px solid #dee2e6 !important; margin-bottom: 8px; font-weight: bold;";
+    editBtn.style.cssText = "margin-bottom: 8px; font-weight: bold;";
     editBtn.innerHTML = '<i class="fas fa-edit"></i> BU İLANI DÜZENLE';
     editBtn.onclick = () => window.handleAdEdit(ad);
 
@@ -1495,7 +1495,7 @@ async function fetchLiveInfo() {
         if (!damEl) return;
         
         // 1. ADIM: Hemen bir 'Fallback' (Yedek) değer basarak boşluğu doldur
-        damEl.textContent = "BARAJ: %27.8"; 
+        damEl.textContent = "BARAJ: %26.4"; 
         damEl.style.opacity = "0.6";
         try {
             // 2. ADIM: Farklı bir proxy motoru ile şansımızı deniyoruz
@@ -1520,7 +1520,7 @@ async function fetchLiveInfo() {
             }
         } catch (e) {
             console.warn("Canlı veri çekilemedi, yedek değer korunuyor.");
-            damEl.textContent = "BARAJ: %27.8";
+            damEl.textContent = "BARAJ: %26.4";
             damEl.style.opacity = "1";
         }
     }; updateDamLevel();

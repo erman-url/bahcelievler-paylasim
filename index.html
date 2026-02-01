@@ -38,7 +38,7 @@
             <div id="info-bar" class="cyber-card" style="display: flex; flex-direction: column; gap: 8px; padding: 12px; border-left: 5px solid #00d2ff;">
                 <div style="display: flex; justify-content: space-around; width: 100%; border-bottom: 1px solid #eee; padding-bottom: 8px;">
                     <div id="weather-widget"><i class="fas fa-sun"></i> <span id="weather-temp">Yükleniyor...</span></div>
-                    <div id="iski-widget"><i class="fas fa-tint"></i> <span id="dam-level">BARAJ: %27.8</span></div>
+                    <div id="iski-widget"><i class="fas fa-tint"></i> <span id="dam-level">BARAJ: %26.4 (Güncel Değer)</span></div>
                 </div>
                 <div id="currency-widget" style="display: flex; justify-content: space-around; font-size: 0.8rem; font-weight: bold;">
                     <div style="color:#28a745;">USD: <span id="usd-rate">...</span></div>
@@ -119,11 +119,14 @@
             
             <select id="ad-category" required>
                 <option value="" disabled selected>Kategori Seçiniz</option>
-                <option value="Ürün-Eşya">Ürün & Eşya</option>
-                <option value="İş&İnsan">İş & İnsan</option>
-                <option value="Araç">Araç & Oto</option>
-                <option value="Gayrimenkul">Ev & İşyeri</option>
-                <option value="Diğer">Diğer</option>
+                <option value="Elektronik">Elektronik</option>
+                <option value="Vasıta">Vasıta</option>
+                <option value="Gayrimenkul">Gayrimenkul</option>
+                <option value="Ev & Yaşam">Ev & Yaşam</option>
+                <option value="Moda">Moda</option>
+                <option value="Oyuncak & Hobi">Oyuncak & Hobi</option>
+                <option value="Kitap & Müzik">Kitap & Müzik</option>
+                <option value="Spor & Outdoor">Spor & Outdoor</option>
             </select>
 
             <select id="ad-district" class="cyber-input" required>
@@ -146,6 +149,7 @@
                     <option value="" disabled selected>Durumu</option>
                     <option value="2.el">2. El</option>
                     <option value="Yeni">Yeni</option>
+                    <option value="Outlet">Outlet</option>
                 </select>
                 <select id="ad-warranty" class="cyber-input" style="flex: 1;" required>
                     <option value="" disabled selected>Garanti</option>

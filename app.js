@@ -1075,7 +1075,6 @@ window.openAdDetail = function(id) {
 
     // MODERN DÜZENLEME BUTONU VE GÜVENLİ YERLEŞİM
     const editBtn = document.createElement('button');
-    editBtn.className = 'cyber-submit edit-btn-style';
     editBtn.className = 'edit-btn-style';
     editBtn.innerHTML = '<i class="fas fa-edit"></i> BU İLANI DÜZENLE';
     editBtn.onclick = () => window.handleAdEdit(ad);
@@ -1088,7 +1087,6 @@ window.openAdDetail = function(id) {
         footer.prepend(editBtn); 
 
         const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'cyber-submit delete-btn-style';
         deleteBtn.className = 'delete-btn-style';
         deleteBtn.id = 'modal-delete-btn-inner';
         deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> İlanı Kalıcı Olarak Kaldır';

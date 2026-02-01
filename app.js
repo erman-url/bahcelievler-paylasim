@@ -260,8 +260,8 @@ function initSlider() {
 
 
 /* >> BOT KORUMA MOTORU << */
-function isBotDetected() {
-    const hpField = document.getElementById("hp_check");
+function isBotDetected(fieldId = "hp_check") {
+    const hpField = document.getElementById(fieldId);
     if (hpField && hpField.value !== "") {
         console.warn("Süper Kontrol: Bot algılandı, işlem reddedildi.");
         return true;
@@ -276,7 +276,7 @@ async function setupQuoteForm() {
 
     quoteForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ AKTİF
+        if (isBotDetected('hp_teklif') || isProcessing) return; // BOT KONTROLÜ AKTİF
 
         const fileInput = document.getElementById("quote-file");
         const emailInput = document.getElementById("quote-email");
@@ -409,7 +409,7 @@ function setupForms() {
     if (adForm) {
         adForm.addEventListener("submit", async e => {
             e.preventDefault();
-            if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+            if (isBotDetected('hp_ilan') || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
             const titleVal = document.getElementById("ad-title").value;
             const priceVal = document.getElementById("ad-price").value;
@@ -529,7 +529,7 @@ function setupForms() {
 
 document.getElementById("recommend-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+    if (isBotDetected('hp_tavsiye') || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
     const btn = e.target.querySelector('button');
     const titleVal = document.getElementById("rec-title").value;
@@ -582,7 +582,7 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
 
     document.getElementById("complaint-form")?.addEventListener("submit", async e => {
         e.preventDefault();
-        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+        if (isBotDetected('hp_sikayet') || isProcessing) return; // BOT KONTROLÜ EKLENDİ
         
         const btn = document.getElementById("comp-submit-btn");
         const fileInput = document.getElementById("comp-files");

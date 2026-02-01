@@ -147,6 +147,9 @@
             <textarea id="ad-content" maxlength="350" placeholder="İlan Açıklaması"></textarea>
             <input type="file" id="ads-files" multiple accept="image/*" required>
             <input type="text" id="ad-tc-no" maxlength="5" placeholder="Silme Şifresi (Örn: S1571)" required>
+            <div style="display:none !important; visibility:hidden !important;">
+                <input type="text" name="hp_ilan" id="hp_ilan" tabindex="-1" autocomplete="off">
+            </div>
             <button type="submit" id="ad-submit-button" class="cyber-submit">İLANINI YAYINLA</button> 
         </form>
     </div>
@@ -228,7 +231,7 @@
                 <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> Yorumu bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="rec-pass" placeholder="Şifre (1 Harf + 4 Rakam)" maxlength="5" required>
                 <div style="display:none !important; visibility:hidden !important;">
-                    <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
+                    <input type="text" name="hp_tavsiye" id="hp_tavsiye" tabindex="-1" autocomplete="off">
                 </div>
                 <button type="submit" class="cyber-submit" style="background: #28a745 !important;">PAYLAŞ</button>
             </form>
@@ -256,7 +259,7 @@
                 <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold; margin-top:10px;"><i class="fas fa-key"></i> Şikayeti daha sonra bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="comp-pass" maxlength="5" placeholder="Şifre (1 Harf + 4 Rakam)" required>
                 <div style="display:none !important; visibility:hidden !important;">
-                    <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
+                    <input type="text" name="hp_sikayet" id="hp_sikayet" tabindex="-1" autocomplete="off">
                 </div>
                 <button type="submit" id="comp-submit-btn" class="cyber-submit" style="background:#ff4d4d !important;">BİLDİRİ YAYINLA</button>
             </form>
@@ -381,7 +384,7 @@
                 <textarea id="quote-text" maxlength="500" placeholder="İşin detaylarını yazınız..." rows="5" required></textarea>
                 <input type="email" id="quote-email" placeholder="E-posta Adresiniz (ZORUNLU: isim@mail.com)" required>
                 <div style="display:none !important; visibility:hidden !important;">
-                    <input type="text" name="honeypot_field" id="hp_check" tabindex="-1" autocomplete="off">
+                    <input type="text" name="hp_teklif" id="hp_teklif" tabindex="-1" autocomplete="off">
                 </div>
                 <button type="submit" id="quote-submit-btn" class="cyber-submit" style="background: #007bff !important;">TEKLİF TALEBİ GÖNDER</button>
             </form>

@@ -276,7 +276,7 @@ async function setupQuoteForm() {
 
     quoteForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (isBotDetected('hp_teklif') || isProcessing) return; // BOT KONTROLÜ AKTİF
+        if (isBotDetected("quote-request-form") || isProcessing) return; // BOT KONTROLÜ AKTİF
 
         const fileInput = document.getElementById("quote-file");
         const emailInput = document.getElementById("quote-email");
@@ -409,7 +409,7 @@ function setupForms() {
     if (adForm) {
         adForm.addEventListener("submit", async e => {
             e.preventDefault();
-            if (isBotDetected('hp_ilan') || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+            if (isBotDetected("new-ad-form") || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
             const titleVal = document.getElementById("ad-title").value;
             const priceVal = document.getElementById("ad-price").value;
@@ -423,6 +423,19 @@ function setupForms() {
 
             const fileInput = document.getElementById("ads-files");
             
+            // Düzenleme modundaysak mevcut resimleri hafızaya al
+            let existingImages = {};
+            if (editingAdId) {
+                const ad = allAds.find(a => a.id == editingAdId);
+                if (ad) {
+                    existingImages = {
+                        image_url: ad.image_url,
+                        image_url_2: ad.image_url_2,
+                        image_url_3: ad.image_url_3
+                    };
+                }
+            }
+
             if (!editingAdId && (!fileInput.files || fileInput.files.length === 0)) {
                 alert("HATA: İlan yayınlamak için en az 1 adet fotoğraf yüklemek zorunludur!");
                 return;
@@ -469,9 +482,13 @@ function setupForms() {
             btn.textContent = "YAYINLA...";
 
             try {
-                const rawFiles = Array.from(fileInput.files);
-                const optimizedFiles = await Promise.all(rawFiles.map(file => optimizeImage(file)));
-                let urls = await handleMultipleUploads(optimizedFiles);
+                let urls = [];
+                // Sadece yeni dosya seçildiyse yükleme yap
+                if (fileInput.files.length > 0) {
+                    const rawFiles = Array.from(fileInput.files);
+                    const optimizedFiles = await Promise.all(rawFiles.map(file => optimizeImage(file)));
+                    urls = await handleMultipleUploads(optimizedFiles);
+                }
 
                 // Veri objesini hazırla
                 const adData = {
@@ -486,14 +503,11 @@ function setupForms() {
                     contact: document.getElementById("ad-contact").value,
                     delete_token: deleteToken,
                     is_active: true,
+                    // Yeni resim yoksa mevcut (existingImages) linklerini kullan
+                    image_url: urls[0] || existingImages.image_url || null,
+                    image_url_2: urls[1] || existingImages.image_url_2 || null,
+                    image_url_3: urls[2] || existingImages.image_url_3 || null
                 };
-
-                // Eğer yeni resim yüklendiyse veriye ekle
-                if (urls.length > 0) {
-                    adData.image_url = urls[0] || null;
-                    adData.image_url_2 = urls[1] || null;
-                    adData.image_url_3 = urls[2] || null;
-                }
 
                 let error;
                 if (editingAdId) {
@@ -502,7 +516,6 @@ function setupForms() {
                     error = response.error;
                     if (!error) {
                         alert("İlan başarıyla güncellendi!");
-                        editingAdId = null;
                     }
                 } else {
                     // YENİ İLAN MODU
@@ -522,6 +535,7 @@ function setupForms() {
                 isProcessing = false;
                 btn.disabled = false;
                 btn.textContent = "YAYINLA";
+                editingAdId = null;
             }
         }); 
     }
@@ -529,7 +543,7 @@ function setupForms() {
 
 document.getElementById("recommend-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (isBotDetected('hp_tavsiye') || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+    if (isBotDetected("recommend-form") || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
     const btn = e.target.querySelector('button');
     const titleVal = document.getElementById("rec-title").value;
@@ -582,7 +596,7 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
 
     document.getElementById("complaint-form")?.addEventListener("submit", async e => {
         e.preventDefault();
-        if (isBotDetected('hp_sikayet') || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+        if (isBotDetected("complaint-form") || isProcessing) return; // BOT KONTROLÜ EKLENDİ
         
         const btn = document.getElementById("comp-submit-btn");
         const fileInput = document.getElementById("comp-files");

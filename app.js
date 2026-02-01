@@ -2293,3 +2293,34 @@ window.sendComment = async function() {
         window.loadComments(ilanId);
     }
 };
+
+/* >> RAMAZAN GERİ SAYIM MOTORU (19 ŞUBAT 2026) << */
+function startRamadanCountdown() {
+    const targetDate = new Date("Feb 19, 2026 00:00:00").getTime();
+
+    const timer = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        // Zaman hesaplamaları
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        const timerElement = document.getElementById("countdown-timer");
+        if (timerElement) {
+            // Format: Gün : Saat : Dakika : Saniye
+            timerElement.innerHTML = `${days}g ${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+        }
+
+        // Süre dolduğunda
+        if (distance < 0) {
+            clearInterval(timer);
+            if (timerElement) timerElement.innerHTML = "Hayırlı Ramazanlar!";
+        }
+    }, 1000);
+}
+
+// Uygulama başladığında çalıştır
+document.addEventListener("DOMContentLoaded", startRamadanCountdown);

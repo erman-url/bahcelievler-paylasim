@@ -666,17 +666,15 @@ h1:not(.cyber-header) i {
 
 /* >> YASAL BİLGİ BARI (FOOTER ÜSTÜ) << */
 .legal-footer-bar {
-    position: relative !important; /* Ekrana çakılı olmayacak */
-    bottom: 0 !important;
-    left: 0 !important;
-    transform: none !important;
-    margin-top: 50px;
+    position: relative !important; /* Ekrana çakılı (fixed) olmayacak */
+    margin-top: 40px !important;
     margin-bottom: 20px !important;
     padding: 15px 0 !important;
     text-align: center !important;
     width: 100% !important;
     background: transparent !important;
     display: block !important;
+    z-index: 1 !important;
 }
 .legal-footer-bar a {
     color: #666;

@@ -743,30 +743,33 @@ h1:not(.cyber-header) i {
     }
 }
 
-/* Yorum Düzeni */
-.comment-list div, #comment-list div { 
-    margin-bottom: 12px; 
-    border-bottom: 1px solid #eee; 
-    padding-bottom: 5px; 
-}
-
-/* Tüm Modal Butonlarını Eşitle */
-.modal-footer button, 
-.modal-content .cyber-submit,
+/* 1. Merkezi Buton Kalıbı (Telegram Stili Referans) */
+.cyber-submit, 
+.edit-btn-style, 
+.delete-btn-style, 
 #modal-buy-btn,
-#modal-share-btn {
+#modal-share-btn,
+.modal-footer button {
     width: 100% !important;
-    max-width: 100% !important;
-    height: 45px !important; /* Standart Yükseklik */
-    margin-bottom: 10px !important;
+    height: 50px !important; /* Standart Yükseklik */
+    border-radius: 12px !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 0.9rem !important;
-    font-weight: bold !important;
-    border-radius: 12px !important;
-    padding: 0 15px !important;
+    margin-bottom: 12px !important;
+    border: none !important;
+    transition: 0.3s !important;
+    cursor: pointer !important;
 }
-/* Düzenle ve Kaldır Butonlarına Özel Stil */ .edit-btn-style { background: #f8f9fa !important; color: #333 !important; border: 1.5px solid #dee2e6 !important; }
+/* 2. Renk Ayrıştırma Mühürleri */
+#modal-buy-btn { background: #00d2ff !important; color: #fff !important; } /* Telegram Turkuaz */
+#modal-share-btn { background: #25D366 !important; color: #fff !important; } /* WhatsApp Yeşil */
+.edit-btn-style { background: #0056b3 !important; color: #fff !important; } /* Kurumsal Mavi */
+.delete-btn-style { background: #fff !important; color: #ff4d4d !important; border: 1.5px solid #ff4d4d !important; } /* Beyaz-Kırmızı */
 
-.delete-btn-style { background: #fff5f5 !important; color: #e53e3e !important; border: 1.5px solid #feb2b2 !important; }
+/* 3. Yorum Alanı Temizliği */
+#comment-section { background: #f8fafc !important; border-radius: 15px !important; padding: 15px !important; margin: 15px 0 !important; }
+#comment-list div { background: #fff; padding: 10px; border-radius: 8px; margin-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }

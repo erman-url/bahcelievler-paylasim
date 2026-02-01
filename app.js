@@ -2167,7 +2167,7 @@ window.loadComments = async function(ilanId) {
     list.innerHTML = data.map(c => `
         <div style="margin-bottom:10px; padding-bottom:5px; border-bottom:1px solid #eee;">
             <strong style="color:var(--app-blue); font-size:0.85rem;">${c.nickname}</strong>
-            <p style="margin:2px 0; font-size:0.9rem;">${c.yorum}</p>
+            <p style="margin:2px 0; font-size:0.9rem;">${c.mesaj}</p>
         </div>
     `).join('');
     list.scrollTop = list.scrollHeight;

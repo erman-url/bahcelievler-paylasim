@@ -502,6 +502,7 @@ function setupForms() {
                 
                 adForm.reset();
                 loadPortalData();
+                window.closeAddAdModal();
             } catch (err) {
                 alert("Hata: " + err.message);
             } finally {

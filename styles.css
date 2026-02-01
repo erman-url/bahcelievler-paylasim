@@ -712,7 +712,7 @@ h1:not(.cyber-header) i {
     #ads-list {
         grid-template-columns: repeat(4, 1fr) !important; 
         gap: 25px !important;
-        row-gap: 30px !important;
+        row-gap: 35px !important;
         max-width: 1200px;
         margin: 0 auto;
     }
@@ -741,3 +741,11 @@ h1:not(.cyber-header) i {
         transform: translateX(-50%);
         border-radius: 20px 20px 0 0;
     }
+}
+
+/* Yorum Düzeni */
+.comment-list div, #comment-list div { 
+    margin-bottom: 12px; 
+    border-bottom: 1px solid #eee; 
+    padding-bottom: 5px; 
+}

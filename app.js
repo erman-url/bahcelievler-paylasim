@@ -2194,12 +2194,24 @@ window.loadComments = async function(ilanId) {
         return;
     }
 
-    list.innerHTML = data.map(c => `
-        <div style="margin-bottom:10px; padding-bottom:5px; border-bottom:1px solid #eee;">
-            <strong style="color:var(--app-blue); font-size:0.85rem;">${c.nickname}</strong>
-            <p style="margin:2px 0; font-size:0.9rem;">${c.mesaj}</p>
+    list.innerHTML = data.map(c => {
+        const date = new Date(c.created_at).toLocaleDateString('tr-TR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        return `
+        <div style="margin-bottom:12px; padding:8px; border-bottom:1px solid #f1f1f1;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong style="color:var(--app-blue); font-size:0.85rem;">${c.nickname}</strong>
+                <span style="font-size:0.7rem; color:#999;">${date}</span>
+            </div>
+            <p style="margin:4px 0 0 0; font-size:0.9rem; color:#444;">${c.mesaj}</p>
         </div>
-    `).join('');
+    `;
+    }).join('');
     list.scrollTop = list.scrollHeight;
 };
 

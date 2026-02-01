@@ -207,6 +207,8 @@ h1:not(.cyber-header) i {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
 }
 
 .modal-content {
@@ -214,7 +216,7 @@ h1:not(.cyber-header) i {
     overflow-y: auto;
     background: #fff;
     border-radius: 24px;
-    padding: 25px;
+    padding: 20px !important;
     position: relative;
     width: calc(100% - 30px);
     max-width: 500px;
@@ -247,10 +249,11 @@ h1:not(.cyber-header) i {
     color: var(--app-blue);
     font-weight: bold;
     cursor: pointer;
-    z-index: 100000; /* Her şeyin ama her şeyin üstünde */
+    z-index: 200000; /* Her şeyin ama her şeyin üstünde */
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     line-height: 1;
     -webkit-tap-highlight-color: transparent;
+    pointer-events: auto !important;
 }
 
 .close-detail:hover {

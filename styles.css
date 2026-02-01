@@ -437,7 +437,7 @@ h1:not(.cyber-header) i {
     display: grid !important; 
     grid-template-columns: 1fr 1fr !important; 
     column-gap: 16px !important; 
-    row-gap: 35px !important; /* ALT ALTA KESİN BOŞLUĞU BURADA MÜHÜRLER */
+    row-gap: 35px !important; /* MÜHÜRLENDİ: Satır Boşluğu */
     padding: 20px 15px !important; 
     background: #f0f4f8 !important; /* Arka plan rengiyle kartları ayırır */
 }
@@ -666,7 +666,7 @@ h1:not(.cyber-header) i {
 
 /* >> YASAL BİLGİ BARI (FOOTER ÜSTÜ) << */
 .legal-footer-bar {
-    position: relative !important; /* Ekrana çakılı (fixed) olmayacak */
+    position: relative !important; /* MÜHÜRLENDİ: Sabitlik Kaldırıldı */
     margin-top: 40px !important;
     margin-bottom: 20px !important;
     padding: 15px 0 !important;
@@ -766,10 +766,9 @@ h1:not(.cyber-header) i {
 #modal-buy-btn { background: #00d2ff !important; color: #fff !important; } /* Telegram Turkuaz */
 #modal-share-btn { background: #25D366 !important; color: #fff !important; } /* WhatsApp Yeşil */
 .edit-btn-style { background: #0056b3 !important; color: #fff !important; } /* Kurumsal Mavi */
-.delete-btn-style { background: #fff5f5 !important; color: #d32f2f !important; border: 1.5px solid #d32f2f !important; } /* Beyaz-Kırmızı */
+.delete-btn-style { background: #fff5f5 !important; color: #d32f2f !important; border: 1.5px solid #d32f2f !important; } /* MÜHÜRLENDİ: Beyaz-Kırmızı */
 
 /* 3. Yorum Alanı Temizliği */
-#comment-section { background: #f8fafc !important; border-radius: 15px !important; padding: 15px !important; margin: 15px 0 !important; }
 #comment-list div { background: #fff; padding: 10px; border-radius: 8px; margin-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
 
 /* 1. Buton Genişlik ve Hizalama Mührü */

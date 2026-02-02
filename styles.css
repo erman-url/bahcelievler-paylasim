@@ -820,3 +820,13 @@ h1:not(.cyber-header) i {
     align-items: center;
     padding: 10px !important;
 }
+
+/* >> HİZMET GÖRSEL OPTİMİZASYONU << */
+#social-image-gallery img {
+    width: 100%;
+    height: 250px; /* Sabit yükseklik mühürlendi */
+    object-fit: cover; /* Görseli bozmadan sığdırır */
+    border-radius: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}

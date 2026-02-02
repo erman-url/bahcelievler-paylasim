@@ -2195,10 +2195,32 @@ window.openSocialDetail = async function(table, id) {
         document.getElementById("social-modal-title").textContent = title;
         
         // Mahalle, Telefon ve Web bilgisini içeriğe ekliyoruz
-        let infoHtml = `<div style="margin-bottom:15px; padding:10px; background:#f8fafc; border-radius:8px; font-size:0.85rem; color:#555;">`;
-        if (data.location_name) infoHtml += `<div><i class="fas fa-map-marker-alt"></i> <b>Konum:</b> ${window.escapeHTML(data.location_name)}</div>`;
-        if (data.phone) infoHtml += `<div style="margin-top:5px;"><i class="fas fa-phone"></i> <b>İletişim:</b> <a href="tel:${data.phone}" style="color:var(--app-blue); text-decoration:none;">${data.phone}</a></div>`;
-        if (data.website) infoHtml += `<div style="margin-top:5px;"><i class="fas fa-globe"></i> <b>Web:</b> <a href="${data.website}" target="_blank" style="color:var(--app-blue); text-decoration:none;">Siteyi Ziyaret Et</a></div>`;
+        let infoHtml = `<div style="margin-bottom:20px; padding:15px; background:#f8fafc; border-radius:12px; font-size:0.9rem; color:#444; border:1px solid #edf2f7;">`;
+
+        if (data.location_name) {
+            infoHtml += `
+                <div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #eee;">
+                    <i class="fas fa-map-marker-alt" style="color:var(--app-blue); width:20px;"></i>
+                    <span><b>Konum:</b> ${window.escapeHTML(data.location_name)}</span>
+                </div>`;
+        }
+
+        if (data.phone) {
+            infoHtml += `
+                <div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #eee;">
+                    <i class="fas fa-phone" style="color:#28a745; width:20px;"></i>
+                    <span><b>İletişim:</b> <a href="tel:${data.phone}" style="color:var(--app-blue); text-decoration:none; font-weight:bold;">${data.phone}</a></span>
+                </div>`;
+        }
+
+        if (data.website) {
+            infoHtml += `
+                <div style="display:flex; align-items:center; gap:10px; padding:8px 0;">
+                    <i class="fas fa-globe" style="color:#00d2ff; width:20px;"></i>
+                    <span><b>Web:</b> <a href="${data.website}" target="_blank" style="color:var(--app-blue); text-decoration:none; font-weight:bold;">Süreyi Ziyaret Et</a></span>
+                </div>`;
+        }
+
         infoHtml += `</div>`;
 
         document.getElementById("social-modal-content").innerHTML = infoHtml + `<p style="white-space: pre-wrap; line-height:1.6;">${window.escapeHTML(content)}</p>`;

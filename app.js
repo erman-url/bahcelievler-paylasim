@@ -121,65 +121,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-/* >> NİHAİ SAYFA İZOLASYON MOTORU V6.0 << */
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     
+    /* >> NİHAİ İZOLASYON MÜHÜRÜ V7.0 << */
     const handleNavigation = (e) => {
         const trigger = e.target.closest("[data-target]");
         if (!trigger) return;
-
         const target = trigger.getAttribute("data-target");
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
 
-        // 1. TÜM SAYFALARI VE ANA SAYFA BİLEŞENLERİNİ KESİN OLARAK GİZLE
-        document.querySelectorAll(".page").forEach(p => {
-            p.style.display = "none";
-            p.classList.remove("active");
+        // 1. TÜM SECTIONLARI VE ANA SAYFAYI TAMAMEN SİL (Hidden yerine None)
+        document.querySelectorAll(".page, section, .slider-container, #home-dashboard, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
+            if(el) el.style.setProperty('display', 'none', 'important');
         });
 
-        const homeElements = [
-            document.querySelector(".slider-container"),
-            document.getElementById("home-dashboard"),
-            document.querySelector(".home-hero"),
-            document.getElementById("info-bar"),
-            document.getElementById("gundem-haber"),
-            document.getElementById("ramadan-status"),
-            document.querySelector(".legal-footer-bar")
-        ];
-
-        // Ana sayfa elemanlarını temizle
-        homeElements.forEach(el => { if(el) el.style.display = "none"; });
-
-        // 2. ANA SAYFA MI? KARAR VER
+        // 2. ANA SAYFA MI?
         if (target === "home") {
-            homeElements.forEach(el => { if(el) el.style.display = "block"; });
-            const dash = document.getElementById("home-dashboard");
-            if(dash) dash.style.display = "grid";
+            document.querySelectorAll(".slider-container, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => el.style.display = "block");
+            document.getElementById("home-dashboard").style.display = "grid";
         }
 
-        // 3. HEDEF SAYFAYI AÇ VE DİĞERLERİNDEN AYIR
+        // 3. HEDEF SAYFAYI TEK BAŞINA AÇ
         const targetPage = document.getElementById(target);
         if (targetPage) {
-            // MÜHÜR: Sayfayı görünür yapmadan önce tüm ekranı en üste çek
-            window.scrollTo(0, 0);
-            targetPage.style.display = "block";
-            targetPage.classList.add("active");
-
-            // KRİTİK: Harita sadece kendi sayfasında mühürlensin
-            if (target === 'semt-radari') {
+            window.scrollTo(0, 0); 
+            targetPage.style.setProperty('display', 'block', 'important');
+            
+            // Harita sadece kendi sayfasında aktif olsun
+            if (target === 'semt-radari' && typeof window.initForumMap === 'function') {
                 setTimeout(() => {
                     window.initForumMap();
                     if (window.forumMap) window.forumMap.invalidateSize();
-                }, 350);
+                }, 300);
             }
         }
-
-        // 4. ALT MENÜ İKONLARINI GÜNCELLE
-        document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-        const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
-        if (activeLink) activeLink.classList.add("active");
     };
 
     navItems.forEach(el => el.addEventListener('click', handleNavigation));

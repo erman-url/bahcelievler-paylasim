@@ -2319,8 +2319,10 @@ window.closeSocialModal = function() {
     }
 };
 
-/* >> YENİ YORUM SİSTEMİ MOTORU << */
-window.loadComments = async function(ilanId) {
+/* >> AKILLI YORUM VE ONAY SİSTEMİ V2.5 << */
+
+// Yorumları Yükleme: Sadece ilgili modüle ait ve ONAYLI yorumları getirir
+window.loadComments = async function(contentId, moduleType = 'ilan') {
     const list = document.getElementById("comment-list");
     if (!list) return;
 
@@ -2329,47 +2331,49 @@ window.loadComments = async function(ilanId) {
     const { data, error } = await window.supabase
         .from('ilan_yorumlar')
         .select('*')
-        .eq('ilan_id', ilanId)
+        .eq('ilan_id', contentId) // İçerik ID eşleşmesi
+        .eq('module_type', moduleType) // Modül ayrıştırma mühürü
+        .eq('is_approved', true) // SADECE ONAYLANMIŞLAR [cite: 19-01-2026]
         .order('created_at', { ascending: true });
 
     if (error || !data || data.length === 0) {
-        list.innerHTML = '<p style="color:#999; text-align:center; font-size:0.8rem;">Henüz yorum yok.</p>';
+        list.innerHTML = '<p style="color:#999; text-align:center; font-size:0.8rem;">Henüz onaylı yorum yok.</p>';
         return;
     }
 
-    list.innerHTML = data.map(c => {
-        const date = new Date(c.created_at).toLocaleDateString('tr-TR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        return `
-        <div style="margin-bottom:12px; padding:8px; border-bottom:1px solid #f1f1f1;">
+    list.innerHTML = data.map(c => `
+        <div style="margin-bottom:12px; padding:10px; background:#fff; border-radius:8px; border-bottom:1px solid #eee;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <strong style="color:var(--app-blue); font-size:0.85rem;">${window.escapeHTML(c.nickname)}</strong>
-                <span style="font-size:0.7rem; color:#999;">${date}</span>
+                <span style="font-size:0.7rem; color:#999;">${new Date(c.created_at).toLocaleDateString('tr-TR')}</span>
             </div>
             <p style="margin:4px 0 0 0; font-size:0.9rem; color:#444;">${window.escapeHTML(c.mesaj)}</p>
         </div>
-    `;
-    }).join('');
-    list.scrollTop = list.scrollHeight;
+    `).join('');
 };
 
-window.sendComment = async function() {
+// Yorum Gönderme: Yorumu 'onaysız' (is_approved: false) olarak kaydeder
+window.sendComment = async function(moduleType = 'ilan') {
     const nick = document.getElementById("comment-nick").value.trim();
     const text = document.getElementById("comment-text").value.trim();
-    const ilanId = window.currentAdId;
+    const contentId = (moduleType === 'ilan') ? window.currentAdId : window.currentFirsatId;
 
     if (!nick || !text) return alert("Lütfen adınızı ve mesajınızı yazın.");
-    if (window.hasBadWords(nick) || window.hasBadWords(text)) return alert("Lütfen uygunsuz ifadeler kullanmayın.");
+    if (window.hasBadWords(nick) || window.hasBadWords(text)) return alert("Uygunsuz içerik tespit edildi.");
 
-    const { error } = await window.supabase.from('ilan_yorumlar').insert([{ ilan_id: ilanId, nickname: nick, mesaj: text }]);
+    const { error } = await window.supabase.from('ilan_yorumlar').insert([{ 
+        ilan_id: contentId, 
+        nickname: nick, 
+        mesaj: text,
+        module_type: moduleType, // 'ilan' veya 'firsat' olarak mühürlenir
+        is_approved: false // Onay bekliyor [cite: 19-01-2026]
+    }]);
+
     if (!error) {
+        alert("Yorumunuz başarıyla iletildi! Denetim sonrası yayınlanacaktır.");
         document.getElementById("comment-text").value = "";
-        window.loadComments(ilanId);
+    } else {
+        alert("Hata: " + error.message);
     }
 };
 

@@ -807,7 +807,7 @@ function getPlaceholderImage(link) {
     }
 }
 
-/* >> 2. FIRSAT RENDER MOTORU (KATEGORİ VE LOGO UYUMLU) << */
+/* >> YENİLENMİŞ FIRSAT RENDER MOTORU << */
 async function renderFirsatlar() {
     const el = document.getElementById('firsat-list');
     if (!el) return;
@@ -819,14 +819,27 @@ async function renderFirsatlar() {
         const borderColor = isOnline ? '#007bff' : '#28a745';
 
         return `
-        <div class="cyber-card ad-card" style="margin-bottom:15px; cursor:pointer; border-left: 5px solid ${borderColor};" onclick="openFirsatDetail('${f.id}')">
-            <div style="display:flex; justify-content:space-between; align-items:start;">
-                <span style="font-size:0.6rem; font-weight:bold; text-transform:uppercase; background:#eee; padding:2px 5px; border-radius:3px;">${window.escapeHTML(f.category)}</span>
-                <button onclick="event.stopPropagation(); window.deleteFirsat('${f.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer; padding:10px;"><i class="fas fa-trash"></i></button>
+        <div class="cyber-card ad-card" style="border-left: 6px solid ${borderColor}; padding: 15px;" onclick="openFirsatDetail('${f.id}')">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <span style="font-size:0.65rem; font-weight:bold; text-transform:uppercase; background:#f0f4f8; color:#555; padding:4px 8px; border-radius:6px;">
+                    ${window.escapeHTML(f.category)}
+                </span>
+                <button onclick="event.stopPropagation(); window.deleteFirsat('${f.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
             </div>
-            <h4 style="margin:5px 0;">${window.escapeHTML(f.title)}</h4>
-            <img src="${displayImg}" style="width:100%; height:150px; object-fit:contain; background:#f9f9f9; border-radius:8px; margin:5px 0; padding:10px;">
-            <p style="font-size:0.8rem; color:#444; margin-top:5px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${window.escapeHTML(f.content)}</p>
+            
+            <h4 style="margin:0 0 10px 0; font-size:1.1rem; color:var(--dark-text);">${window.escapeHTML(f.title)}</h4>
+            
+            <div style="width:100%; height:180px; background:#f9f9f9; border-radius:10px; overflow:hidden; margin-bottom:12px;">
+                <img src="${displayImg}" style="width:100%; height:100%; object-fit:contain; padding:10px;">
+            </div>
+
+            <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border: 1px dashed #eee;">
+                <p style="font-size:0.85rem; color:#444; line-height:1.4; margin:0;">
+                    ${window.escapeHTML(f.content)}
+                </p>
+            </div>
         </div>`;
     }).join('') || "";
 }

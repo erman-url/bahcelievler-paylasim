@@ -2336,21 +2336,20 @@ window.closeSocialModal = function() {
     }
 };
 
-/* >> AKILLI YORUM VE ONAY SİSTEMİ V2.5 << */
+/* >> AKILLI YORUM VE ONAY SİSTEMİ (DB SENKRONİZELİ) << */
 
-// Yorumları Yükleme: Sadece ilgili modüle ait ve ONAYLI yorumları getirir
 window.loadComments = async function(contentId, moduleType = 'ilan') {
     const list = document.getElementById("comment-list");
     if (!list) return;
 
-    list.innerHTML = '<p style="color:#888; text-align:center; font-size:0.8rem;">Yükleniyor...</p>';
+    list.innerHTML = '<p style="color:#888; text-align:center; font-size:0.8rem;">Yorumlar denetleniyor...</p>';
 
     const { data, error } = await window.supabase
         .from('ilan_yorumlar')
         .select('*')
-        .eq('ilan_id', contentId) // İçerik ID eşleşmesi
-        .eq('module_type', moduleType) // Modül ayrıştırma mühürü
-        .eq('is_approved', true) // SADECE ONAYLANMIŞLAR [cite: 19-01-2026]
+        .eq('ilan_id', contentId) 
+        .eq('module_type', moduleType) // Modül ayrımı (ilan, firsat vb.)
+        .eq('is_approved', true)       // Sadece onaylı olanlar mühürlendi
         .order('created_at', { ascending: true });
 
     if (error || !data || data.length === 0) {
@@ -2369,25 +2368,25 @@ window.loadComments = async function(contentId, moduleType = 'ilan') {
     `).join('');
 };
 
-// Yorum Gönderme: Yorumu 'onaysız' (is_approved: false) olarak kaydeder
 window.sendComment = async function(moduleType = 'ilan') {
     const nick = document.getElementById("comment-nick").value.trim();
     const text = document.getElementById("comment-text").value.trim();
+    // Modüle göre doğru ID'yi yakala
     const contentId = (moduleType === 'ilan') ? window.currentAdId : window.currentFirsatId;
 
     if (!nick || !text) return alert("Lütfen adınızı ve mesajınızı yazın.");
-    if (window.hasBadWords(nick) || window.hasBadWords(text)) return alert("Uygunsuz içerik tespit edildi.");
+    if (window.hasBadWords(nick) || window.hasBadWords(text)) return alert("Uygunsuz içerik engellendi.");
 
     const { error } = await window.supabase.from('ilan_yorumlar').insert([{ 
         ilan_id: contentId, 
         nickname: nick, 
         mesaj: text,
-        module_type: moduleType, // 'ilan' veya 'firsat' olarak mühürlenir
-        is_approved: false // Onay bekliyor [cite: 19-01-2026]
+        module_type: moduleType,
+        is_approved: false // Varsayılan olarak onaysız gider
     }]);
 
     if (!error) {
-        alert("Yorumunuz başarıyla iletildi! Denetim sonrası yayınlanacaktır.");
+        alert("Yorumunuz başarıyla iletildi! Yönetici onayı sonrası yayınlanacaktır.");
         document.getElementById("comment-text").value = "";
     } else {
         alert("Hata: " + error.message);

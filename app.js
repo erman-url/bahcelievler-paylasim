@@ -1699,29 +1699,38 @@ window.searchOnMap = function() {
 
 /* >> HİZMET TANITIM MOTORU - GÖRSEL ZORUNLULUĞU V1.1 << */
 /* >> HİZMET TANITIM MOTORU GÜNCELLEMESİ V2.5 << */
+/* >> HİZMET TANITIM MOTORU V3.0 (HATASIZ NİHAİ SÜRÜM) << */
 async function setupHizmetForm() {
     const form = document.getElementById("hizmet-form");
     if (!form) return;
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
+        
+        // Tek seferlik tanımlama (Redeclare hatasını önler)
+        const btn = document.getElementById("hizmet-submit-btn");
         if (isBotDetected("hizmet-form") || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
         const titleVal = document.getElementById("hizmet-firma").value;
         const descVal = document.getElementById("hizmet-desc").value;
         const passVal = document.getElementById("hizmet-pass").value;
+        const titleVal = document.getElementById("hizmet-firma").value.trim();
+        const descVal = document.getElementById("hizmet-desc").value.trim();
+        const passVal = document.getElementById("hizmet-pass").value.trim();
         const fileInput = document.getElementById("hizmet-file");
         const btn = document.getElementById("hizmet-submit-btn");
 
         const passVal = document.getElementById("hizmet-pass").value;
         // Şifre Kontrolü
         // Küfür Kontrolü
+        // Küfür ve Argo Kontrolü
         if (window.hasBadWords(titleVal) || window.hasBadWords(descVal)) {
             alert("Lütfen topluluk kurallarına uygun bir dil kullanın.");
             return;
         }
 
         // Şifre ve Dosya Kontrolü
+        // Şifre ve Dosya Sayısı Kontrolü
         const passCheck = window.validateComplexPassword(passVal);
         if (passCheck) { alert(passCheck); return; }
         if (fileInput.files.length > 2) { alert("Maksimum 2 görsel seçebilirsiniz."); return; }
@@ -1750,6 +1759,8 @@ async function setupHizmetForm() {
             let uploadedUrl = urls[0];
             // Görsel Optimizasyonu ve Yükleme
             const optimizedFiles = await Promise.all(Array.from(fileInput.files).map(f => optimizeImage(f)));
+            const rawFiles = Array.from(fileInput.files);
+            const optimizedFiles = await Promise.all(rawFiles.map(f => optimizeImage(f)));
             const urls = await handleMultipleUploads(optimizedFiles);
 
             const payload = {
@@ -1762,21 +1773,26 @@ async function setupHizmetForm() {
                 location_name: document.getElementById("hizmet-konum").value,
                 phone: document.getElementById("hizmet-tel").value,
                 website: document.getElementById("hizmet-web").value,
+                website: document.getElementById("hizmet-web").value || null,
                 content: descVal,
                 image_url: urls[0] || null,
                 image_url_2: urls[1] || null,
                 delete_password: passVal,
                 created_at: new Date().toISOString() // Otomatik tarih
+                created_at: new Date().toISOString() // Otomatik Tarih Mühürü
             };
 
             const { error } = await window.supabase.from('hizmetler').insert([payload]);
             if (error) throw error;
 
             alert("Hizmet tanıtımınız başarıyla eklendi!");
+            alert("Hizmetiniz başarıyla eklendi!");
             form.reset();
             renderHizmetler();
+            if (typeof renderHizmetler === "function") renderHizmetler();
         } catch (err) {
             alert("Hata: " + err.message);
+            alert("Sistem Hatası: " + err.message);
         } finally {
             isProcessing = false;
             btn.disabled = false;

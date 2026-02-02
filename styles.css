@@ -27,25 +27,31 @@ body {
     overflow-x: hidden;
 }
 
-/* Sayfa Konumlandırma Mührü */
+/* Sayfaların birbirinin üzerine binmesini engeller */
 .page { 
     display: none; 
     width: 100%;
-    margin: 0 !important;
-    padding: 15px !important;
-    min-height: 100vh;
-    box-sizing: border-box;
     position: relative;
-    top: 0; /* Sayfanın en üstten başlamasını garanti eder */
+    background: var(--bg);
+    min-height: 100vh;
+    z-index: 5; /* Sayfaları temel seviyeye al */
 }
 
 .page.active { 
     display: block !important; 
 }
 
-/* Harita alanının dikey hizalamasını mühürle */
-#semt-radari {
-    padding-top: 10px !important;
+/* Haritayı sadece kendi sayfasında hapseder */
+#semt-radari #main-map {
+    display: block !important;
+    visibility: visible !important;
+    height: 400px !important;
+    z-index: 10 !important;
+}
+
+/* Diğer sayfalardayken harita asla yer kaplamasın */
+body:not([data-active-page="semt-radari"]) #main-map {
+    display: none !important;
 }
 @-webkit-keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

@@ -2574,3 +2574,26 @@ window.loadMapPoints = async function(filterType) {
 };
 
 window.openNav = (lat, lng) => window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+
+/* >> HARİTA NOKTASI SİLME MÜHÜRÜ << */
+window.deleteMapPoint = async function(id) {
+    const userPass = prompt("Bu noktayı kaldırmak için belirlediğiniz şifreyi girin:");
+    if (!userPass || !userPass.trim()) return;
+
+    // Supabase üzerinden hem ID hem şifre eşleşmesi aranır
+    const { data, error } = await window.supabase
+        .from('harita_noktalari')
+        .delete()
+        .eq('id', id)
+        .eq('delete_password', userPass.trim())
+        .select();
+
+    if (error) {
+        alert("Sistem Hatası: " + error.message);
+    } else if (data && data.length > 0) {
+        alert("Nokta başarıyla kaldırıldı.");
+        loadMapPoints('all'); // Haritayı güncelle
+    } else {
+        alert("HATA: Şifre yanlış, bu noktayı silme yetkiniz yok!");
+    }
+};

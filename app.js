@@ -434,7 +434,7 @@ function setupForms() {
     if (adForm) {
         adForm.addEventListener("submit", async e => {
             e.preventDefault();
-            if (isBotDetected("new-ad-form") || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+            if (isBotDetected("new-ad-form") || isProcessing) return;
 
             const titleVal = document.getElementById("ad-title").value;
             const priceVal = document.getElementById("ad-price").value;

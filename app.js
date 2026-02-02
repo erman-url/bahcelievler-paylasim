@@ -24,6 +24,7 @@ let allAds = [];
 let isProcessing = false;
 let currentCategory = 'all'; 
 window.currentAdId = null;
+window.currentFirsatId = null;
 
 /* >> GÜVENLİK MOTORU: SHA-256 HASH << */
 async function sha256(message) {
@@ -834,6 +835,7 @@ window.openFirsatDetail = async function(id) {
     try {
         const { data: f, error } = await window.supabase.from('firsatlar').select('*').eq('id', id).single();
         if (error || !f) return;
+        window.currentFirsatId = f.id;
 
         const dateStr = new Date(f.created_at).toLocaleDateString('tr-TR', {day:'2-digit', month:'2-digit', year:'numeric'});
 
@@ -895,6 +897,14 @@ window.openFirsatDetail = async function(id) {
             buyBtn.style.marginBottom = "10px";
             buyBtn.after(shareBtn);
         }
+
+        // Yorum Butonu Ayarı (Fırsat Modu)
+        const commentBtn = document.querySelector('#comment-section button');
+        if(commentBtn) {
+            commentBtn.setAttribute('onclick', "window.sendComment('firsat')");
+            commentBtn.innerHTML = '<i class="fas fa-paper-plane"></i> ONAYA GÖNDER';
+        }
+        if (typeof window.loadComments === "function") window.loadComments(f.id, 'firsat');
 
         // Modalı ekranda göster
         const modal = document.getElementById("ad-detail-modal");
@@ -1048,6 +1058,13 @@ window.openAdDetail = function(id) {
     if (!ad) return;
     window.currentAdId = ad.id;
 
+    // Yorum Butonu Ayarı (İlan Modu)
+    const commentBtn = document.querySelector('#comment-section button');
+    if(commentBtn) {
+        commentBtn.setAttribute('onclick', "window.sendComment('ilan')");
+        commentBtn.innerHTML = '<i class="fas fa-paper-plane"></i> YORUMU GÖNDER';
+    }
+
     document.body.style.overflow = 'hidden'; // Arka plan kaydırmasını engelle
 
     const adDate = new Date(ad.created_at).toLocaleDateString('tr-TR');
@@ -1121,7 +1138,7 @@ window.openAdDetail = function(id) {
     }
 
     // >> YORUM SİSTEMİ ENTEGRASYONU <<
-    if (typeof window.loadComments === "function") window.loadComments(ad.id);
+    if (typeof window.loadComments === "function") window.loadComments(ad.id, 'ilan');
 
     // MODERN DÜZENLEME BUTONU VE GÜVENLİ YERLEŞİM
     const editBtn = document.createElement('button');

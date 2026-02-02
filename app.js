@@ -2481,18 +2481,36 @@ document.addEventListener("DOMContentLoaded", startRamadanCountdown);
 let forumMap;
 let markers = [];
 
+/* >> BAHÇELİEVLER SINIR VE GÜVENLİK MÜHÜRÜ << */
+// 1. Harita Sınırlarını Tanımla (Bahçelievler Koordinat Kalkanı)
+const bhvelerBounds = L.latLngBounds(
+    [40.9750, 28.7850], // Güneybatı sınırı
+    [41.0350, 28.8750]  // Kuzeydoğu sınırı
+);
+
 window.initForumMap = function() {
     if (forumMap) return;
     const mapEl = document.getElementById('main-map');
     if (!mapEl) return;
 
-    // Bahçelievler Merkez Odaklı Başlat
-    forumMap = L.map('main-map').setView([41.00, 28.84], 14);
+    // Haritayı sadece Bahçelievler'e kilitler (MaxBounds ve MinZoom ile)
+    forumMap = L.map('main-map', {
+        maxBounds: bhvelerBounds,
+        maxBoundsViscosity: 1.0, // Sınır dışına kaymayı sertçe engeller
+        minZoom: 13
+    }).setView([41.0000, 28.8300], 14);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(forumMap);
     
     loadMapPoints('all');
+};
+
+// 2. Giriş Güvenliği: Konumun Bahçelievler'de olup olmadığını kontrol et
+window.checkLocationInDistrict = function(lat, lng) {
+    const point = L.latLng(lat, lng);
+    return bhvelerBounds.contains(point);
 };
 
 window.prepareMapPoint = function() {
@@ -2501,6 +2519,10 @@ window.prepareMapPoint = function() {
     alert("Lütfen şu an geri dönüşüm noktasının tam yanındayken bu işlemi yapın.");
     
     navigator.geolocation.getCurrentPosition(async (pos) => {
+        if (!window.checkLocationInDistrict(pos.coords.latitude, pos.coords.longitude)) {
+            return alert("HATA: Sadece Bahçelievler sınırları içinde nokta ekleyebilirsiniz!");
+        }
+
         const title = prompt("Nokta İsmi (Örn: Cumhuriyet Mah. Ekmek Kutusu):");
         if (!title) return;
         

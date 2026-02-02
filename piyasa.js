@@ -192,40 +192,65 @@ async function fetchAndRenderPiyasa() {
     }
 }
 
+/* >> OTOMATİK SEMT ENFLASYON ANALİZİ (CANLI VERİDEN) << */
 async function renderEnflasyonGrafigi() {
-    const ctx = document.getElementById('enflasyonChart');
-    if (!ctx) return;
+    const canvas = document.getElementById('enflasyonChart');
+    if (!canvas) return;
 
-    // Analiz tablosundan verileri çek
-    const { data, error } = await window.supabase
-        .from("piyasa_analiz")
-        .select('created_at, ortalama_fiyat')
-        .order('created_at', { ascending: true })
-        .limit(10);
+    try {
+        // MÜHÜRLENDİ: Boş tablo yerine gerçek 'piyasa_verileri' tablosunu süz
+        const { data, error } = await window.supabase
+            .from('piyasa_verileri')
+            .select('fiyat, created_at')
+            .eq('is_active', true)
+            .order('created_at', { ascending: true });
 
-    if (error) {
-        console.error("Grafik Veri Hatası:", error);
-        return;
+        if (error || !data || data.length === 0) return;
+
+        // Verileri tarihlere göre gruplayıp günlük ortalama fiyatı çıkar
+        const gunlukAnaliz = {};
+        data.forEach(item => {
+            const tarih = new Date(item.created_at).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' });
+            if (!gunlukAnaliz[tarih]) {
+                gunlukAnaliz[tarih] = { toplam: 0, adet: 0 };
+            }
+            gunlukAnaliz[tarih].toplam += parseFloat(item.fiyat);
+            gunlukAnaliz[tarih].adet += 1;
+        });
+
+        const etiketler = Object.keys(gunlukAnaliz);
+        const ortalamaFiyatlar = etiketler.map(t => (gunlukAnaliz[t].toplam / gunlukAnaliz[t].adet).toFixed(2));
+
+        // Eski grafiği bellekten temizle
+        if (window.enflasyonChartInstance) window.enflasyonChartInstance.destroy();
+
+        // Chart.js Çizimi (Cyber Pink Temalı)
+        window.enflasyonChartInstance = new Chart(canvas, {
+            type: 'line',
+            data: {
+                labels: etiketler,
+                datasets: [{
+                    label: 'Semt Ortalaması (₺)',
+                    data: ortalamaFiyatlar,
+                    borderColor: '#ff007f', // cyber-pink
+                    backgroundColor: 'rgba(255, 0, 127, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4, // Yumuşak kavisli hatlar
+                    fill: true,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: false, grid: { color: '#f0f0f0' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    } catch (err) {
+        console.error("Grafik Motoru Hatası:", err);
     }
-
-    if (!data || data.length === 0) return;
-
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: data.map(d => new Date(d.created_at).toLocaleDateString('tr-TR')),
-            datasets: [{
-                label: 'Ortalama Fiyat (TL)',
-                data: data.map(d => d.ortalama_fiyat),
-                borderColor: '#ff007f',
-                backgroundColor: 'rgba(255, 0, 127, 0.1)',
-                fill: true,
-                tension: 0.4
-            }]
-        },
-        options: {
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: false } }
-        }
-    });
 }

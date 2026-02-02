@@ -2477,80 +2477,62 @@ function startRamadanCountdown() {
 // Uygulama yüklenince başlat
 document.addEventListener("DOMContentLoaded", startRamadanCountdown);
 
-/* >> SEMT RADARI HARİTA MOTORU V1.0 << */
-let forumMap;
-let markers = [];
-
-/* >> BAHÇELİEVLER SINIR VE GÜVENLİK MÜHÜRÜ << */
-// 1. Harita Sınırlarını Tanımla (Bahçelievler Koordinat Kalkanı)
-const bhvelerBounds = L.latLngBounds(
-    [40.9750, 28.7850], // Güneybatı sınırı
-    [41.0350, 28.8750]  // Kuzeydoğu sınırı
-);
+/* >> SEMT RADARI HARİTA MOTORU V1.5 << */
+let forumMap = null;
+let mapMarkers = [];
+const bhvBounds = L.latLngBounds([40.975, 28.785], [41.035, 28.875]); // Bahçelievler Sınırları
 
 window.initForumMap = function() {
-    if (forumMap) return;
-    const mapEl = document.getElementById('main-map');
-    if (!mapEl) return;
-
-    // Haritayı sadece Bahçelievler'e kilitler (MaxBounds ve MinZoom ile)
+    if (forumMap) {
+        forumMap.invalidateSize(); // Boyut çakışmasını önler
+        return;
+    }
+    
+    // Haritayı Bahçelievler Merkezli Başlat
     forumMap = L.map('main-map', {
-        maxBounds: bhvelerBounds,
-        maxBoundsViscosity: 1.0, // Sınır dışına kaymayı sertçe engeller
+        maxBounds: bhvBounds,
+        maxBoundsViscosity: 1.0,
         minZoom: 13
-    }).setView([41.0000, 28.8300], 14);
+    }).setView([41.000, 28.830], 14);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+        attribution: '© OpenStreetMap'
     }).addTo(forumMap);
-    
-    loadMapPoints('all');
-};
 
-// 2. Giriş Güvenliği: Konumun Bahçelievler'de olup olmadığını kontrol et
-window.checkLocationInDistrict = function(lat, lng) {
-    const point = L.latLng(lat, lng);
-    return bhvelerBounds.contains(point);
+    window.loadMapPoints('all');
 };
 
 window.prepareMapPoint = function() {
-    if (!navigator.geolocation) return alert("Tarayıcınız konum bilgisini desteklemiyor.");
-    
-    alert("Lütfen şu an geri dönüşüm noktasının tam yanındayken bu işlemi yapın.");
-    
+    if (!navigator.geolocation) return alert("HATA: GPS erişimi sağlanamadı.");
+
+    alert("Mühür: Noktanın tam yanındayken onay verin.");
+
     navigator.geolocation.getCurrentPosition(async (pos) => {
-        if (!window.checkLocationInDistrict(pos.coords.latitude, pos.coords.longitude)) {
+        const { latitude, longitude } = pos.coords;
+
+        // Bahçelievler Sınır Kontrolü
+        if (!bhvBounds.contains([latitude, longitude])) {
             return alert("HATA: Sadece Bahçelievler sınırları içinde nokta ekleyebilirsiniz!");
         }
 
-        const title = prompt("Nokta İsmi (Örn: Cumhuriyet Mah. Ekmek Kutusu):");
-        if (!title) return;
-        
+        const title = prompt("Nokta Başlığı (Örn: Siyavuşpaşa Ekmek Kutusu):");
+        if(!title) return;
         const type = prompt("Tür seçin: ekmek, kiyafet, pil");
-        if (!type) return;
+        const pass = prompt("Silme Şifresi belirleyin (1 Harf + 4 Rakam):");
 
-        const pass = prompt("Silme şifresi belirleyin (1 Harf + 4 Rakam):");
-        if (!pass) return;
-        
-        // Buraya görsel yükleme modalını da bağlayabiliriz
         const { error } = await window.supabase.from('harita_noktalari').insert([{
             baslik: title,
-            tur: type,
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            delete_password: pass,
-            is_active: true
+            tur: type || 'ekmek',
+            lat: latitude,
+            lng: longitude,
+            delete_password: pass
         }]);
 
         if (!error) {
-            alert("Nokta mühürlendi! Haritayı yenileyin.");
-            loadMapPoints('all');
-        } else {
-            alert("Hata: " + error.message);
+            alert("Nokta Haritaya İşlendi!");
+            window.loadMapPoints('all');
         }
-    }, (err) => {
-        alert("Konum alınamadı: " + err.message);
-    });
+    }, (err) => alert("Konum hatası: " + err.message));
 };
 
 window.loadMapPoints = async function(filterType) {
@@ -2560,20 +2542,28 @@ window.loadMapPoints = async function(filterType) {
     if (filterType !== 'all') query = query.eq('tur', filterType);
     
     const { data, error } = await query;
-    if (error) return console.error(error);
-    
-    // Temizle ve Yeniden Bas
-    markers.forEach(m => forumMap.removeLayer(m));
-    markers = [];
-    
+    if (error) return;
+
+    // Mevcut markerları temizle
+    mapMarkers.forEach(m => forumMap.removeLayer(m));
+    mapMarkers = [];
+
     data.forEach(p => {
-        const m = L.marker([p.lat, p.lng]).addTo(forumMap)
-            .bindPopup(`<b>${window.escapeHTML(p.baslik)}</b><br>Tür: ${window.escapeHTML(p.tur)}<br><button onclick="window.openNav('${p.lat}','${p.lng}')" style="margin-top:5px; cursor:pointer;">Yol Tarifi Al</button>`);
-        markers.push(m);
+        const iconColor = p.tur === 'ekmek' ? 'orange' : p.tur === 'pil' ? 'red' : 'green';
+        const marker = L.marker([p.lat, p.lng]).addTo(forumMap)
+            .bindPopup(`
+                <div style="text-align:center;">
+                    <b>${window.escapeHTML(p.baslik)}</b><br>
+                    <small>Tür: ${p.tur}</small><br>
+                    <button onclick="window.openNav(${p.lat}, ${p.lng})" style="background:var(--app-blue); color:white; border:none; padding:5px 10px; border-radius:5px; margin-top:5px; cursor:pointer;">YOL TARİFİ</button>
+                    <br><button onclick="window.deleteMapPoint('${p.id}')" style="background:none; border:none; color:#999; font-size:0.6rem; text-decoration:underline; margin-top:10px;">Noktayı Kaldır</button>
+                </div>
+            `);
+        mapMarkers.push(marker);
     });
 };
 
-window.openNav = (lat, lng) => window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+window.openNav = (lat, lng) => window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
 
 /* >> HARİTA NOKTASI SİLME MÜHÜRÜ << */
 window.deleteMapPoint = async function(id) {
@@ -2592,7 +2582,7 @@ window.deleteMapPoint = async function(id) {
         alert("Sistem Hatası: " + error.message);
     } else if (data && data.length > 0) {
         alert("Nokta başarıyla kaldırıldı.");
-        loadMapPoints('all'); // Haritayı güncelle
+        window.loadMapPoints('all'); // Haritayı güncelle
     } else {
         alert("HATA: Şifre yanlış, bu noktayı silme yetkiniz yok!");
     }

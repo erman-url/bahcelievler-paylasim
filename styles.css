@@ -830,3 +830,20 @@ h1:not(.cyber-header) i {
     margin-bottom: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+
+/* >> SOSYAL MODAL BİLGİ ALANI STİLİ << */
+#social-modal-content a {
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+#social-modal-content a:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+#social-modal-content div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

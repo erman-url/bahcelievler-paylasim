@@ -428,7 +428,7 @@
                 
                 <input type="text" id="hizmet-firma" placeholder="Firma / Kurum / Usta Adı (Max 35 Karakter)" maxlength="35" required>
                 <input type="text" id="hizmet-konum" placeholder="Mahalle Adı (Max 35 Karakter)" maxlength="35" required>
-                <input type="tel" id="hizmet-tel" placeholder="Telefon: 0212-111-11-11" pattern="[0-9]{4}-[0-9]{3}-[0-9]{2}-[0-9]{2}" required title="Format: 0212-111-11-11">
+                <input type="tel" id="hizmet-tel" placeholder="Telefon No (Örn: 2123332211)" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                 <input type="url" id="hizmet-web" placeholder="Web Sitesi (Opsiyonel - https://...)">
                 <textarea id="hizmet-desc" maxlength="750" placeholder="Hizmet Detayları (Max 750 Karakter)" rows="5" required></textarea>
                 

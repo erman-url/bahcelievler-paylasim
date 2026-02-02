@@ -177,6 +177,14 @@ function setupNavigation() {
                 
                 // KRİTİK: Sayfayı en üste taşı (Mobil uygulama hissi için)
                 window.scrollTo({ top: 0, behavior: 'instant' });
+
+                // >> HARİTA TETİKLEME MÜHÜRÜ <<
+                if (target === 'mahaller-haritasi' && typeof window.initForumMap === 'function') {
+                    setTimeout(() => {
+                        window.initForumMap();
+                        if (forumMap) forumMap.invalidateSize();
+                    }, 200);
+                }
             }
 
             // 3. ALT MENÜ İKONLARINI GÜNCELLE
@@ -2468,3 +2476,79 @@ function startRamadanCountdown() {
 
 // Uygulama yüklenince başlat
 document.addEventListener("DOMContentLoaded", startRamadanCountdown);
+
+/* >> SEMT RADARI HARİTA MOTORU V1.0 << */
+let forumMap;
+let markers = [];
+
+window.initForumMap = function() {
+    if (forumMap) return;
+    const mapEl = document.getElementById('main-map');
+    if (!mapEl) return;
+
+    // Bahçelievler Merkez Odaklı Başlat
+    forumMap = L.map('main-map').setView([41.00, 28.84], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(forumMap);
+    
+    loadMapPoints('all');
+};
+
+window.prepareMapPoint = function() {
+    if (!navigator.geolocation) return alert("Tarayıcınız konum bilgisini desteklemiyor.");
+    
+    alert("Lütfen şu an geri dönüşüm noktasının tam yanındayken bu işlemi yapın.");
+    
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+        const title = prompt("Nokta İsmi (Örn: Cumhuriyet Mah. Ekmek Kutusu):");
+        if (!title) return;
+        
+        const type = prompt("Tür seçin: ekmek, kiyafet, pil");
+        if (!type) return;
+
+        const pass = prompt("Silme şifresi belirleyin (1 Harf + 4 Rakam):");
+        if (!pass) return;
+        
+        // Buraya görsel yükleme modalını da bağlayabiliriz
+        const { error } = await window.supabase.from('harita_noktalari').insert([{
+            baslik: title,
+            tur: type,
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            delete_password: pass,
+            is_active: true
+        }]);
+
+        if (!error) {
+            alert("Nokta mühürlendi! Haritayı yenileyin.");
+            loadMapPoints('all');
+        } else {
+            alert("Hata: " + error.message);
+        }
+    }, (err) => {
+        alert("Konum alınamadı: " + err.message);
+    });
+};
+
+window.loadMapPoints = async function(filterType) {
+    if (!forumMap) return;
+    
+    let query = window.supabase.from('harita_noktalari').select('*').eq('is_active', true);
+    if (filterType !== 'all') query = query.eq('tur', filterType);
+    
+    const { data, error } = await query;
+    if (error) return console.error(error);
+    
+    // Temizle ve Yeniden Bas
+    markers.forEach(m => forumMap.removeLayer(m));
+    markers = [];
+    
+    data.forEach(p => {
+        const m = L.marker([p.lat, p.lng]).addTo(forumMap)
+            .bindPopup(`<b>${window.escapeHTML(p.baslik)}</b><br>Tür: ${window.escapeHTML(p.tur)}<br><button onclick="window.openNav('${p.lat}','${p.lng}')" style="margin-top:5px; cursor:pointer;">Yol Tarifi Al</button>`);
+        markers.push(m);
+    });
+};
+
+window.openNav = (lat, lng) => window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');

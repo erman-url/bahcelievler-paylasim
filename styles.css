@@ -965,3 +965,50 @@ button[onclick*="prepareDeleteHizmet"]:hover {
     width: 24px;
     text-align: center;
 }
+
+/* >> FIRSAT FORMU DÜZENLEME VE HİZALAMA MÜHÜRÜ << */
+
+/* 1. Formun ana kapsayıcısını ve dikey hizalamasını mühürler */
+#firsat-form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important; /* Elemanlar arası standart boşluk */
+    width: 100% !important;
+    max-width: 500px !important; /* Formu ilanlarla aynı genişliğe sabitler */
+    margin: 0 auto 30px auto !important; /* Alt kısımdaki kartla arayı açar */
+    padding: 0 !important;
+}
+
+/* 2. Tüm girdi alanlarını (Input, Select, Textarea) aynı hizaya getirir */
+#firsat-form .cyber-form, 
+#firsat-form input, 
+#firsat-form select, 
+#firsat-form textarea {
+    width: 100% !important;
+    box-sizing: border-box !important; /* Padding taşmalarını engeller */
+    margin: 0 !important; /* Eski düzensiz marginleri sıfırlar */
+    height: 48px; /* Standart yükseklik */
+}
+
+/* 3. Textarea için özel yükseklik ayarı */
+#firsat-form textarea#firsat-desc {
+    height: 100px !important;
+    padding: 12px !important;
+}
+
+/* 4. Gönder butonunu formla tam hizalar */
+#firsat-form .cyber-submit {
+    width: 100% !important;
+    margin-top: 10px !important;
+    height: 50px !important;
+}
+
+/* 5. Liste alanını formun tam altına, aynı dikey hizada mühürler */
+#firsat-list {
+    width: 100% !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+}

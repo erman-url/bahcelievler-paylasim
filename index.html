@@ -415,7 +415,7 @@
             </div>
             <form id="hizmet-form" class="cyber-form">
                 <select id="hizmet-category" required>
-                    <option value="" disabled selected>Kategori Seçin</option>
+                    <option value="" disabled selected>Kategori Seçin (Zorunlu)</option>
                     <option value="Tadilat & Dekorasyon">Tadilat & Dekorasyon</option>
                     <option value="Temizlik Hizmetleri">Temizlik Hizmetleri</option>
                     <option value="Teknoloji & Tamir">Teknoloji & Tamir</option>
@@ -425,16 +425,25 @@
                     <option value="Nakliye & Taşımacılık">Nakliye & Taşımacılık</option>
                     <option value="Diğer & Hizmet">Diğer & Hizmet</option>
                 </select>
-                <input type="text" id="hizmet-firma" placeholder="Firma veya Usta Adı" maxlength="40" required>
-                <textarea id="hizmet-desc" maxlength="500" placeholder="Verdiğiniz hizmetlerin detaylarını yazın..." rows="4" required></textarea>
-                <label style="font-size: 0.75rem; color: #d32f2f; display: block; margin-top: 10px; font-weight: bold;"><i class="fas fa-camera"></i> Dükkan veya Hizmet Görseli (ZORUNLU) </label>
-                <input type="file" id="hizmet-file" accept="image/png, image/jpeg" required>
+                
+                <input type="text" id="hizmet-firma" placeholder="Firma / Kurum / Usta Adı (Zorunlu)" maxlength="35" required>
+                <input type="text" id="hizmet-konum" placeholder="Mahalle Adı (Zorunlu)" maxlength="35" required>
+                <input type="tel" id="hizmet-tel" placeholder="Telefon: 0212-111-11-11" pattern="[0-9]{4}-[0-9]{3}-[0-9]{2}-[0-9]{2}" required title="Format: 0212-111-11-11">
+                <input type="url" id="hizmet-web" placeholder="Web Sitesi (Opsiyonel - https://...)" title="Lütfen geçerli bir URL giriniz">
+                <textarea id="hizmet-desc" maxlength="750" placeholder="Hizmet Detayları (Zorunlu - Max 750 Karakter)" rows="5" required></textarea>
+                
+                <label style="font-size: 0.75rem; color: #d32f2f; display: block; margin-top: 10px; font-weight: bold;">
+                    <i class="fas fa-camera"></i> Hizmet Görseli (Zorunlu - Max 2 Görsel, Max 5MB)
+                </label>
+                <input type="file" id="hizmet-file" accept="image/*" multiple required>
+                
                 <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold; margin-top:10px;"><i class="fas fa-key"></i> Paylaşımı bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="hizmet-pass" maxlength="5" placeholder="Şifre (1 Harf + 4 Rakam)" required>
                 <div style="display:none !important; visibility:hidden !important;">
                     <input type="text" name="hp_hizmet" id="hp_hizmet" tabindex="-1" autocomplete="off">
                 </div>
                 <button type="submit" id="hizmet-submit-btn" class="cyber-submit" style="background: #28a745 !important;">HİZMETİ YAYINLA</button>
+            </form>
             <div id="hizmet-list" style="padding: 10px;"></div>
         </section>
 

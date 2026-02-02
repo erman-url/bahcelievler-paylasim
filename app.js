@@ -2336,75 +2336,63 @@ window.closeSocialModal = function() {
     }
 };
 
-/* >> YORUM MOTORU STABİLİZASYON MÜHÜRÜ << */
+/* >> YORUM MOTORU NİHAİ MÜHÜR V4.0 << */
 
 window.loadComments = async function(contentId, moduleType = 'ilan') {
     const list = document.getElementById("comment-list");
     if (!list || !contentId) return;
 
-    list.innerHTML = '<p style="color:#888; text-align:center; font-size:0.8rem;">Yükleniyor...</p>';
-
-    // HATA FİX: contentId'nin geçerli bir UUID olup olmadığını kontrol et
-    if (contentId.length < 20) {
-        console.warn("Geçersiz ID formatı, yorumlar yüklenemedi.");
-        list.innerHTML = "";
-        return;
-    }
+    list.innerHTML = '<p style="color:#888; text-align:center; font-size:0.8rem;">Denetleniyor...</p>';
 
     const { data, error } = await window.supabase
         .from('ilan_yorumlar')
         .select('*')
-        .eq('ilan_id', contentId) 
-        .eq('module_type', moduleType) // Sütun adı: module_type
-        .eq('is_approved', true)       // Sütun adı: is_approved
+        .eq('ilan_id', String(contentId)) // ID tipi mühürlendi
+        .eq('module_type', moduleType)     // Modül tipi mühürlendi
+        .eq('is_approved', true)           // Sadece onaylılar [cite: 19-01-2026]
         .order('created_at', { ascending: true });
 
-    if (error) {
-        console.error("Yorum çekme hatası:", error.message);
-        list.innerHTML = "";
-        return;
-    }
-
-    if (!data || data.length === 0) {
+    if (error || !data || data.length === 0) {
         list.innerHTML = '<p style="color:#999; text-align:center; font-size:0.8rem;">Henüz onaylı yorum yok.</p>';
         return;
     }
 
     list.innerHTML = data.map(c => `
-        <div style="margin-bottom:12px; padding:10px; background:#fff; border-radius:8px; border-bottom:1px solid #eee;">
+        <div style="margin-bottom:12px; padding:10px; background:#fff; border-radius:10px; border-bottom:1px solid #eee; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <strong style="color:var(--app-blue); font-size:0.85rem;">${window.escapeHTML(c.nickname)}</strong>
-                <span style="font-size:0.7rem; color:#999;">${new Date(c.created_at).toLocaleDateString('tr-TR')}</span>
+                <strong style="color:var(--app-blue); font-size:0.8rem;">${window.escapeHTML(c.nickname)}</strong>
+                <span style="font-size:0.65rem; color:#aaa;">${new Date(c.created_at).toLocaleDateString('tr-TR')}</span>
             </div>
-            <p style="margin:4px 0 0 0; font-size:0.9rem; color:#444;">${window.escapeHTML(c.mesaj)}</p>
+            <p style="margin:5px 0 0 0; font-size:0.85rem; color:#444; line-height:1.4;">${window.escapeHTML(c.mesaj)}</p>
         </div>
     `).join('');
 };
 
 window.sendComment = async function(moduleType = 'ilan') {
-    const nick = document.getElementById("comment-nick").value.trim();
-    const text = document.getElementById("comment-text").value.trim();
-    
-    // HATA FİX: Modüle göre GLOBAL ID değişkenlerini doğru yakala
-    const contentId = (moduleType === 'ilan') ? window.currentAdId : window.currentFirsatId;
+    const nickEl = document.getElementById("comment-nick");
+    const textEl = document.getElementById("comment-text");
+    if (!nickEl || !textEl) return;
 
-    if (!contentId) return alert("Hata: İçerik kimliği bulunamadı.");
+    const nick = nickEl.value.trim();
+    const text = textEl.value.trim();
+    const rawId = (moduleType === 'ilan') ? window.currentAdId : window.currentFirsatId;
+
+    if (!rawId) return alert("Hata: İçerik kimliği bulunamadı.");
     if (!nick || !text) return alert("Lütfen adınızı ve mesajınızı yazın.");
 
     const { error } = await window.supabase.from('ilan_yorumlar').insert([{ 
-        ilan_id: contentId, 
+        ilan_id: String(rawId), 
         nickname: nick, 
         mesaj: text,
         module_type: moduleType,
-        is_approved: false // Onay bekliyor olarak kaydedilir [cite: 19-01-2026]
+        is_approved: false // Onay bekliyor [cite: 19-01-2026]
     }]);
 
     if (!error) {
-        alert("Yorumunuz iletildi! Onay sonrası yayınlanacaktır.");
-        document.getElementById("comment-text").value = "";
+        alert("Yorumunuz başarıyla iletildi! Onaylandıktan sonra görünecektir.");
+        textEl.value = "";
     } else {
-        console.error("Gönderim Hatası:", error);
-        alert("Sistem Hatası: Veritabanı ID formatı uyuşmuyor.");
+        alert("Sistem Hatası: " + error.message);
     }
 };
 

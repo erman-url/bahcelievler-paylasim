@@ -121,91 +121,67 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// --- 1. NAVİGASYON MOTORU (TEK VE STABİL) ---
+/* >> NİHAİ NAVİGASYON VE SAYFA SABİTLEME MÜHÜRÜ << */
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
-    let startY = 0;
-    const scrollThreshold = 10; 
-
+    
     const handleNavigation = (e) => {
         const trigger = e.target.closest("[data-target]");
         if (!trigger) return;
 
         const target = trigger.getAttribute("data-target");
-        const href = trigger.getAttribute("href");
+        if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
 
-        // Sayfa geçişini başlat
-        if (!href || href === "#" || href === "") {
-            if (e.cancelable) e.preventDefault();
-            e.stopPropagation();
+        // 1. TÜM BİLEŞENLERİ TEMİZLE (Kalıntı bırakma)
+        document.querySelectorAll(".page").forEach(p => {
+            p.classList.remove("active");
+            p.style.display = "none";
+        });
 
-            // 1. KESİN GİZLEME: Tüm sayfaları ve ana sayfa bileşenlerini kapat
-            document.querySelectorAll(".page").forEach(p => {
-                p.classList.remove("active");
-                p.style.display = "none";
-                p.style.opacity = "0";
-                p.style.visibility = "hidden";
-            });
+        const homeComponents = [
+            document.querySelector(".slider-container"),
+            document.getElementById("home-dashboard"),
+            document.querySelector(".home-hero"),
+            document.getElementById("info-bar"),
+            document.getElementById("gundem-haber"),
+            document.getElementById("ramadan-status")
+        ];
 
-            // Ana sayfa özel bileşenlerini hedef "home" değilse gizle
-            const homeComponents = [
-                document.querySelector(".slider-container"),
-                document.getElementById("home-dashboard"),
-                document.querySelector(".home-hero"),
-                document.getElementById("info-bar")
-            ];
-
-            if (target === "home") {
-                homeComponents.forEach(el => { if(el) el.style.display = "block"; });
-                if(document.getElementById("home-dashboard")) document.getElementById("home-dashboard").style.display = "grid";
-            } else {
-                homeComponents.forEach(el => { if(el) el.style.display = "none"; });
-            }
-
-            // 2. HEDEF SAYFAYI GÖSTER
-            const targetPage = document.getElementById(target);
-            if (targetPage) {
-                targetPage.style.display = "block";
-                targetPage.style.visibility = "visible";
-                targetPage.style.pointerEvents = "auto";
-                
-                // Reflow force (Animasyon stabilitesi için)
-                void targetPage.offsetWidth; 
-                
-                targetPage.classList.add("active");
-                setTimeout(() => { targetPage.style.opacity = "1"; }, 10);
-                
-                // KRİTİK: Sayfayı en üste taşı (Mobil uygulama hissi için)
-                window.scrollTo({ top: 0, behavior: 'instant' });
-
-                // >> HARİTA TETİKLEME MÜHÜRÜ <<
-                if (target === 'semt-radari' && typeof window.initForumMap === 'function') {
-                    setTimeout(() => {
-                        window.initForumMap();
-                        if (forumMap) {
-                            forumMap.invalidateSize(); // Haritanın gri ekran kalmasını engeller
-                        }
-                    }, 300);
-                }
-            }
-
-            // 3. ALT MENÜ İKONLARINI GÜNCELLE
-            document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-            const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
-            if (activeLink) activeLink.classList.add("active");
+        // 2. ANA SAYFA MI? KARAR VER
+        if (target === "home") {
+            homeComponents.forEach(el => { if(el) el.style.display = "block"; });
+            if(document.getElementById("home-dashboard")) document.getElementById("home-dashboard").style.display = "grid";
+        } else {
+            homeComponents.forEach(el => { if(el) el.style.display = "none"; });
         }
+
+        // 3. HEDEF SAYFAYI EN ÜSTE MÜHÜRLE
+        const targetPage = document.getElementById(target);
+        if (targetPage) {
+            targetPage.style.display = "block";
+            targetPage.classList.add("active");
+            
+            // Sayfayı en üste çek (Kayma sorununu bitirir)
+            window.scrollTo(0, 0);
+
+            // Harita tetikleyicisi
+            if (target === 'semt-radari' && typeof window.initForumMap === 'function') {
+                setTimeout(() => {
+                    window.initForumMap();
+                    if (forumMap) forumMap.invalidateSize();
+                }, 300);
+            }
+        }
+
+        // 4. ALT MENÜ AKTİFLİK DURUMU
+        document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+        const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
+        if (activeLink) activeLink.classList.add("active");
     };
 
-    // Dokunma ve tıklama olaylarını bağla
     navItems.forEach(el => {
-        el.addEventListener('touchstart', (e) => { startY = e.touches[0].pageY; }, { passive: true });
-        el.addEventListener('touchend', (e) => {
-            const endY = e.changedTouches[0].pageY;
-            if (Math.abs(endY - startY) < scrollThreshold) handleNavigation(e);
-        }, { passive: false });
-        el.addEventListener('click', (e) => {
-            if (e.pointerType === "mouse" || !e.pointerType) handleNavigation(e);
-        });
+        el.addEventListener('click', handleNavigation);
     });
 }
 

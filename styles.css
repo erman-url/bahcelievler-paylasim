@@ -1012,3 +1012,16 @@ button[onclick*="prepareDeleteHizmet"]:hover {
     flex-direction: column !important;
     gap: 20px !important;
 }
+
+/* Harita Sayfası Görünürlük Mührü */
+#semt-radari.active {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Haritanın içine giren elemanların kaybolmasını önler */
+.leaflet-container {
+    z-index: 1 !important;
+    cursor: crosshair;
+}

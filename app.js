@@ -2185,14 +2185,22 @@ window.shareOnWhatsApp = function(title, path) {
 /* >> MODAL BUTON HİYERARŞİSİ VE PAYLAŞIM MÜHÜRÜ << */
 window.currentDetailTable = null;
 
+/* >> HİZMET PAYLAŞIM VE METİN MÜHÜRÜ << */
+
 window.shareHizmet = function(id, title) {
-    const shareUrl = window.location.origin + "?hizmet=" + id;
-    const text = `${title} - Bahçelievler Forum'da harika bir hizmet buldum! \n\nDetaylar: ${shareUrl}`;
+    // URL oluşturma mantığı Invalid URL hatasını önlemek için mühürlendi
+    const siteUrl = window.location.origin + window.location.pathname;
+    const shareUrl = `${siteUrl}?hizmet=${id}`;
+    const message = `*${title}*\n\nBahçelievler Forum'da harika bir hizmet buldum! Detaylar için:\n${shareUrl}`;
     
     if (navigator.share) {
-        navigator.share({ title: title, text: text, url: shareUrl });
+        navigator.share({
+            title: title,
+            text: message,
+            url: shareUrl
+        }).catch(err => console.log('Paylaşım iptal edildi veya hata oluştu.'));
     } else {
-        const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
         window.open(waUrl, '_blank');
     }
 };
@@ -2256,7 +2264,7 @@ window.openSocialDetail = async function(table, id) {
             infoHtml += `
                 <div style="display:flex; align-items:center; gap:10px; padding:8px 0;">
                     <i class="fas fa-globe" style="color:#00d2ff; width:20px;"></i>
-                    <span><b>Web:</b> <a href="${data.website}" target="_blank" style="color:var(--app-blue); text-decoration:none; font-weight:bold;">Süreyi Ziyaret Et</a></span>
+                    <span><b>Web:</b> <a href="${data.website}" target="_blank" style="color:var(--app-blue); text-decoration:none; font-weight:bold;">Siteyi Ziyaret Et</a></span>
                 </div>`;
         }
 

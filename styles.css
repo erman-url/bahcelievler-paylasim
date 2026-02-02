@@ -865,3 +865,30 @@ button[onclick*="prepareDeleteHizmet"]:hover {
     opacity: 1;
     color: #d32f2f !important;
 }
+
+/* >> HİZMET MODAL SATIR DÜZENLEME << */
+#social-modal-content > div:first-child {
+    display: flex !important;
+    flex-direction: column !important; /* Her bilgiyi kesinlikle ayrı satıra zorlar */
+    gap: 12px !important;
+    padding: 15px !important;
+    background: #f8fafc !important;
+    border-radius: 12px !important;
+}
+
+#social-modal-content div[style*="display:flex"] {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    border-bottom: 1px solid #edf2f7;
+    padding-bottom: 8px;
+}
+
+#social-modal-content div:last-child {
+    border-bottom: none !important;
+}
+
+/* Paylaş butonu ikon boşluğu */
+#social-modal-content i {
+    width: 24px;
+    text-align: center;
+}

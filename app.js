@@ -179,11 +179,13 @@ function setupNavigation() {
                 window.scrollTo({ top: 0, behavior: 'instant' });
 
                 // >> HARİTA TETİKLEME MÜHÜRÜ <<
-                if (target === 'mahaller-haritasi' && typeof window.initForumMap === 'function') {
+                if (target === 'semt-radari' && typeof window.initForumMap === 'function') {
                     setTimeout(() => {
                         window.initForumMap();
-                        if (forumMap) forumMap.invalidateSize();
-                    }, 200);
+                        if (forumMap) {
+                            forumMap.invalidateSize(); // Haritanın gri ekran kalmasını engeller
+                        }
+                    }, 300);
                 }
             }
 

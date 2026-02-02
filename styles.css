@@ -847,3 +847,21 @@ h1:not(.cyber-header) i {
     align-items: center;
     gap: 8px;
 }
+
+/* >> MODAL AKSİYON TASARIMI << */
+.share-btn-active {
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.share-btn-active:active {
+    transform: scale(0.95);
+}
+
+/* Kaldır butonu için dikkat çekmeyen stil */
+button[onclick*="prepareDeleteHizmet"] {
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}
+button[onclick*="prepareDeleteHizmet"]:hover {
+    opacity: 1;
+    color: #d32f2f !important;
+}

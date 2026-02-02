@@ -461,13 +461,40 @@ body.modal-open {
 #player { transition: bottom 0.1s; }
 #obstacle { animation-fill-mode: forwards; }
 
-/* >> FIRSAT LİSTESİ TEK SATIR VE FERAH DÜZEN << */
-#firsat-list {
+/* >> FIRSAT FORMU VE LİSTE HİZALAMA MÜHÜRÜ << */
+#firsat-indirim {
     display: flex !important;
-    flex-direction: column !important; /* Kartları zorunlu olarak alt alta dizer */
-    gap: 20px !important; /* İlanlardaki gibi aralık sağlar */
-    padding: 15px !important;
+    flex-direction: column !important;
+    align-items: center !important; /* Tüm içeriği yatayda ortalar */
     width: 100% !important;
+    padding: 0 15px !important;
+    box-sizing: border-box !important;
+}
+
+#firsat-form {
+    width: 100% !important;
+    max-width: 500px !important; /* Form genişliğini sabitler */
+    margin: 0 auto 20px auto !important;
+}
+
+#firsat-list {
+    width: 100% !important;
+    max-width: 500px !important; /* Liste kartlarını form ile aynı genişliğe getirir */
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+}
+
+/* Form içindeki input ve butonların tam genişlik kaplamasını sağlar */
+#firsat-form .cyber-form, 
+#firsat-form .cyber-submit,
+#firsat-form input,
+#firsat-form select,
+#firsat-form textarea {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 #firsat-list .ad-card {

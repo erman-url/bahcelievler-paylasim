@@ -2181,68 +2181,64 @@ window.shareOnWhatsApp = function(title, path) {
     }
 };
 
-/* >> SOSYAL DETAY VE SİLME MOTORU (YENİ) << */
+/* >> HİZMET DETAYLARINI MODALDA GÖSTERME VE KAYIT GÜNCELLEMESİ << */
 window.openSocialDetail = async function(table, id) {
     try {
-        const { data, error } = await window.supabase
-            .from(table)
-            .select('*')
-            .eq('id', id)
-            .single();
-
+        const { data, error } = await window.supabase.from(table).select('*').eq('id', id).single();
         if (error || !data) return;
 
-        // Veri Eşleştirme
-        const title = data.title || data.urun_adi || "Detay";
-        const content = data.content || data.comment || data.description || "";
+        const title = data.title || "Detay";
+        const content = data.content || "";
         const images = [data.image_url, data.image_url_2].filter(Boolean);
 
-        // Modal Doldurma
+        // MODAL İÇERİK DOLDURMA
         document.getElementById("social-modal-title").textContent = title;
-        document.getElementById("social-modal-content").textContent = content;
+        
+        // Mahalle, Telefon ve Web bilgisini içeriğe ekliyoruz
+        let infoHtml = `<div style="margin-bottom:15px; padding:10px; background:#f8fafc; border-radius:8px; font-size:0.85rem; color:#555;">`;
+        if (data.location_name) infoHtml += `<div><i class="fas fa-map-marker-alt"></i> <b>Konum:</b> ${window.escapeHTML(data.location_name)}</div>`;
+        if (data.phone) infoHtml += `<div style="margin-top:5px;"><i class="fas fa-phone"></i> <b>İletişim:</b> <a href="tel:${data.phone}" style="color:var(--app-blue); text-decoration:none;">${data.phone}</a></div>`;
+        if (data.website) infoHtml += `<div style="margin-top:5px;"><i class="fas fa-globe"></i> <b>Web:</b> <a href="${data.website}" target="_blank" style="color:var(--app-blue); text-decoration:none;">Siteyi Ziyaret Et</a></div>`;
+        infoHtml += `</div>`;
+
+        document.getElementById("social-modal-content").innerHTML = infoHtml + `<p style="white-space: pre-wrap; line-height:1.6;">${window.escapeHTML(content)}</p>`;
         
         const gallery = document.getElementById("social-image-gallery");
         if (gallery) {
-            gallery.innerHTML = images.length > 0 
-                ? images.map(src => `<img src="${src}" style="width:100%; border-radius:12px; margin-bottom:10px;">`).join('')
-                : '';
+            gallery.innerHTML = images.map(src => `<img src="${src}" style="width:100%; border-radius:12px; margin-bottom:10px;">`).join('');
         }
 
         // Silme Butonu Ayarı (Soft Delete)
         const deleteBtn = document.getElementById("social-delete-btn");
-        deleteBtn.onclick = async () => {
-            const userPass = prompt("İçeriği kaldırmak için şifrenizi giriniz:");
-            if (!userPass || !userPass.trim()) return;
+        if (deleteBtn) {
+            deleteBtn.onclick = async () => {
+                const userPass = prompt("İçeriği kaldırmak için şifrenizi giriniz:");
+                if (!userPass || !userPass.trim()) return;
 
-            const { data: delData, error: delError } = await window.supabase
-                .from(table)
-                .update({ is_active: false })
-                .eq('id', id)
-                .eq('delete_password', userPass)
-                .select();
+                const { data: delData, error: delError } = await window.supabase
+                    .from(table)
+                    .update({ is_active: false })
+                    .eq('id', id)
+                    .eq('delete_password', userPass)
+                    .select();
 
-            if (delError) {
-                alert("Hata: " + delError.message);
-            } else if (delData && delData.length > 0) {
-                alert("İçerik başarıyla kaldırıldı.");
-                closeSocialModal();
-                loadPortalData();
-            } else {
-                alert("Hata: Şifre yanlış!");
-            }
-        };
+                if (delError) {
+                    alert("Hata: " + delError.message);
+                } else if (delData && delData.length > 0) {
+                    alert("İçerik başarıyla kaldırıldı.");
+                    closeSocialModal();
+                    loadPortalData();
+                } else {
+                    alert("Hata: Şifre yanlış!");
+                }
+            };
+        }
 
         // Modalı Aç
         const modal = document.getElementById("social-detail-modal");
         modal.style.display = "flex";
-        setTimeout(() => {
-            modal.style.visibility = "visible";
-            modal.style.opacity = "1";
-        }, 10);
-
-    } catch (err) {
-        console.error("Sosyal Detay Hatası:", err);
-    }
+        setTimeout(() => { modal.style.visibility = "visible"; modal.style.opacity = "1"; }, 10);
+    } catch (err) { console.error("Detay Hatası:", err); }
 };
 
 window.closeSocialModal = function() {

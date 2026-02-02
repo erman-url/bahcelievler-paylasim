@@ -2368,6 +2368,7 @@ window.loadComments = async function(contentId, moduleType = 'ilan') {
     `).join('');
 };
 
+/* >> GELİŞMİŞ TAKMA AD DENETİM MOTORU V5.0 << */
 window.sendComment = async function(moduleType = 'ilan') {
     const nickEl = document.getElementById("comment-nick");
     const textEl = document.getElementById("comment-text");
@@ -2377,20 +2378,52 @@ window.sendComment = async function(moduleType = 'ilan') {
     const text = textEl.value.trim();
     const rawId = (moduleType === 'ilan') ? window.currentAdId : window.currentFirsatId;
 
-    if (!rawId) return alert("Hata: İçerik kimliği bulunamadı.");
-    if (!nick || !text) return alert("Lütfen adınızı ve mesajınızı yazın.");
+    // --- TAKMA AD (NICKNAME) VALIDASYONU ---
+    
+    // 1. Temel Yapı: 3-10 Karakter, Sadece Harf ve Rakam
+    const basicRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ]{3,10}$/;
+    
+    // 2. Sadece Rakam Kontrolü (En az bir harf olmalı)
+    const isOnlyNumber = /^\d+$/.test(nick);
+    
+    // 3. Ardışık Tekrar Kontrolü (Aynı karakter 3 kez yan yana gelemez)
+    const hasTripleChar = /(.)\1{2,}/.test(nick);
 
+    if (!basicRegex.test(nick)) {
+        alert("HATA: Takma ad 3-10 karakter olmalı ve sadece harf/rakam içermelidir.");
+        return;
+    }
+    if (isOnlyNumber) {
+        alert("HATA: Takma ad sadece rakamlardan oluşamaz, en az bir harf içermelidir.");
+        return;
+    }
+    if (hasTripleChar) {
+        alert("HATA: Aynı karakteri 2 kereden fazla üst üste yazamazsınız (Örn: aaa veya 111 yasaktır).");
+        return;
+    }
+
+    // --- YORUM METNİ VALIDASYONU ---
+    const textRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.\,\!\?\-\:\(\)\;]+$/;
+    if (text.length > 150 || !textRegex.test(text)) {
+        alert("HATA: Yorum 150 karakteri geçemez veya geçersiz karakter içeriyor.");
+        return;
+    }
+
+    if (!rawId) return alert("Hata: İçerik kimliği bulunamadı.");
+
+    // DB KAYIT İŞLEMİ (Mühürlü Yapı)
     const { error } = await window.supabase.from('ilan_yorumlar').insert([{ 
         ilan_id: String(rawId), 
         nickname: nick, 
         mesaj: text,
         module_type: moduleType,
-        is_approved: false // Onay bekliyor [cite: 19-01-2026]
+        is_approved: false 
     }]);
 
     if (!error) {
-        alert("Yorumunuz başarıyla iletildi! Onaylandıktan sonra görünecektir.");
+        alert("Yorumunuz onaya gönderildi.");
         textEl.value = "";
+        nickEl.value = "";
     } else {
         alert("Sistem Hatası: " + error.message);
     }

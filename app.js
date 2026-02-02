@@ -2182,8 +2182,47 @@ window.shareOnWhatsApp = function(title, path) {
 };
 
 /* >> HİZMET DETAYLARINI MODALDA GÖSTERME VE KAYIT GÜNCELLEMESİ << */
+/* >> MODAL BUTON HİYERARŞİSİ VE PAYLAŞIM MÜHÜRÜ << */
+window.currentDetailTable = null;
+
+window.shareHizmet = function(id, title) {
+    const shareUrl = window.location.origin + "?hizmet=" + id;
+    const text = `${title} - Bahçelievler Forum'da harika bir hizmet buldum! \n\nDetaylar: ${shareUrl}`;
+    
+    if (navigator.share) {
+        navigator.share({ title: title, text: text, url: shareUrl });
+    } else {
+        const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.open(waUrl, '_blank');
+    }
+};
+
+window.prepareDeleteHizmet = async function(id) {
+    const table = window.currentDetailTable || 'hizmetler';
+    const userPass = prompt("İçeriği kaldırmak için şifrenizi giriniz:");
+    if (!userPass || !userPass.trim()) return;
+
+    const { data: delData, error: delError } = await window.supabase
+        .from(table)
+        .update({ is_active: false })
+        .eq('id', id)
+        .eq('delete_password', userPass)
+        .select();
+
+    if (delError) {
+        alert("Hata: " + delError.message);
+    } else if (delData && delData.length > 0) {
+        alert("İçerik başarıyla kaldırıldı.");
+        closeSocialModal();
+        loadPortalData();
+    } else {
+        alert("Hata: Şifre yanlış!");
+    }
+};
+
 window.openSocialDetail = async function(table, id) {
     try {
+        window.currentDetailTable = table;
         const { data, error } = await window.supabase.from(table).select('*').eq('id', id).single();
         if (error || !data) return;
 
@@ -2230,30 +2269,30 @@ window.openSocialDetail = async function(table, id) {
             gallery.innerHTML = images.map(src => `<img src="${src}" style="width:100%; border-radius:12px; margin-bottom:10px;">`).join('');
         }
 
-        // Silme Butonu Ayarı (Soft Delete)
+        // BUTON HİYERARŞİSİ GÜNCELLEMESİ
+        const safeTitle = title.replace(/'/g, "\\'");
+        const phoneBtn = data.phone ? `
+        <a href="tel:${data.phone}" style="text-decoration:none; width:100%; height:45px; border-radius:10px; border:1px solid var(--app-blue); color:var(--app-blue); font-weight:bold; display:flex; align-items:center; justify-content:center; gap:8px;">
+            <i class="fas fa-phone"></i> HEMEN ARA
+        </a>` : '';
+
+        const actionButtonsHtml = `
+            <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
+                <button onclick="window.shareHizmet('${data.id}', '${safeTitle}')" style="width:100%; height:45px; border-radius:10px; border:none; background:var(--app-blue); color:white; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <i class="fas fa-share-alt"></i> HİZMETİ PAYLAŞ
+                </button>
+
+                ${phoneBtn}
+
+                <button onclick="window.prepareDeleteHizmet('${data.id}')" style="margin-top:10px; background:none; border:none; color:#999; font-size:0.75rem; text-decoration:underline; cursor:pointer;">
+                    İçeriği Kaldır
+                </button>
+            </div>
+        `;
+
         const deleteBtn = document.getElementById("social-delete-btn");
-        if (deleteBtn) {
-            deleteBtn.onclick = async () => {
-                const userPass = prompt("İçeriği kaldırmak için şifrenizi giriniz:");
-                if (!userPass || !userPass.trim()) return;
-
-                const { data: delData, error: delError } = await window.supabase
-                    .from(table)
-                    .update({ is_active: false })
-                    .eq('id', id)
-                    .eq('delete_password', userPass)
-                    .select();
-
-                if (delError) {
-                    alert("Hata: " + delError.message);
-                } else if (delData && delData.length > 0) {
-                    alert("İçerik başarıyla kaldırıldı.");
-                    closeSocialModal();
-                    loadPortalData();
-                } else {
-                    alert("Hata: Şifre yanlış!");
-                }
-            };
+        if (deleteBtn && deleteBtn.parentNode) {
+            deleteBtn.parentNode.innerHTML = actionButtonsHtml;
         }
 
         // Modalı Aç

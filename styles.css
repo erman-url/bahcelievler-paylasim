@@ -27,30 +27,29 @@ body {
     overflow-x: hidden;
 }
 
-/* Sayfaların birbirinin içinden geçmesini engeller */
+/* Sayfa İzolasyon Kalkanı */
 .page { 
-    display: none; 
-    width: 100%;
-    min-height: 100vh;
-    background: var(--bg);
+    display: none !important; 
+    width: 100% !important;
+    position: relative !important;
+    min-height: 100vh !important;
     margin: 0 !important;
-    position: relative;
-    z-index: 10;
+    padding: 15px !important;
+    z-index: 10 !important;
 }
 
 .page.active { 
     display: block !important; 
 }
 
-/* Harita sadece kendi ID'si altındayken görünür olsun */
+/* Harita sadece kendi sayfasında yer kaplasın */
 #semt-radari #main-map {
-    display: block !important;
     height: 400px !important;
-    width: 100% !important;
+    z-index: 20 !important;
 }
 
-/* Başka sayfadayken harita yer kaplamasın */
-section:not(#semt-radari) #main-map {
+/* Radar sayfası dışında haritayı tamamen yok et */
+body:not(:has(#semt-radari.active)) #main-map {
     display: none !important;
 }
 @-webkit-keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

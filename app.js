@@ -1698,6 +1698,7 @@ window.searchOnMap = function() {
 
 
 /* >> HİZMET TANITIM MOTORU - GÖRSEL ZORUNLULUĞU V1.1 << */
+/* >> HİZMET TANITIM MOTORU GÜNCELLEMESİ V2.5 << */
 async function setupHizmetForm() {
     const form = document.getElementById("hizmet-form");
     if (!form) return;
@@ -1706,13 +1707,24 @@ async function setupHizmetForm() {
         e.preventDefault();
         if (isBotDetected("hizmet-form") || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
+        const titleVal = document.getElementById("hizmet-firma").value;
+        const descVal = document.getElementById("hizmet-desc").value;
+        const passVal = document.getElementById("hizmet-pass").value;
         const fileInput = document.getElementById("hizmet-file");
         const btn = document.getElementById("hizmet-submit-btn");
 
         const passVal = document.getElementById("hizmet-pass").value;
         // Şifre Kontrolü
+        // Küfür Kontrolü
+        if (window.hasBadWords(titleVal) || window.hasBadWords(descVal)) {
+            alert("Lütfen topluluk kurallarına uygun bir dil kullanın.");
+            return;
+        }
+
+        // Şifre ve Dosya Kontrolü
         const passCheck = window.validateComplexPassword(passVal);
         if (passCheck) { alert(passCheck); return; }
+        if (fileInput.files.length > 2) { alert("Maksimum 2 görsel seçebilirsiniz."); return; }
 
         if (!fileInput.files || fileInput.files.length === 0) {
             alert("HATA: Hizmetinizi tanıtmak için lütfen bir görsel ekleyiniz.");
@@ -1728,12 +1740,17 @@ async function setupHizmetForm() {
         }
 
         isProcessing = true;
+        const btn = document.getElementById("hizmet-submit-btn");
         btn.disabled = true;
         btn.textContent = "YÜKLENİYOR...";
+        btn.textContent = "İŞLENİYOR...";
 
         try {
             let urls = await handleMultipleUploads(fileInput.files);
             let uploadedUrl = urls[0];
+            // Görsel Optimizasyonu ve Yükleme
+            const optimizedFiles = await Promise.all(Array.from(fileInput.files).map(f => optimizeImage(f)));
+            const urls = await handleMultipleUploads(optimizedFiles);
 
             const payload = {
                 category: document.getElementById("hizmet-category").value,
@@ -1741,6 +1758,15 @@ async function setupHizmetForm() {
                 content: document.getElementById("hizmet-desc").value,
                 image_url: uploadedUrl,
                 delete_password: passVal
+                title: titleVal,
+                location_name: document.getElementById("hizmet-konum").value,
+                phone: document.getElementById("hizmet-tel").value,
+                website: document.getElementById("hizmet-web").value,
+                content: descVal,
+                image_url: urls[0] || null,
+                image_url_2: urls[1] || null,
+                delete_password: passVal,
+                created_at: new Date().toISOString() // Otomatik tarih
             };
 
             const { error } = await window.supabase.from('hizmetler').insert([payload]);
@@ -1759,6 +1785,11 @@ async function setupHizmetForm() {
     });
 }
 
+// Hizmetlerin Modal Olarak Açılması
+window.openHizmetDetail = function(id) {
+    window.openSocialDetail('hizmetler', id); // Mevcut modal motorunu kullanır
+};
+
 async function renderHizmetler() {
     const el = document.getElementById('hizmet-list');
     if (!el) return;
@@ -1770,12 +1801,16 @@ async function renderHizmetler() {
 
     el.innerHTML = data?.map(h => `
         <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #28a745; cursor:pointer;" onclick="window.openSocialDetail('hizmetler', '${h.id}')">
+        <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #28a745; cursor:pointer;" onclick="window.openHizmetDetail('${h.id}')">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span class="student-badge" style="background:#e8f5e9; color:#2e7d32;">${window.escapeHTML(h.category)}</span>
+                ${h.location_name ? `<small style="color:#666; font-size:0.75rem;"><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(h.location_name)}</small>` : ''}
             </div>
             <h3 style="margin:10px 0 5px 0;">${window.escapeHTML(h.title)}</h3>
             ${h.image_url ? `<img src="${h.image_url}" style="width:100%; border-radius:8px; margin:8px 0;">` : ''}
             <p style="font-size:0.9rem; color:#444;">${window.escapeHTML(h.content)}</p>
+            ${h.phone ? `<div style="margin-top:8px; font-weight:bold; color:#28a745; font-size:0.9rem;"><i class="fas fa-phone"></i> ${window.escapeHTML(h.phone)}</div>` : ''}
+            ${h.website ? `<div style="margin-top:4px; font-size:0.85rem;"><a href="${h.website}" target="_blank" onclick="event.stopPropagation()" style="color:#007bff; text-decoration:none;">🌐 Web Sitesi</a></div>` : ''}
         </div>
     `).join('') || "<p style='text-align:center;'>Henüz bir hizmet tanıtımı yok.</p>";
 }

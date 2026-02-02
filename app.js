@@ -125,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     
+    /* >> SEMT RADARI VE FIRSAT İZOLASYON MÜHÜRÜ V5.0 << */
     const handleNavigation = (e) => {
         const trigger = e.target.closest("[data-target]");
         if (!trigger) return;
@@ -132,49 +133,54 @@ function setupNavigation() {
         const target = trigger.getAttribute("data-target");
         if (e.cancelable) e.preventDefault();
         e.stopPropagation();
-
-        // 1. TÜM BİLEŞENLERİ TEMİZLE (Kalıntı bırakma)
+    
+        // 1. TÜM SAYFALARI GİZLE VE RESETLE
         document.querySelectorAll(".page").forEach(p => {
-            p.classList.remove("active");
             p.style.display = "none";
+            p.classList.remove("active");
         });
-
-        const homeComponents = [
+    
+        // 2. ANA SAYFA BİLEŞENLERİNİ KESİN OLARAK YÖNET
+        const homeElements = [
             document.querySelector(".slider-container"),
             document.getElementById("home-dashboard"),
             document.querySelector(".home-hero"),
             document.getElementById("info-bar"),
             document.getElementById("gundem-haber"),
-            document.getElementById("ramadan-status")
+            document.getElementById("ramadan-status"),
+            document.querySelector(".legal-footer-bar")
         ];
-
-        // 2. ANA SAYFA MI? KARAR VER
+    
         if (target === "home") {
-            homeComponents.forEach(el => { if(el) el.style.display = "block"; });
-            if(document.getElementById("home-dashboard")) document.getElementById("home-dashboard").style.display = "grid";
+            homeElements.forEach(el => { if(el) el.style.display = "block"; });
+            const dash = document.getElementById("home-dashboard");
+            if(dash) dash.style.display = "grid";
         } else {
-            homeComponents.forEach(el => { if(el) el.style.display = "none"; });
+            homeElements.forEach(el => { if(el) el.style.display = "none"; });
         }
-
-        // 3. HEDEF SAYFAYI EN ÜSTE MÜHÜRLE
+    
+        // 3. HEDEF SAYFAYI AÇ VE DİĞERLERİNDEN AYIR
         const targetPage = document.getElementById(target);
         if (targetPage) {
             targetPage.style.display = "block";
             targetPage.classList.add("active");
-            
-            // Sayfayı en üste çek (Kayma sorununu bitirir)
             window.scrollTo(0, 0);
-
-            // Harita tetikleyicisi
+    
+            // Harita Sadece Kendi Sayfasında Çalışsın
             if (target === 'semt-radari' && typeof window.initForumMap === 'function') {
                 setTimeout(() => {
                     window.initForumMap();
-                    if (forumMap) forumMap.invalidateSize();
+                    if (window.forumMap) window.forumMap.invalidateSize();
                 }, 300);
+            } else {
+                // Başka sayfaya geçince haritayı durdur ve konteynırı temizle
+                const mapContainer = document.getElementById("main-map");
+                if(mapContainer) mapContainer.innerHTML = ""; 
+                window.forumMap = null; 
             }
         }
-
-        // 4. ALT MENÜ AKTİFLİK DURUMU
+    
+        // 4. NAV İKONLARINI GÜNCELLE
         document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
         const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
         if (activeLink) activeLink.classList.add("active");

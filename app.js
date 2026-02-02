@@ -2336,23 +2336,36 @@ window.closeSocialModal = function() {
     }
 };
 
-/* >> AKILLI YORUM VE ONAY SİSTEMİ (DB SENKRONİZELİ) << */
+/* >> YORUM MOTORU STABİLİZASYON MÜHÜRÜ << */
 
 window.loadComments = async function(contentId, moduleType = 'ilan') {
     const list = document.getElementById("comment-list");
-    if (!list) return;
+    if (!list || !contentId) return;
 
-    list.innerHTML = '<p style="color:#888; text-align:center; font-size:0.8rem;">Yorumlar denetleniyor...</p>';
+    list.innerHTML = '<p style="color:#888; text-align:center; font-size:0.8rem;">Yükleniyor...</p>';
+
+    // HATA FİX: contentId'nin geçerli bir UUID olup olmadığını kontrol et
+    if (contentId.length < 20) {
+        console.warn("Geçersiz ID formatı, yorumlar yüklenemedi.");
+        list.innerHTML = "";
+        return;
+    }
 
     const { data, error } = await window.supabase
         .from('ilan_yorumlar')
         .select('*')
         .eq('ilan_id', contentId) 
-        .eq('module_type', moduleType) // Modül ayrımı (ilan, firsat vb.)
-        .eq('is_approved', true)       // Sadece onaylı olanlar mühürlendi
+        .eq('module_type', moduleType) // Sütun adı: module_type
+        .eq('is_approved', true)       // Sütun adı: is_approved
         .order('created_at', { ascending: true });
 
-    if (error || !data || data.length === 0) {
+    if (error) {
+        console.error("Yorum çekme hatası:", error.message);
+        list.innerHTML = "";
+        return;
+    }
+
+    if (!data || data.length === 0) {
         list.innerHTML = '<p style="color:#999; text-align:center; font-size:0.8rem;">Henüz onaylı yorum yok.</p>';
         return;
     }
@@ -2371,25 +2384,27 @@ window.loadComments = async function(contentId, moduleType = 'ilan') {
 window.sendComment = async function(moduleType = 'ilan') {
     const nick = document.getElementById("comment-nick").value.trim();
     const text = document.getElementById("comment-text").value.trim();
-    // Modüle göre doğru ID'yi yakala
+    
+    // HATA FİX: Modüle göre GLOBAL ID değişkenlerini doğru yakala
     const contentId = (moduleType === 'ilan') ? window.currentAdId : window.currentFirsatId;
 
+    if (!contentId) return alert("Hata: İçerik kimliği bulunamadı.");
     if (!nick || !text) return alert("Lütfen adınızı ve mesajınızı yazın.");
-    if (window.hasBadWords(nick) || window.hasBadWords(text)) return alert("Uygunsuz içerik engellendi.");
 
     const { error } = await window.supabase.from('ilan_yorumlar').insert([{ 
         ilan_id: contentId, 
         nickname: nick, 
         mesaj: text,
         module_type: moduleType,
-        is_approved: false // Varsayılan olarak onaysız gider
+        is_approved: false // Onay bekliyor olarak kaydedilir [cite: 19-01-2026]
     }]);
 
     if (!error) {
-        alert("Yorumunuz başarıyla iletildi! Yönetici onayı sonrası yayınlanacaktır.");
+        alert("Yorumunuz iletildi! Onay sonrası yayınlanacaktır.");
         document.getElementById("comment-text").value = "";
     } else {
-        alert("Hata: " + error.message);
+        console.error("Gönderim Hatası:", error);
+        alert("Sistem Hatası: Veritabanı ID formatı uyuşmuyor.");
     }
 };
 

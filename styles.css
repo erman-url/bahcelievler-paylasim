@@ -27,20 +27,25 @@ body {
     overflow-x: hidden;
 }
 
-/* SAYFA YAPISI - SAFARI UYUMLU (KAYIPSIZ KORUNDU) */
+/* Sayfa Konumlandırma Mührü */
 .page { 
-    display: none; /* Başlangıçta her şey kapalı */
+    display: none; 
     width: 100%;
-    min-height: calc(100vh - 80px); /* Footer payı düşülmüş tam ekran */
-    padding: 15px; 
+    margin: 0 !important;
+    padding: 15px !important;
+    min-height: 100vh;
     box-sizing: border-box;
-    opacity: 0;
-    transition: opacity 0.2s ease-in;
+    position: relative;
+    top: 0; /* Sayfanın en üstten başlamasını garanti eder */
 }
 
 .page.active { 
-    display: block !important; /* Sadece aktif sayfa yer kaplar */
-    opacity: 1;
+    display: block !important; 
+}
+
+/* Harita alanının dikey hizalamasını mühürle */
+#semt-radari {
+    padding-top: 10px !important;
 }
 @-webkit-keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

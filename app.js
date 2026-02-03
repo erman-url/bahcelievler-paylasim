@@ -1348,29 +1348,29 @@ async function fetchDuyurular() {
     }
 }
 
-/* >> KESİNTİ BİLDİRİM MOTORU V4.0 << */
+/* >> KESİNTİ BİLDİRİM MOTORU V4.1 << */
 async function setupKesintiForm() {
     const form = document.getElementById("kesinti-form");
     if (!form) return;
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        // isProcessing kontrolü ile mükerrer işlem engellenir
         if (isProcessing) return; 
 
-        const descVal = document.getElementById("kes-desc").value.trim();
-        const streetVal = document.getElementById("kes-street").value.trim();
+        const typeVal = document.getElementById("kes-type").value;
+        const providerVal = document.getElementById("kes-provider").value.trim(); // Yeni Alan
         const districtVal = document.getElementById("kes-district").value;
+        const streetVal = document.getElementById("kes-street").value.trim();
+        const descVal = document.getElementById("kes-desc").value.trim();
         const passVal = document.getElementById("kes-pass").value;
 
         // >> KÜFÜR VE ARGO DENETİMİ <<
-        // Hem sokak isminde hem de detaylarda filtreleme yapılır
-        if (window.hasBadWords(descVal) || window.hasBadWords(streetVal)) {
+        // Firma ismi, sokak ve detaylarda filtreleme yapılır
+        if (window.hasBadWords(descVal) || window.hasBadWords(streetVal) || window.hasBadWords(providerVal)) {
             alert("Lütfen topluluk kurallarına uygun bir dil kullanın.");
             return;
         }
-
-        // Şifre formatı kontrolü
+        
         const passCheck = window.validateComplexPassword(passVal);
         if (passCheck) { alert(passCheck); return; }
 
@@ -1382,10 +1382,10 @@ async function setupKesintiForm() {
         try {
             const deleteToken = await sha256(passVal);
             const payload = {
-                type: document.getElementById("kes-type").value,
-                // Mahalle ve Sokak bilgisi kurumsal nizamda birleştirilir
+                type: typeVal,
                 location: `${districtVal}, ${streetVal}`, 
-                description: descVal,
+                // Firma bilgisi detayın başına kurumsal bir şekilde eklenir
+                description: `[SAĞLAYICI: ${providerVal}] - ${descVal}`,
                 delete_password: deleteToken
             };
 
@@ -1394,7 +1394,6 @@ async function setupKesintiForm() {
 
             alert("Kesinti bildirimi yayınlandı!");
             form.reset();
-            // Listeyi anında güncelle
             if (typeof renderKesintiler === "function") renderKesintiler(); 
         } catch (err) {
             alert("Sistem Hatası: " + err.message);

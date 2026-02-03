@@ -124,20 +124,16 @@ document.addEventListener("DOMContentLoaded", () => {
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     
-    /* >> SEMT RADARI HARİTA KURTARMA MÜHÜRÜ V8.0 << */
+    /* >> SEMT RADARI FİZİKSEL RENDER MÜHÜRÜ << */
     const handleNavigation = (e) => {
         const trigger = e.target.closest("[data-target]");
         if (!trigger) return;
         const target = trigger.getAttribute("data-target");
 
-        // 1. TÜM SAYFALARI GİZLE (Önceki hatayı temizle)
-        document.querySelectorAll(".page, section").forEach(el => {
-            if(el) el.style.setProperty('display', 'none', 'important');
-        });
-
-        // Ana sayfa bileşenlerini gizle
-        document.querySelectorAll(".slider-container, .home-hero, #home-dashboard, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
+        // 1. TÜM BİLEŞENLERİ TEMİZLE
+        document.querySelectorAll(".page, section, .slider-container, #home-dashboard, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
             if(el) el.style.display = "none";
+            if(el.classList.contains("page")) el.classList.remove("active");
         });
 
         // 2. ANA SAYFA MI?
@@ -146,25 +142,30 @@ function setupNavigation() {
             if(document.getElementById("home-dashboard")) document.getElementById("home-dashboard").style.display = "grid";
         }
 
-        // 3. HEDEF SAYFAYI AÇ
+        // 3. HEDEF SAYFAYI AKTİF ET
         const targetPage = document.getElementById(target);
         if (targetPage) {
             window.scrollTo(0, 0); 
-            targetPage.style.setProperty('display', 'block', 'important');
+            targetPage.classList.add("active");
+            targetPage.style.display = "block";
             
-            // HARİTA KURTARMA MOTORU
+            // HARİTA CANLANDIRMA (KRİTİK)
             if (target === 'semt-radari') {
-                // Konteynırın görünür olması için küçük bir gecikme verilir
+                // Önce sayfanın DOM'da işlenmesi için küçük bir bekleme
                 setTimeout(() => {
-                    if (!forumMap) {
-                        window.initForumMap();
+                    if (!window.forumMap) {
+                        window.initForumMap(); // Harita hiç yoksa kur
                     } else {
-                        // Harita zaten varsa boyutlarını yeniden hesapla (Gri ekranı bitirir)
-                        forumMap.invalidateSize();
+                        window.forumMap.invalidateSize(); // Harita varsa boyutları güncelle
                     }
-                }, 400);
+                }, 500); // 500ms güvenli render süresi
             }
         }
+
+        // 4. İKONLARI GÜNCELLE
+        document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+        const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
+        if (activeLink) activeLink.classList.add("active");
     };
 
     navItems.forEach(el => el.addEventListener('click', handleNavigation));

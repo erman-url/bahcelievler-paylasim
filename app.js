@@ -2236,83 +2236,80 @@ window.prepareDeleteHizmet = async function(id) {
     }
 };
 
-/* >> TAVSİYE DETAY VE İZOLE YORUM SİSTEMİ - HATA ONARILMIŞ SÜRÜM << */
+/* >> TAVSİYE DETAY KURUMSAL MODÜLÜ - V13.0 << */
 window.openSocialDetail = async function(table, id) {
     try {
         window.currentDetailTable = table;
-        const { data: socialData, error: socialError } = await window.supabase.from(table).select('*').eq('id', id).single();
-        if (socialError || !socialData) return;
+        const { data: s, error } = await window.supabase.from(table).select('*').eq('id', id).single();
+        if (error || !s) return;
 
-        // 'content' değişkeni çakışmasını önlemek için benzersiz isimler kullanıldı
-        const displayTitle = socialData.title || "Detay";
-        const displayContent = socialData.comment || socialData.content || ""; 
-        const displayDate = new Date(socialData.created_at).toLocaleDateString('tr-TR');
-        const displayImages = [socialData.image_url, socialData.image_url_2].filter(Boolean);
+        // Değişken isimleri benzersiz hale getirildi (Conflict Fix)
+        const modalTitle = s.title || "Tavsiye Detayı";
+        const modalContent = s.comment || s.content || ""; 
+        const modalDate = new Date(s.created_at).toLocaleDateString('tr-TR');
+        const modalImages = [s.image_url, s.image_url_2].filter(Boolean);
 
-        // 1. ÜST BİLGİ ALANI
+        // 1. ÜST BİLGİ ALANI (İÇ İÇE GEÇME ENGELLENDİ)
         document.getElementById("social-modal-title").innerHTML = `
-            <div style="text-align:center; width:100%;">
-                <small style="display:block; color:#ffc107; font-weight:bold; letter-spacing:1px; margin-bottom:5px;">⭐ TAVSİYE İNCELEMESİ</small>
-                <h2 style="margin:0; font-size:1.4rem; color:var(--dark);">${window.escapeHTML(displayTitle)}</h2>
-                <small style="color:#aaa; font-size:0.75rem;"><i class="far fa-calendar-alt"></i> ${displayDate}</small>
+            <div class="modal-header-meta" style="margin-bottom:15px;">
+                <span style="display:inline-block; font-weight:800; color:#ffc107; font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;">⭐ TAVSİYE İNCELEMESİ</span>
+                <h2 style="margin:8px 0; font-size:1.4rem; color:var(--dark-text); line-height:1.2;">${window.escapeHTML(modalTitle)}</h2>
+                <span style="color:#aaa; font-size:0.8rem; font-weight:600;"><i class="far fa-calendar-alt"></i> ${modalDate}</span>
             </div>`;
         
-        // 2. DETAY METNİ (KUTU İÇİNDE)
+        // 2. DETAY METNİ (DÜZENLİ KUTU)
         document.getElementById("social-modal-content").innerHTML = `
-            <div class="ad-info-box" style="text-align:center; background:#fdfdfd; border:1.5px dashed #cbd5e1; padding:20px; border-radius:18px; margin:15px 0;">
-                <p style="white-space: pre-wrap; line-height:1.7; color:#334155; font-size:1.05rem; font-style:italic;">
-                    "${window.escapeHTML(displayContent)}"
+            <div class="ad-info-box" style="background:#fdfdfd; border:1.5px dashed #cbd5e1; padding:18px; border-radius:15px; margin:5px 0;">
+                <p style="white-space: pre-wrap; line-height:1.6; color:#334155; font-size:1rem; font-style:italic; margin:0;">
+                    "${window.escapeHTML(modalContent)}"
                 </p>
             </div>`;
         
-        // 3. GÖRSEL GALERİ
+        // 3. GÖRSEL ALANI
         const gallery = document.getElementById("social-image-gallery");
         if (gallery) {
-            gallery.innerHTML = displayImages.length > 0 
-                ? displayImages.map(src => `<img src="${src}" style="width:100%; border-radius:15px; margin-bottom:15px; box-shadow:var(--card-shadow-soft);">`).join('')
-                : '<div style="height:10px;"></div>';
+            gallery.innerHTML = modalImages.length > 0 
+                ? modalImages.map(src => `<img src="${src}" style="width:100%; border-radius:15px; margin-bottom:12px; box-shadow:var(--card-shadow-soft);">`).join('')
+                : '<div style="height:5px;"></div>';
         }
 
-        // 4. İZOLE YORUM SİSTEMİ (MODAL İÇİNE ENJEKSİYON)
-        const modalContent = document.querySelector("#social-detail-modal .modal-content");
-        let socialCommentArea = document.getElementById("social-comment-section");
-        
-        if (!socialCommentArea) {
-            socialCommentArea = document.createElement("div");
-            socialCommentArea.id = "social-comment-section";
-            modalContent.appendChild(socialCommentArea);
+        // 4. YORUM SİSTEMİ (İZOLE VE TEMİZ)
+        const modalInner = document.querySelector("#social-detail-modal .modal-content");
+        let commentBox = document.getElementById("social-comment-section");
+        if (!commentBox) {
+            commentBox = document.createElement("div");
+            commentBox.id = "social-comment-section";
+            modalInner.appendChild(commentBox);
         }
 
-        socialCommentArea.innerHTML = `
-            <div id="comment-section" style="margin-top:25px; border-top:2px solid #f1f5f9; padding-top:20px; width:100%;">
-                <h4 style="font-size:0.95rem; margin-bottom:15px; text-align:left;"><i class="fas fa-comments"></i> Sorular & Yorumlar</h4>
-                <div id="social-comment-list" style="max-height:200px; overflow-y:auto; margin-bottom:15px; text-align:left;"></div>
-                <div style="display:flex; flex-direction:column; gap:10px;">
-                    <input type="text" id="social-comment-nick" placeholder="Takma Ad" class="cyber-form" maxlength="10" style="height:45px; margin-bottom:0 !important;">
-                    <textarea id="social-comment-text" placeholder="Yorumunuz..." class="cyber-form" maxlength="150" style="height:70px; margin-bottom:0 !important; padding:10px;"></textarea>
-                    <button onclick="window.sendSocialComment('${id}', '${table}')" class="cyber-submit" style="background:var(--app-blue)!important; height:50px;">
-                        <i class="fas fa-paper-plane"></i> YORUMU GÖNDER
+        commentBox.innerHTML = `
+            <div id="comment-section" style="margin-top:20px; border-top:1.5px solid #f1f5f9; padding-top:15px; width:100%;">
+                <h4 style="font-size:0.9rem; margin-bottom:12px; text-align:left; color:var(--app-blue);"><i class="fas fa-comments"></i> Sorular & Yorumlar</h4>
+                <div id="social-comment-list" style="max-height:180px; overflow-y:auto; margin-bottom:12px; text-align:left;"></div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <input type="text" id="social-comment-nick" placeholder="Takma Ad" class="cyber-form" maxlength="10" style="height:40px; margin:0 !important;">
+                    <textarea id="social-comment-text" placeholder="Yorumunuz..." class="cyber-form" maxlength="150" style="height:65px; margin:0 !important; padding:10px;"></textarea>
+                    <button onclick="window.sendSocialComment('${id}', '${table}')" class="cyber-submit" style="background:var(--app-blue)!important; height:48px; border-radius:10px !important;">
+                        <i class="fas fa-paper-plane"></i> GÖNDER
                     </button>
                 </div>
             </div>`;
 
         window.loadSocialComments(id, table);
 
-        // 5. MODAL AKSİYONLARI
-        const actionArea = document.getElementById("social-delete-btn")?.parentNode;
-        if (actionArea) {
-            actionArea.innerHTML = `
-                <button onclick="window.prepareDeleteHizmet('${id}')" style="width:100%; margin-top:20px; background:none; border:none; color:#ff4d4d; text-decoration:underline; font-size:0.8rem; cursor:pointer; opacity:0.6;">
-                    İçeriği Kaldır
+        // 5. KALDIRMA AKSİYONU
+        const footerArea = document.getElementById("social-delete-btn")?.parentNode;
+        if (footerArea) {
+            footerArea.innerHTML = `
+                <button onclick="window.prepareDeleteHizmet('${id}')" style="width:100%; margin-top:15px; background:none; border:none; color:#ff4d4d; text-decoration:underline; font-size:0.75rem; cursor:pointer; opacity:0.6;">
+                    Bu içeriği sistemden kaldır
                 </button>`;
         }
 
         const modal = document.getElementById("social-detail-modal");
-        if (modal) {
-            modal.style.display = "flex";
-            setTimeout(() => { modal.style.visibility = "visible"; modal.style.opacity = "1"; }, 10);
-        }
-    } catch (err) { console.error("Detay Hatası:", err); }
+        modal.style.display = "flex";
+        setTimeout(() => { modal.style.visibility = "visible"; modal.style.opacity = "1"; }, 10);
+    } catch (err) { console.error("Hizmet Hatası:", err); }
 };
 
 /* >> İZOLE YORUM KAYIT VE YÜKLEME MOTORLARI << */

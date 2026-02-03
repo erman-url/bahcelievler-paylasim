@@ -1218,79 +1218,80 @@ button[onclick*="prepareDeleteHizmet"]:hover {
     color: #ff4d4d !important;
 }
 
-/* >> TAVSİYE DETAY KURUMSAL DÜZENLEME VE BOŞLUK MÜHÜRÜ << */
+/* >> MODAL KOMPAKT KURUMSAL DÜZEN MÜHÜRÜ << */
 
-/* 1. Modal Çerçevesini ve Hizalamasını Stabilize Eder */
+/* 1. Modal Ana Çerçevesini Sıkılaştırır */
 #social-detail-modal .modal-content {
-    background: #ffffff !important;
-    border-radius: 24px !important;
-    padding: 20px 25px !important; /* Ferah ama kontrollü boşluk */
-    border: 1px solid rgba(0, 86, 179, 0.08) !important;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.12) !important;
-    max-width: 480px !important;
-    width: 92% !important;
-    text-align: center !important;
-    box-sizing: border-box !important;
+    padding: 15px !important; /* Dış boşluklar daraltıldı */
+    border-radius: 20px !important;
+    max-width: 440px !important; /* Daha kompakt genişlik */
+    margin-bottom: 60px !important; /* Nav bar payı optimize edildi */
 }
 
-/* 2. Başlık ve Üst Bilgi Alanını Sıkılaştırır */
+/* 2. Başlık Alanındaki Boşlukları Sıfırlar */
 .modal-header-meta {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 4px !important; /* Elemanlar arası boşluk daraltıldı */
-    margin-bottom: 15px !important;
+    margin-bottom: 10px !important;
+    gap: 2px !important;
 }
 
-/* 3. Detay Metin Kutusunu Kurumsallaştırır */
+.modal-header-meta h2 {
+    margin: 5px 0 !important;
+    font-size: 1.25rem !important;
+}
+
+/* 3. Detay Metin Kutusunu Küçültür (Boşluk Avcısı) */
 #social-modal-content .ad-info-box {
-    background: #f8fafc !important; /* Azure soft gri */
-    border: 1.5px dashed #cbd5e1 !important;
-    border-radius: 15px !important;
-    padding: 18px !important;
-    margin: 10px 0 !important;
-    font-size: 1rem !important;
-    color: #334155 !important;
-    text-align: center !important;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important;
+    background: #f8fafc !important;
+    border: 1px solid #edf2f7 !important; /* Kesikli çizgiden düz çizgiye geçiş (Daha kurumsal) */
+    padding: 12px 15px !important; /* İç boşluklar %40 azaltıldı */
+    margin: 8px 0 !important; /* Dış boşluklar daraltıldı */
+    border-radius: 12px !important;
 }
 
-/* 4. Yorum Bölümü Dikey Yerleşim Düzeni */
+#social-modal-content p {
+    font-size: 0.95rem !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+}
+
+/* 4. Yorum Alanı Kompakt Yerleşim */
 #social-comment-section {
-    width: 100% !important;
-    margin-top: 15px !important;
-    padding-top: 15px !important;
-    border-top: 1.5px solid #f1f5f9 !important;
+    margin-top: 10px !important;
+    padding-top: 10px !important;
 }
 
 #social-comment-list {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    margin-bottom: 15px !important;
+    gap: 8px !important;
+    margin-bottom: 10px !important;
 }
 
-/* 5. Girdi Alanları (Input/Textarea) Optimizasyonu */
-#social-comment-section .cyber-form {
-    margin-bottom: 6px !important; /* Boşluklar minimize edildi */
-    border: 1px solid #e2e8f0 !important;
+/* Yorum balonlarını küçültür */
+#social-comment-list div {
+    padding: 8px 12px !important;
     border-radius: 10px !important;
-    background: #ffffff !important;
+    margin-bottom: 0 !important;
 }
 
-/* 6. Aksiyon Butonları (Gönder/Kaldır) */
+/* 5. Giriş Alanları ve Butonları İnce Ayar */
+#social-comment-section .cyber-form {
+    height: 38px !important; /* Daha ince inputlar */
+    padding: 8px 12px !important;
+    font-size: 0.9rem !important;
+}
+
+#social-comment-section textarea {
+    height: 55px !important; /* Daha az yer kaplayan yazı alanı */
+}
+
 #social-detail-modal .cyber-submit {
-    height: 48px !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.5px !important;
+    height: 42px !important; /* Daha kibar buton */
+    font-size: 0.85rem !important;
     margin-top: 5px !important;
 }
 
-/* Kaldır butonu stilini profesyonelleştirir */
-#social-detail-modal button[onclick*="prepareDeleteHizmet"] {
-    margin-top: 12px !important;
-    font-weight: 600 !important;
-    font-size: 0.75rem !important;
-    color: #94a3b8 !important;
-    text-decoration: underline !important;
+/* 6. Kaldır Linkini Satır Arasına Alır */
+button[onclick*="prepareDeleteHizmet"] {
+    margin-top: 8px !important;
+    font-size: 0.7rem !important;
+    padding: 0 !important;
 }

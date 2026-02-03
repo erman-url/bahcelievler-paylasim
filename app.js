@@ -1361,6 +1361,17 @@ async function setupKesintiForm() {
         const passCheck = window.validateComplexPassword(passVal);
         if (passCheck) { alert(passCheck); return; }
 
+        const districtVal = document.getElementById("kes-district").value;
+        const streetVal = document.getElementById("kes-street").value.trim();
+        const descVal = document.getElementById("kes-desc").value.trim();
+
+        // Sokak Regex Kontrolü (HTML pattern'e ek güvenlik)
+        const streetRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.]+$/;
+        if (!streetRegex.test(streetVal)) {
+            alert("HATA: Sokak isminde sadece harf, rakam ve nokta kullanabilirsiniz.");
+            return;
+        }
+
         const btn = document.getElementById("kes-submit-btn");
         isProcessing = true;
         btn.disabled = true;
@@ -1370,8 +1381,8 @@ async function setupKesintiForm() {
             const deleteToken = await sha256(passVal);
             const payload = {
                 type: document.getElementById("kes-type").value,
-                location: document.getElementById("kes-location").value,
-                description: document.getElementById("kes-desc").value,
+                location: `${districtVal} - ${streetVal}`,
+                description: descVal,
                 delete_password: deleteToken
             };
 

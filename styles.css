@@ -1094,3 +1094,53 @@ button[onclick*="prepareDeleteHizmet"]:hover {
         height: 180px !important;
     }
 }
+
+/* >> FIRSAT MODAL KURUMSAL DÜZENLEME MÜHÜRÜ << */
+
+/* Modal başlık ve tarih alanını satırlara ayırır */
+.modal-header-meta {
+    display: flex !important;
+    flex-direction: column !important; /* Alt alta gelmesini sağlar */
+    align-items: center !important; /* Ortalar */
+    gap: 5px !important;
+    margin-bottom: 20px !important;
+    text-align: center;
+}
+
+#modal-price {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+}
+
+/* Modal içindeki metin kutusunu (fırsat içeriği) düzenler */
+.ad-info-box {
+    text-align: center !important; /* Metni ortalar */
+    background: #f8fafc !important;
+    border: 1px solid #edf2f7 !important;
+    border-radius: 15px !important;
+    padding: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Butonlar arası boşluk ve mobil uyum */
+#modal-buy-btn, #modal-share-btn {
+    width: 100% !important;
+    max-width: 400px !important; /* Masaüstünde çok yayılmasın */
+    margin: 10px auto !important; /* Butonları ortalar */
+    height: 55px !important;
+    font-size: 1rem !important;
+    letter-spacing: 1px;
+}
+
+/* Yorum alanını merkeze mühürler */
+#comment-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 25px 0 !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+    text-align: center;
+}

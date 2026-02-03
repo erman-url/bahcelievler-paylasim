@@ -823,14 +823,14 @@ window.openFirsatDetail = async function(id) {
 
         document.getElementById("modal-title").textContent = f.title;
         document.getElementById("modal-price").innerHTML = `
-            <div style="display:flex; justify-content:space-between; width:100%; font-size:0.85rem; color:#666;">
-                <span style="font-weight:bold; color:#28a745;">${window.escapeHTML(f.category)}</span>
-                <span><i class="far fa-calendar-alt"></i> ${dateStr}</span>
+            <div class="modal-header-meta">
+                <span style="font-weight:bold; color:#28a745; font-size:0.9rem;">${window.escapeHTML(f.category)}</span>
+                <span style="font-size:0.8rem; color:#888;"><i class="far fa-calendar-alt"></i> ${dateStr}</span>
             </div>`;
         
         const descriptionEl = document.getElementById("modal-description");
         if (descriptionEl) {
-            descriptionEl.innerHTML = `<div style="white-space: pre-wrap; color: #333; margin-top:15px; font-size:1rem; line-height:1.5;">${window.escapeHTML(f.content)}</div>`;
+            descriptionEl.innerHTML = `<div class="ad-info-box" style="white-space: pre-wrap; font-size:1rem; line-height:1.5;">${window.escapeHTML(f.content)}</div>`;
         }
 
         const gallery = document.getElementById("modal-image-gallery");

@@ -124,37 +124,49 @@ document.addEventListener("DOMContentLoaded", () => {
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     
-    /* >> NİHAİ İZOLASYON VE KURTARMA MOTORU V10.0 << */
+    /* >> KESİN İZOLASYON VE TEMİZLİK MOTORU V12.0 << */
     const handleNavigation = (e) => {
         const trigger = e.target.closest("[data-target]");
         if (!trigger) return;
         const target = trigger.getAttribute("data-target");
 
-        // 1. TÜM BİLEŞENLERİ VE SAYFALARI KESİN OLARAK GİZLE (Sızıntı Önleyici)
+        // 1. EKRANI TAMAMEN SIFIRLA (Cerrahi Temizlik)
+        // Tüm page ve section'ları sadece gizlemekle kalmaz, dikey alanlarını da yok eder
         document.querySelectorAll(".page, section, .slider-container, #home-dashboard, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
             if(el) {
-                el.style.display = "none";
+                el.style.setProperty('display', 'none', 'important');
                 el.classList.remove("active");
+                el.style.height = "0"; // Dikey alanı fiziksel olarak sıfırlar
+                el.style.overflow = "hidden";
             }
         });
 
-        // 2. ANA SAYFA BİLEŞENLERİNİ SADECE ANA SAYFADA AÇ
+        // 2. ANA SAYFA BİLEŞENLERİNİ YALNIZCA ANA SAYFADA UYANDIR
         if (target === "home") {
             document.querySelectorAll(".slider-container, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
-                if(el) el.style.display = "block";
+                if(el) {
+                    el.style.display = "block";
+                    el.style.height = "auto";
+                    el.style.overflow = "visible";
+                }
             });
             if(document.getElementById("home-dashboard")) document.getElementById("home-dashboard").style.display = "grid";
         }
 
-        // 3. HEDEF SAYFAYI TEK BAŞINA VE EN ÜSTTE AÇ
+        // 3. HEDEF SAYFAYI TEK BAŞINA MÜHÜRLE
         const targetPage = document.getElementById(target);
         if (targetPage) {
-            window.scrollTo(0, 0); // Sayfa kaymasını engeller
-            targetPage.style.display = "block";
+            window.scrollTo(0, 0); // Sayfayı en üste mühürler
             targetPage.classList.add("active");
+            targetPage.style.setProperty('display', 'block', 'important');
+            targetPage.style.height = "auto";
+            targetPage.style.overflow = "visible";
+            
+            // Fırsat listesini sadece kendi sayfasında render et (Sızıntı Önleyici)
+            if (target === 'firsat-indirim') renderFirsatlar();
         }
 
-        // 4. ALT MENÜ İKONLARI GÜNCELLE
+        // 4. ALT MENÜ İKONLARI
         document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
         const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
         if (activeLink) activeLink.classList.add("active");

@@ -2471,37 +2471,9 @@ window.sendComment = async function(moduleType = 'ilan') {
     }
 };
 
-/* >> KELİME AVI ENTEGRASYON MOTORU << */
-window.openWordGame = function() {
-    const modal = document.getElementById("word-game-modal");
-    const frame = document.getElementById("word-game-frame");
-    
-    // Oyun dosyasını iframe içine yükle
-    frame.src = "kelime-avi.html";
-    
-    modal.style.display = "flex";
-    document.body.style.overflow = "hidden"; // Arka planı dondur
-    setTimeout(() => {
-        modal.style.visibility = "visible";
-        modal.style.opacity = "1";
-    }, 10);
-};
 /* >> KELİME AVI MODÜLÜ - HARİCİ SAYFA YÖNETİMİ << */
 // Modal tabanlı oyun motoru (openWordGame, closeWordGame) kaldırıldı.
 // Oyun artık doğrudan "kelime-avi.html" sayfasına yönlendirme ile çalışmaktadır.
-
-window.closeWordGame = function() {
-    const modal = document.getElementById("word-game-modal");
-    const frame = document.getElementById("word-game-frame");
-    
-    modal.style.opacity = "0";
-    modal.style.visibility = "hidden";
-    setTimeout(() => {
-        modal.style.display = "none";
-        frame.src = ""; // Kaynağı temizle (Performans için)
-        document.body.style.overflow = "auto";
-    }, 300);
-};
 
 /* >> MİNİMAL RAMAZAN SAYACI << */
 function startRamadanCountdown() {

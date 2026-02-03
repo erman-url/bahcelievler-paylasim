@@ -2486,6 +2486,9 @@ window.openWordGame = function() {
         modal.style.opacity = "1";
     }, 10);
 };
+/* >> KELİME AVI MODÜLÜ - HARİCİ SAYFA YÖNETİMİ << */
+// Modal tabanlı oyun motoru (openWordGame, closeWordGame) kaldırıldı.
+// Oyun artık doğrudan "kelime-avi.html" sayfasına yönlendirme ile çalışmaktadır.
 
 window.closeWordGame = function() {
     const modal = document.getElementById("word-game-modal");

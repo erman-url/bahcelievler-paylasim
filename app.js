@@ -535,39 +535,51 @@ function setupForms() {
     }
 }
 
+/* >> TAVSİYE KAYIT MOTORU V5.0 - SÜPER KONTROL << */
 document.getElementById("recommend-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (isBotDetected("recommend-form") || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+    if (isBotDetected("recommend-form") || isProcessing) return;
 
     const btn = e.target.querySelector('button');
-    const titleVal = document.getElementById("rec-title").value;
+    const titleVal = document.getElementById("rec-title").value.trim();
+    const districtVal = document.getElementById("rec-district").value;
     const ratingVal = parseInt(document.getElementById("rec-rating").value);
     const contentVal = document.getElementById("rec-content").value;
     const passVal = document.getElementById("rec-pass").value;
     const fileInput = document.getElementById("rec-file");
 
-    // Şifre Kontrolü
+    // 1. GÖRSEL ZORUNLULUĞU VE LİMİT KONTROLÜ
+    if (!fileInput.files || fileInput.files.length === 0) return alert("HATA: En az 1 görsel eklemek zorunludur!");
+    if (fileInput.files.length > 2) return alert("HATA: Maksimum 2 görsel seçebilirsiniz.");
+
+    // 2. SEO VE KARAKTER FİLTRESİ (Mühür: Sadece harf, rakam ve noktalama)
+    const safeRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.\,\!\?\-\:\(\)\;]+$/;
+    if (!safeRegex.test(contentVal)) return alert("HATA: Yorumda sadece harf, rakam ve temel noktalama işaretleri kullanabilirsiniz.");
+    
+    if (window.hasBadWords(titleVal) || window.hasBadWords(contentVal)) {
+        return alert("Lütfen topluluk kurallarına uygun bir dil kullanın.");
+    }
+
     const passCheck = window.validateComplexPassword(passVal);
-    if (passCheck) { alert(passCheck); return; }
+    if (passCheck) return alert(passCheck);
 
     isProcessing = true;
     btn.disabled = true;
-    btn.textContent = "YAYINLANIYOR...";
+    btn.textContent = "İŞLENİYOR...";
 
     try {
-        let uploadedUrl = null;
-        if (fileInput && fileInput.files.length > 0) {
-            const urls = await handleMultipleUploads(fileInput.files);
-            uploadedUrl = urls[0];
-        }
+        const optimizedFiles = await Promise.all(Array.from(fileInput.files).map(f => optimizeImage(f)));
+        const urls = await handleMultipleUploads(optimizedFiles);
 
         const payload = {
             title: titleVal,
             comment: contentVal,
             rating: ratingVal,
+            district: districtVal, // Yeni Mahalle Verisi
             delete_password: passVal,
-            image_url: uploadedUrl,
-            category: "Genel" 
+            image_url: urls[0] || null,
+            image_url_2: urls[1] || null,
+            category: "Tavsiye"
         };
 
         const { error } = await window.supabase.from('tavsiyeler').insert([payload]);
@@ -575,11 +587,8 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
 
         alert("Tavsiyeniz başarıyla panoya eklendi!");
         e.target.reset();
-        
-        if (typeof loadPortalData === "function") loadPortalData();
-
+        loadPortalData();
     } catch (err) {
-        console.error("L2 Uzman Desteği Gerekebilir:", err.message);
         alert("Hata: " + err.message);
     } finally {
         isProcessing = false;
@@ -587,6 +596,7 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
         btn.textContent = "PAYLAŞ";
     }
 });
+
 
     document.getElementById("complaint-form")?.addEventListener("submit", async e => {
         e.preventDefault();

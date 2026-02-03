@@ -223,21 +223,34 @@
                 <i class="fas fa-thumbs-up"></i> Bahçelievler'de beğendiğiniz restoran, esnaf veya işletmeleri komşularınıza tavsiye edin, semt rehberimize katkıda bulunun.
             </p>
             <form id="recommend-form" class="cyber-form">
-                <input type="text" id="rec-title" placeholder="Mekan Adı" required>
+                <input type="text" id="rec-title" placeholder="Mekan/İşletme Adı (Max 30 Karakter)" maxlength="30" required>
+                
+                <select id="rec-district" required>
+                    <option value="" disabled selected>Mekan Konumu / Mahalle Seçiniz</option>
+                    <option value="Bahçelievler Mah.">Bahçelievler Mahallesi</option>
+                    <option value="Cumhuriyet Mah.">Cumhuriyet Mahallesi</option>
+                    <option value="Çobançeşme Mah.">Çobançeşme Mahallesi</option>
+                    <option value="Fevzi Çakmak Mah.">Fevzi Çakmak Mahallesi</option>
+                    <option value="Hürriyet Mah.">Hürriyet Mahallesi</option>
+                    <option value="Kocasinan Merkez Mah.">Kocasinan Merkez Mahallesi</option>
+                    <option value="Siyavuşpaşa Mah.">Siyavuşpaşa Mahallesi</option>
+                    <option value="Soğanlı Mah.">Soğanlı Mahallesi</option>
+                    <option value="Şirinevler Mah.">Şirinevler Mahallesi</option>
+                    <option value="Yenibosna Merkez Mah.">Yenibosna Merkez Mahallesi</option>
+                    <option value="Zafer Mah.">Zafer Mahallesi</option>
+                </select>
+
                 <select id="rec-rating" required>
                     <option value="" disabled selected>Puan Seçin</option>
                     <option value="5">⭐⭐⭐⭐⭐ (Harika)</option>
                     <option value="4">⭐⭐⭐⭐ (İyi)</option>
                     <option value="3">⭐⭐⭐ (Başarılı)</option>
                 </select>
-                <textarea id="rec-content" placeholder="Yorumunuz..." required></textarea>
-                <label style="font-size: 0.8rem; display: block; margin-top: 10px;">Görsel (Opsiyonel - Max 5MB)</label>
-                <input type="file" id="rec-file" accept="image/*">
-                <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold;"><i class="fas fa-key"></i> Yorumu bu şifre ile silebilirsiniz:</p>
+                <textarea id="rec-content" maxlength="500" placeholder="Yorumunuz... (Max 500 karakter. Sadece harf, rakam ve noktalama)" required></textarea>
+                <label style="font-size: 0.75rem; color: #d32f2f; font-weight: bold; margin-top: 10px; display: block;"><i class="fas fa-camera"></i> GÖRSEL EKLEMEK ZORUNLUDUR! (Max 2 Adet, Max 5MB)</label>
+                <input type="file" id="rec-file" accept="image/*" multiple required>
                 <input type="password" id="rec-pass" placeholder="Şifre (1 Harf + 4 Rakam)" maxlength="5" required>
-                <div style="display:none !important; visibility:hidden !important;">
-                    <input type="text" name="hp_tavsiye" id="hp_tavsiye" tabindex="-1" autocomplete="off">
-                </div>
+                <div style="display:none !important;"><input type="text" name="hp_tavsiye" id="hp_tavsiye" tabindex="-1"></div>
                 <button type="submit" class="cyber-submit" style="background: #28a745 !important;">PAYLAŞ</button>
             </form>
             <div id="recommend-list" style="padding: 10px;"></div>

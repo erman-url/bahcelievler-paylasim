@@ -570,13 +570,14 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
     try {
         const optimizedFiles = await Promise.all(Array.from(fileInput.files).map(f => optimizeImage(f)));
         const urls = await handleMultipleUploads(optimizedFiles);
+        const deleteToken = await sha256(passVal);
 
         const payload = {
             title: titleVal,
             comment: contentVal,
             rating: ratingVal,
             district: districtVal, // Yeni Mahalle Verisi
-            delete_password: passVal,
+            delete_password: deleteToken,
             image_url: urls[0] || null,
             image_url_2: urls[1] || null,
             category: "Tavsiye"
@@ -625,10 +626,12 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
                 urls = await handleMultipleUploads(fileInput.files);
             }
 
+            const deleteToken = await sha256(passVal);
+
             const payload = {
                 title: document.getElementById("comp-title").value,
                 content: document.getElementById("comp-content").value,
-                delete_password: passVal,
+                delete_password: deleteToken,
                 category: document.getElementById("comp-category") ? document.getElementById("comp-category").value : "Genel",
                 image_url: urls[0] || null,
                 image_url_2: urls[1] || null
@@ -744,6 +747,7 @@ async function setupFirsatForm() {
 
         try {
             let urls = files.length > 0 ? await handleMultipleUploads(files) : [];
+            const deleteToken = await sha256(pass);
 
             const payload = {
                 title: title,
@@ -752,7 +756,7 @@ async function setupFirsatForm() {
                 category: type === 'yerel' ? 'Yerel Esnaf & Mağaza' : 'Online Ürün & Kampanya',
                 image_url: urls[0] || null,
                 image_url_2: urls[1] || null,
-                delete_password: pass,
+                delete_password: deleteToken,
                 type: type
             };
 
@@ -976,15 +980,13 @@ window.deleteFirsat = async (id) => {
     if (!userPass || !userPass.trim()) return;
 
     const finalPass = String(userPass).trim();
-    console.log("Silme İsteği -> ID:", id, "Girilmiş Şifre:", finalPass);
+    const deleteToken = await sha256(finalPass);
 
-    // SÜPER KONTROL: Hem sayı hem metin gibi davranan OR sorgusu
     const { data, error } = await window.supabase
         .from('firsatlar')
         .delete()
         .eq('id', id)
-        .or(`delete_password.eq.${finalPass},delete_password.eq."${finalPass}"`)
-        .eq('delete_password', finalPass)
+        .eq('delete_password', deleteToken)
         .select();
 
     if (error) {
@@ -995,12 +997,10 @@ window.deleteFirsat = async (id) => {
 
     if (data && data.length > 0) {
         alert("Fırsat başarıyla silindi.");
-        setTimeout(() => {
-            if (typeof loadPortalData === "function") loadPortalData();
-        }, 200);
+        if (typeof loadPortalData === "function") loadPortalData();
     } else {
         alert("Hata: Şifre yanlış!");
-        console.warn("Eşleşme yok. DB'deki değer ile '" + finalPass + "' uyuşmuyor.");
+        console.warn("Eşleşme yok. DB'deki değer ile girilen şifrenin hash'i uyuşmuyor.");
     }
 };
 
@@ -1008,12 +1008,13 @@ window.deleteFirsat = async (id) => {
 window.deleteTavsiye = async (id) => {
     const userPass = prompt("Bu tavsiyeyi silmek için şifrenizi girin:");
     if (!userPass || !userPass.trim()) return;
+    const deleteToken = await sha256(userPass.trim());
 
     const { data, error } = await window.supabase
         .from('tavsiyeler')
         .delete()
-        .or(`delete_password.eq."${userPass}",delete_password.eq.${parseInt(userPass)}`) 
         .eq('id', id)
+        .eq('delete_password', deleteToken)
         .select();
 
     if (data && data.length > 0) {
@@ -1027,12 +1028,13 @@ window.deleteTavsiye = async (id) => {
 window.deleteSikayet = async (id) => {
     const userPass = prompt("Bu şikayeti silmek için şifrenizi girin:");
     if (userPass === null || !userPass.trim()) return;
+    const deleteToken = await sha256(userPass.trim());
 
     const { error } = await window.supabase
         .from('sikayetler')
         .delete()
         .eq('id', id)
-        .eq('delete_password', userPass); 
+        .eq('delete_password', deleteToken); 
 
     if (!error) {
         alert("Şikayet başarıyla kaldırıldı.");
@@ -1354,11 +1356,12 @@ async function setupKesintiForm() {
         btn.textContent = "BİLDİRİLİYOR...";
 
         try {
+            const deleteToken = await sha256(passVal);
             const payload = {
                 type: document.getElementById("kes-type").value,
                 location: document.getElementById("kes-location").value,
                 description: document.getElementById("kes-desc").value,
-                delete_password: passVal
+                delete_password: deleteToken
             };
 
             const { error } = await window.supabase.from('kesintiler').insert([payload]);
@@ -1401,13 +1404,14 @@ async function renderKesintiler() {
 window.deleteKesinti = async (id) => {
     const userPass = prompt("Silmek için şifre:");
     if (!userPass) return;
+    const deleteToken = await sha256(userPass.trim());
 
     // Şifreyi client-side karşılaştırmak yerine Supabase sorgusuna dahil ediyoruz
     const { data, error } = await window.supabase
         .from('kesintiler')
         .delete()
         .eq('id', id)
-        .eq('delete_password', userPass.trim())
+        .eq('delete_password', deleteToken)
         .select();
 
     if (data && data.length > 0) {
@@ -1751,6 +1755,7 @@ async function setupHizmetForm() {
             const rawFiles = Array.from(fileInput.files);
             const optimizedFiles = await Promise.all(rawFiles.map(f => optimizeImage(f)));
             const urls = await handleMultipleUploads(optimizedFiles);
+            const deleteToken = await sha256(passVal);
 
             const payload = {
                 category: document.getElementById("hizmet-category").value,
@@ -1761,7 +1766,7 @@ async function setupHizmetForm() {
                 content: descVal,
                 image_url: urls[0] || null,
                 image_url_2: urls[1] || null,
-                delete_password: passVal,
+                delete_password: deleteToken,
                 created_at: new Date().toISOString() // Otomatik Tarih Mühürü
             };
 
@@ -1898,8 +1903,9 @@ window.closeRadarModal = () => {
 window.softDeleteRadar = async (id) => {
     const userPass = prompt("İlanı kaldırmak için şifrenizi giriniz (1 Harf + 4 Rakam)");
     if (!userPass || !userPass.trim()) return;
-    
+
     const finalPass = String(userPass).trim();
+    const deleteToken = await sha256(finalPass);
 
     // Şifre Formatı Kontrolü (Mühür)
     const passCheck = window.validateComplexPassword(finalPass);
@@ -1909,7 +1915,7 @@ window.softDeleteRadar = async (id) => {
         .from('piyasa_verileri')
         .update({ is_active: false })
         .eq('id', id)
-        .eq('delete_password', finalPass)
+        .eq('delete_password', deleteToken)
         .select();
 
     if (error) {
@@ -2229,11 +2235,13 @@ window.prepareDeleteHizmet = async function(id) {
     const userPass = prompt("İçeriği kaldırmak için şifrenizi giriniz:");
     if (!userPass || !userPass.trim()) return;
 
+    const deleteToken = await sha256(userPass.trim());
+
     const { data: delData, error: delError } = await window.supabase
         .from(table)
         .update({ is_active: false })
         .eq('id', id)
-        .eq('delete_password', userPass)
+        .eq('delete_password', deleteToken)
         .select();
 
     if (delError) {

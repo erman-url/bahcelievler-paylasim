@@ -149,10 +149,7 @@ async function submitPiyasaVerisi() {
             barkod: barkod, // DB'deki barkod sütununa veri gönderiliyor
             market_adi: marketAdi,
             image_url: publicUrl,
-            delete_password: pass,
-            delete_password: deleteToken,
-            tarih_etiketi: bugun,
-            is_active: true 
+            delete_password: 
         }]);
 
         if (dbError) throw dbError;

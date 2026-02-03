@@ -124,33 +124,37 @@ document.addEventListener("DOMContentLoaded", () => {
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     
-    /* >> SEMT RADARI FİZİKSEL RENDER MÜHÜRÜ << */
+    /* >> NİHAİ İZOLASYON VE KURTARMA MOTORU V10.0 << */
     const handleNavigation = (e) => {
         const trigger = e.target.closest("[data-target]");
         if (!trigger) return;
         const target = trigger.getAttribute("data-target");
 
-        // 1. TÜM BİLEŞENLERİ TEMİZLE
+        // 1. TÜM BİLEŞENLERİ VE SAYFALARI KESİN OLARAK GİZLE (Sızıntı Önleyici)
         document.querySelectorAll(".page, section, .slider-container, #home-dashboard, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
-            if(el) el.style.display = "none";
-            if(el.classList.contains("page")) el.classList.remove("active");
+            if(el) {
+                el.style.display = "none";
+                el.classList.remove("active");
+            }
         });
 
-        // 2. ANA SAYFA MI?
+        // 2. ANA SAYFA BİLEŞENLERİNİ SADECE ANA SAYFADA AÇ
         if (target === "home") {
-            document.querySelectorAll(".slider-container, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => el.style.display = "block");
+            document.querySelectorAll(".slider-container, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
+                if(el) el.style.display = "block";
+            });
             if(document.getElementById("home-dashboard")) document.getElementById("home-dashboard").style.display = "grid";
         }
 
-        // 3. HEDEF SAYFAYI AKTİF ET
+        // 3. HEDEF SAYFAYI TEK BAŞINA VE EN ÜSTTE AÇ
         const targetPage = document.getElementById(target);
         if (targetPage) {
-            window.scrollTo(0, 0); 
-            targetPage.classList.add("active");
+            window.scrollTo(0, 0); // Sayfa kaymasını engeller
             targetPage.style.display = "block";
+            targetPage.classList.add("active");
         }
 
-        // 4. İKONLARI GÜNCELLE
+        // 4. ALT MENÜ İKONLARI GÜNCELLE
         document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
         const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
         if (activeLink) activeLink.classList.add("active");

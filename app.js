@@ -121,8 +121,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-/* >> TEMİZ NAVİGASYON MOTORU - V2.0 << */
+/* >> NAVİGASYON MOTORU: HİYERARŞİK TEMİZLİK V3.0 << */
 function setupNavigation() {
+    // Tüm navigasyon tetikleyicilerini (menü, butonlar, widgetlar) kapsar
     const navItems = document.querySelectorAll(".nav-item, [data-target], .cyber-btn-block, .home-widget");
     
     const handleNavigation = (e) => {
@@ -131,33 +132,50 @@ function setupNavigation() {
         
         const target = trigger.getAttribute("data-target");
 
-        // 1. Tüm sayfaları temizle ve gizle
-        document.querySelectorAll(".page").forEach(p => {
+        // 1. TÜM GERÇEK SAYFA (SECTION.PAGE) ÖĞELERİNİ TEMİZLE [cite: 03-02-2026]
+        // Bu adım, hiyerarşik olarak en üstteki sayfaları kesin olarak gizler.
+        document.querySelectorAll("section.page").forEach(p => {
             p.classList.remove("active");
             p.style.setProperty('display', 'none', 'important');
         });
 
-        // 2. Hedef sayfayı mühürle
+        // 2. HEDEF SAYFAYI MÜHÜRLE VE GÖSTER
         const targetPage = document.getElementById(target);
         if (targetPage) {
+            // Statik akış için block mühürü vurulur (Flex çakışması önlenir) [cite: 03-02-2026]
             targetPage.style.setProperty('display', 'block', 'important');
             targetPage.classList.add("active");
-            window.scrollTo(0, 0);
+            
+            // Kullanıcıyı her zaman sayfa başına taşır
+            window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
-        // 3. Ana sayfa bileşenlerini yönet (Slider vb.)
-        const homeExtras = document.querySelectorAll(".slider-container, .home-hero, #info-bar, #ramadan-status, #gundem-haber");
-        homeExtras.forEach(el => {
-            el.style.display = (target === "home") ? "block" : "none";
+        // 3. ANA SAYFA BİLEŞENLERİNİ YÖNET (SLIDER, HERO VB.)
+        // Bu bileşenler sadece 'home' aktifken görünür olmalıdır.
+        const homeComponents = [
+            ".slider-container", ".home-hero", "#info-bar", 
+            "#ramadan-status", "#gundem-haber", "#home-dashboard"
+        ];
+        
+        homeComponents.forEach(selector => {
+            const el = document.querySelector(selector);
+            if (el) {
+                // Ana sayfa dışındaki sayfalarda bu bileşenleri DOM'dan gizler [cite: 03-02-2026]
+                el.style.display = (target === "home") ? "" : "none";
+            }
         });
 
-        // 4. Alt menü ikonlarını güncelle
+        // 4. ALT MENÜ İKONLARINI VE AKTİF DURUMU GÜNCELLE
         document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
         const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
         if (activeLink) activeLink.classList.add("active");
     };
 
-    navItems.forEach(el => el.addEventListener('click', handleNavigation));
+    // Mevcut event listener'ları temizleyip yenilerini bağlar
+    navItems.forEach(el => {
+        el.removeEventListener('click', handleNavigation);
+        el.addEventListener('click', handleNavigation);
+    });
 }
 
 // --- 2. VERİ YÜKLEME MOTORU ---

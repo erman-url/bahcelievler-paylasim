@@ -1863,10 +1863,10 @@ window.openRadarDetail = async function(id) {
     document.getElementById("radar-image-gallery").innerHTML = `<img src="${urun.image_url}" style="width:100%; border-radius:12px;">`;
     
     document.getElementById("radar-info-content").innerHTML = `
-        <div class="ad-info-box" style="text-align:left;">
-            <p><strong><i class="fas fa-store"></i> Market:</strong> ${window.escapeHTML(urun.market_adi)}</p>
-            <p><strong><i class="fas fa-calendar-alt"></i> Tarih:</strong> ${urun.tarih_etiketi || 'Belirtilmedi'}</p>
-        </div>`;
+    <div class="ad-info-box">
+        <p style="margin-bottom:8px; display:flex; align-items:center; gap:8px;"><strong><i class="fas fa-store"></i> Market:</strong> ${window.escapeHTML(urun.market_adi)}</p>
+        <p style="margin:0; display:flex; align-items:center; gap:8px;"><strong><i class="fas fa-calendar-alt"></i> Tarih:</strong> ${urun.tarih_etiketi || 'Belirtilmedi'}</p>
+    </div>`;
     // 3. Silme Butonunu Bağla
     document.getElementById("radar-delete-btn").onclick = () => window.softDeleteRadar(urun.id);
     // 4. Modalı Fiziksel Olarak Tetikle
@@ -2263,7 +2263,7 @@ window.openSocialDetail = async function(table, id) {
         
         document.getElementById("social-modal-content").innerHTML = `
             <div class="ad-info-box">
-                <p style="white-space: pre-wrap; margin:0; text-align:center; font-style:italic;">
+                <p style="white-space: pre-wrap; margin:0; text-align:center; color:#333; font-size:0.95rem; line-height:1.5;">
                     "${window.escapeHTML(modalContent)}"
                 </p>
             </div>`;

@@ -2262,11 +2262,7 @@ window.openSocialDetail = async function(table, id) {
             </div>`;
         
         document.getElementById("social-modal-content").innerHTML = `
-            <div class="ad-info-box">
-                <p style="white-space: pre-wrap; margin:0; text-align:center; color:#333; font-size:0.95rem; line-height:1.5;">
-                    "${window.escapeHTML(modalContent)}"
-                </p>
-            </div>`;
+            <div class="ad-info-box">"${window.escapeHTML(modalContent)}"</div>`;
         
         // 3. GÖRSEL ALANI
         const gallery = document.getElementById("social-image-gallery");

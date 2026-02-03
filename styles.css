@@ -1239,23 +1239,6 @@ button[onclick*="prepareDeleteHizmet"]:hover {
     font-size: 1.2rem !important;
 }
 
-/* Eski ad-info-box yerine gelen tertemiz kare */
-.recommend-text-box {
-    background: #f8fafc !important; /* Azure soft gri */
-    border: 1px solid #e2e8f0 !important;
-    border-radius: 12px !important;
-    padding: 15px !important;
-    margin: 10px 0 !important;
-    font-size: 1rem !important;
-    color: #334155 !important;
-    text-align: center !important;
-    line-height: 1.5 !important;
-    font-style: italic !important;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-}
-
 /* Yorum alanındaki fazla boşluğu al */
 #social-comment-section {
     margin-top: 5px !important;
@@ -1298,19 +1281,20 @@ button[onclick*="prepareDeleteHizmet"] {
     padding: 0 !important;
 }
 
-/* >> İLANLAR STİLİNDE TEK KARE ÇERÇEVE MÜHÜRÜ << */
+/* >> TEK KARE KURUMSAL ÇERÇEVE MÜHÜRÜ << */
 .ad-info-box {
-    background: #f8fafc !important;
-    border: 1.5px solid #e2e8f0 !important;
+    background: #f8fafc !important; /* Azure soft gri */
+    border: 1.5px solid #e2e8f0 !important; /* İnce kurumsal çerçeve */
     padding: 18px !important;
     border-radius: 16px !important;
-    margin: 15px 0 !important;
+    margin: 10px 0 !important;
     width: 100% !important;
     box-sizing: border-box !important;
+    text-align: center !important; /* Metni tam ortalar */
+    font-style: italic !important; /* Tavsiye metni olduğu belli olur */
+    line-height: 1.5 !important;
+    color: #334155 !important;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important;
-    text-align: center;
-    font-style: italic;
-    line-height: 1.5;
 }
 
 /* Modal ana başlık ve tarih alanını İlanlar gibi sıkılaştır */

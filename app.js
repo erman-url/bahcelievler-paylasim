@@ -2471,10 +2471,6 @@ window.sendComment = async function(moduleType = 'ilan') {
     }
 };
 
-/* >> KELİME AVI MODÜLÜ - HARİCİ SAYFA YÖNETİMİ << */
-// Modal tabanlı oyun motoru (openWordGame, closeWordGame) kaldırıldı.
-// Oyun artık doğrudan "kelime-avi.html" sayfasına yönlendirme ile çalışmaktadır.
-
 /* >> MİNİMAL RAMAZAN SAYACI << */
 function startRamadanCountdown() {
     const targetDate = new Date("Feb 19, 2026 00:00:00").getTime();

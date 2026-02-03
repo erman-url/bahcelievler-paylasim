@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Türkçe Kelime Avı</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --accent:#2563eb;
+      --good:#16a34a;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --shadow: 0 10px 30px rgba(0,0,0,.07);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    header{
+      position: sticky; top:0; z-index:10;
+      background: rgba(246,247,251,.9);
+      backdrop-filter: blur(8px);
+      padding:14px 14px 10px;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:0 10px}
+    .titleRow{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:10px;
+    }
+    h1{font-size:18px;margin:0}
+    .sub{font-size:12px;color:var(--muted)}
+    .stats{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .pill{
+      background: var(--card);
+      box-shadow: var(--shadow);
+      border:1px solid rgba(0,0,0,.06);
+      padding:8px 10px;
+      border-radius:12px;
+      font-size:13px;
+      display:flex; gap:8px; align-items:center;
+    }
+    .pill b{font-weight:800}
+    main{padding:14px}
+    .gridArea{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:14px;
+      align-items:start;
+    }
+    @media (max-width: 860px){
+      .gridArea{grid-template-columns:1fr; }
+    }
+    .card{
+      background:var(--card);
+      box-shadow: var(--shadow);
+      border:1px solid rgba(0,0,0,.06);
+      border-radius:16px;
+      padding:14px;
+    }
+    .board{
+      display:grid;
+      grid-template-columns: repeat(var(--n), 1fr);
+      gap:6px;
+      user-select:none;
+      touch-action:none;
+    }
+    .cell{
+      aspect-ratio: 1/1;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      font-size: clamp(14px, 3.6vw, 22px);
+      background: #f3f4f6;
+      border: 1px solid rgba(0,0,0,.06);
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+    }
+    .cell:active{ transform: scale(.98); }
+    .cell.sel{
+      background: rgba(37,99,235,.18);
+      border-color: rgba(37,99,235,.35);
+    }
+    .cell.ok{
+      background: rgba(22,163,74,.18);
+      border-color: rgba(22,163,74,.35);
+    }
+    .hint{
+      outline: 2px dashed rgba(245,158,11,.7);
+      outline-offset: 2px;
+    }
+
+    .rightCol{
+      display:flex; flex-direction:column; gap:14px;
+    }
+    .controls{
+      display:flex; flex-wrap:wrap; gap:10px;
+    }
+    button{
+      border:0;
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:700;
+      background: var(--accent);
+      color:white;
+      cursor:pointer;
+      box-shadow: var(--shadow);
+    }
+    button.secondary{
+      background:#111827;
+    }
+    button.ghost{
+      background:#ffffff;
+      color:#111827;
+      border:1px solid rgba(0,0,0,.12);
+      box-shadow:none;
+    }
+    button:active{ transform: translateY(1px); }
+
+    .wordList{
+      display:flex; flex-wrap:wrap; gap:8px;
+      margin-top:10px;
+    }
+    .tag{
+      padding:7px 10px;
+      border-radius:999px;
+      background:#f3f4f6;
+      border:1px solid rgba(0,0,0,.06);
+      font-weight:700;
+      font-size:12px;
+      color:#111827;
+    }
+    .tag.found{
+      background: rgba(22,163,74,.15);
+      border-color: rgba(22,163,74,.3);
+      color: #065f46;
+      text-decoration: line-through;
+    }
+
+    .current{
+      margin-top:10px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-radius:14px;
+      background:#f9fafb;
+      border:1px solid rgba(0,0,0,.06);
+      font-weight:800;
+    }
+    .msg{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+      min-height: 18px;
+    }
+
+    .smallNote{
+      margin-top:8px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.4;
+    }
+
+    .toast{
+      position: fixed;
+      left:50%; transform: translateX(-50%);
+      bottom: 18px;
+      background: rgba(17,24,39,.92);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight:800;
+      font-size:13px;
+      box-shadow: var(--shadow);
+      opacity:0; pointer-events:none;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .toast.show{
+      opacity:1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="titleRow">
+      <div>
+        <h1>Türkçe Kelime Avı</h1>
+        <div class="sub">Harfleri sürükleyerek seç • 8 yön destekli • Mobil uyumlu</div>
+      </div>
+      <div class="sub">v1.0</div>
+    </div>
+    <div class="stats">
+      <div class="pill">⏱️ Süre: <b id="time">00:00</b></div>
+      <div class="pill">⭐ Puan: <b id="score">0</b></div>
+      <div class="pill">✅ Bulunan: <b id="foundCount">0</b>/<span id="totalCount">0</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="gridArea">
+    <section class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <b style="font-size:14px;">Bulmaca Alanı</b>
+        <span class="sub" id="modeText">Parmağınla sürükle</span>
+      </div>
+
+      <div class="current">
+        <div>Seçim: <span id="currentWord">—</span></div>
+        <div class="sub">Bırakınca kontrol eder</div>
+      </div>
+
+      <div class="msg" id="msg"></div>
+
+      <div style="margin-top:12px;">
+        <div id="board" class="board" style="--n: 10;"></div>
+      </div>
+
+      <div class="smallNote">
+        İpucu: Aynı doğrultuda (yatay / dikey / çapraz) seçmek daha hızlıdır. Geleneksel kelime avı mantığı.
+      </div>
+    </section>
+
+    <aside class="rightCol">
+      <section class="card">
+        <b style="font-size:14px;">Kontroller</b>
+        <div class="controls" style="margin-top:10px;">
+          <button id="newBtn">Yeni Oyun</button>
+          <button class="secondary" id="mixBtn">Karıştır</button>
+          <button class="ghost" id="hintBtn">İpucu</button>
+        </div>
+        <div class="smallNote">
+          “İpucu” rastgele bir kelimenin ilk harfini vurgular.
+        </div>
+      </section>
+
+      <section class="card">
+        <b style="font-size:14px;">Bulunacak Kelimeler</b>
+        <div class="wordList" id="wordList"></div>
+        <div class="smallNote">
+          Türkçe karakterler oyunda normal çalışır: Ç, Ğ, İ, Ö, Ş, Ü ✅
+        </div>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===========================
+   TÜRKÇE KELİME AVI - v1.0
+   =========================== */
+
+/** Türkçe alfabe + sık kullanılan harfler ağırlıklı */
+const LETTER_POOL = [
+  ..."AAAAAEEEEİİİİİİOOOUUÜÜÜ",
+  ..."NNNNRRRRLLLLTTTTSSSSKKKK",
+  ..."MMMMDDDDYYŞŞÇÇĞĞÖÖPPBBCCVJZ"
+].join("");
+
+/** Kısa, pozitif, çocuk/halka uygun kelimeler (değiştirilebilir) */
+const WORD_BANK = [
+  "MUTLULUK","HUZUR","SEVGİ","UMUT","GÜÇLÜ",
+  "CESUR","SABIR","ŞÜKÜR","BAŞARI","GÜVEN",
+  "DOSTLUK","İYİLİK","NEŞE","PAYLAŞ","ŞEFKAT",
+  "SAĞLIK","BEREKET","TEŞEKKÜR","İLHAM","AZİM"
+];
+
+/** Oyun ayarları */
+let SIZE = 10;             // 10x10
+let WORD_COUNT = 8;        // her oyunda seçilecek kelime sayısı
+let grid = [];
+let placedWords = [];      // {word, path:[{r,c}], found:false}
+
+let selecting = false;
+let startCell = null;
+let selectedPath = [];     // düz bir çizgi üzerinde hücreler
+let timer = null;
+let seconds = 0;
+let score = 0;
+
+const boardEl = document.getElementById("board");
+const wordListEl = document.getElementById("wordList");
+const currentWordEl = document.getElementById("currentWord");
+const msgEl = document.getElementById("msg");
+const timeEl = document.getElementById("time");
+const scoreEl = document.getElementById("score");
+const foundCountEl = document.getElementById("foundCount");
+const totalCountEl = document.getElementById("totalCount");
+const toastEl = document.getElementById("toast");
+
+document.getElementById("newBtn").addEventListener("click", newGame);
+document.getElementById("mixBtn").addEventListener("click", mixLetters);
+document.getElementById("hintBtn").addEventListener("click", hint);
+
+/* ---------- yardımcılar ---------- */
+function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function pick(arr){ return arr[randInt(0, arr.length-1)]; }
+
+function formatTime(s){
+  const m = Math.floor(s/60);
+  const r = s%60;
+  return String(m).padStart(2,"0")+":"+String(r).padStart(2,"0");
+}
+
+function toast(t){
+  toastEl.textContent = t;
+  toastEl.classList.add("show");
+  setTimeout(()=> toastEl.classList.remove("show"), 1200);
+}
+
+function clearMsg(){ msgEl.textContent = ""; }
+function setMsg(t){ msgEl.textContent = t; }
+
+/* 8 yön: (dr,dc) */
+const DIRS = [
+  [0,1],[0,-1],[1,0],[-1,0],
+  [1,1],[1,-1],[-1,1],[-1,-1],
+];
+
+function inside(r,c){ return r>=0 && c>=0 && r<SIZE && c<SIZE; }
+
+/* Bir kelimeyi grid'e yerleştir (geleneksel kelime avı mantığı) */
+function tryPlaceWord(word){
+  const attempts = 200;
+  for(let k=0;k<attempts;k++){
+    const [dr,dc] = pick(DIRS);
+    const r0 = randInt(0, SIZE-1);
+    const c0 = randInt(0, SIZE-1);
+
+    const endR = r0 + dr*(word.length-1);
+    const endC = c0 + dc*(word.length-1);
+    if(!inside(endR,endC)) continue;
+
+    // çakışma kontrolü (aynı harf üst üste gelebilir)
+    let ok = true;
+    let path = [];
+    for(let i=0;i<word.length;i++){
+      const r = r0 + dr*i;
+      const c = c0 + dc*i;
+      const ch = word[i];
+      const here = grid[r][c];
+      if(here !== "" && here !== ch){ ok=false; break; }
+      path.push({r,c});
+    }
+    if(!ok) continue;
+
+    // yerleştir
+    for(let i=0;i<word.length;i++){
+      const {r,c} = path[i];
+      grid[r][c] = word[i];
+    }
+    placedWords.push({word, path, found:false});
+    return true;
+  }
+  return false;
+}
+
+function fillEmpty(){
+  for(let r=0;r<SIZE;r++){
+    for(let c=0;c<SIZE;c++){
+      if(grid[r][c]===""){
+        grid[r][c] = LETTER_POOL[randInt(0, LETTER_POOL.length-1)];
+      }
+    }
+  }
+}
+
+/* ---------- render ---------- */
+function renderBoard(){
+  boardEl.style.setProperty("--n", SIZE);
+  boardEl.innerHTML = "";
+  for(let r=0;r<SIZE;r++){
+    for(let c=0;c<SIZE;c++){
+      const d = document.createElement("div");
+      d.className = "cell";
+      d.textContent = grid[r][c];
+      d.dataset.r = r;
+      d.dataset.c = c;
+      boardEl.appendChild(d);
+    }
+  }
+}
+
+function renderWords(){
+  wordListEl.innerHTML = "";
+  for(const w of placedWords){
+    const t = document.createElement("div");
+    t.className = "tag" + (w.found ? " found":"");
+    t.textContent = w.word;
+    wordListEl.appendChild(t);
+  }
+  totalCountEl.textContent = placedWords.length;
+  foundCountEl.textContent = placedWords.filter(x=>x.found).length;
+}
+
+function updateStats(){
+  timeEl.textContent = formatTime(seconds);
+  scoreEl.textContent = score;
+  foundCountEl.textContent = placedWords.filter(x=>x.found).length;
+}
+
+function getCellEl(r,c){
+  return boardEl.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`);
+}
+
+function clearSelectionVisual(){
+  boardEl.querySelectorAll(".cell.sel").forEach(el=>el.classList.remove("sel"));
+  currentWordEl.textContent = "—";
+}
+
+function markSelectionVisual(path){
+  for(const p of path){
+    const el = getCellEl(p.r,p.c);
+    if(el) el.classList.add("sel");
+  }
+}
+
+function markFoundVisual(wordObj){
+  for(const p of wordObj.path){
+    const el = getCellEl(p.r,p.c);
+    if(el){
+      el.classList.remove("sel");
+      el.classList.add("ok");
+    }
+  }
+}
+
+/* ---------- seçim mantığı: çizgi üzerinde seçim ---------- */
+function directionFrom(a,b){
+  const dr = b.r - a.r;
+  const dc = b.c - a.c;
+  const sdr = Math.sign(dr);
+  const sdc = Math.sign(dc);
+
+  // aynı satır / sütun / çapraz olmalı
+  const absdr = Math.abs(dr), absdc = Math.abs(dc);
+  if(dr===0 && dc===0) return null;
+  if(dr===0) return {dr:0, dc:sdc};
+  if(dc===0) return {dr:sdr, dc:0};
+  if(absdr === absdc) return {dr:sdr, dc:sdc};
+  return null;
+}
+
+function buildLinePath(a,b){
+  const dir = directionFrom(a,b);
+  if(!dir) return [];
+  const path = [];
+  let r=a.r, c=a.c;
+  path.push({r,c});
+  while(!(r===b.r && c===b.c)){
+    r += dir.dr;
+    c += dir.dc;
+    if(!inside(r,c)) break;
+    path.push({r,c});
+  }
+  return path;
+}
+
+function pathToWord(path){
+  return path.map(p=>grid[p.r][p.c]).join("");
+}
+
+/* ---------- kontrol: kelime bulundu mu? ---------- */
+function checkFound(selected){
+  if(!selected || selected.length<2) return false;
+  const w1 = selected;
+  const w2 = selected.split("").reverse().join(""); // ters yön
+
+  for(const w of placedWords){
+    if(w.found) continue;
+    if(w.word === w1 || w.word === w2){
+      // path birebir aynı mı diye kontrol
+      // kelime bulundu saymak için yol aynı doğrultuda seçildiyse yeterli:
+      // seçilen path uzunluğu kelime uzunluğuna eşit olmalı
+      if(selectedPath.length !== w.word.length) continue;
+
+      w.found = true;
+      score += Math.max(10, w.word.length * 5);
+      renderWords();
+      markFoundVisual(w);
+      updateStats();
+      toast("✅ Bulundu: " + w.word);
+
+      if(placedWords.every(x=>x.found)){
+        clearInterval(timer);
+        setMsg("Tebrikler! Tüm kelimeleri buldun 🎉");
+        toast("🎉 Oyun bitti!");
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
+/* ---------- dokunma / mouse olayları ---------- */
+function cellFromEvent(e){
+  const t = e.target.closest(".cell");
+  if(!t) return null;
+  return { r: parseInt(t.dataset.r,10), c: parseInt(t.dataset.c,10) };
+}
+
+function onStart(e){
+  const cell = cellFromEvent(e);
+  if(!cell) return;
+  selecting = true;
+  startCell = cell;
+  selectedPath = [{...cell}];
+
+  clearSelectionVisual();
+  clearMsg();
+  markSelectionVisual(selectedPath);
+  currentWordEl.textContent = pathToWord(selectedPath);
+}
+
+function onMove(e){
+  if(!selecting || !startCell) return;
+
+  // touch için doğru hedefi bulalım
+  let clientX, clientY;
+  if(e.touches && e.touches[0]){
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+    const el = document.elementFromPoint(clientX, clientY);
+    if(!el) return;
+    const t = el.closest(".cell");
+    if(!t) return;
+    const cell = { r: parseInt(t.dataset.r,10), c: parseInt(t.dataset.c,10) };
+    selectedPath = buildLinePath(startCell, cell);
+  } else {
+    const cell = cellFromEvent(e);
+    if(!cell) return;
+    selectedPath = buildLinePath(startCell, cell);
+  }
+
+  boardEl.querySelectorAll(".cell.sel").forEach(el=>el.classList.remove("sel"));
+  markSelectionVisual(selectedPath);
+
+  const w = pathToWord(selectedPath);
+  currentWordEl.textContent = w || "—";
+}
+
+function onEnd(){
+  if(!selecting) return;
+  selecting = false;
+
+  const chosen = pathToWord(selectedPath);
+  if(chosen && chosen.length>=2){
+    const ok = checkFound(chosen);
+    if(!ok){
+      setMsg("❌ Bu seçim listede yok. Tekrar dene.");
+      score = Math.max(0, score - 2);
+      updateStats();
+      setTimeout(()=> clearSelectionVisual(), 200);
+    }
+  } else {
+    clearSelectionVisual();
+  }
+
+  startCell = null;
+  selectedPath = [];
+}
+
+/* ---------- oyun akışı ---------- */
+function startTimer(){
+  clearInterval(timer);
+  timer = setInterval(()=>{
+    seconds++;
+    updateStats();
+  }, 1000);
+}
+
+function buildNewPuzzle(){
+  grid = Array.from({length:SIZE}, ()=> Array.from({length:SIZE}, ()=>""));
+  placedWords = [];
+
+  // kelimeleri seç
+  const pool = [...WORD_BANK].sort(()=>Math.random()-0.5);
+  const chosen = pool.slice(0, WORD_COUNT);
+
+  // yerleştir
+  for(const w of chosen){
+    const placed = tryPlaceWord(w);
+    if(!placed){
+      // yerleşmeyeni atla (çok nadir)
+      console.warn("Yerleşemedi:", w);
+    }
+  }
+
+  fillEmpty();
+  renderBoard();
+  renderWords();
+  updateStats();
+  clearMsg();
+
+  // bulunan renklerini sıfırla (zaten yeni grid)
+  currentWordEl.textContent = "—";
+}
+
+function newGame(){
+  seconds = 0;
+  score = 0;
+  buildNewPuzzle();
+  startTimer();
+  toast("🧩 Yeni oyun hazır!");
+}
+
+function mixLetters(){
+  // Kelimelerin bulunduğu hücrelere dokunmuyoruz, sadece boş “random” harfleri karıştırıyoruz.
+  const protectedCells = new Set();
+  for(const w of placedWords){
+    for(const p of w.path){
+      protectedCells.add(p.r+"-"+p.c);
+    }
+  }
+  for(let r=0;r<SIZE;r++){
+    for(let c=0;c<SIZE;c++){
+      if(!protectedCells.has(r+"-"+c)){
+        grid[r][c] = LETTER_POOL[randInt(0, LETTER_POOL.length-1)];
+      }
+    }
+  }
+  renderBoard();
+  // bulunanları tekrar işaretle
+  for(const w of placedWords){
+    if(w.found) markFoundVisual(w);
+  }
+  toast("🔀 Harfler karıştı!");
+}
+
+function hint(){
+  // bulunmamış kelimelerden birini seç, ilk harfini vurgula
+  const notFound = placedWords.filter(x=>!x.found);
+  if(notFound.length===0){
+    toast("Hepsi bulundu ✅");
+    return;
+  }
+  const w = pick(notFound);
+  const first = w.path[0];
+  const el = getCellEl(first.r, first.c);
+  if(!el) return;
+
+  boardEl.querySelectorAll(".hint").forEach(x=>x.classList.remove("hint"));
+  el.classList.add("hint");
+  toast("💡 İpucu: " + w.word[0] + " ile başlıyor");
+}
+
+/* ---------- event bağlama ---------- */
+boardEl.addEventListener("mousedown", onStart);
+window.addEventListener("mousemove", onMove);
+window.addEventListener("mouseup", onEnd);
+
+boardEl.addEventListener("touchstart", (e)=>{ onStart(e); }, {passive:true});
+boardEl.addEventListener("touchmove", (e)=>{ onMove(e); }, {passive:true});
+boardEl.addEventListener("touchend", onEnd, {passive:true});
+
+/* açılış */
+newGame();
+</script>
+</body>
+</html>

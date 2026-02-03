@@ -112,6 +112,7 @@ async function submitPiyasaVerisi() {
         const barkod = barkodInput ? barkodInput.value.trim() : null;
         const marketAdi = marketAdiInput.value;
         const pass = passInput.value;
+        const deleteToken = await sha256(pass);
 
         // --- SÜPER KONTROL: Giriş Doğrulama ---
         const kontrol = window.PiyasaMotoru.girdiKontrol({ 
@@ -149,6 +150,7 @@ async function submitPiyasaVerisi() {
             market_adi: marketAdi,
             image_url: publicUrl,
             delete_password: pass,
+            delete_password: deleteToken,
             tarih_etiketi: bugun,
             is_active: true 
         }]);

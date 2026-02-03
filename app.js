@@ -838,11 +838,11 @@ window.openFirsatDetail = async function(id) {
         // Fırsat açıklama kutusunu ortalar ve kurumsallaştırır
         const descriptionEl = document.getElementById("modal-description");
         if (descriptionEl) {
-            descriptionEl.innerHTML = `
-                <div class="ad-info-box">
-                    <p style="white-space: pre-wrap; margin:0; text-align:center;">${window.escapeHTML(f.content)}</p>
-                </div>`;
+            descriptionEl.innerText = f.content || '';
         }
+        // Fırsat modalında iletişim alanı olmadığı için temizliyoruz
+        const contactEl = document.getElementById('modal-contact');
+        if(contactEl) contactEl.innerText = '';
 
         const gallery = document.getElementById("modal-image-gallery");
         if (gallery) {
@@ -1078,18 +1078,15 @@ window.openAdDetail = function(id) {
 
     document.getElementById("modal-price").textContent = `Fiyat: ${new Intl.NumberFormat('tr-TR').format(ad.price)} TL`;
 
-    const descriptionEl = document.getElementById("modal-description");
     const content = ad.content || '';
     const contact = ad.contact || '';
 
-    // Güvenlik Düzeltmesi: XSS filtresi ve satır sonu dönüşümü
-    const safeContent = window.escapeHTML(content).replace(/\n/g, "<br>");
-
+    document.getElementById('modal-description').innerText = content;
+    const contactEl = document.getElementById('modal-contact');
     if (contact) {
-        const safeContact = window.escapeHTML(contact);
-        descriptionEl.innerHTML = safeContent + `<br><br><strong style="color:#007bff;"><i class="fas fa-phone"></i> İletişim:</strong> ${safeContact}`;
+        contactEl.innerText = `İletişim: ${contact}`;
     } else {
-        descriptionEl.innerHTML = safeContent;
+        contactEl.innerText = '';
     }
 
     const gallery = document.getElementById("modal-image-gallery");
@@ -2261,10 +2258,9 @@ window.openSocialDetail = async function(table, id) {
                 <span style="color:#aaa; font-size:0.8rem; font-weight:600;"><i class="far fa-calendar-alt"></i> ${modalDate}</span>
             </div>`;
         
-        document.getElementById("social-modal-content").innerHTML = `
-            <div class="ad-info-box">
-                "${window.escapeHTML(modalContent)}"
-            </div>`;
+        document.getElementById("social-modal-content").innerHTML = `<div class="ad-info-wrapper">
+            <div class="ad-info-box"><div class="ad-text">"${window.escapeHTML(modalContent)}"</div></div>
+        </div>`;
         
         // 3. GÖRSEL ALANI
         const gallery = document.getElementById("social-image-gallery");

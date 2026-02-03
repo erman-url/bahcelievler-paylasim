@@ -142,15 +142,15 @@ async function submitPiyasaVerisi() {
 
         const bugun = new Date().toLocaleDateString('tr-TR');
 
-        // is_active: true mühürü ile kaydedilir (Data toplama amacı için [cite: 2026-01-19])
-     const { error: dbError } = await window.supabase.from('piyasa_verileri').insert([{
-    urun_adi: urunAdi,
-    fiyat: fiyat,
-    barkod: barkod, 
-    market_adi: marketAdi,
-    image_url: publicUrl,
-    delete_password: deleteToken // Buraya 'deleteToken' değişkenini ekledik
-}]);
+        /* >> PİYASA VERİ KAYIT MOTORU RESTORASYONU << */
+        const { error: dbError } = await window.supabase.from('piyasa_verileri').insert([{
+            urun_adi: urunAdi,
+            fiyat: fiyat,
+            barkod: barkod, 
+            market_adi: marketAdi,
+            image_url: publicUrl,
+            delete_password: deleteToken // Eksik değişken eklendi, sistem ayağa kalktı
+        }]);
 
         if (dbError) throw dbError;
 

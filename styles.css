@@ -29,17 +29,25 @@ body {
 
 /* >> SAYFA MİMARİSİ NİHAİ DÜZELTME << */
 .page {
-    display: none !important; /* Pasifleri kesin gizle */
-    width: 100%;
-    min-height: auto !important; /* 100vh kaldırıldı */
-    padding: 20px 15px 100px 15px;
-    box-sizing: border-box;
-    position: relative; /* Üst üste binmeyi bitirir */
+    display: none !important; /* Pasif sayfaları kesinlikle gizle */
+    width: 100% !important;
+    min-height: auto !important; /* Taşma hatası mühürlendi */
+    padding: 20px 15px 100px 15px !important;
+    box-sizing: border-box !important;
+    position: relative !important; /* Absolute karmaşası bitti */
+    overflow-x: hidden !important;
 }
 
 
 .page.active { 
-    display: block !important; /* Flex/Absolute çakışmasını engeller */
+    display: block !important; /* Statik akış mühürü */
+}
+
+/* Fırsat İndirim sayfası için özel stabilizasyon */
+#firsat-indirim.active {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
 }
 
 /* İletişim sayfasının üzerine başka bir şey binmesini engeller */

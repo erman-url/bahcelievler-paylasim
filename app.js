@@ -121,80 +121,43 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-/* >> SAYFA GEÇİŞ VE TEMİZLİK MOTORU << */
-/* >> NAVİGASYON VE SAYFA ARINDIRMA MOTORU << */
-
-/* >> TEMİZ NAVİGASYON MOTORU << */
+/* >> TEMİZ NAVİGASYON MOTORU - V2.0 << */
 function setupNavigation() {
-    const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
-    const navItems = document.querySelectorAll(".nav-item, [data-target]");
+    const navItems = document.querySelectorAll(".nav-item, [data-target], .cyber-btn-block, .home-widget");
     
     const handleNavigation = (e) => {
         const trigger = e.target.closest("[data-target]");
         if (!trigger) return;
+        
         const target = trigger.getAttribute("data-target");
-    navItems.forEach(item => {
-        item.addEventListener("click", function(e) {
-            e.preventDefault();
-            const target = this.getAttribute("data-target");
-            if (!target) return;
 
-        // 1. TÜM SAYFALARI VE ANA SAYFA BİLEŞENLERİNİ GİZLE
-        // 1. TÜM SAYFA VE BİLEŞENLERİ FİZİKSEL OLARAK GİZLE
-        document.querySelectorAll(".page, section, .slider-container, #home-dashboard, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
-            if(el) {
-                el.style.setProperty('display', 'none', 'important');
-                el.style.display = "none"; // Kesin gizleme
-                el.classList.remove("active");
-            // 1. Sadece .page sınıfına sahip ana bölümleri temizle
-            document.querySelectorAll(".page").forEach(p => {
-                p.classList.remove("active");
-                p.style.display = "none";
-            });
-
-            // 2. Hedef sayfayı mühürle ve üste kaydır
-            const targetPage = document.getElementById(target);
-            if (targetPage) {
-                targetPage.style.display = "block";
-                targetPage.classList.add("active");
-                window.scrollTo(0, 0);
-            }
+        // 1. Tüm sayfaları temizle ve gizle
+        document.querySelectorAll(".page").forEach(p => {
+            p.classList.remove("active");
+            p.style.setProperty('display', 'none', 'important');
         });
 
-        // 2. HEDEF SAYFAYI AKTİF ET VE ÜSTE ÇEK
+        // 2. Hedef sayfayı mühürle
         const targetPage = document.getElementById(target);
         if (targetPage) {
-            window.scrollTo(0, 0); // Sayfa başına dön
-            targetPage.style.display = "block"; // Fiziksel olarak göster
-            targetPage.classList.add("active");
             targetPage.style.setProperty('display', 'block', 'important');
+            targetPage.classList.add("active");
             window.scrollTo(0, 0);
         }
 
-        // 3. ANA SAYFA ÖZEL BİLEŞENLERİNİ GÖSTER
-        // 3. ANA SAYFAYA ÖZEL BİLEŞENLERİ TETİKLE
-        if (target === "home") {
-            document.querySelectorAll(".slider-container, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
-                if(el) el.style.display = "block";
-            // 3. Ana sayfa bileşenlerini sadece 'home' aktifse göster
-            const homeExtras = document.querySelectorAll(".slider-container, .home-hero, #info-bar, #ramadan-status");
-            homeExtras.forEach(el => {
-                el.style.display = (target === "home") ? "block" : "none";
-            });
-            const dash = document.getElementById("home-dashboard");
-            if(dash) dash.style.display = "grid";
-        }
+        // 3. Ana sayfa bileşenlerini yönet (Slider vb.)
+        const homeExtras = document.querySelectorAll(".slider-container, .home-hero, #info-bar, #ramadan-status, #gundem-haber");
+        homeExtras.forEach(el => {
+            el.style.display = (target === "home") ? "block" : "none";
+        });
 
-        // 4. ALT MENÜ İKONLARI GÜNCELLE
-        // 4. ALT MENÜ İKONLARINI GÜNCELLE
+        // 4. Alt menü ikonlarını güncelle
         document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
         const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
         if (activeLink) activeLink.classList.add("active");
     };
 
     navItems.forEach(el => el.addEventListener('click', handleNavigation));
-        });
-    });
 }
 
 // --- 2. VERİ YÜKLEME MOTORU ---

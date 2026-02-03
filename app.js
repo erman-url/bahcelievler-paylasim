@@ -121,17 +121,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+/* >> SAYFA GEÇİŞ VE TEMİZLİK MOTORU << */
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     
-    /* >> NİHAİ GÖRSEL GÜVENLİK VE İZOLASYON MOTORU << */
     const handleNavigation = (e) => {
         const trigger = e.target.closest("[data-target]");
         if (!trigger) return;
         const target = trigger.getAttribute("data-target");
 
-        // 1. EKRANI KESİN OLARAK SIFIRLA (Cerrahi Temizlik)
-        // Tüm .page ve ana sayfa bileşenlerini tek hamlede gizler
+        // 1. TÜM SAYFALARI VE ANA SAYFA BİLEŞENLERİNİ GİZLE
         document.querySelectorAll(".page, section, .slider-container, #home-dashboard, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
             if(el) {
                 el.style.setProperty('display', 'none', 'important');
@@ -139,24 +138,21 @@ function setupNavigation() {
             }
         });
 
-        // 2. ANA SAYFA BİLEŞENLERİNİ YÖNET
+        // 2. HEDEF SAYFAYI AKTİF ET VE ÜSTE ÇEK
+        const targetPage = document.getElementById(target);
+        if (targetPage) {
+            targetPage.classList.add("active");
+            targetPage.style.setProperty('display', 'block', 'important');
+            window.scrollTo(0, 0);
+        }
+
+        // 3. ANA SAYFA ÖZEL BİLEŞENLERİNİ GÖSTER
         if (target === "home") {
             document.querySelectorAll(".slider-container, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
                 if(el) el.style.display = "block";
             });
             const dash = document.getElementById("home-dashboard");
             if(dash) dash.style.display = "grid";
-        }
-
-        // 3. HEDEF SAYFAYI TEK BAŞINA AÇ VE EN ÜSTE ÇEK
-        const targetPage = document.getElementById(target);
-        if (targetPage) {
-            window.scrollTo(0, 0); // Sayfanın en altta kalma sorununu bitirir
-            targetPage.classList.add("active");
-            targetPage.style.setProperty('display', 'block', 'important');
-            
-            // Fırsat listesini sadece kendi sayfasında render et (Sızıntı Önleyici)
-            if (target === 'firsat-indirim') renderFirsatlar();
         }
 
         // 4. ALT MENÜ İKONLARI GÜNCELLE

@@ -2259,10 +2259,8 @@ window.openSocialDetail = async function(table, id) {
         
         // 2. DETAY METNİ (DÜZENLİ KUTU)
         document.getElementById("social-modal-content").innerHTML = `
-            <div class="ad-info-box" style="background:#fdfdfd; border:1.5px dashed #cbd5e1; padding:18px; border-radius:15px; margin:5px 0;">
-                <p style="white-space: pre-wrap; line-height:1.6; color:#334155; font-size:1rem; font-style:italic; margin:0;">
-                    "${window.escapeHTML(modalContent)}"
-                </p>
+            <div class="recommend-text-box">
+                "${window.escapeHTML(modalContent)}"
             </div>`;
         
         // 3. GÖRSEL ALANI

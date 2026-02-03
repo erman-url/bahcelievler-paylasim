@@ -1311,23 +1311,28 @@ button[onclick*="prepareDeleteHizmet"] {
     font-weight: 600 !important;
 }
 
-/* 3. Merkezi Çerçeveyi (ad-info-box) Stabilize Et */
+/* >> TEK KARE KURUMSAL STİL MÜHÜRÜ << */
 .ad-info-box {
-    background: #f8fafc !important;
-    border: 1.5px solid #e2e8f0 !important;
-    padding: 15px !important;
-    border-radius: 12px !important;
+    max-width: 320px !important;
     width: 100% !important;
-    box-sizing: border-box !important;
-    margin: 10px 0 !important;
-    text-align: left; /* Sayfa listelerinde sola yaslı kalmalı */
-}
+    min-height: 90px !important;
+    margin: 20px auto !important; /* Dikeyde nizamlı boşluk */
+    
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px !important;
 
-/* 4. Sadece MODAL İçindeki Çerçeveyi İlanlar Gibi Ortala */
-.modal-content .ad-info-box {
-    text-align: center !important; 
-    padding: 18px !important;
-    border-radius: 16px !important;
+    border: 2px solid #4a90e2 !important; /* Belirgin mavi çerçeve */
+    border-radius: 12px !important;
+    background-color: #f4f8ff !important; /* Soft azure arka plan */
+    
+    color: #1f2f46 !important;
+    text-align: center !important;
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+    font-style: italic !important;
+    box-sizing: border-box !important;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important;
 }
 

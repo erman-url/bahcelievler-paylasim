@@ -2262,7 +2262,7 @@ window.openSocialDetail = async function(table, id) {
             </div>`;
         
         document.getElementById("social-modal-content").innerHTML = `
-            <div class="ad-info-box" style="text-align:center; font-style:italic; line-height:1.5; margin:10px 0;">
+            <div class="ad-info-box">
                 "${window.escapeHTML(modalContent)}"
             </div>`;
         

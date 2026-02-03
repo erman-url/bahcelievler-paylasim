@@ -27,21 +27,27 @@ body {
     overflow-x: hidden;
 }
 
-/* >> SAYFA VE FORM HİZALAMA MÜHÜRÜ << */
+/* >> SAYFA İZOLASYON VE DİKEY HİZA MÜHÜRÜ << */
 .page { 
-    display: none; 
+    display: none !important; 
     width: 100% !important;
     min-height: 100vh !important;
     background: var(--bg) !important;
     margin: 0 !important;
-    padding: 15px !important;
+    padding: 20px !important;
     box-sizing: border-box !important;
     position: relative !important;
-    z-index: 10 !important; /* Sayfayı en öne çeker */
+    z-index: 10 !important;
+    overflow-x: hidden;
 }
 
 .page.active { 
     display: block !important; 
+}
+
+/* İletişim sayfasının üzerine başka bir şey binmesini engeller */
+#iletisim.active {
+    z-index: 999 !important;
 }
 
 /* Fırsat ve İletişim Formlarını Aynı Hizaya Getir */
@@ -1026,12 +1032,9 @@ button[onclick*="prepareDeleteHizmet"]:hover {
     height: 50px !important;
 }
 
-/* 5. Liste alanını formun tam altına, aynı dikey hizada mühürler */
+/* Fırsat kartlarının dikey alan sızıntısını engelle */
 #firsat-list {
-    width: 100% !important;
-    max-width: 500px !important;
-    margin: 0 auto !important;
+    clear: both !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 20px !important;
 }

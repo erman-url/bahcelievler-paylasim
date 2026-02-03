@@ -1038,3 +1038,59 @@ button[onclick*="prepareDeleteHizmet"]:hover {
     display: flex !important;
     flex-direction: column !important;
 }
+
+/* >> FIRSAT KARTLARI NİHAİ HİZALAMA VE MOBİL UYUM MÜHÜRÜ << */
+
+/* 1. Sayfanın ana kapsayıcısını tüm cihazlarda ortalar */
+#firsat-indirim {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important; /* Kartları ve formu merkeze mühürler */
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 15px 100px 15px !important; /* Navigasyon payı mühürlendi */
+    box-sizing: border-box !important;
+}
+
+/* 2. Kart listesini form genişliğiyle (500px) tam eşitler */
+#firsat-list {
+    width: 100% !important;
+    max-width: 500px !important; /* Formla milimetrik aynı genişlik */
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 25px !important; /* Kartlar arası ferah boşluk */
+}
+
+/* 3. Kart içindeki içerikleri ve görselleri stabilize eder */
+#firsat-list .ad-card {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    border-radius: 20px !important;
+    background: #ffffff !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+    border: 1px solid rgba(0,0,0,0.05) !important;
+    overflow: hidden !important;
+    cursor: pointer;
+}
+
+/* 4. Görselleri kutuya hapseder ve taşmayı engeller */
+#firsat-list img {
+    width: 100% !important;
+    height: 220px !important; /* Sabit yükseklik ile düzen sağlar */
+    object-fit: contain !important; /* Görseli bozmadan sığdırır */
+    background: #f8fafc !important;
+    border-radius: 12px !important;
+    margin: 15px 0 !important;
+}
+
+/* 5. Mobil cihazlar için özel dokunuş (Web Uyumu) */
+@media screen and (max-width: 480px) {
+    #firsat-list .ad-card {
+        padding: 15px !important;
+    }
+    #firsat-list img {
+        height: 180px !important;
+    }
+}

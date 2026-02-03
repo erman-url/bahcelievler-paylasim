@@ -42,10 +42,13 @@ body {
     display: block !important; 
 }
 
-/* Harita sadece kendi sayfasında yer kaplasın */
+/* Harita Görünürlük Garantisi */
 #semt-radari #main-map {
     height: 400px !important;
-    z-index: 20 !important;
+    width: 100% !important;
+    display: block !important;
+    visibility: visible !important;
+    z-index: 5 !important; /* Katman çakışmasını önler */
 }
 
 /* Radar sayfası dışında haritayı tamamen yok et */
@@ -378,6 +381,7 @@ body.modal-open {
 }
 
 /* ALT MENÜ (FOOTER) - RENK MANTIĞI */
+/* Navigasyon barının haritanın üstünde kalmasını sağla */
 .app-footer-nav {
     position: fixed;
     bottom: 0; left: 50%;
@@ -390,7 +394,7 @@ body.modal-open {
     justify-content: space-around;
     padding: 10px 0;
     padding-bottom: env(safe-area-inset-bottom);
-    z-index: 10000;
+    z-index: 20000 !important;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
     transform: translateX(-50%);
 }

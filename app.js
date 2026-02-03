@@ -2236,138 +2236,82 @@ window.prepareDeleteHizmet = async function(id) {
     }
 };
 
-/* >> TAVSİYE DETAY VE İZOLE YORUM SİSTEMİ MÜHÜRÜ << */
+/* >> TAVSİYE DETAY VE İZOLE YORUM SİSTEMİ - HATA ONARILMIŞ SÜRÜM << */
 window.openSocialDetail = async function(table, id) {
     try {
         window.currentDetailTable = table;
-        const { data, error } = await window.supabase.from(table).select('*').eq('id', id).single();
-        if (error || !data) return;
+        const { data: socialData, error: socialError } = await window.supabase.from(table).select('*').eq('id', id).single();
+        if (socialError || !socialData) return;
 
-        const title = data.title || "Detay";
-        const content = data.content || "";
-        const content = data.comment || data.content || ""; // Metin içeriği burada mühürlendi
-        const dateStr = new Date(data.created_at).toLocaleDateString('tr-TR');
-        const images = [data.image_url, data.image_url_2].filter(Boolean);
+        // 'content' değişkeni çakışmasını önlemek için benzersiz isimler kullanıldı
+        const displayTitle = socialData.title || "Detay";
+        const displayContent = socialData.comment || socialData.content || ""; 
+        const displayDate = new Date(socialData.created_at).toLocaleDateString('tr-TR');
+        const displayImages = [socialData.image_url, socialData.image_url_2].filter(Boolean);
 
-        // MODAL İÇERİK DOLDURMA
-        document.getElementById("social-modal-title").textContent = title;
-        // 1. ÜST BİLGİ VE BAŞLIK ALANI (Kurumsal Stil)
+        // 1. ÜST BİLGİ ALANI
         document.getElementById("social-modal-title").innerHTML = `
             <div style="text-align:center; width:100%;">
                 <small style="display:block; color:#ffc107; font-weight:bold; letter-spacing:1px; margin-bottom:5px;">⭐ TAVSİYE İNCELEMESİ</small>
-                <h2 style="margin:0; font-size:1.4rem; color:var(--dark);">${window.escapeHTML(title)}</h2>
-                <small style="color:#aaa; font-size:0.75rem;"><i class="far fa-calendar-alt"></i> ${dateStr}</small>
+                <h2 style="margin:0; font-size:1.4rem; color:var(--dark);">${window.escapeHTML(displayTitle)}</h2>
+                <small style="color:#aaa; font-size:0.75rem;"><i class="far fa-calendar-alt"></i> ${displayDate}</small>
             </div>`;
         
-        // Mahalle, Telefon ve Web bilgisini içeriğe ekliyoruz
-        let infoHtml = `<div style="margin-bottom:20px; padding:15px; background:#f8fafc; border-radius:12px; font-size:0.9rem; color:#444; border:1px solid #edf2f7;">`;
-
-        if (data.location_name) {
-            infoHtml += `
-                <div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #eee;">
-                    <i class="fas fa-map-marker-alt" style="color:var(--app-blue); width:20px;"></i>
-                    <span><b>Konum:</b> ${window.escapeHTML(data.location_name)}</span>
-                </div>`;
-        }
-
-        if (data.phone) {
-            infoHtml += `
-                <div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #eee;">
-                    <i class="fas fa-phone" style="color:#28a745; width:20px;"></i>
-                    <span><b>İletişim:</b> <a href="tel:${data.phone}" style="color:var(--app-blue); text-decoration:none; font-weight:bold;">${data.phone}</a></span>
-                </div>`;
-        }
-
-        if (data.website) {
-            infoHtml += `
-                <div style="display:flex; align-items:center; gap:10px; padding:8px 0;">
-                    <i class="fas fa-globe" style="color:#00d2ff; width:20px;"></i>
-                    <span><b>Web:</b> <a href="${data.website}" target="_blank" style="color:var(--app-blue); text-decoration:none; font-weight:bold;">Siteyi Ziyaret Et</a></span>
-                </div>`;
-        }
-
-        infoHtml += `</div>`;
-
-        document.getElementById("social-modal-content").innerHTML = infoHtml + `<p style="white-space: pre-wrap; line-height:1.6;">${window.escapeHTML(content)}</p>`;
-        // 2. DETAY METNİ ALANI (İçerik Eksikliği Giderildi)
+        // 2. DETAY METNİ (KUTU İÇİNDE)
         document.getElementById("social-modal-content").innerHTML = `
-            <div class="ad-info-box" style="text-align:center; background:#fdfdfd; border:1px dashed #ddd; padding:20px; border-radius:15px;">
-                <p style="white-space: pre-wrap; line-height:1.7; color:#333; font-size:1rem; font-style:italic;">
-                    "${window.escapeHTML(content)}"
+            <div class="ad-info-box" style="text-align:center; background:#fdfdfd; border:1.5px dashed #cbd5e1; padding:20px; border-radius:18px; margin:15px 0;">
+                <p style="white-space: pre-wrap; line-height:1.7; color:#334155; font-size:1.05rem; font-style:italic;">
+                    "${window.escapeHTML(displayContent)}"
                 </p>
             </div>`;
         
         // 3. GÖRSEL GALERİ
         const gallery = document.getElementById("social-image-gallery");
         if (gallery) {
-            gallery.innerHTML = images.map(src => `<img src="${src}" style="width:100%; border-radius:12px; margin-bottom:10px;">`).join('');
-            gallery.innerHTML = images.length > 0 
-                ? images.map(src => `<img src="${src}" style="width:100%; border-radius:15px; margin-bottom:15px; box-shadow:var(--card-shadow-soft);">`).join('')
-                : '<div style="height:20px;"></div>';
+            gallery.innerHTML = displayImages.length > 0 
+                ? displayImages.map(src => `<img src="${src}" style="width:100%; border-radius:15px; margin-bottom:15px; box-shadow:var(--card-shadow-soft);">`).join('')
+                : '<div style="height:10px;"></div>';
         }
 
-        // BUTON HİYERARŞİSİ GÜNCELLEMESİ
-        const safeTitle = title.replace(/'/g, "\\'");
-        const phoneBtn = data.phone ? `
-        <a href="tel:${data.phone}" style="text-decoration:none; width:100%; height:45px; border-radius:10px; border:1px solid var(--app-blue); color:var(--app-blue); font-weight:bold; display:flex; align-items:center; justify-content:center; gap:8px;">
-            <i class="fas fa-phone"></i> HEMEN ARA
-        </a>` : '';
-        // 4. İZOLE YORUM SİSTEMİ ENTEGRASYONU
-        // Tavsiye bölümü için modal içinde yorum alanı açar
+        // 4. İZOLE YORUM SİSTEMİ (MODAL İÇİNE ENJEKSİYON)
         const modalContent = document.querySelector("#social-detail-modal .modal-content");
-        let commentArea = document.getElementById("social-comment-section");
+        let socialCommentArea = document.getElementById("social-comment-section");
         
-        if (!commentArea) {
-            commentArea = document.createElement("div");
-            commentArea.id = "social-comment-section";
-            commentArea.className = "comment-section-style"; // CSS mühürü
-            modalContent.appendChild(commentArea);
+        if (!socialCommentArea) {
+            socialCommentArea = document.createElement("div");
+            socialCommentArea.id = "social-comment-section";
+            modalContent.appendChild(socialCommentArea);
         }
 
-        const actionButtonsHtml = `
-            <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
-                <button onclick="window.shareHizmet('${data.id}', '${safeTitle}')" style="width:100%; height:45px; border-radius:10px; border:none; background:var(--app-blue); color:white; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
-                    <i class="fas fa-share-alt"></i> HİZMETİ PAYLAŞ
-                </button>
-        // Yorum kutusunu her açılışta tazeleyip 'tavsiye' moduna mühürler
-        commentArea.innerHTML = `
-            <div id="comment-section" style="margin-top:20px; border-top:2px solid #eee; padding-top:20px;">
-                <h4 style="font-size:0.9rem; margin-bottom:15px;"><i class="fas fa-comments"></i> Sorular & Yorumlar</h4>
-                <div id="social-comment-list" style="max-height:200px; overflow-y:auto; margin-bottom:15px;"></div>
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                    <input type="text" id="social-comment-nick" placeholder="Takma Ad" class="cyber-form" maxlength="10" style="height:40px;">
-                    <textarea id="social-comment-text" placeholder="Yorumunuz..." class="cyber-form" maxlength="150" style="height:60px;"></textarea>
-                    <button onclick="window.sendSocialComment('${id}', '${table}')" class="cyber-submit" style="background:var(--app-blue)!important; height:45px;">
-                        <i class="fas fa-paper-plane"></i> GÖNDER
+        socialCommentArea.innerHTML = `
+            <div id="comment-section" style="margin-top:25px; border-top:2px solid #f1f5f9; padding-top:20px; width:100%;">
+                <h4 style="font-size:0.95rem; margin-bottom:15px; text-align:left;"><i class="fas fa-comments"></i> Sorular & Yorumlar</h4>
+                <div id="social-comment-list" style="max-height:200px; overflow-y:auto; margin-bottom:15px; text-align:left;"></div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <input type="text" id="social-comment-nick" placeholder="Takma Ad" class="cyber-form" maxlength="10" style="height:45px; margin-bottom:0 !important;">
+                    <textarea id="social-comment-text" placeholder="Yorumunuz..." class="cyber-form" maxlength="150" style="height:70px; margin-bottom:0 !important; padding:10px;"></textarea>
+                    <button onclick="window.sendSocialComment('${id}', '${table}')" class="cyber-submit" style="background:var(--app-blue)!important; height:50px;">
+                        <i class="fas fa-paper-plane"></i> YORUMU GÖNDER
                     </button>
                 </div>
             </div>`;
 
-                ${phoneBtn}
-        // Tavsiyeye özel yorumları yükle
         window.loadSocialComments(id, table);
 
-                <button onclick="window.prepareDeleteHizmet('${data.id}')" style="margin-top:10px; background:none; border:none; color:#999; font-size:0.75rem; text-decoration:underline; cursor:pointer;">
+        // 5. MODAL AKSİYONLARI
+        const actionArea = document.getElementById("social-delete-btn")?.parentNode;
+        if (actionArea) {
+            actionArea.innerHTML = `
+                <button onclick="window.prepareDeleteHizmet('${id}')" style="width:100%; margin-top:20px; background:none; border:none; color:#ff4d4d; text-decoration:underline; font-size:0.8rem; cursor:pointer; opacity:0.6;">
                     İçeriği Kaldır
-                </button>
-            </div>
-        `;
-        // 5. MODAL AKSİYONLARI (Kaldır Butonu vb.)
-        const actionHtml = `
-            <button onclick="window.prepareDeleteHizmet('${id}')" style="width:100%; margin-top:20px; background:none; border:none; color:#ff4d4d; text-decoration:underline; font-size:0.8rem; cursor:pointer;">
-                Bu Tavsiyeyi Kaldır
-            </button>`;
-        document.getElementById("social-delete-btn").parentNode.innerHTML = actionHtml;
-
-        const deleteBtn = document.getElementById("social-delete-btn");
-        if (deleteBtn && deleteBtn.parentNode) {
-            deleteBtn.parentNode.innerHTML = actionButtonsHtml;
+                </button>`;
         }
 
-        // Modalı Aç
         const modal = document.getElementById("social-detail-modal");
-        modal.style.display = "flex";
-        setTimeout(() => { modal.style.visibility = "visible"; modal.style.opacity = "1"; }, 10);
+        if (modal) {
+            modal.style.display = "flex";
+            setTimeout(() => { modal.style.visibility = "visible"; modal.style.opacity = "1"; }, 10);
+        }
     } catch (err) { console.error("Detay Hatası:", err); }
 };
 

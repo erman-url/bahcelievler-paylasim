@@ -1281,20 +1281,35 @@ button[onclick*="prepareDeleteHizmet"] {
     padding: 0 !important;
 }
 
-/* >> TEK KARE KURUMSAL ÇERÇEVE MÜHÜRÜ << */
+/* >> MERKEZİ ÇERÇEVE VE MODAL STİL RESTORASYONU << */
+
+/* 1. Genel kutu yapısını Şikayet Et listesine uygun hale getir */
 .ad-info-box {
-    background: #f8fafc !important; /* Azure soft gri */
-    border: 1.5px solid #e2e8f0 !important; /* İnce kurumsal çerçeve */
-    padding: 18px !important;
-    border-radius: 16px !important;
-    margin: 10px 0 !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 15px !important;
+    border-radius: 12px !important;
     width: 100% !important;
     box-sizing: border-box !important;
-    text-align: center !important; /* Metni tam ortalar */
-    font-style: italic !important; /* Tavsiye metni olduğu belli olur */
-    line-height: 1.5 !important;
-    color: #334155 !important;
+    margin: 10px 0 !important;
+    /* Önemli: Şikayet listesindeki metin kaymalarını önlemek için hizayı sıfırla */
+    text-align: left; 
+}
+
+/* 2. Sadece modal içindeki kareyi İlanlar stilinde özelleştir */
+.modal-content .ad-info-box {
+    text-align: center !important; /* Modal içinde metni ortala */
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important;
+    padding: 18px !important;
+    border-radius: 16px !important;
+}
+
+/* 3. Şikayet Et sayfasındaki kartların alt boşluklarını onar */
+#complaint-list .cyber-card {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 20px !important;
 }
 
 /* Modal ana başlık ve tarih alanını İlanlar gibi sıkılaştır */
@@ -1306,10 +1321,9 @@ button[onclick*="prepareDeleteHizmet"] {
     margin-bottom: 12px !important;
 }
 
-/* Modal genel kompaktlık ayarı (Taşma korumalı) */
-#social-detail-modal .modal-content, 
-#radar-detail-modal .modal-content,
-#ad-detail-modal .modal-content {
-    max-width: 440px !important; /* Dağılmayı önleyen kompakt genişlik */
+/* 4. Modal genişlik ve taşma koruması */
+.modal-content {
+    max-width: 450px !important;
+    width: 92% !important;
     padding: 15px 20px !important;
 }

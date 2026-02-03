@@ -124,13 +124,20 @@ document.addEventListener("DOMContentLoaded", () => {
 /* >> SAYFA GEÇİŞ VE TEMİZLİK MOTORU << */
 /* >> NAVİGASYON VE SAYFA ARINDIRMA MOTORU << */
 
+/* >> TEMİZ NAVİGASYON MOTORU << */
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
+    const navItems = document.querySelectorAll(".nav-item, [data-target]");
     
     const handleNavigation = (e) => {
         const trigger = e.target.closest("[data-target]");
         if (!trigger) return;
         const target = trigger.getAttribute("data-target");
+    navItems.forEach(item => {
+        item.addEventListener("click", function(e) {
+            e.preventDefault();
+            const target = this.getAttribute("data-target");
+            if (!target) return;
 
         // 1. TÜM SAYFALARI VE ANA SAYFA BİLEŞENLERİNİ GİZLE
         // 1. TÜM SAYFA VE BİLEŞENLERİ FİZİKSEL OLARAK GİZLE
@@ -139,6 +146,18 @@ function setupNavigation() {
                 el.style.setProperty('display', 'none', 'important');
                 el.style.display = "none"; // Kesin gizleme
                 el.classList.remove("active");
+            // 1. Sadece .page sınıfına sahip ana bölümleri temizle
+            document.querySelectorAll(".page").forEach(p => {
+                p.classList.remove("active");
+                p.style.display = "none";
+            });
+
+            // 2. Hedef sayfayı mühürle ve üste kaydır
+            const targetPage = document.getElementById(target);
+            if (targetPage) {
+                targetPage.style.display = "block";
+                targetPage.classList.add("active");
+                window.scrollTo(0, 0);
             }
         });
 
@@ -157,6 +176,10 @@ function setupNavigation() {
         if (target === "home") {
             document.querySelectorAll(".slider-container, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
                 if(el) el.style.display = "block";
+            // 3. Ana sayfa bileşenlerini sadece 'home' aktifse göster
+            const homeExtras = document.querySelectorAll(".slider-container, .home-hero, #info-bar, #ramadan-status");
+            homeExtras.forEach(el => {
+                el.style.display = (target === "home") ? "block" : "none";
             });
             const dash = document.getElementById("home-dashboard");
             if(dash) dash.style.display = "grid";
@@ -170,6 +193,8 @@ function setupNavigation() {
     };
 
     navItems.forEach(el => el.addEventListener('click', handleNavigation));
+        });
+    });
 }
 
 // --- 2. VERİ YÜKLEME MOTORU ---

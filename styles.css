@@ -27,24 +27,19 @@ body {
     overflow-x: hidden;
 }
 
-/* >> SAYFA İZOLASYON VE KESİN AYRIŞTIRMA MÜHÜRÜ << */
-
-.page { 
-    display: none !important; /* Pasif sayfaları DOM'da tamamen yok et */
-    width: 100% !important;
-    min-height: 100vh !important;
-    background: var(--bg) !important;
-    margin: 0 !important;
-    padding: 20px 15px 100px 15px !important;
-    box-sizing: border-box !important;
-    overflow-x: hidden !important;
-    /* KRİTİK: position: absolute kuralı silindi. Sayfalar artık statik hizada durur. */
+/* >> SAYFA MİMARİSİ NİHAİ DÜZELTME << */
+.page {
+    display: none !important; /* Pasifleri kesin gizle */
+    width: 100%;
+    min-height: auto !important; /* 100vh kaldırıldı */
+    padding: 20px 15px 100px 15px;
+    box-sizing: border-box;
+    position: relative; /* Üst üste binmeyi bitirir */
 }
 
 
 .page.active { 
-    display: block !important; /* Sadece aktif sayfayı fiziksel olarak oluştur */
-    animation: fadeIn 0.3s ease-in-out; /* Yumuşak geçiş mühürü */
+    display: block !important; /* Flex/Absolute çakışmasını engeller */
 }
 
 /* İletişim sayfasının üzerine başka bir şey binmesini engeller */

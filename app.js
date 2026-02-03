@@ -838,8 +838,10 @@ window.openFirsatDetail = async function(id) {
         // Fırsat açıklama kutusunu ortalar ve kurumsallaştırır
         const descriptionEl = document.getElementById("modal-description");
         if (descriptionEl) {
-            descriptionEl.style.textAlign = "center";
-            descriptionEl.innerHTML = `<div style="white-space: pre-wrap; color: #333; margin-top:15px; font-size:1.05rem; line-height:1.6; font-weight:500;">${window.escapeHTML(f.content)}</div>`;
+            descriptionEl.innerHTML = `
+                <div class="ad-info-box">
+                    <p style="white-space: pre-wrap; margin:0; text-align:center;">${window.escapeHTML(f.content)}</p>
+                </div>`;
         }
 
         const gallery = document.getElementById("modal-image-gallery");
@@ -1861,8 +1863,10 @@ window.openRadarDetail = async function(id) {
     document.getElementById("radar-image-gallery").innerHTML = `<img src="${urun.image_url}" style="width:100%; border-radius:12px;">`;
     
     document.getElementById("radar-info-content").innerHTML = `
-        <p><strong>Market:</strong> ${window.escapeHTML(urun.market_adi)}</p>
-        <p><strong>Tarih:</strong> ${urun.tarih_etiketi || 'Belirtilmedi'}</p>`;
+        <div class="ad-info-box" style="text-align:left;">
+            <p><strong><i class="fas fa-store"></i> Market:</strong> ${window.escapeHTML(urun.market_adi)}</p>
+            <p><strong><i class="fas fa-calendar-alt"></i> Tarih:</strong> ${urun.tarih_etiketi || 'Belirtilmedi'}</p>
+        </div>`;
     // 3. Silme Butonunu Bağla
     document.getElementById("radar-delete-btn").onclick = () => window.softDeleteRadar(urun.id);
     // 4. Modalı Fiziksel Olarak Tetikle
@@ -2257,10 +2261,11 @@ window.openSocialDetail = async function(table, id) {
                 <span style="color:#aaa; font-size:0.8rem; font-weight:600;"><i class="far fa-calendar-alt"></i> ${modalDate}</span>
             </div>`;
         
-        /* >> TAVSİYE METNİ TEK KARE MÜHÜRÜ << */
         document.getElementById("social-modal-content").innerHTML = `
-            <div class="recommend-text-box">
-                "${window.escapeHTML(modalContent)}"
+            <div class="ad-info-box">
+                <p style="white-space: pre-wrap; margin:0; text-align:center; font-style:italic;">
+                    "${window.escapeHTML(modalContent)}"
+                </p>
             </div>`;
         
         // 3. GÖRSEL ALANI

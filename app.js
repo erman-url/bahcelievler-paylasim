@@ -2257,7 +2257,7 @@ window.openSocialDetail = async function(table, id) {
                 <span style="color:#aaa; font-size:0.8rem; font-weight:600;"><i class="far fa-calendar-alt"></i> ${modalDate}</span>
             </div>`;
         
-        // 2. DETAY METNİ (DÜZENLİ KUTU)
+        /* >> TAVSİYE METNİ TEK KARE MÜHÜRÜ << */
         document.getElementById("social-modal-content").innerHTML = `
             <div class="recommend-text-box">
                 "${window.escapeHTML(modalContent)}"

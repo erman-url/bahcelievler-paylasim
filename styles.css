@@ -27,24 +27,24 @@ body {
     overflow-x: hidden;
 }
 
-/* >> SAYFA İZOLASYON VE DİKEY HİYERARŞİ MÜHÜRÜ << */
-.page {
-    display: none !important; /* Tüm sayfaları kesin olarak gizle */
+/* >> SAYFA İZOLASYON VE KESİN AYRIŞTIRMA MÜHÜRÜ << */
+
+.page { 
+    display: none !important; /* Pasif sayfaları DOM'da tamamen yok et */
     width: 100% !important;
     min-height: 100vh !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
     background: var(--bg) !important;
+    margin: 0 !important;
     padding: 20px 15px 100px 15px !important;
     box-sizing: border-box !important;
-    z-index: 1 !important;
+    overflow-x: hidden !important;
+    /* KRİTİK: position: absolute kuralı silindi. Sayfalar artık statik hizada durur. */
 }
 
-/* Sadece aktif sayfayı ön plana çıkar */
-.page.active {
-    display: block !important;
-    z-index: 10 !important;
+
+.page.active { 
+    display: block !important; /* Sadece aktif sayfayı fiziksel olarak oluştur */
+    animation: fadeIn 0.3s ease-in-out; /* Yumuşak geçiş mühürü */
 }
 
 /* İletişim sayfasının üzerine başka bir şey binmesini engeller */
@@ -471,10 +471,12 @@ body.modal-open {
     opacity: 1 !important;
 }
 
-/* Fırsat İndirim sayfası için ekstra görsel temizlik */
-#firsat-indirim {
-    background-color: var(--bg) !important;
-    z-index: 20 !important;
+/* Fırsat İndirim Sayfası İçin Özel Z-Index Koruması */
+#firsat-indirim.active {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    z-index: 999 !important;
 }
 
 #firsat-form {

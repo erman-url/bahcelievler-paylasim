@@ -122,6 +122,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* >> SAYFA GEÇİŞ VE TEMİZLİK MOTORU << */
+/* >> NAVİGASYON VE SAYFA ARINDIRMA MOTORU << */
+
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     
@@ -131,9 +133,11 @@ function setupNavigation() {
         const target = trigger.getAttribute("data-target");
 
         // 1. TÜM SAYFALARI VE ANA SAYFA BİLEŞENLERİNİ GİZLE
+        // 1. TÜM SAYFA VE BİLEŞENLERİ FİZİKSEL OLARAK GİZLE
         document.querySelectorAll(".page, section, .slider-container, #home-dashboard, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
             if(el) {
                 el.style.setProperty('display', 'none', 'important');
+                el.style.display = "none"; // Kesin gizleme
                 el.classList.remove("active");
             }
         });
@@ -141,12 +145,15 @@ function setupNavigation() {
         // 2. HEDEF SAYFAYI AKTİF ET VE ÜSTE ÇEK
         const targetPage = document.getElementById(target);
         if (targetPage) {
+            window.scrollTo(0, 0); // Sayfa başına dön
+            targetPage.style.display = "block"; // Fiziksel olarak göster
             targetPage.classList.add("active");
             targetPage.style.setProperty('display', 'block', 'important');
             window.scrollTo(0, 0);
         }
 
         // 3. ANA SAYFA ÖZEL BİLEŞENLERİNİ GÖSTER
+        // 3. ANA SAYFAYA ÖZEL BİLEŞENLERİ TETİKLE
         if (target === "home") {
             document.querySelectorAll(".slider-container, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
                 if(el) el.style.display = "block";
@@ -156,6 +163,7 @@ function setupNavigation() {
         }
 
         // 4. ALT MENÜ İKONLARI GÜNCELLE
+        // 4. ALT MENÜ İKONLARINI GÜNCELLE
         document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
         const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
         if (activeLink) activeLink.classList.add("active");

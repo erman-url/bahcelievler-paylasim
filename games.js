@@ -5,15 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Skorları ilk açılışta yükle
     if (typeof renderScores === "function") renderScores();
     
-    // Cyber-Jump kontrollerini bağla
-    const gameContainer = document.getElementById("game-container");
-    if (gameContainer) {
-        gameContainer.addEventListener("touchstart", jump);
-        gameContainer.addEventListener("mousedown", jump);
-    }
-    document.addEventListener("keydown", (e) => { 
-        if (e.code === "Space") jump(); 
-    });
 });
 
 // --- OYUN 1: SAYI TAHMİN MOTORU ---
@@ -74,74 +65,6 @@ window.saveScore = async function() {
         resetGame();
     }
 };
-
-// --- OYUN 2: HAREKETLİ CYBER-JUMP MOTORU ---
-let isJumping = false;
-let gameActive = false;
-let jumpScore = 0;
-let gameInterval;
-
-window.startGame = function() {
-    document.getElementById("start-screen").style.display = "none";
-    document.getElementById("game-container").style.display = "block";
-    const obstacle = document.getElementById("obstacle");
-    const player = document.getElementById("player");
-    jumpScore = 0;
-    gameActive = true;
-    
-    gameInterval = setInterval(() => {
-        if(!gameActive) return;
-        
-        let obstacleLeft = parseInt(window.getComputedStyle(obstacle).getPropertyValue("left"));
-        let playerBottom = parseInt(window.getComputedStyle(player).getPropertyValue("bottom"));
-
-        jumpScore++;
-        document.getElementById("live-score").textContent = `Skor: ${Math.floor(jumpScore/10)}`;
-
-        if (obstacleLeft < 90 && obstacleLeft > 50 && playerBottom <= 40) {
-            gameOver();
-        }
-    }, 10);
-    
-    obstacle.style.animation = "moveObstacle 1.5s infinite linear";
-};
-
-function jump() {
-    if (isJumping || !gameActive) return;
-    const player = document.getElementById("player");
-    isJumping = true;
-    let position = 0;
-    
-    let upInterval = setInterval(() => {
-        if (position >= 120) {
-            clearInterval(upInterval);
-            let downInterval = setInterval(() => {
-                if (position <= 0) {
-                    clearInterval(downInterval);
-                    isJumping = false;
-                }
-                position -= 5;
-                player.style.bottom = position + "px";
-            }, 20);
-        }
-        position += 5;
-        player.style.bottom = position + "px";
-    }, 20);
-}
-
-async function gameOver() {
-    gameActive = false;
-    clearInterval(gameInterval);
-    document.getElementById("obstacle").style.animation = "none";
-    let finalScore = Math.floor(jumpScore/10);
-    
-    const playerName = prompt(`OYUN BİTTİ! Skorun: ${finalScore}\nAdını yaz:`) || "İsimsiz";
-    await window.supabase.from('skorlar').insert([{ player_name: playerName, score: finalScore }]);
-    
-    document.getElementById("start-screen").style.display = "block";
-    document.getElementById("game-container").style.display = "none";
-    renderScores();
-}
 
 // --- SKOR LİSTELEME SİSTEMİ ---
 async function renderScores() {

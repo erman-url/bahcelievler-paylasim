@@ -124,49 +124,42 @@ document.addEventListener("DOMContentLoaded", () => {
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     
-    /* >> KESİN İZOLASYON VE TEMİZLİK MOTORU V12.0 << */
+    /* >> NİHAİ GÖRSEL GÜVENLİK VE İZOLASYON MOTORU << */
     const handleNavigation = (e) => {
         const trigger = e.target.closest("[data-target]");
         if (!trigger) return;
         const target = trigger.getAttribute("data-target");
 
-        // 1. EKRANI TAMAMEN SIFIRLA (Cerrahi Temizlik)
-        // Tüm page ve section'ları sadece gizlemekle kalmaz, dikey alanlarını da yok eder
+        // 1. EKRANI KESİN OLARAK SIFIRLA (Cerrahi Temizlik)
+        // Tüm .page ve ana sayfa bileşenlerini tek hamlede gizler
         document.querySelectorAll(".page, section, .slider-container, #home-dashboard, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
             if(el) {
                 el.style.setProperty('display', 'none', 'important');
                 el.classList.remove("active");
-                el.style.height = "0"; // Dikey alanı fiziksel olarak sıfırlar
-                el.style.overflow = "hidden";
             }
         });
 
-        // 2. ANA SAYFA BİLEŞENLERİNİ YALNIZCA ANA SAYFADA UYANDIR
+        // 2. ANA SAYFA BİLEŞENLERİNİ YÖNET
         if (target === "home") {
             document.querySelectorAll(".slider-container, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
-                if(el) {
-                    el.style.display = "block";
-                    el.style.height = "auto";
-                    el.style.overflow = "visible";
-                }
+                if(el) el.style.display = "block";
             });
-            if(document.getElementById("home-dashboard")) document.getElementById("home-dashboard").style.display = "grid";
+            const dash = document.getElementById("home-dashboard");
+            if(dash) dash.style.display = "grid";
         }
 
-        // 3. HEDEF SAYFAYI TEK BAŞINA MÜHÜRLE
+        // 3. HEDEF SAYFAYI TEK BAŞINA AÇ VE EN ÜSTE ÇEK
         const targetPage = document.getElementById(target);
         if (targetPage) {
-            window.scrollTo(0, 0); // Sayfayı en üste mühürler
+            window.scrollTo(0, 0); // Sayfanın en altta kalma sorununu bitirir
             targetPage.classList.add("active");
             targetPage.style.setProperty('display', 'block', 'important');
-            targetPage.style.height = "auto";
-            targetPage.style.overflow = "visible";
             
             // Fırsat listesini sadece kendi sayfasında render et (Sızıntı Önleyici)
             if (target === 'firsat-indirim') renderFirsatlar();
         }
 
-        // 4. ALT MENÜ İKONLARI
+        // 4. ALT MENÜ İKONLARI GÜNCELLE
         document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
         const activeLink = document.querySelector(`.nav-item[data-target="${target}"]`);
         if (activeLink) activeLink.classList.add("active");

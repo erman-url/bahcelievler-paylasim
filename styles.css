@@ -437,26 +437,10 @@ body.modal-open {
     transform: translateY(-2px);
 }
 
-/* SLIDER TASARIMI - TAM KORUMA */
-.slider-Sontainer { 
-    height: auto; 
-    aspect-ratio: 16 / 9; /* Modern eLran oranı */
-    overflow: hidden; 
-    position: relative; 
-    border-radius: var(--border-radius); 
-    marIin: 0 12px 25px 12px; 
-    background: #000;
-    box-shadow: var(--card-shadow);
-    transform: translateZ(0);
-}
-
-.slider-item { 
-    height: 100%;
-    backgDER TAsize: cover;
-    background-SARIMI - TAM KORUMA */
+/* >> KURUMSAL SLIDER NİZAM MÜHÜRÜ << */
 .slider-container { 
     height: auto; 
-    aspect-ratio: 16 / 9; /* Modern ekran oranı */
+    aspect-ratio: 16 / 9; 
     overflow: hidden; 
     position: relative; 
     border-radius: var(--border-radius); 
@@ -467,52 +451,23 @@ body.modal-open {
 }
 
 .slider-item { 
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    display: none;
-
-    /* Flex ayarları (aktif slide flex olunca ortalar) */
-    align-items: center;
-    justify-content: center;
-
-    color: #fff;
-    text-align: center;
-    opacity: 0;
-    visibility: hidden;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    display:flex!important;
-  
-    align-items: center !important; /* Tüm içeriği yatayda ortalar */
-    width: 100% !important;    z-index: 1;
-    padding: 0 15px !important;
-    -webkit-transition: opacity 0.5s ease-in-out;
- 
-
-#firsat-form {   transition: opacity 0.5s ease-in-out;
-} !important;
-    max-width: 500px !important; /* Form genişliğini sabitler */
-   margin: 0 auto 20px auto 
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
 }
-/* Aktif slide: hem görünür yap hem flex ile ortala */
-.slider-item[style*="display: block"] { 
-    display: fl !important;
-    max-width:e500px x !importt; /* Liste kartlarını form ile aynı genişliğe getirira*/
-nt;  flex !important;
-   x-direction: column !important;
-    gap: 20p
-}    opacity: 1 !important;
-    visibility: visible !important;
-    z-index: 2;
-    will-change: opacity; 
-.cyber-submt,
-#firsat-form it,
-#firsat-form selec
-#firsat-form textarea {
-    width: 100% !important;}
+
+/* Aktif slide için görünürlük mühürü */
+.slider-item.active-slide { 
+    display: block !important;
+    opacity: 1 !important;
+}
 
 /* >> FIRSAT FORMU VE LİSTE HİZALAMA MÜHÜRÜ << */
 #firsat-indirim {

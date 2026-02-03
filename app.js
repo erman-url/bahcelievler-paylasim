@@ -1271,32 +1271,33 @@ if (lastPiyasa?.[0]) {
     }
 }
 
+/* >> SLIDER YÖNETİM MOTORU V2.0 << */
 function showSlides() {
     let slides = document.getElementsByClassName("slider-item");
-    if (!slides.length) return;
+    if (!slides || slides.length === 0) return;
     
+    // Tüm slide'ları temizle
     for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.remove("active-slide");
         slides[i].style.display = "none";
-        slides[i].style.opacity = "0";
-        slides[i].style.visibility = "hidden";
     }
     
-    if (slideIndex >= slides.length) {
-        slideIndex = 0;
-    }
+    // İndeksi kontrol et ve ilerlet
+    if (slideIndex >= slides.length) slideIndex = 0;
     
+    // Mevcut slide'ı göster
     const currentSlide = slides[slideIndex];
     if (currentSlide) {
         currentSlide.style.display = "block";
-        currentSlide.style.visibility = "visible";
+        // Reflow tetikle ve sınıfı ekle
         void currentSlide.offsetWidth;
-        setTimeout(() => {
-            currentSlide.style.opacity = "1";
-        }, 10);
+        currentSlide.classList.add("active-slide");
     }
     
     slideIndex++;
-    setTimeout(showSlides, 4000);
+    // Bir sonraki geçişi zamanla
+    if (window.sliderTimeout) clearTimeout(window.sliderTimeout);
+    window.sliderTimeout = setTimeout(showSlides, 4000);
 }
 
 /* >> DUYURU MOTORU: RESMİ BİLGİ AKIŞI << */

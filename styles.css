@@ -25,29 +25,32 @@ body {
     color: var(--dark-text);
     padding-bottom: 80px;
     overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* >> SAYFA MİMARİSİ NİHAİ DÜZELTME << */
+/* >> SAYFA İZOLASYON SİSTEMİ V3.0 << */
 .page {
-    display: none !important; /* Pasif sayfaları kesinlikle gizle */
+    display: none !important; /* Pasif sayfaları %100 gizle */
     width: 100% !important;
-    min-height: auto !important; /* Taşma hatası mühürlendi */
+    min-height: auto !important; /* 100vh sızıntısı bitti */
+    position: relative !important;
     padding: 20px 15px 100px 15px !important;
     box-sizing: border-box !important;
-    position: relative !important; /* Absolute karmaşası bitti */
-    overflow-x: hidden !important;
+    overflow: hidden; /* Alt sızmayı engeller */
 }
 
 
 .page.active { 
-    display: block !important; /* Statik akış mühürü */
+    display: block !important; /* Tüm sayfalar standart blok akışında */
 }
 
-/* Fırsat İndirim sayfası için özel stabilizasyon */
-#firsat-indirim.active {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
+/* Flex ihtiyacı olan sayfalar için iç kapsayıcı kullanıyoruz */
+.firsat-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
 }
 
 /* İletişim sayfasının üzerine başka bir şey binmesini engeller */
@@ -472,14 +475,6 @@ body.modal-open {
 .slider-item.active-slide { 
     display: block !important;
     opacity: 1 !important;
-}
-
-/* Fırsat İndirim Sayfası İçin Özel Z-Index Koruması */
-#firsat-indirim.active {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    z-index: 999 !important;
 }
 
 #firsat-form {
@@ -1022,14 +1017,6 @@ button[onclick*="prepareDeleteHizmet"]:hover {
 }
 
 /* >> FIRSAT LİSTELEME GENİŞLİK VE HİZALAMA MÜHÜRÜ << */
-
-/* 1. Sayfanın ana kapsayıcısını tüm cihazlarda ortalar */
-#firsat-indirim {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important; /* Buton ve kartları yatayda tam ortalar */
-    padding-bottom: 100px !important;
-}
 
 /* 2. GÖNDER butonu ve form elemanlarını standart boyuta sabitler */
 #firsat-form {

@@ -28,12 +28,12 @@
     <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.15)), url('img/slider5.jpg');"></div>
 </div>
 
-    <section id="gundem-haber">
+    <div id="gundem-haber">
         <h1 class="cyber-header" style="margin-top: 10px; margin-bottom: 15px;">🏙️ GÜNDEM & HABER</h1>
         <div id="haber-listesi">
             <p style="color: #888; width: 100%; text-align: center;">Haberler yükleniyor...</p>
         </div>
-    </section>
+    </div>
     
             <div id="ramadan-status" class="cyber-card" style="margin-bottom: 8px; padding: 10px; text-align: center; font-size: 0.9rem; font-weight: 500; color: var(--app-blue); background: var(--azure-light);">
                 <i class="fas fa-moon" style="margin-right: 5px;"></i>
@@ -264,6 +264,7 @@
         </section>
 
         <section id="firsat-indirim" class="page">
+            <div class="firsat-wrapper">
             <h1 class="cyber-header">🔥 FIRSAT & İNDİRİM EKLE</h1>
             <form id="firsat-form" class="cyber-form">
                 <select id="firsat-type" required onchange="toggleFirsatFields()">
@@ -287,6 +288,7 @@
                 <button type="submit" id="firsat-submit-btn" class="cyber-submit">GÖNDER</button>
             </form>
             <div id="firsat-list" style="padding: 10px;"></div>
+            </div>
         </section>
 
         <section id="fiyat-dedektifi" class="page">

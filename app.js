@@ -1348,29 +1348,31 @@ async function fetchDuyurular() {
     }
 }
 
+/* >> KESİNTİ BİLDİRİM MOTORU V4.0 << */
 async function setupKesintiForm() {
     const form = document.getElementById("kesinti-form");
     if (!form) return;
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+        // isProcessing kontrolü ile mükerrer işlem engellenir
+        if (isProcessing) return; 
 
-        const passVal = document.getElementById("kes-pass").value;
-        // Şifre Kontrolü
-        const passCheck = window.validateComplexPassword(passVal);
-        if (passCheck) { alert(passCheck); return; }
-
-        const districtVal = document.getElementById("kes-district").value;
-        const streetVal = document.getElementById("kes-street").value.trim();
         const descVal = document.getElementById("kes-desc").value.trim();
+        const streetVal = document.getElementById("kes-street").value.trim();
+        const districtVal = document.getElementById("kes-district").value;
+        const passVal = document.getElementById("kes-pass").value;
 
-        // Sokak Regex Kontrolü (HTML pattern'e ek güvenlik)
-        const streetRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.]+$/;
-        if (!streetRegex.test(streetVal)) {
-            alert("HATA: Sokak isminde sadece harf, rakam ve nokta kullanabilirsiniz.");
+        // >> KÜFÜR VE ARGO DENETİMİ <<
+        // Hem sokak isminde hem de detaylarda filtreleme yapılır
+        if (window.hasBadWords(descVal) || window.hasBadWords(streetVal)) {
+            alert("Lütfen topluluk kurallarına uygun bir dil kullanın.");
             return;
         }
+
+        // Şifre formatı kontrolü
+        const passCheck = window.validateComplexPassword(passVal);
+        if (passCheck) { alert(passCheck); return; }
 
         const btn = document.getElementById("kes-submit-btn");
         isProcessing = true;
@@ -1381,7 +1383,8 @@ async function setupKesintiForm() {
             const deleteToken = await sha256(passVal);
             const payload = {
                 type: document.getElementById("kes-type").value,
-                location: `${districtVal} - ${streetVal}`,
+                // Mahalle ve Sokak bilgisi kurumsal nizamda birleştirilir
+                location: `${districtVal}, ${streetVal}`, 
                 description: descVal,
                 delete_password: deleteToken
             };
@@ -1391,9 +1394,10 @@ async function setupKesintiForm() {
 
             alert("Kesinti bildirimi yayınlandı!");
             form.reset();
-            renderKesintiler();
+            // Listeyi anında güncelle
+            if (typeof renderKesintiler === "function") renderKesintiler(); 
         } catch (err) {
-            alert("Hata: " + err.message);
+            alert("Sistem Hatası: " + err.message);
         } finally {
             isProcessing = false;
             btn.disabled = false;

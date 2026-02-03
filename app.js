@@ -822,15 +822,24 @@ window.openFirsatDetail = async function(id) {
         const dateStr = new Date(f.created_at).toLocaleDateString('tr-TR', {day:'2-digit', month:'2-digit', year:'numeric'});
 
         document.getElementById("modal-title").textContent = f.title;
+        /* >> MODAL META VERİ (KATEGORİ & TARİH) AYRIŞTIRMA MÜHÜRÜ << */
+
+        // modal-price alanını temizleyip kurumsal meta alanına dönüştürür
         document.getElementById("modal-price").innerHTML = `
-            <div class="modal-header-meta">
-                <span style="font-weight:bold; color:#28a745; font-size:0.9rem;">${window.escapeHTML(f.category)}</span>
-                <span style="font-size:0.8rem; color:#888;"><i class="far fa-calendar-alt"></i> ${dateStr}</span>
+            <div class="modal-header-meta" style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 20px; width: 100%;">
+                <span class="meta-badge" style="background: var(--azure-light); color: var(--app-blue); padding: 6px 15px; border-radius: 50px; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; border: 1px solid rgba(0, 86, 179, 0.1);">
+                    <i class="fas fa-tag"></i> ${window.escapeHTML(f.category)}
+                </span>
+                <span class="meta-date" style="color: #888; font-size: 0.85rem; font-weight: 600;">
+                    <i class="far fa-calendar-alt"></i> ${dateStr}
+                </span>
             </div>`;
         
+        // Fırsat açıklama kutusunu ortalar ve kurumsallaştırır
         const descriptionEl = document.getElementById("modal-description");
         if (descriptionEl) {
-            descriptionEl.innerHTML = `<div class="ad-info-box" style="white-space: pre-wrap; font-size:1rem; line-height:1.5;">${window.escapeHTML(f.content)}</div>`;
+            descriptionEl.style.textAlign = "center";
+            descriptionEl.innerHTML = `<div style="white-space: pre-wrap; color: #333; margin-top:15px; font-size:1.05rem; line-height:1.6; font-weight:500;">${window.escapeHTML(f.content)}</div>`;
         }
 
         const gallery = document.getElementById("modal-image-gallery");

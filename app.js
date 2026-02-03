@@ -2258,9 +2258,14 @@ window.openSocialDetail = async function(table, id) {
                 <span style="color:#aaa; font-size:0.8rem; font-weight:600;"><i class="far fa-calendar-alt"></i> ${modalDate}</span>
             </div>`;
         
-        document.getElementById("social-modal-content").innerHTML = `<div class="ad-info-wrapper">
-            <div class="ad-info-box"><div class="ad-text">"${window.escapeHTML(modalContent)}"</div></div>
-        </div>`;
+        /* >> TAVSİYE/ŞİKAYET METNİ TEK KARE MÜHÜRÜ << */
+        // openSocialDetail fonksiyonu içindeki social-modal-content satırını bununla değiştir:
+        document.getElementById("social-modal-content").innerHTML = `
+    <div class="ad-info-wrapper">
+        <div class="ad-info-box">
+            "${window.escapeHTML(modalContent)}"
+        </div>
+    </div>`;
         
         // 3. GÖRSEL ALANI
         const gallery = document.getElementById("social-image-gallery");

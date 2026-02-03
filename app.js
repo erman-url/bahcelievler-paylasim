@@ -124,35 +124,45 @@ document.addEventListener("DOMContentLoaded", () => {
 function setupNavigation() {
     const navItems = document.querySelectorAll(".nav-item, .cyber-btn-block, .home-widget");
     
-    /* >> NİHAİ İZOLASYON MÜHÜRÜ V7.0 << */
+    /* >> SEMT RADARI HARİTA KURTARMA MÜHÜRÜ V8.0 << */
     const handleNavigation = (e) => {
         const trigger = e.target.closest("[data-target]");
         if (!trigger) return;
         const target = trigger.getAttribute("data-target");
 
-        // 1. TÜM SECTIONLARI VE ANA SAYFAYI TAMAMEN SİL (Hidden yerine None)
-        document.querySelectorAll(".page, section, .slider-container, #home-dashboard, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
+        // 1. TÜM SAYFALARI GİZLE (Önceki hatayı temizle)
+        document.querySelectorAll(".page, section").forEach(el => {
             if(el) el.style.setProperty('display', 'none', 'important');
+        });
+
+        // Ana sayfa bileşenlerini gizle
+        document.querySelectorAll(".slider-container, .home-hero, #home-dashboard, #info-bar, #gundem-haber, #ramadan-status").forEach(el => {
+            if(el) el.style.display = "none";
         });
 
         // 2. ANA SAYFA MI?
         if (target === "home") {
             document.querySelectorAll(".slider-container, .home-hero, #info-bar, #gundem-haber, #ramadan-status").forEach(el => el.style.display = "block");
-            document.getElementById("home-dashboard").style.display = "grid";
+            if(document.getElementById("home-dashboard")) document.getElementById("home-dashboard").style.display = "grid";
         }
 
-        // 3. HEDEF SAYFAYI TEK BAŞINA AÇ
+        // 3. HEDEF SAYFAYI AÇ
         const targetPage = document.getElementById(target);
         if (targetPage) {
             window.scrollTo(0, 0); 
             targetPage.style.setProperty('display', 'block', 'important');
             
-            // Harita sadece kendi sayfasında aktif olsun
-            if (target === 'semt-radari' && typeof window.initForumMap === 'function') {
+            // HARİTA KURTARMA MOTORU
+            if (target === 'semt-radari') {
+                // Konteynırın görünür olması için küçük bir gecikme verilir
                 setTimeout(() => {
-                    window.initForumMap();
-                    if (window.forumMap) window.forumMap.invalidateSize();
-                }, 300);
+                    if (!forumMap) {
+                        window.initForumMap();
+                    } else {
+                        // Harita zaten varsa boyutlarını yeniden hesapla (Gri ekranı bitirir)
+                        forumMap.invalidateSize();
+                    }
+                }, 400);
             }
         }
     };

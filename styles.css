@@ -27,17 +27,38 @@ body {
     overflow-x: hidden;
 }
 
-/* >> TEMİZLENMİŞ SAYFA MOTORU << */
+/* >> SAYFA VE FORM HİZALAMA MÜHÜRÜ << */
 .page { 
     display: none; 
-    width: 100%;
-    min-height: 100vh;
-    background: var(--bg);
+    width: 100% !important;
+    min-height: 100vh !important;
+    background: var(--bg) !important;
     margin: 0 !important;
+    padding: 15px !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    z-index: 10 !important; /* Sayfayı en öne çeker */
 }
 
 .page.active { 
     display: block !important; 
+}
+
+/* Fırsat ve İletişim Formlarını Aynı Hizaya Getir */
+#firsat-form, #contact-form, .cyber-form {
+    width: 100% !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+}
+
+/* İletişim sayfasındaki buton gruplarını düzenle */
+#iletisim .cyber-btn-block {
+    max-width: 500px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 
 /* 4. Alt navigasyon barını haritanın her zaman üstünde tut */

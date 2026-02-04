@@ -1401,14 +1401,20 @@ async function setupKesintiForm() {
     });
 }
 
-/* >> GÜVENLİ KESİNTİ RENDER MOTORU << */
+/* >> GÜVENLİ KESİNTİ RENDER MOTORU V5.0 << */
 async function renderKesintiler() {
     const el = document.getElementById('kesinti-list');
     if (!el) return;
 
     const { data } = await window.supabase.from('kesintiler').select('*').order('created_at', { ascending: false });
 
-    el.innerHTML = data?.map(k => `
+    el.innerHTML = data?.map(k => {
+        const dateObj = new Date(k.created_at);
+        // Hem Tarih Hem Saat Mührü [cite: 04-02-2026]
+        const displayDate = dateObj.toLocaleDateString('tr-TR');
+        const displayTime = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+
+        return `
         <div class="cyber-card" style="margin-bottom:12px; border-left: 5px solid ${k.type === 'Elektrik' ? '#ffc107' : k.type === 'Su' ? '#00d2ff' : '#ff4d4d'};">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <strong style="color:${k.type === 'Elektrik' ? '#b8860b' : '#007bff'};">${window.escapeHTML(k.type)} Kesintisi</strong>
@@ -1416,9 +1422,11 @@ async function renderKesintiler() {
             </div>
             <p style="margin:5px 0; font-weight:bold; font-size:0.9rem;"><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(k.location)}</p>
             <p style="margin:0; font-size:0.85rem; color:#555;">${window.escapeHTML(k.description)}</p>
-            <div style="text-align:right; font-size:0.6rem; color:#999; margin-top:5px;">${new Date(k.created_at).toLocaleTimeString('tr-TR')}</div>
+            <div style="text-align:right; font-size:0.65rem; color:#999; margin-top:8px; font-weight:600;">
+                <i class="far fa-calendar-alt"></i> ${displayDate} | <i class="far fa-clock"></i> ${displayTime}
+            </div>
         </div>
-    `).join('') || "<p style='text-align:center;'>Şu an bildirilmiş bir kesinti yok.</p>";
+    `}).join('') || "<p style='text-align:center;'>Şu an bildirilmiş bir kesinti yok.</p>";
 }
 
 /* >> GÜVENLİ KESİNTİ SİLME MOTORU << */

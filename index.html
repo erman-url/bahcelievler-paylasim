@@ -275,13 +275,21 @@
         </section>
 
         <section id="sikayet-et" class="page">
-            <h1 class="cyber-header">✍️ ŞİKAYET ET </h1>
-            <p style="padding: 0 15px; font-size: 0.85rem; color: #666; margin-bottom: 15px; line-height: 1.4;">
-                <i class="fas fa-bullhorn" style="color:#ff4d4d;"></i> İlçemizdeki olumsuzlukları dile getirin, birlikte düzeltelim.
-            </p>
+            <h1 class="cyber-header">🚩 SORUN BİLDİR</h1>
+    
+    <div class="cyber-card" style="margin: -10px 10px 20px 10px; border-left: 5px solid #ff4d4d; background: #fff5f5; padding: 15px; text-align: center;">
+        <h3 style="margin: 0; color: #c62828; font-size: 1rem;">
+            <i class="fas fa-bullhorn fa-beat" style="margin-right: 8px;"></i> 
+            Bahçelievler’de Bir Sorun mu Var?
+        </h3>
+        <p style="font-size: 0.85rem; color: #666; margin-top: 5px; line-height: 1.4;">
+            Mahallendeki aksaklıkları (çöp, yol, park vb.) bildir, komşularınla paylaş ve birlikte çözüm üretilmesini sağla.
+        </p>
+    </div>
+
             <form id="complaint-form" class="cyber-form">
                 <select id="comp-category" required>
-                    <option value="" disabled selected>Konu Kategorisi Seçiniz</option>
+                    <option value="" disabled selected>Sorun Kategorisi Seçiniz</option>
                     <option value="Belediye Hizmetleri">Belediye Hizmetleri (Çöp, Yol vb.)</option>
                     <option value="İşletme Şikayeti">İşletme & Esnaf (Davranış, Hizmet)</option>
                     <option value="Hayvan Hakları">Hayvan Hakları & Çevre</option>
@@ -289,16 +297,31 @@
                     <option value="Diğer">Diğer Olumsuzluklar</option>
                 </select>
                 
-                <input type="text" id="comp-title" placeholder="Kısa Başlık (Max 35 Karakter)" maxlength="35" required>
+                <input type="text" id="comp-title" placeholder="Kısa Başlık (Max 30 Karakter)" maxlength="30" pattern="^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s]+$" required title="Sadece harf, rakam ve boşluk kullanabilirsiniz.">
                 
+                <select id="comp-district" required>
+                    <option value="" disabled selected>Sorunun Olduğu Mahalle (Zorunlu)</option>
+                    <option value="Bahçelievler Mah.">Bahçelievler Mahallesi</option>
+                    <option value="Cumhuriyet Mah.">Cumhuriyet Mahallesi</option>
+                    <option value="Çobançeşme Mah.">Çobançeşme Mahallesi</option>
+                    <option value="Fevzi Çakmak Mah.">Fevzi Çakmak Mahallesi</option>
+                    <option value="Hürriyet Mah.">Hürriyet Mahallesi</option>
+                    <option value="Kocasinan Merkez Mah.">Kocasinan Merkez Mahallesi</option>
+                    <option value="Siyavuşpaşa Mah.">Siyavuşpaşa Mahallesi</option>
+                    <option value="Soğanlı Mah.">Soğanlı Mahallesi</option>
+                    <option value="Şirinevler Mah.">Şirinevler Mahallesi</option>
+                    <option value="Yenibosna Merkez Mah.">Yenibosna Merkez Mahallesi</option>
+                    <option value="Zafer Mah.">Zafer Mahallesi</option>
+                </select>
+
                 <textarea id="comp-content" maxlength="350" placeholder="Durumu detaylandırın (Max 350 karakter)..." rows="4" required></textarea>
                 
-                <label style="font-size: 0.75rem; color: #555; display: block; margin-top: 10px;">Görsel Ekle (Opsiyonel - Max 2 Adet)</label>
-                <input type="file" id="comp-files" multiple accept="image/*">
+                <label style="font-size: 0.75rem; color: #555; display: block; margin-top: 10px;">Görsel Ekle (Opsiyonel - Max 1 Adet / 3MB)</label>
+                <input type="file" id="comp-files" accept="image/*">
                 
                 <input type="password" id="comp-pass" maxlength="5" placeholder="Silme Şifresi (1 Harf + 4 Rakam)" required>
                 <div style="display:none !important;"><input type="text" name="hp_sikayet" id="hp_sikayet" tabindex="-1"></div>
-                <button type="submit" id="comp-submit-btn" class="cyber-submit" style="background:#ff4d4d !important;">BİLDİRİ YAYINLA</button>
+                <button type="submit" id="comp-submit-btn" class="cyber-submit" style="background:#ff4d4d !important;">SORUNU BİLDİR</button>
             </form>
             <div id="complaint-list" style="padding: 10px;"></div>
         </section>

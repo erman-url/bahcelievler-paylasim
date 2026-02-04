@@ -617,9 +617,16 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
         const passCheck = window.validateComplexPassword(passVal);
         if (passCheck) { alert(passCheck); return; }
         
-        if (fileInput && fileInput.files.length > 2) {
-            alert("En fazla 2 adet görsel ekleyebilirsiniz.");
+        if (fileInput && fileInput.files.length > 1) {
+            alert("En fazla 1 adet görsel ekleyebilirsiniz.");
             return;
+        }
+
+        if (fileInput && fileInput.files.length > 0) {
+            if (fileInput.files[0].size > 3 * 1024 * 1024) {
+                alert("HATA: Görsel boyutu 3MB'ı geçemez.");
+                return;
+            }
         }
 
         isProcessing = true;
@@ -639,14 +646,14 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
                 content: document.getElementById("comp-content").value,
                 delete_password: deleteToken,
                 category: document.getElementById("comp-category") ? document.getElementById("comp-category").value : "Genel",
-                image_url: urls[0] || null,
-                image_url_2: urls[1] || null
+                district: document.getElementById("comp-district").value,
+                image_url: urls[0] || null
             };
 
             const { error } = await window.supabase.from('sikayetler').insert([payload]);
             if (error) throw error;
 
-            alert("Şikayet ve iyileştirme talebiniz halka açık panoda yayınlandı!");
+            alert("Sorun bildiriminiz başarıyla alındı ve panoda yayınlandı!");
             e.target.reset();
             loadPortalData();
         } catch (err) {
@@ -654,7 +661,7 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
         } finally {
             isProcessing = false;
             btn.disabled = false;
-            btn.textContent = "BİLDİRİ YAYINLA";
+            btn.textContent = "SORUNU BİLDİR";
         }
     });
 
@@ -967,6 +974,7 @@ async function renderSikayetler() {
         <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff4d4d; cursor:pointer;" onclick="window.openSocialDetail('sikayetler', '${i.id}')">
             <div style="display:flex; justify-content:space-between; align-items:start;">
                 <span style="font-size:0.7rem; font-weight:bold; background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px;">${window.escapeHTML(i.category)}</span>
+                ${i.district ? `<span style="font-size:0.65rem; color:#666; font-weight:bold;"><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(i.district)}</span>` : ''}
             </div>
             <h4 style="margin:10px 0 5px 0;">${window.escapeHTML(i.title)}</h4>
             <p style="font-size:0.9rem; color:#444;">${window.escapeHTML(i.content)}</p>

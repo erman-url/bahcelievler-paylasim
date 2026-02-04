@@ -473,6 +473,7 @@ body.modal-open {
     transform: translateZ(0);
 }
 
+/* >> SLIDER GÖRÜNÜRLÜK MÜHÜRÜ << */
 .slider-item { 
     position: absolute;
     top: 0;
@@ -481,11 +482,12 @@ body.modal-open {
     height: 100%;
     background-size: cover;
     background-position: center;
-    display: none;
+    /* opacity ve visibility kuralları kaldırıldı, JS ile çakışma bitti */
+    display: none; 
     transition: opacity 0.8s ease-in-out;
 }
 
-/* Aktif slide için görünürlük mühürü */
+/* Aktif slayt için zorunlu görünürlük */
 .slider-item.active-slide { 
     display: block !important;
     opacity: 1 !important;

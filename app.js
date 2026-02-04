@@ -236,13 +236,11 @@ function initSlider() {
 
     // İlk açılışta tüm slide'ları sıfırla
     for (let i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
         slides[i].classList.remove("active-slide");
     }
 
     // İlk slide'ı göster
     slideIndex = 0;
-    slides[0].style.display = "block";
     slides[0].classList.add("active-slide");
 
     // Döngüyü başlat
@@ -1287,7 +1285,6 @@ function showSlides() {
     // Tüm slide'ları temizle
     for (let i = 0; i < slides.length; i++) {
         slides[i].classList.remove("active-slide");
-        slides[i].style.display = "none";
     }
     
     // İndeksi kontrol et ve ilerlet
@@ -1296,7 +1293,6 @@ function showSlides() {
     // Mevcut slide'ı göster
     const currentSlide = slides[slideIndex];
     if (currentSlide) {
-        currentSlide.style.display = "block";
         // Reflow tetikle ve sınıfı ekle
         void currentSlide.offsetWidth;
         currentSlide.classList.add("active-slide");

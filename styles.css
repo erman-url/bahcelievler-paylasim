@@ -1397,3 +1397,14 @@ button[onclick*="prepareDeleteHizmet"] {
     width: 92% !important;
     padding: 15px 20px !important;
 }
+
+#modal-image-gallery { position: relative; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+#modal-image-gallery::before, #modal-image-gallery::after {
+    content: '\f104'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+    position: absolute; top: 50%; transform: translateY(-50%);
+    color: rgba(255,255,255,0.7); font-size: 2rem; z-index: 10; pointer-events: none;
+}
+#modal-image-gallery::before { left: 10px; content: '\f104'; }
+#modal-image-gallery::after { right: 10px; content: '\f105'; }
+#modal-image-gallery img:only-child ~ ::before, 
+#modal-image-gallery img:only-child ~ ::after { display: none !important; }

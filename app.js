@@ -1764,7 +1764,7 @@ window.searchOnMap = function() {
 };
 
 
-/* >> EMLAK TALEP VE KVKK MOTORU V2.0 << */
+/* >> EMLAK TALEP MOTORU V3.0: AD-SOYAD ENTEGRASYONU << */
 async function setupEstateForm() {
     const form = document.getElementById("estate-request-form");
     if (!form) return;
@@ -1773,19 +1773,20 @@ async function setupEstateForm() {
         e.preventDefault();
         if (isProcessing) return;
 
-        // 1. KVKK Onay Denetimi
+        // KVKK Onay Kontrolü
         const kvkkCheck = document.getElementById("est-kvkk");
-        if (!kvkkCheck.checked) {
-            alert("Devam etmek için KVKK metnini okuyup onaylamanız gerekmektedir.");
+        if (!kvkkCheck || !kvkkCheck.checked) {
+            alert("Devam etmek için KVKK ve açık rıza metnini onaylamanız gerekmektedir.");
             return;
         }
 
+        const name = document.getElementById("est-name").value.trim(); // Yeni Alan
         const phone = document.getElementById("est-phone").value.trim();
-        const email = document.getElementById("est-email").value.trim();
+        const email = document.getElementById("est-email") ? document.getElementById("est-email").value.trim() : null;
         const desc = document.getElementById("est-desc").value.trim();
 
-        // 2. Küfür Filtresi Denetimi
-        if (window.hasBadWords(desc)) {
+        // Küfür Filtresi (İsim ve Açıklama İçin)
+        if (window.hasBadWords(desc) || window.hasBadWords(name)) {
             alert("Lütfen topluluk kurallarına uygun bir dil kullanın.");
             return;
         }
@@ -1797,22 +1798,25 @@ async function setupEstateForm() {
 
         try {
             const payload = {
+                name: name, // Yeni Sütun
                 type: document.getElementById("est-type").value,
                 status: document.getElementById("est-status").value,
                 district: document.getElementById("est-district").value,
                 budget: document.getElementById("est-budget").value,
                 description: desc,
-                phone: phone, // Zorunlu alan
-                email: email || null // Opsiyonel alan
+                phone: phone, // Zorunlu
+                email: email || null // Opsiyonel
             };
 
             const { error } = await window.supabase.from('emlak_talepleri').insert([payload]);
             if (error) throw error;
 
-            alert("Talebiniz emlak havuzuna mühürlendi. Sizinle iletişime geçilecektir.");
+            alert("Talebiniz başarıyla emlak havuzuna mühürlendi!");
             form.reset();
-            // Başarılı işlem sonrası yönlendirme
-            document.querySelector('[data-target="hizmetler"]').click();
+            // Sayfa geçişini tetikle
+            if (document.querySelector('[data-target="hizmetler"]')) {
+                document.querySelector('[data-target="hizmetler"]').click();
+            }
         } catch (err) {
             alert("Sistem Hatası: " + err.message);
         } finally {

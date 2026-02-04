@@ -2368,6 +2368,7 @@ window.prepareDeleteHizmet = async function(id) {
 };
 
 /* >> HİZMET DETAY MOTORU V4.0: WEB SİTESİ ENTEGRASYONU << */
+/* >> SOSYAL DETAY MOTORU V5.0: MODÜLER BAŞLIK MÜHÜRÜ << */
 window.openSocialDetail = async function(table, id) {
     try {
         window.currentDetailTable = table;
@@ -2375,6 +2376,22 @@ window.openSocialDetail = async function(table, id) {
         if (error || !s) return;
 
         const modalTitle = s.title || "Hizmet Detayı";
+        // Modül Bazlı Dinamik Başlık Belirleme
+        let moduleHeader = "";
+        let headerColor = "";
+        
+        if (table === 'hizmetler') {
+            moduleHeader = "🏢 HİZMET TANITIMI";
+            headerColor = "#28a745";
+        } else if (table === 'sikayetler') {
+            moduleHeader = "📢 ŞİKAYET & BİLDİRİM"; // Yanlış başlık düzeltildi
+            headerColor = "#ff4d4d";
+        } else if (table === 'tavsiyeler') {
+            moduleHeader = "⭐ KOMŞU TAVSİYESİ";
+            headerColor = "#ffc107";
+        }
+
+        const modalTitle = s.title || "Detay";
         const modalContent = s.comment || s.content || ""; 
         const modalDate = new Date(s.created_at).toLocaleDateString('tr-TR');
         const modalImages = [s.image_url, s.image_url_2].filter(Boolean);
@@ -2390,9 +2407,11 @@ window.openSocialDetail = async function(table, id) {
         document.getElementById("social-modal-title").innerHTML = `
             <div class="modal-header-meta" style="margin-bottom:15px;">
                 <span style="display:inline-block; font-weight:800; color:#28a745; font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;">🏢 HİZMET TANITIMI</span>
+                <span style="display:inline-block; font-weight:800; color:${headerColor}; font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;">${moduleHeader}</span>
                 <h2 style="margin:8px 0; font-size:1.4rem; color:var(--dark-text); line-height:1.2;">${window.escapeHTML(modalTitle)}</h2>
                 <div style="color:#666; font-size:0.85rem; font-weight:600; margin-bottom:5px;">
                     <i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(s.location_name || 'Bahçelievler')}
+                    <i class="fas fa-tag"></i> ${window.escapeHTML(s.category || 'Genel')}
                 </div>
                 <span style="color:#aaa; font-size:0.8rem; font-weight:600;"><i class="far fa-calendar-alt"></i> ${modalDate}</span>
             </div>`;
@@ -2400,8 +2419,10 @@ window.openSocialDetail = async function(table, id) {
         document.getElementById("social-modal-content").innerHTML = `
             <div class="ad-info-wrapper">
                 <div class="ad-info-box" style="font-style:normal !important;">
+                <div class="ad-info-box" style="font-style:normal !important; text-align:left !important;">
                     ${window.escapeHTML(modalContent)}
                     ${websiteLink} </div>
+                </div>
             </div>`;
         
         const gallery = document.getElementById("social-image-gallery");

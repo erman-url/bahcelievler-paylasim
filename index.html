@@ -509,36 +509,49 @@
                 <h3 style="margin-top: 0; color: #2e7d32;"><i class="fas fa-store"></i> İşinizi Komşularınızla Büyütün!</h3>
                 <p style="font-size: 0.85rem; line-height: 1.5; color: #444;">Hizmetlerinizi ücretsiz tanıtın, mahalle sakinlerinin size ulaşmasını sağlayın.</p>
             </div>
-            <form id="hizmet-form" class="cyber-form">
-                <select id="hizmet-category" required>
-                    <option value="" disabled selected>Kategori Seçin (Zorunlu)</option>
-                    <option value="Tadilat & Dekorasyon">Tadilat & Dekorasyon</option>
-                    <option value="Temizlik Hizmetleri">Temizlik Hizmetleri</option>
-                    <option value="Teknoloji & Tamir">Teknoloji & Tamir</option>
-                    <option value="Restoran & Cafe">Restoran & Cafe</option>
-                    <option value="Sağlık & Kişisel Bakım">Sağlık & Kişisel Bakım</option>
-                    <option value="Özel Ders & Eğitim">Özel Ders & Eğitim</option>
-                    <option value="Nakliye & Taşımacılık">Nakliye & Taşımacılık</option>
-                    <option value="Diğer & Hizmet">Diğer & Hizmet</option>
-                </select>
-                
-                <input type="text" id="hizmet-firma" placeholder="Firma / Kurum / Usta Adı (Max 35 Karakter)" maxlength="35" required>
-                <input type="text" id="hizmet-konum" placeholder="Mahalle Adı (Max 35 Karakter)" maxlength="35" required>
-                <input type="tel" id="hizmet-tel" placeholder="Telefon No (Örn: 2123332211)" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
-                <input type="url" id="hizmet-web" placeholder="Web Sitesi (Opsiyonel - https://...)">
-                <textarea id="hizmet-desc" maxlength="750" placeholder="Hizmet Detayları (Max 750 Karakter)" rows="5" required></textarea>
-                
-                <label style="font-size: 0.75rem; color: #d32f2f; display: block; margin-top: 10px; font-weight: bold;">
-                    <i class="fas fa-camera"></i> Hizmet Görseli (Zorunlu - Max 2 Görsel, Max 5MB)
-                </label>
-                <input type="file" id="hizmet-file" accept="image/*" multiple required>
-                
-                <input type="password" id="hizmet-pass" maxlength="5" placeholder="Silme Şifresi (1 Harf + 4 Rakam)" required>
-                <div style="display:none !important; visibility:hidden !important;">
-                    <input type="text" name="hp_hizmet" id="hp_hizmet" tabindex="-1" autocomplete="off">
-                </div>
-                <button type="submit" id="hizmet-submit-btn" class="cyber-submit" style="background: #28a745 !important;">HİZMETİ YAYINLA</button>
-            </form>
+           <form id="hizmet-form" class="cyber-form">
+    <select id="hizmet-category" required>
+        <option value="" disabled selected>Kategori Seçin (Zorunlu)</option>
+        <option value="Tadilat & Dekorasyon">Tadilat & Dekorasyon</option>
+        <option value="Temizlik Hizmetleri">Temizlik Hizmetleri</option>
+        <option value="Teknoloji & Tamir">Teknoloji & Tamir</option>
+        <option value="Restoran & Cafe">Restoran & Cafe</option>
+        <option value="Sağlık & Kişisel Bakım">Sağlık & Kişisel Bakım</option>
+        <option value="Özel Ders & Eğitim">Özel Ders & Eğitim</option>
+        <option value="Nakliye & Taşımacılık">Nakliye & Taşımacılık</option>
+        <option value="Diğer & Hizmet">Diğer & Hizmet</option>
+    </select>
+    
+    <input type="text" id="hizmet-firma" placeholder="Firma / Kurum / Usta Adı (Max 35 Karakter)" maxlength="35" required>
+    
+    <select id="hizmet-konum" required>
+        <option value="" disabled selected>Mahalle Seçiniz (Zorunlu)</option>
+        <option value="Bahçelievler Mah.">Bahçelievler Mahallesi</option>
+        <option value="Cumhuriyet Mah.">Cumhuriyet Mahallesi</option>
+        <option value="Çobançeşme Mah.">Çobançeşme Mahallesi</option>
+        <option value="Fevzi Çakmak Mah.">Fevzi Çakmak Mahallesi</option>
+        <option value="Hürriyet Mah.">Hürriyet Mahallesi</option>
+        <option value="Kocasinan Merkez Mah.">Kocasinan Merkez Mahallesi</option>
+        <option value="Siyavuşpaşa Mah.">Siyavuşpaşa Mahallesi</option>
+        <option value="Soğanlı Mah.">Soğanlı Mahallesi</option>
+        <option value="Şirinevler Mah.">Şirinevler Mahallesi</option>
+        <option value="Yenibosna Merkez Mah.">Yenibosna Merkez Mahallesi</option>
+        <option value="Zafer Mah.">Zafer Mahallesi</option>
+    </select>
+
+    <input type="tel" id="hizmet-tel" placeholder="Telefon No (Zorunlu)" maxlength="11" required>
+    <input type="url" id="hizmet-web" placeholder="Web Sitesi (Opsiyonel - https://...)">
+    <textarea id="hizmet-desc" maxlength="750" placeholder="Hizmet Detayları (Max 750 Karakter)" rows="5" required></textarea>
+    
+    <label style="font-size: 0.75rem; color: #d32f2f; display: block; margin-top: 10px; font-weight: bold;">
+        <i class="fas fa-camera"></i> Hizmet Görseli (Zorunlu - Max 2 Görsel)
+    </label>
+    <input type="file" id="hizmet-file" accept="image/*" multiple required>
+    
+    <input type="password" id="hizmet-pass" maxlength="5" placeholder="Silme Şifresi (1 Harf + 4 Rakam)" required>
+    <div style="display:none !important;"><input type="text" name="hp_hizmet" id="hp_hizmet" tabindex="-1"></div>
+    <button type="submit" id="hizmet-submit-btn" class="cyber-submit" style="background: #28a745 !important;">HİZMETİ YAYINLA</button>
+</form>
             <div id="hizmet-list" style="padding: 10px;"></div>
         </section>
 

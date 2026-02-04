@@ -485,6 +485,8 @@
         <input type="text" id="est-budget" placeholder="Bütçe Aralığı (Örn: 20.000 - 25.000 TL)" required>
         <textarea id="est-desc" maxlength="300" placeholder="Ekstra özellikler (Örn: 2+1, Metroya yakın vb.)" rows="4" required></textarea>
         
+        <input type="text" id="est-name" placeholder="Adınız (Zorunlu)" maxlength="20" pattern="^[a-zA-ZçĞİıÖşüÇğİıÖŞÜ\s]+$" required title="Lütfen sadece harf ve boşluk kullanınız.">
+
         <input type="tel" id="est-phone" placeholder="Telefon Numaranız (Zorunlu)" maxlength="11" required>
         <input type="email" id="est-email" placeholder="E-posta Adresiniz (Opsiyonel)">
 
@@ -495,7 +497,7 @@
             </label>
         </div>
 
-        <button type="submit" id="est-submit-btn" class="cyber-submit" style="background: var(--app-blue) !important;">TALEBİ GÖNDER</button>
+        <button type="submit" id="est-submit-btn" class="cyber-submit" style="background: var(--app-blue) !important;">TALEBİ HAVUZA GÖNDER</button>
     </form>
 </section>
 

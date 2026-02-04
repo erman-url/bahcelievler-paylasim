@@ -1277,30 +1277,32 @@ if (lastPiyasa?.[0]) {
     }
 }
 
-/* >> SLIDER YÖNETİM MOTORU V2.0 << */
 function showSlides() {
     let slides = document.getElementsByClassName("slider-item");
     if (!slides || slides.length === 0) return;
     
-    // Tüm slide'ları temizle
+    // 3. Mevcut tüm aktif sınıfları ve görünürlüğü sıfırla
     for (let i = 0; i < slides.length; i++) {
         slides[i].classList.remove("active-slide");
+        slides[i].style.display = "none";
     }
     
-    // İndeksi kontrol et ve ilerlet
+    // 4. İndeks kontrolü
     if (slideIndex >= slides.length) slideIndex = 0;
     
-    // Mevcut slide'ı göster
     const currentSlide = slides[slideIndex];
     if (currentSlide) {
-        // Reflow tetikle ve sınıfı ekle
-        void currentSlide.offsetWidth;
+        // 5. Önce blok akışına al, sonra reflow tetikle
+        currentSlide.style.display = "block";
+        
+        // Görselin siyah kalmasını önleyen kritik teknik mühür (Reflow)
+        void currentSlide.offsetWidth; 
+        
         currentSlide.classList.add("active-slide");
     }
     
     slideIndex++;
-    // Bir sonraki geçişi zamanla
-    if (window.sliderTimeout) clearTimeout(window.sliderTimeout);
+    // 6. Bir sonraki geçişi mühürle
     window.sliderTimeout = setTimeout(showSlides, 4000);
 }
 

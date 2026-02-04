@@ -444,62 +444,62 @@
             </form>
         </section>
 
-        <section id="emlak-talep-form" class="page">
-            <h1 class="cyber-header"><i class="fas fa-search-location"></i> EMLAK TALEBİ</h1>
-            <div class="cyber-card" style="margin: 10px; border-left: 5px solid var(--app-blue); background: #f0f8ff;">
-                <h3 style="margin-top: 0; color: var(--app-blue);"><i class="fas fa-key"></i> Aradığınız Gayrimenkulü Tarif Edin</h3>
-                <p style="font-size: 0.85rem; color: #444;">Talebiniz emlak havuzuna düşecek ve emlak firması size ulaşacaktır.</p>
-            </div>
-            
-            <form id="estate-request-form" class="cyber-form">
-                <select id="est-type" required>
-                    <option value="" disabled selected>Gayrimenkul Türü</option>
-                    <option value="Daire">Konut / Daire</option>
-                    <option value="Dükkan">İşyeri / Dükkan</option>
-                    <option value="Arsa">Arsa / Arazi</option>
-                </select>
+       <section id="emlak-talep-form" class="page">
+    <h1 class="cyber-header"><i class="fas fa-search-location"></i> EMLAK TALEBİ</h1>
+    
+    <div class="cyber-card" style="margin: 10px; border-left: 5px solid var(--app-blue); background: #f0f8ff;">
+        <h3 style="margin-top: 0; color: var(--app-blue);"><i class="fas fa-key"></i> Aradığınız Gayrimenkulü Tarif Edin</h3>
+        <p style="font-size: 0.85rem; color: #444;">Talebiniz emlak havuzuna düşecek ve emlak firması size ulaşacaktır.</p>
+    </div>
 
-                <select id="est-status" required>
-                    <option value="" disabled selected>Durum</option>
-                    <option value="Kiralık">Kiralık Arıyorum</option>
-                    <option value="Satılık">Satın Almak İstiyorum</option>
-                </select>
+    <form id="estate-request-form" class="cyber-form">
+        <select id="est-type" required>
+            <option value="" disabled selected>Gayrimenkul Türü</option>
+            <option value="Daire">Konut / Daire</option>
+            <option value="Dükkan">İşyeri / Dükkan</option>
+            <option value="Arsa">Arsa / Arazi</option>
+        </select>
 
-                <select id="est-district" required>
-                    <option value="" disabled selected>Tercih Edilen Mahalle</option>
-                    <option value="Bahçelievler Mah.">Bahçelievler Mahallesi</option>
-                    <option value="Cumhuriyet Mah.">Cumhuriyet Mahallesi</option>
-                    <option value="Çobançeşme Mah.">Çobançeşme Mahallesi</option>
-                    <option value="Fevzi Çakmak Mah.">Fevzi Çakmak Mahallesi</option>
-                    <option value="Hürriyet Mah.">Hürriyet Mahallesi</option>
-                    <option value="Kocasinan Merkez Mah.">Kocasinan Merkez Mahallesi</option>
-                    <option value="Siyavuşpaşa Mah.">Siyavuşpaşa Mahallesi</option>
-                    <option value="Soğanlı Mah.">Soğanlı Mahallesi</option>
-                    <option value="Şirinevler Mah.">Şirinevler Mahallesi</option>
-                    <option value="Yenibosna Merkez Mah.">Yenibosna Merkez Mahallesi</option>
-                    <option value="Zafer Mah.">Zafer Mahallesi</option>
-                    <option value="Hepsi">Bahçelievler Genel (Hepsi)</option>
-                </select>
+        <select id="est-status" required>
+            <option value="" disabled selected>Durum</option>
+            <option value="Kiralık">Kiralık Arıyorum</option>
+            <option value="Satılık">Satın Almak İstiyorum</option>
+        </select>
 
-                <input type="text" id="est-budget" placeholder="Bütçe Aralığı (Örn: 20.000 - 25.000 TL)" required>
-                
-                <textarea id="est-desc" maxlength="300" placeholder="Ekstra özellikler (Örn: 2+1, Metroya yakın vb.)" rows="4" required></textarea>
-                
-                <input type="tel" id="est-phone" placeholder="Telefon Numaranız (Beni Arayın)" maxlength="11" required>
-                
-                <div class="kvkk-container" style="margin: 15px 0; padding: 12px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; text-align: left;">
-                    <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; font-size: 0.85rem; color: #333; line-height: 1.5;">
-                        <input type="checkbox" id="est-kvkk" required style="width: 22px; height: 22px; margin-top: 3px; cursor: pointer;">
-                        <span>
-                            <strong>KVKK ve Açık Rıza Metni:</strong><br>
-                            6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) kapsamında; bu form aracılığıyla paylaştığım kişisel verilerimin (telefon numarası, arama tercihlerim ve talep bilgilerim), Bahçelievler ilçesinde faaliyet gösteren emlak ofisleri ile paylaşılmasını, tarafıma gayrimenkul taleplerim doğrultusunda iletişime geçilmesini kabul ediyorum. Kişisel verilerimin yalnızca bu amaçla işleneceğini, üçüncü kişilerle izinsiz paylaşılmayacağını ve talebim halinde silineceğini biliyorum.
-                        </span>
-                    </label>
-                </div>
+        <select id="est-district" required>
+            <option value="" disabled selected>Tercih Edilen Mahalle</option>
+            <option value="Bahçelievler Mah.">Bahçelievler Mahallesi</option>
+            <option value="Cumhuriyet Mah.">Cumhuriyet Mahallesi</option>
+            <option value="Çobançeşme Mah.">Çobançeşme Mahallesi</option>
+            <option value="Fevzi Çakmak Mah.">Fevzi Çakmak Mahallesi</option>
+            <option value="Hürriyet Mah.">Hürriyet Mahallesi</option>
+            <option value="Kocasinan Merkez Mah.">Kocasinan Merkez Mahallesi</option>
+            <option value="Siyavuşpaşa Mah.">Siyavuşpaşa Mahallesi</option>
+            <option value="Soğanlı Mah.">Soğanlı Mahallesi</option>
+            <option value="Şirinevler Mah.">Şirinevler Mahallesi</option>
+            <option value="Yenibosna Merkez Mah.">Yenibosna Merkez Mahallesi</option>
+            <option value="Zafer Mah.">Zafer Mahallesi</option>
+            <option value="Hepsi">Bahçelievler Genel (Hepsi)</option>
+        </select>
 
-                <button type="submit" id="est-submit-btn" class="cyber-submit" style="background: var(--app-blue) !important;">TALEBİ HAVUZA GÖNDER</button>
-            </form>
-        </section>
+        <input type="text" id="est-budget" placeholder="Bütçe Aralığı (Örn: 20.000 - 25.000 TL)" required>
+        <textarea id="est-desc" maxlength="300" placeholder="Ekstra özellikler (Örn: 2+1, Metroya yakın vb.)" rows="4" required></textarea>
+        
+        <input type="tel" id="est-phone" placeholder="Telefon Numaranız (Zorunlu)" maxlength="11" required>
+        <input type="email" id="est-email" placeholder="E-posta Adresiniz (Opsiyonel)">
+
+        <div class="kvkk-confirm-area" style="margin: 15px 0; text-align: center;">
+            <label style="font-size: 0.85rem; color: #444; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="est-kvkk" required style="width: 20px; height: 20px;">
+                <span>KVKK ve açık rıza metnini <a href="javascript:void(0)" onclick="window.showLegal('emlak-kvkk')" style="color: var(--app-blue); font-weight: bold; text-decoration: underline;">okudum</a>, kabul ediyorum.</span>
+            </label>
+        </div>
+
+        <button type="submit" id="est-submit-btn" class="cyber-submit" style="background: var(--app-blue) !important;">TALEBİ GÖNDER</button>
+    </form>
+</section>
+
+         
 
         <section id="hizmet-ver" class="page">
             <h1 class="cyber-header">💼 ESNAF HİZMET TANITIMI</h1>

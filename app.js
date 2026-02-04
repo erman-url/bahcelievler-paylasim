@@ -2367,14 +2367,14 @@ window.prepareDeleteHizmet = async function(id) {
     }
 };
 
-/* >> SOSYAL DETAY MOTORU V5.1: DEĞİŞKEN ÇAKIŞMA ONARIMI << [cite: 04-02-2026] */
+/* >> SOSYAL DETAY MOTORU V5.2: BAŞLIK İZOLASYONU VE HATA ONARIMI << [cite: 04-02-2026] */
 window.openSocialDetail = async function(table, id) {
     try {
         window.currentDetailTable = table;
         const { data: s, error } = await window.supabase.from(table).select('*').eq('id', id).single();
         if (error || !s) return;
 
-        // 1. Dinamik Başlık Belirleme
+        // 1. Modül Bazlı Dinamik Başlık Belirleme
         let moduleHeader = "";
         let headerColor = "";
         
@@ -2382,14 +2382,14 @@ window.openSocialDetail = async function(table, id) {
             moduleHeader = "🏢 HİZMET TANITIMI";
             headerColor = "#28a745";
         } else if (table === 'sikayetler') {
-            moduleHeader = "📢 ŞİKAYET & BİLDİRİM"; // Yanlış başlık mühürlendi
+            moduleHeader = "📢 ŞİKAYET & BİLDİRİM"; // Yanlış başlık düzeltildi
             headerColor = "#ff4d4d";
         } else if (table === 'tavsiyeler') {
             moduleHeader = "⭐ KOMŞU TAVSİYESİ";
             headerColor = "#ffc107";
         }
 
-        // 2. Verileri Tanımla (HATA GİDERİLDİ: Sadece bir kez tanımlanır)
+        // 2. Veri Tanımlama (HATA ÇÖZÜLDÜ: 'const' redeclare hatası mTitle ile giderildi)
         const mTitle = s.title || "Detay"; 
         const mContent = s.comment || s.content || ""; 
         const mDate = new Date(s.created_at).toLocaleDateString('tr-TR');

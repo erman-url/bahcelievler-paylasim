@@ -407,6 +407,11 @@
             <i class="fas fa-hand-holding-usd"></i> 
             <span>Hizmet Ver (İşinizi Tanıtın)</span>
         </a>
+
+        <a href="#" class="cyber-btn-block" data-target="emlak-talep-form">
+            <i class="fas fa-home-user"></i> 
+            <span>Emlak Talebi Bırak (Ev/Dükkan Arıyorum)</span>
+        </a>
     </div>
 </section>
 
@@ -436,6 +441,53 @@
                     <input type="text" name="hp_teklif" id="hp_teklif" tabindex="-1" autocomplete="off">
                 </div>
                 <button type="submit" id="quote-submit-btn" class="cyber-submit" style="background: #007bff !important;">TEKLİF TALEBİ GÖNDER</button>
+            </form>
+        </section>
+
+        <section id="emlak-talep-form" class="page">
+            <h1 class="cyber-header"><i class="fas fa-search-location"></i> EMLAK TALEBİ</h1>
+            <div class="cyber-card" style="margin: 10px; border-left: 5px solid var(--app-blue); background: #f0f8ff;">
+                <h3 style="margin-top: 0; color: var(--app-blue);"><i class="fas fa-key"></i> Aradığınız Gayrimenkulü Tarif Edin</h3>
+                <p style="font-size: 0.85rem; color: #444;">Talebiniz emlak havuzuna düşecek ve emlak firması size ulaşacaktır.</p>
+            </div>
+            
+            <form id="estate-request-form" class="cyber-form">
+                <select id="est-type" required>
+                    <option value="" disabled selected>Gayrimenkul Türü</option>
+                    <option value="Daire">Konut / Daire</option>
+                    <option value="Dükkan">İşyeri / Dükkan</option>
+                    <option value="Arsa">Arsa / Arazi</option>
+                </select>
+
+                <select id="est-status" required>
+                    <option value="" disabled selected>Durum</option>
+                    <option value="Kiralık">Kiralık Arıyorum</option>
+                    <option value="Satılık">Satın Almak İstiyorum</option>
+                </select>
+
+                <select id="est-district" required>
+                    <option value="" disabled selected>Tercih Edilen Mahalle</option>
+                    <option value="Bahçelievler Mah.">Bahçelievler Mahallesi</option>
+                    <option value="Cumhuriyet Mah.">Cumhuriyet Mahallesi</option>
+                    <option value="Çobançeşme Mah.">Çobançeşme Mahallesi</option>
+                    <option value="Fevzi Çakmak Mah.">Fevzi Çakmak Mahallesi</option>
+                    <option value="Hürriyet Mah.">Hürriyet Mahallesi</option>
+                    <option value="Kocasinan Merkez Mah.">Kocasinan Merkez Mahallesi</option>
+                    <option value="Siyavuşpaşa Mah.">Siyavuşpaşa Mahallesi</option>
+                    <option value="Soğanlı Mah.">Soğanlı Mahallesi</option>
+                    <option value="Şirinevler Mah.">Şirinevler Mahallesi</option>
+                    <option value="Yenibosna Merkez Mah.">Yenibosna Merkez Mahallesi</option>
+                    <option value="Zafer Mah.">Zafer Mahallesi</option>
+                    <option value="Hepsi">Bahçelievler Genel (Hepsi)</option>
+                </select>
+
+                <input type="text" id="est-budget" placeholder="Bütçe Aralığı (Örn: 20.000 - 25.000 TL)" required>
+                
+                <textarea id="est-desc" maxlength="300" placeholder="Ekstra özellikler (Örn: 2+1, Metroya yakın vb.)" rows="4" required></textarea>
+                
+                <input type="tel" id="est-phone" placeholder="Telefon Numaranız (Beni Arayın)" maxlength="11" required>
+                
+                <button type="submit" id="est-submit-btn" class="cyber-submit" style="background: var(--app-blue) !important;">TALEBİ HAVUZA GÖNDER</button>
             </form>
         </section>
 

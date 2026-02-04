@@ -96,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupFirsatForm();
     setupKesintiForm(); 
     setupHizmetForm();  
+    setupEstateForm();
     renderHizmetler();  
     setupAdSearch(); 
     loadPortalData();

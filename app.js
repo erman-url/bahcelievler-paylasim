@@ -1449,6 +1449,26 @@ window.deleteKesinti = async (id) => {
 };
 
 window.showLegal = function(type) {
+    if (type === 'emlak-kvkk') {
+        const kvkkContent = `
+            <div style="text-align:left; font-size:0.85rem; line-height:1.5; color:#333;">
+                <h3 style="text-align:center; color:var(--app-blue); border-bottom:1px solid #eee; padding-bottom:10px;">🛡️ EMLAK TALEP KVKK</h3>
+                <p>6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) kapsamında; bu form aracılığıyla paylaştığım kişisel verilerimin (telefon numarası, arama tercihlerim ve talep bilgilerim), Bahçelievler ilçesinde faaliyet gösteren emlak ofisleri ile paylaşılmasını, tarafıma gayrimenkul taleplerim doğrultusunda iletişime geçilmesini kabul ediyorum. Kişisel verilerimin yalnızca bu amaçla işleneceğini, üçüncü kişilerle izinsiz paylaşılmayacağını ve talebim halinde silineceğini biliyorum.</p>
+            </div>`;
+        
+        const legalModalContent = document.getElementById('legal-modal-content');
+        const legalModal = document.getElementById('legal-modal');
+        
+        if (legalModalContent && legalModal) {
+            legalModalContent.innerHTML = kvkkContent;
+            legalModal.style.display = 'flex';
+            setTimeout(() => {
+                legalModal.style.visibility = 'visible';
+                legalModal.style.opacity = '1';
+            }, 10);
+        }
+        return;
+    }
     const area = document.getElementById('legal-content-area');
     const contents = {
      about: `
@@ -1743,6 +1763,65 @@ window.searchOnMap = function() {
     mapIframe.src = freeSearchUrl;
 };
 
+
+/* >> EMLAK TALEP VE KVKK MOTORU V2.0 << */
+async function setupEstateForm() {
+    const form = document.getElementById("estate-request-form");
+    if (!form) return;
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (isProcessing) return;
+
+        // 1. KVKK Onay Denetimi
+        const kvkkCheck = document.getElementById("est-kvkk");
+        if (!kvkkCheck.checked) {
+            alert("Devam etmek için KVKK metnini okuyup onaylamanız gerekmektedir.");
+            return;
+        }
+
+        const phone = document.getElementById("est-phone").value.trim();
+        const email = document.getElementById("est-email").value.trim();
+        const desc = document.getElementById("est-desc").value.trim();
+
+        // 2. Küfür Filtresi Denetimi
+        if (window.hasBadWords(desc)) {
+            alert("Lütfen topluluk kurallarına uygun bir dil kullanın.");
+            return;
+        }
+
+        const btn = document.getElementById("est-submit-btn");
+        isProcessing = true;
+        btn.disabled = true;
+        btn.textContent = "İŞLENİYOR...";
+
+        try {
+            const payload = {
+                type: document.getElementById("est-type").value,
+                status: document.getElementById("est-status").value,
+                district: document.getElementById("est-district").value,
+                budget: document.getElementById("est-budget").value,
+                description: desc,
+                phone: phone, // Zorunlu alan
+                email: email || null // Opsiyonel alan
+            };
+
+            const { error } = await window.supabase.from('emlak_talepleri').insert([payload]);
+            if (error) throw error;
+
+            alert("Talebiniz emlak havuzuna mühürlendi. Sizinle iletişime geçilecektir.");
+            form.reset();
+            // Başarılı işlem sonrası yönlendirme
+            document.querySelector('[data-target="hizmetler"]').click();
+        } catch (err) {
+            alert("Sistem Hatası: " + err.message);
+        } finally {
+            isProcessing = false;
+            btn.disabled = false;
+            btn.textContent = "TALEBİ HAVUZA GÖNDER";
+        }
+    });
+}
 
 /* >> HİZMET TANITIM MOTORU V3.0 (HATASIZ NİHAİ SÜRÜM) << */
 async function setupHizmetForm() {

@@ -237,16 +237,13 @@ function initSlider() {
     // İlk açılışta tüm slide'ları sıfırla
     for (let i = 0; i < slides.length; i++) {
         slides[i].style.display = "none";
-        slides[i].style.opacity = "0";
-        slides[i].style.visibility = "hidden";
+        slides[i].classList.remove("active-slide");
     }
 
     // İlk slide'ı göster
     slideIndex = 0;
     slides[0].style.display = "block";
-    slides[0].style.visibility = "visible";
-    void slides[0].offsetWidth; // reflow
-    slides[0].style.opacity = "1";
+    slides[0].classList.add("active-slide");
 
     // Döngüyü başlat
     slideIndex = 1;

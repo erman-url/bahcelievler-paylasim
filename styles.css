@@ -482,7 +482,6 @@ body.modal-open {
     background-size: cover;
     background-position: center;
     display: none;
-    opacity: 0;
     transition: opacity 0.8s ease-in-out;
 }
 

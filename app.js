@@ -2524,7 +2524,7 @@ window.loadComments = async function(contentId, moduleType = 'ilan') {
         <div style="margin-bottom:12px; padding:10px; background:#fff; border-radius:10px; border-bottom:1px solid #eee; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <strong style="color:var(--app-blue); font-size:0.8rem;">${window.escapeHTML(c.nickname)}</strong>
-                <span style="font-size:0.65rem; color:#aaa;">${new Date(c.created_at).toLocaleDateString('tr-TR')}</span>
+                <span style="font-size:0.65rem; color:#aaa;">${new Date(c.created_at).toLocaleString('tr-TR')}</span>
             </div>
             <p style="margin:5px 0 0 0; font-size:0.85rem; color:#444; line-height:1.4;">${window.escapeHTML(c.mesaj)}</p>
         </div>

@@ -605,65 +605,82 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
 });
 
 
-    document.getElementById("complaint-form")?.addEventListener("submit", async e => {
-        e.preventDefault();
-        if (isBotDetected("complaint-form") || isProcessing) return; // BOT KONTROLÜ EKLENDİ
-        
-        const btn = document.getElementById("comp-submit-btn");
-        const fileInput = document.getElementById("comp-files");
-        const passVal = document.getElementById("comp-pass").value;
+/* >> SORUN BİLDİR MOTORU V6.0: SPAM KORUMALI << */
+document.getElementById("complaint-form")?.addEventListener("submit", async e => {
+    e.preventDefault();
+    if (isBotDetected("complaint-form") || isProcessing) return;
+    
+    const titleVal = document.getElementById("comp-title").value.trim();
+    const contentVal = document.getElementById("comp-content").value.trim();
+    const districtVal = document.getElementById("comp-district").value;
+    const passVal = document.getElementById("comp-pass").value;
+    const fileInput = document.getElementById("comp-files");
 
-        // Şifre Kontrolü
-        const passCheck = window.validateComplexPassword(passVal);
-        if (passCheck) { alert(passCheck); return; }
-        
-        if (fileInput && fileInput.files.length > 1) {
-            alert("En fazla 1 adet görsel ekleyebilirsiniz.");
-            return;
+    // 1. SPAM VE ANLAMSIZ METİN KONTROLÜ
+    const spamRegex = /(.)\1{3,}/; // Aynı karakterden 4 ve üzeri yan yana (ffff, 1111 vb.)
+    if (spamRegex.test(titleVal) || spamRegex.test(contentVal)) {
+        alert("HATA: Lütfen anlamsız karakter tekrarları yapmadan geçerli bir metin giriniz.");
+        return;
+    }
+
+    // 2. KÜFÜR VE ARGO FİLTRESİ
+    if (window.hasBadWords(titleVal) || window.hasBadWords(contentVal)) {
+        alert("Lütfen topluluk kurallarına uygun bir dil kullanın.");
+        return;
+    }
+
+    // 3. GÖRSEL BOYUT KONTROLÜ (3MB) [cite: 04-02-2026]
+    if (fileInput.files.length > 1) {
+        alert("En fazla 1 adet görsel ekleyebilirsiniz.");
+        return;
+    }
+    if (fileInput.files[0] && fileInput.files[0].size > 3 * 1024 * 1024) {
+        alert("HATA: Görsel boyutu 3MB'ı geçemez.");
+        return;
+    }
+
+    // Şifre Kontrolü
+    const passCheck = window.validateComplexPassword(passVal);
+    if (passCheck) { alert(passCheck); return; }
+
+    isProcessing = true;
+    const btn = document.getElementById("comp-submit-btn");
+    btn.disabled = true;
+    btn.textContent = "İLETİLYOR...";
+
+    try {
+        let urls = [];
+        if (fileInput.files.length > 0) {
+            // Görsel optimizasyon motorunu kullan
+            const optimized = await optimizeImage(fileInput.files[0]);
+            urls = await handleMultipleUploads([optimized]);
         }
 
-        if (fileInput && fileInput.files.length > 0) {
-            if (fileInput.files[0].size > 3 * 1024 * 1024) {
-                alert("HATA: Görsel boyutu 3MB'ı geçemez.");
-                return;
-            }
-        }
+        const deleteToken = await sha256(passVal);
+        const payload = {
+            title: titleVal,
+            content: contentVal,
+            location_name: districtVal, // Mahalle verisi [cite: 04-02-2026]
+            delete_password: deleteToken,
+            category: document.getElementById("comp-category").value,
+            image_url: urls[0] || null,
+            is_active: true
+        };
 
-        isProcessing = true;
-        btn.disabled = true;
-        btn.textContent = "İLETİLİYOR...";
+        const { error } = await window.supabase.from('sikayetler').insert([payload]);
+        if (error) throw error;
 
-        try {
-            let urls = [];
-            if (fileInput && fileInput.files.length > 0) {
-                urls = await handleMultipleUploads(fileInput.files);
-            }
-
-            const deleteToken = await sha256(passVal);
-
-            const payload = {
-                title: document.getElementById("comp-title").value,
-                content: document.getElementById("comp-content").value,
-                delete_password: deleteToken,
-                category: document.getElementById("comp-category") ? document.getElementById("comp-category").value : "Genel",
-                district: document.getElementById("comp-district").value,
-                image_url: urls[0] || null
-            };
-
-            const { error } = await window.supabase.from('sikayetler').insert([payload]);
-            if (error) throw error;
-
-            alert("Sorun bildiriminiz başarıyla alındı ve panoda yayınlandı!");
-            e.target.reset();
-            loadPortalData();
-        } catch (err) {
-            alert("Hata: " + err.message);
-        } finally {
-            isProcessing = false;
-            btn.disabled = false;
-            btn.textContent = "SORUNU BİLDİR";
-        }
-    });
+        alert("Sorun bildirimiz yayına alındı. Teşekkürler!");
+        e.target.reset();
+        loadPortalData();
+    } catch (err) {
+        alert("Hata: " + err.message);
+    } finally {
+        isProcessing = false;
+        btn.disabled = false;
+        btn.textContent = "SORUNU BİLDİR";
+    }
+});
 
 /* >> FIRSAT ALANLARINI TETİKLEME MOTORU << */
 function toggleFirsatFields() {

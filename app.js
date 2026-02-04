@@ -2367,37 +2367,43 @@ window.prepareDeleteHizmet = async function(id) {
     }
 };
 
-/* >> TAVSİYE DETAY KURUMSAL MODÜLÜ - V13.0 << */
+/* >> HİZMET DETAY MOTORU V4.0: WEB SİTESİ ENTEGRASYONU << */
 window.openSocialDetail = async function(table, id) {
     try {
         window.currentDetailTable = table;
         const { data: s, error } = await window.supabase.from(table).select('*').eq('id', id).single();
         if (error || !s) return;
 
-        // Değişken isimleri benzersiz hale getirildi (Conflict Fix)
-        const modalTitle = s.title || "Tavsiye Detayı";
+        const modalTitle = s.title || "Hizmet Detayı";
         const modalContent = s.comment || s.content || ""; 
         const modalDate = new Date(s.created_at).toLocaleDateString('tr-TR');
         const modalImages = [s.image_url, s.image_url_2].filter(Boolean);
 
-        // 1. ÜST BİLGİ ALANI (İÇ İÇE GEÇME ENGELLENDİ)
+        // Web sitesi linki mühürü [cite: 04-02-2026]
+        const websiteLink = s.website ? `
+            <div style="margin-top:15px; padding-top:10px; border-top:1px solid #eee;">
+                <a href="${s.website}" target="_blank" style="color:var(--app-blue); font-weight:bold; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <i class="fas fa-external-link-alt"></i> Web Sitesini Ziyaret Et
+                </a>
+            </div>` : '';
+
         document.getElementById("social-modal-title").innerHTML = `
             <div class="modal-header-meta" style="margin-bottom:15px;">
-                <span style="display:inline-block; font-weight:800; color:#ffc107; font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;">⭐ TAVSİYE İNCELEMESİ</span>
+                <span style="display:inline-block; font-weight:800; color:#28a745; font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;">🏢 HİZMET TANITIMI</span>
                 <h2 style="margin:8px 0; font-size:1.4rem; color:var(--dark-text); line-height:1.2;">${window.escapeHTML(modalTitle)}</h2>
+                <div style="color:#666; font-size:0.85rem; font-weight:600; margin-bottom:5px;">
+                    <i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(s.location_name || 'Bahçelievler')}
+                </div>
                 <span style="color:#aaa; font-size:0.8rem; font-weight:600;"><i class="far fa-calendar-alt"></i> ${modalDate}</span>
             </div>`;
         
-        /* >> TAVSİYE/ŞİKAYET METNİ TEK KARE MÜHÜRÜ << */
-        // openSocialDetail fonksiyonu içindeki social-modal-content satırını bununla değiştir:
         document.getElementById("social-modal-content").innerHTML = `
-    <div class="ad-info-wrapper">
-        <div class="ad-info-box">
-            "${window.escapeHTML(modalContent)}"
-        </div>
-    </div>`;
+            <div class="ad-info-wrapper">
+                <div class="ad-info-box" style="font-style:normal !important;">
+                    ${window.escapeHTML(modalContent)}
+                    ${websiteLink} </div>
+            </div>`;
         
-        // 3. GÖRSEL ALANI
         const gallery = document.getElementById("social-image-gallery");
         if (gallery) {
             gallery.innerHTML = modalImages.length > 0 

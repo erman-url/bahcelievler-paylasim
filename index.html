@@ -171,20 +171,38 @@
             <a href="#" class="cyber-btn-block" data-target="kesinti-bildir"><i class="fas fa-bolt"></i> Kesinti Bildir</a>
         </section>
 
-        <section id="kesinti-bildir" class="page">
+    <section id="kesinti-bildir" class="page">
     <h1 class="cyber-header">⚡ GÜNCEL KESİNTİLER</h1>
     
+    <div class="cyber-card" style="margin: -10px 10px 20px 10px; border-left: 5px solid #ffc107; background: #fffcf0; padding: 15px; text-align: center;">
+        <h3 style="margin: 0; color: #b8860b; font-size: 1rem;">
+            <i class="fas fa-map-marked-alt fa-beat" style="margin-right: 8px;"></i> 
+            Mahallende Kesinti Var mı?
+        </h3>
+        <p style="font-size: 0.85rem; color: #666; margin-top: 5px; line-height: 1.4;">
+            Elektrik, su ve internet kesintilerini komşularınla paylaş, ilçedeki anlık durumdan herkes haberdar olsun.
+        </p>
+    </div>
+
+    <div style="padding: 0 10px 15px 10px; display: flex; justify-content: center;">
+        <button onclick="document.getElementById('kesinti-form-container').scrollIntoView({behavior: 'smooth'})" 
+                class="cyber-submit" 
+                style="background: var(--app-blue) !important; border-radius: 50px; font-weight: 800; font-size: 0.9rem; max-width: 300px;">
+            <i class="fas fa-plus-circle"></i> YENİ KESİNTİ BİLDİR
+        </button>
+    </div>
+
     <div id="kesinti-list" style="padding: 10px; min-height: 100px;">
         <p style="text-align:center; color:#888;">Yükleniyor...</p>
     </div>
 
-    <div style="margin-top: 30px; border-top: 2px dashed #eee; padding-top: 20px;">
+    <div id="kesinti-form-container" style="margin-top: 30px; border-top: 2px dashed #eee; padding-top: 20px;">
         <h2 style="text-align:center; font-size: 1.1rem; color: var(--app-blue);"><i class="fas fa-edit"></i> Yeni Kesinti Bildir</h2>
         <form id="kesinti-form" class="cyber-form">
             <select id="kes-type" required>
                 <option value="" disabled selected>Kesinti Türü Seçiniz</option>
                 <option value="Elektrik">Elektrik</option>
-                <option value="Su">SU</option>
+                <option value="Su">Su</option>
                 <option value="İnternet">İnternet/TV</option>
                 <option value="Doğalgaz">Doğalgaz</option>
                 <option value="Diğer">Diğer & Hizmet</option>

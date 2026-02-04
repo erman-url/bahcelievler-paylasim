@@ -270,15 +270,18 @@
                     <option value="Trafik & Park">Trafik & Park Sorunları</option>
                     <option value="Diğer">Diğer Olumsuzluklar</option>
                 </select>
-                <input type="text" id="comp-title" placeholder="Kısa Başlık (Örn: Çöp Sorunu)" required>
-                <textarea id="comp-content" placeholder="Durumu detaylandırın ve çözüm önerinizi yazın..." rows="4" required></textarea>
-                <label style="font-size: 0.75rem; color: #555; display: block; margin-top: 10px;">Görsel Ekle (Opsiyonel - Max 2 Adet, Her biri 5MB)</label>
+                
+                <input type="text" id="comp-title" placeholder="Kısa Başlık (Max 35 Karakter)" maxlength="35" required>
+                
+                <textarea id="comp-content" maxlength="350" placeholder="Durumu detaylandırın (Max 350 karakter)..." rows="4" required></textarea>
+                
+                <label style="font-size: 0.75rem; color: #555; display: block; margin-top: 10px;">Görsel Ekle (Opsiyonel - Max 2 Adet)</label>
                 <input type="file" id="comp-files" multiple accept="image/*">
+                
                 <p style="font-size:0.7rem; color:#d32f2f; margin-bottom:2px; font-weight:bold; margin-top:10px;"><i class="fas fa-key"></i> Şikayeti daha sonra bu şifre ile silebilirsiniz:</p>
                 <input type="password" id="comp-pass" maxlength="5" placeholder="Şifre (1 Harf + 4 Rakam)" required>
-                <div style="display:none !important; visibility:hidden !important;">
-                    <input type="text" name="hp_sikayet" id="hp_sikayet" tabindex="-1" autocomplete="off">
-                </div>
+                
+                <div style="display:none !important;"><input type="text" name="hp_sikayet" id="hp_sikayet" tabindex="-1"></div>
                 <button type="submit" id="comp-submit-btn" class="cyber-submit" style="background:#ff4d4d !important;">BİLDİRİ YAYINLA</button>
             </form>
             <div id="complaint-list" style="padding: 10px;"></div>

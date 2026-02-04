@@ -482,8 +482,8 @@
             <option value="Hepsi">Bahçelievler Genel (Hepsi)</option>
         </select>
 
-        <input type="text" id="est-budget" placeholder="Bütçe Aralığı (Örn: 20.000 - 25.000 TL)" required>
-        <textarea id="est-desc" maxlength="300" placeholder="Ekstra özellikler (Örn: 2+1, Metroya yakın vb.)" rows="4" required></textarea>
+        <input type="text" id="est-budget" placeholder="Bütçe Aralığı (Sadece Rakam - Max 11)" maxlength="11" pattern="\d*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+        <textarea id="est-desc" minlength="15" maxlength="300" placeholder="Ekstra özellikler (En az 15 karakter giriniz...)" rows="4" required></textarea>
         
         <input type="text" id="est-name" placeholder="Adınız (Zorunlu)" maxlength="20" pattern="^[a-zA-ZçĞİıÖşüÇğİıÖŞÜ\s]+$" required title="Lütfen sadece harf ve boşluk kullanınız.">
 

@@ -37,7 +37,7 @@ body {
     position: relative !important;
     padding: 20px 15px 100px 15px !important;
     box-sizing: border-box !important;
-    overflow: hidden; /* Alt sızmayı engeller */
+    overflow-x: hidden !important; /* Yatay kaymayı kesin olarak bitirir */
 }
 
 
@@ -201,17 +201,32 @@ h1:not(.cyber-header) i {
 }
 
 /* FORM ELEMENTLERİ */
-.cyber-form input, .cyber-form textarea, .cyber-form select {
-    width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #E2E8F0; 
-    border-radius: 12px; background: #F8FAFC; box-sizing: border-box; font-size: 16px !important;
-    transition: 0.3s ease;
+/* >> FORM VE BUTON NİZAM MÜHÜRÜ << */
+.cyber-form input, 
+.cyber-form select, 
+.cyber-form textarea {
+    width: 100%; padding: 14px; margin-bottom: 12px; 
+    border: 2px solid #E2E8F0 !important; /* Daha belirgin ve temiz çerçeve */
+    border-radius: 12px; 
+    background: #ffffff !important;
+    box-sizing: border-box; font-size: 16px !important;
+    transition: border-color 0.2s ease-in-out !important;
 }
 
-.cyber-form input:focus {
-    border-color: var(--app-blue) !important;
-    background: #fff;
+.cyber-form input:focus, 
+.cyber-form select:focus, 
+.cyber-form textarea:focus {
+    border-color: var(--app-blue) !important; /* Odaklanıldığında kurumsal mavi */
     outline: none;
-    box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1);
+}
+
+/* 2. Emlak Talep Formu KVKK onay alanı izolasyonu */
+#estate-request-form .kvkk-confirm-area {
+    background: #f1f5f9 !important; /* Hafif gri arka plan ile ayrıştırma */
+    padding: 12px !important;
+    border-radius: 12px !important;
+    margin: 15px 0 !important;
+    border: 1px dashed #cbd5e1 !important;
 }
 
 .cyber-submit { 

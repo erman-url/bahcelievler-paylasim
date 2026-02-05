@@ -694,6 +694,19 @@
         <a href="#" class="nav-item" data-target="iletisim"><i class="fas fa-users"></i><span>İletişim</span></a>
     </nav>
 
+
+<div id="delete-confirm-modal" class="modal" style="display:none; z-index: 9999;">
+    <div class="modal-content" style="max-width: 300px; text-align: center;">
+        <h3 style="color:var(--app-blue); margin-bottom:15px;">İçeriği Sil</h3>
+        <p style="font-size:0.85rem; color:#666; margin-bottom:15px;">Lütfen bu içeriği eklerken belirlediğiniz 4 haneli şifreyi giriniz.</p>
+        <input type="password" id="confirm-delete-pass" maxlength="4" placeholder="Şifre" style="width: 80%; padding: 10px; text-align: center; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px;">
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button onclick="closeDeleteModal()" style="background:#eee; padding: 8px 15px; border-radius: 6px;">İptal</button>
+            <button id="final-delete-btn" style="background:var(--cyber-pink); color:white; padding: 8px 15px; border-radius: 6px;">Sil</button>
+        </div>
+    </div>
+</div>
+
     <script src="piyasa.js" defer></script>
     <script src="app.js" defer></script>
 </body>

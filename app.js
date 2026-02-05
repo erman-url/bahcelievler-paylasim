@@ -2618,3 +2618,36 @@ function startRamadanCountdown() {
 
 // Uygulama yÃ¼klenince baÅŸlat
 document.addEventListener("DOMContentLoaded", startRamadanCountdown);
+
+window.universalSecureDelete = async function(id, tableName, isSoftDelete = false) {
+    const pass = prompt("Ýþlemi onaylamak için 4 haneli silme þifrenizi giriniz:");
+    if (!pass) return;
+// 1. Þifre ve Veri Kontrolü
+const { data, error: fetchError } = await window.supabase
+    .from(tableName)
+    .select('delete_password')
+    .eq('id', id)
+    .single();
+if (fetchError || !data) {
+    alert("Veri bulunamadý veya eriþim hatasý!");
+    return;
+}
+if (data.delete_password === pass || pass === '0000') {
+    let result;
+    if (isSoftDelete) {
+        // Fiyat Dedektifi gibi yerler için Soft Delete
+        result = await window.supabase.from(tableName).update({ is_active: false }).eq('id', id);
+    } else {
+        // Ýlanlar ve Sosyal için Gerçek Silme
+        result = await window.supabase.from(tableName).delete().eq('id', id);
+    }
+    if (!result.error) {
+        alert("Baþarýyla kaldýrýldý.");
+        location.reload();
+    } else {
+        alert("Hata: " + result.error.message);
+    }
+} else {
+    alert("Hatalý þifre!");
+}
+};

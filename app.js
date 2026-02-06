@@ -320,13 +320,9 @@ async function uploadToR2(file) {
 
 async function handleMultipleUploads(files) {
     if (!files || files.length === 0) return [];
-    let urls = [];
-    const filesArray = Array.from(files).slice(0, 3); 
-    for (let file of filesArray) {
-        const publicUrl = await uploadToR2(file); // Senin eklediğin değişkene bağlar
-        urls.push(publicUrl);
-    }
-    return urls;
+    // En fazla 3 dosya alınır (Kota Mühürü) ve hepsi aynı anda yüklenir.
+    const filesToUpload = Array.from(files).slice(0, 3);
+    return Promise.all(filesToUpload.map(uploadToR2));
 }
 
 window.handleAdEdit = async function(ad) {

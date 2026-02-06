@@ -2616,15 +2616,18 @@ window.uDelete = async (id, table, isSoft = false) => {
     const rawPass = prompt("4 Haneli Silme Şifreniz (Örn: S1571):");
     if (!rawPass) return;
     
-    // Nokta Atışı Onarım: Girilen şifreyi hashleyerek karşılaştırıyoruz
+    // Süper Kontrol: Girilen şifre hashlenerek DB'deki hash ile karşılaştırılır
     const hashedPass = await sha256(rawPass); 
-    const { data: d } = await window.supabase.from(table).select('delete_password').eq('id', id).single();
+    const { data: d } = await window.supabase.from(table).select('delete_password, delete_token').eq('id', id).single();
+    
+    // İlanlar tablosunda 'delete_token', diğerlerinde 'delete_password' kullanıldığı için ikisini de kontrol eder
+    const dbPass = d?.delete_password || d?.delete_token;
 
-    if (d?.delete_password === hashedPass || rawPass === '0000') {
+    if (dbPass === hashedPass || rawPass === '0000') {
         const action = isSoft ? window.supabase.from(table).update({ is_active: false }) : window.supabase.from(table).delete();
         const { error } = await action.eq('id', id);
         if (!error) { alert("Başarıyla kaldırıldı."); location.reload(); }
     } else {
-        alert("Hatalı Şifre!");
+        alert("Hata: Şifre yanlış!");
     }
 };

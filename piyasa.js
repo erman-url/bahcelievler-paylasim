@@ -127,14 +127,12 @@ async function submitPiyasaVerisi() {
         const file = optimizedFiles[0];
         let publicUrl = null;
 
-        const fileName = `kanit_${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
-        const { error: uploadError } = await window.supabase.storage
-            .from('piyasa-kanitlar')
-            .upload(fileName, file);
-
-        if (uploadError) throw uploadError;
-        const { data: urlData } = window.supabase.storage.from('piyasa-kanitlar').getPublicUrl(fileName);
-        publicUrl = urlData.publicUrl;
+        try {
+            publicUrl = await window.uploadToR2(file); 
+        } catch (uploadError) {
+            console.error("R2 Yükleme Hatası:", uploadError);
+            throw new Error("Görsel yüklenemedi, lütfen tekrar deneyin.");
+        }
 
         const bugun = new Date().toLocaleDateString('tr-TR');
 

@@ -321,20 +321,10 @@ async function uploadToR2(file) {
 async function handleMultipleUploads(files) {
     if (!files || files.length === 0) return [];
     let urls = [];
-    const MAX_SIZE = 10 * 1024 * 1024; // 10 MB LİMİTİ
-    const filesArray = Array.from(files).slice(0, 4); // MAKSİMUM 4 ADET
-
+    const filesArray = Array.from(files).slice(0, 3); 
     for (let file of filesArray) {
-        if (file.size > MAX_SIZE) {
-            alert(`"${file.name}" 10MB limitini aşıyor. Lütfen daha küçük bir dosya seçin.`);
-            continue;
-        }
-        try {
-            const url = await uploadToR2(file);
-            if (url) urls.push(url);
-        } catch (err) {
-            console.error("Yükleme hatası:", err.message);
-        }
+        const publicUrl = await uploadToR2(file); // Senin eklediğin değişkene bağlar
+        urls.push(publicUrl);
     }
     return urls;
 }

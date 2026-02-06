@@ -68,7 +68,6 @@ const PiyasaMotoru = {
                             </div>
                             <h4 style="margin:2px 0; font-size:0.95rem;">${urun.urun_adi}</h4>
                             <div style="font-weight:bold; color:var(--dark); font-size:1.1rem;">${new Intl.NumberFormat('tr-TR').format(urun.fiyat)} TL <button onclick="uDelete('${urun.id}', 'piyasa_verileri', true)" style="color:var(--cyber-pink); b
-                                <br><i class="fas fa-calendar-alt"></i> ${urun.tarih_etiketi || 'Tarih Belirtilmedi'}
                             </div>
                         </div>
                     </div>

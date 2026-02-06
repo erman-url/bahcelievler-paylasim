@@ -136,16 +136,18 @@ async function submitPiyasaVerisi() {
             throw new Error("Görsel yüklenemedi, lütfen tekrar deneyin.");
         }
 
-        const bugun = new Date().toLocaleDateString('tr-TR');
+        // >> GÜNCEL TARİH ETİKETİ OLUŞTURMA <<
+        const bugun = new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-        /* >> PİYASA VERİ KAYIT MOTORU RESTORASYONU << */
+        /* >> PİYASA VERİ KAYIT MOTORU GÜNCELLEMESİ << */
         const { error: dbError } = await window.supabase.from('piyasa_verileri').insert([{
             urun_adi: urunAdi,
             fiyat: fiyat,
             barkod: barkod, 
             market_adi: marketAdi,
             image_url: publicUrl,
-            delete_password: deleteToken // Eksik değişken eklendi, sistem ayağa kalktı
+            delete_password: deleteToken,
+            tarih_etiketi: bugun // BU SATIRI EKLE: Artık tarihler boş kalmayacak
         }]);
 
         if (dbError) throw dbError;

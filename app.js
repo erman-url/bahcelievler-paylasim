@@ -2076,15 +2076,15 @@ async function fetchHaberler() {
     if (!el) return;
 
     try {
-        const { data, error } = await window.supabase
+        const { data: news, error } = await window.supabase
             .from('haberler')
             .select('*')
             .eq('is_active', true)
             .order('created_at', { ascending: false })
-            .limit(6);
+            .limit(5);
 
         if (error) throw error;
-        renderHaberler(data);
+        renderHaberler(news);
     } catch (err) {
         console.error("Haber akışı hatası:", err);
         el.innerHTML = '<p style="text-align:center; width:100%; color:#888;">Haberler yüklenemedi.</p>';

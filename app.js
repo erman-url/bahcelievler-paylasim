@@ -53,41 +53,6 @@ window.validateComplexPassword = function(password) {
     return null;
 };
 
-/* >> GÖRSEL OPTİMİZASYON MOTORU (STABİL) << */
-async function optimizeImage(file) {
-    if (!file) return null;
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-            const img = new Image();
-            img.src = event.target.result;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const max_width = 800; // Optimum genişlik
-                let width = img.width;
-                let height = img.height;
-
-                if (width > max_width) {
-                    height *= max_width / width;
-                    width = max_width;
-                }
-
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                
-                // 0.4 kalitesi ile JPEG formatında sıkıştırıyoruz
-                canvas.toBlob((blob) => {
-                    const optimizedFile = new File([blob], file.name, { type: 'image/jpeg' });
-                    resolve(optimizedFile);
-                }, 'image/jpeg', 0.4);
-            };
-        };
-    });
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     setupNavigation();
     setupForms();

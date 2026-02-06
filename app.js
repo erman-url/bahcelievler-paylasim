@@ -2081,7 +2081,7 @@ async function fetchHaberler() {
             .select('*')
             .eq('is_active', true)
             .order('created_at', { ascending: false })
-            .limit(5);
+            .limit(3);
 
         if (error) throw error;
         renderHaberler(news);

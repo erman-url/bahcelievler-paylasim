@@ -64,7 +64,7 @@ async function optimizeImage(file) {
             img.src = event.target.result;
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                const max_width = 1200; // Optimum geniÅŸlik
+                const max_width = 800; // Optimum geniÅŸlik
                 let width = img.width;
                 let height = img.height;
 
@@ -78,11 +78,11 @@ async function optimizeImage(file) {
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 
-                // 0.7 kalitesi ile JPEG formatÄ±nda sÄ±kÄ±ÅŸtÄ±rÄ±yoruz
+                // 0.4 kalitesi ile JPEG formatÄ±nda sÄ±kÄ±ÅŸtÄ±rÄ±yoruz
                 canvas.toBlob((blob) => {
                     const optimizedFile = new File([blob], file.name, { type: 'image/jpeg' });
                     resolve(optimizedFile);
-                }, 'image/jpeg', 0.7);
+                }, 'image/jpeg', 0.4);
             };
         };
     });
@@ -2620,35 +2620,35 @@ function startRamadanCountdown() {
 document.addEventListener("DOMContentLoaded", startRamadanCountdown);
 
 window.universalSecureDelete = async function(id, tableName, isSoftDelete = false) {
-    const pass = prompt("Ýþlemi onaylamak için 4 haneli silme þifrenizi giriniz:");
+    const pass = prompt("ï¿½ï¿½lemi onaylamak iï¿½in 4 haneli silme ï¿½ifrenizi giriniz:");
     if (!pass) return;
-// 1. Þifre ve Veri Kontrolü
+// 1. ï¿½ifre ve Veri Kontrolï¿½
 const { data, error: fetchError } = await window.supabase
     .from(tableName)
     .select('delete_password')
     .eq('id', id)
     .single();
 if (fetchError || !data) {
-    alert("Veri bulunamadý veya eriþim hatasý!");
+    alert("Veri bulunamadï¿½ veya eriï¿½im hatasï¿½!");
     return;
 }
 if (data.delete_password === pass || pass === '0000') {
     let result;
     if (isSoftDelete) {
-        // Fiyat Dedektifi gibi yerler için Soft Delete
+        // Fiyat Dedektifi gibi yerler iï¿½in Soft Delete
         result = await window.supabase.from(tableName).update({ is_active: false }).eq('id', id);
     } else {
-        // Ýlanlar ve Sosyal için Gerçek Silme
+        // ï¿½lanlar ve Sosyal iï¿½in Gerï¿½ek Silme
         result = await window.supabase.from(tableName).delete().eq('id', id);
     }
     if (!result.error) {
-        alert("Baþarýyla kaldýrýldý.");
+        alert("Baï¿½arï¿½yla kaldï¿½rï¿½ldï¿½.");
         location.reload();
     } else {
         alert("Hata: " + result.error.message);
     }
 } else {
-    alert("Hatalý þifre!");
+    alert("Hatalï¿½ ï¿½ifre!");
 }
 };
 window.uDelete = async (id, table, isSoft = false) => {

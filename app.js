@@ -1046,7 +1046,8 @@ async function fetchAndRenderAds() {
     const { data } = await window.supabase.from('ilanlar')
         .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, condition, warranty, district')
         .or('is_active.is.null,is_active.eq.true')
-        .order('created_at', {ascending: false});
+        .order('created_at', {ascending: false})
+        .limit(10);
     allAds = data || [];
     
     const searchInput = document.getElementById("ad-search-input");

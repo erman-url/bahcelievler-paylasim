@@ -2083,6 +2083,7 @@ async function fetchHaberler() {
             .eq('is_active', true)
             .order('created_at', { ascending: false })
             .limit(3);
+        const { data: news, error } = await window.supabase.from('haberler').select('*').eq('is_active', true).order('created_at', { ascending: false }).limit(3);
 
         if (error) throw error;
         renderHaberler(news);

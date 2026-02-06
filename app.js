@@ -1,5 +1,37 @@
 /* >> BAHÇELİEVLER PRO ENGINE V4.3 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
 const R2_WORKER_URL = "https://broad-mountain-f064.erman-urel.workers.dev"; //
+/* >> GÖRSEL OPTİMİZASYON MOTORU (KOTA DOSTU) << */
+window.optimizeImage = async function(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 1200; // Standart HD genişlik
+                let width = img.width;
+                let height = img.height;
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                canvas.toBlob((blob) => {
+                    const optimizedFile = new File([blob], file.name, {
+                        type: 'image/jpeg',
+                        lastModified: Date.now(),
+                    });
+                    resolve(optimizedFile);
+                }, 'image/jpeg', 0.8); // %80 kalite ile sıkıştır
+            };
+        };
+    });
+};
 const R2_PUBLIC_VIEW_URL = "https://pub-135fc4a127b54815aacf75dd25458a20.r2.dev"; //
 /* >> XSS GÜVENLİK FİLTRESİ (MÜHÜRLENDİ) << */
 window.escapeHTML = function(str) {

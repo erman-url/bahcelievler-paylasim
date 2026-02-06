@@ -59,6 +59,7 @@ let isProcessing = false;
 let currentCategory = 'all'; 
 window.currentAdId = null;
 window.currentFirsatId = null;
+window.loadedModules = {};
 
 /* >> GÜVENLİK MOTORU: SHA-256 HASH << */
 async function sha256(message) {
@@ -96,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupKesintiForm(); 
     setupHizmetForm();  
     setupEstateForm();
-    renderHizmetler();  
     setupAdSearch(); 
     loadPortalData();
     fetchLiveInfo();
@@ -131,6 +131,30 @@ function setupNavigation() {
         if (!trigger) return;
         
         const target = trigger.getAttribute("data-target");
+
+        // >> LAZY LOAD KONTROLÜ <<
+        if (!window.loadedModules[target]) {
+            if (target === 'fiyat-dedektifi') {
+                fetchAndRenderPiyasa();
+                if (typeof renderEnflasyonGrafigi === 'function') renderEnflasyonGrafigi();
+                window.loadedModules[target] = true;
+            } else if (target === 'tavsiyeler') {
+                renderTavsiyeler();
+                window.loadedModules[target] = true;
+            } else if (target === 'sikayet-hatti') {
+                renderSikayetler();
+                window.loadedModules[target] = true;
+            } else if (target === 'firsatlar') {
+                renderFirsatlar();
+                window.loadedModules[target] = true;
+            } else if (target === 'kesintiler') {
+                renderKesintiler();
+                window.loadedModules[target] = true;
+            } else if (target === 'hizmetler') {
+                renderHizmetler();
+                window.loadedModules[target] = true;
+            }
+        }
 
         // 1. TÜM GERÇEK SAYFA (SECTION.PAGE) ÖĞELERİNİ TEMİZLE [cite: 03-02-2026]
         // Bu adım, hiyerarşik olarak en üstteki sayfaları kesin olarak gizler.
@@ -184,17 +208,9 @@ async function loadPortalData() {
         // Önce temel verileri yükle
         await Promise.allSettled([
             fetchAndRenderAds(),
-            renderTavsiyeler(),
-            renderSikayetler(),
-            renderFirsatlar(),
             fetchDuyurular(), // Duyuru Motoru Güncellendi
-            renderKesintiler(),
             fetchHaberler(), // Haber Motoru Başlatıldı
         ]);
-
-        // KRİTİK: Önce verileri çek, sonra grafiği oluştur
-        await fetchAndRenderPiyasa(); 
-        await renderEnflasyonGrafigi(); 
 
         updateDashboard();
     } catch (err) { console.error("Portal yükleme hatası:", err); }

@@ -1,4 +1,6 @@
 /* >> BAHÇELİEVLER PRO ENGINE V4.3 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
+const R2_WORKER_URL = "https://broad-mountain-f064.erman-urel.workers.dev"; //
+const R2_PUBLIC_VIEW_URL = "https://pub-135fc4a127b54815aacf75dd25458a20.r2.dev"; //
 /* >> XSS GÜVENLİK FİLTRESİ (MÜHÜRLENDİ) << */
 window.escapeHTML = function(str) {
     if (!str) return "";
@@ -268,16 +270,8 @@ async function setupQuoteForm() {
         btn.textContent = "İŞLENİYOR...";
 
         try {
-            const fileName = `teklif_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-            const { data, error: storageError } = await window.supabase.storage
-                .from('ilanlar')
-                .upload(fileName, file);
+            const uploadedImageUrl = await uploadToR2(file);
             
-            if (storageError) throw storageError;
-            
-            const { data: urlData } = window.supabase.storage.from('ilanlar').getPublicUrl(fileName);
-            const uploadedImageUrl = urlData.publicUrl;
-
             const payload = {
                 category: document.getElementById("quote-category").value,
                 talep_metni: document.getElementById("quote-text").value,
@@ -313,6 +307,17 @@ async function setupQuoteForm() {
 }
 
 /* >> İLAN YAYINLAMA: KURALLAR DAHİLİNDE GÜNCEL << */
+async function uploadToR2(file) {
+    const fileName = `resim_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    const response = await fetch(`${R2_WORKER_URL}?file=${fileName}`, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type }
+    });
+    if (response.ok) return `${R2_PUBLIC_VIEW_URL}/${fileName}`;
+    throw new Error("R2 Yükleme Hatası");
+}
+
 async function handleMultipleUploads(files) {
     if (!files || files.length === 0) return [];
     let urls = [];
@@ -324,15 +329,9 @@ async function handleMultipleUploads(files) {
             alert(`"${file.name}" 10MB limitini aşıyor. Lütfen daha küçük bir dosya seçin.`);
             continue;
         }
-        const fileExt = file.name.split('.').pop();
-        const fileName = `ilan_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
         try {
-            const { data, error } = await window.supabase.storage
-                .from('ilanlar')
-                .upload(fileName, file);
-            if (error) throw error;
-            const { data: urlData } = window.supabase.storage.from('ilanlar').getPublicUrl(fileName);
-            if (urlData) urls.push(urlData.publicUrl);
+            const url = await uploadToR2(file);
+            if (url) urls.push(url);
         } catch (err) {
             console.error("Yükleme hatası:", err.message);
         }

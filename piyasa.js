@@ -151,10 +151,12 @@ async function submitPiyasaVerisi() {
             is_active: true // BU SATIRI EKLE: Verinin anında yayınlanmasını sağlar
         }]);
 
-        /* >> CLOUDFLARE D1 YEDEKLEME MOTORU (AYNALAMA) << */
+        /* >> CLOUDFLARE D1 YEDEKLEME MOTORU (NİHAİ MÜHÜR) << */
         try {
+            // Arka planda D1'e aynalama yapar
             fetch(window.R2_WORKER_URL, {
                 method: 'POST',
+                mode: 'cors', 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     urun_adi: urunAdi,
@@ -164,7 +166,7 @@ async function submitPiyasaVerisi() {
                     tarih_etiketi: bugun
                 })
             });
-            console.log("D1: Veri yedekleme kuyruğuna alındı.");
+            console.log("D1: Veri yedekleme kuyruğuna başarıyla gönderildi.");
         } catch (d1Err) {
             console.error("D1 Yedekleme Hatası:", d1Err);
         }

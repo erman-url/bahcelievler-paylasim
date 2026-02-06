@@ -939,7 +939,11 @@ window.openFirsatDetail = async function(id) {
             commentBtn.setAttribute('onclick', "window.sendComment('firsat')");
             commentBtn.innerHTML = '<i class="fas fa-paper-plane"></i> ONAYA GÖNDER';
         }
-        if (typeof window.loadComments === "function") window.loadComments(f.id, 'firsat');
+        
+        const cList = document.getElementById("comment-list");
+        if(cList) {
+            cList.innerHTML = `<div style="text-align:center; margin:10px 0;"><button onclick="window.loadComments('${f.id}', 'firsat')" style="background:none; border:none; color:var(--app-blue); font-weight:bold; cursor:pointer; text-decoration:underline; font-size:0.9rem;"><i class="far fa-comments"></i> Yorumları Göster</button></div>`;
+        }
 
         // Modalı ekranda göster
         const modal = document.getElementById("ad-detail-modal");
@@ -1169,8 +1173,11 @@ window.openAdDetail = function(id) {
         buyBtn.after(shareBtn);
     }
 
-    // >> YORUM SİSTEMİ ENTEGRASYONU <<
-    if (typeof window.loadComments === "function") window.loadComments(ad.id, 'ilan');
+    // >> YORUM SİSTEMİ ENTEGRASYONU (LAZY LOAD) <<
+    const cList = document.getElementById("comment-list");
+    if(cList) {
+        cList.innerHTML = `<div style="text-align:center; margin:10px 0;"><button onclick="window.loadComments('${ad.id}', 'ilan')" style="background:none; border:none; color:var(--app-blue); font-weight:bold; cursor:pointer; text-decoration:underline; font-size:0.9rem;"><i class="far fa-comments"></i> Yorumları Göster</button></div>`;
+    }
 
     // MODERN DÜZENLEME BUTONU VE GÜVENLİ YERLEŞİM
     const editBtn = document.createElement('button');

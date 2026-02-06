@@ -139,7 +139,7 @@ async function submitPiyasaVerisi() {
         // >> GÜNCEL TARİH ETİKETİ OLUŞTURMA <<
         const bugun = new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-        /* >> PİYASA VERİ KAYIT MOTORU GÜNCELLEMESİ << */
+      /* >> PİYASA VERİ KAYIT MOTORU GÜNCELLEMESİ << */
         const { error: dbError } = await window.supabase.from('piyasa_verileri').insert([{
             urun_adi: urunAdi,
             fiyat: fiyat,
@@ -147,7 +147,8 @@ async function submitPiyasaVerisi() {
             market_adi: marketAdi,
             image_url: publicUrl,
             delete_password: deleteToken,
-            tarih_etiketi: bugun // BU SATIRI EKLE: Artık tarihler boş kalmayacak
+            tarih_etiketi: bugun,
+            is_active: true // BU SATIRI EKLE: Verinin anında yayınlanmasını sağlar
         }]);
 
         if (dbError) throw dbError;

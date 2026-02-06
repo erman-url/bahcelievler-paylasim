@@ -1408,3 +1408,11 @@ button[onclick*="prepareDeleteHizmet"] {
 #modal-image-gallery::after { right: 10px; content: '\f105'; }
 #modal-image-gallery img:only-child ~ ::before, 
 #modal-image-gallery img:only-child ~ ::after { display: none !important; }
+
+.u-pass {
+    border: 2px solid #E3F2FD !important;
+    border-radius: 10px !important;
+    text-align: center;
+    width: 100%;
+    margin: 10px 0;
+}

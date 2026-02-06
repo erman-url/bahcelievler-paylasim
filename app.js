@@ -2652,12 +2652,14 @@ if (data.delete_password === pass || pass === '0000') {
 }
 };
 window.uDelete = async (id, table, isSoft = false) => {
-    const p = prompt("4 Haneli Şifre:");
-    if (!p) return;
+    const rawPass = prompt("Şifreniz:");
+    if (!rawPass) return;
+    const hashedPass = await sha256(rawPass); // Şifreyi hashle
     const { data: d } = await window.supabase.from(table).select('delete_password').eq('id', id).single();
-    if (d?.delete_password === p || p === '0000') {
+
+    if (d?.delete_password === hashedPass || rawPass === '0000') {
         const action = isSoft ? window.supabase.from(table).update({ is_active: false }) : window.supabase.from(table).delete();
-        const { error } = await action.eq('id', id);
-        if (!error) { alert("Başarıyla Kaldırıldı"); location.reload(); }
-    } else alert("Hatalı Şifre!");
+        await action.eq('id', id);
+        location.reload();
+    } else { alert("Hatalı!"); }
 };

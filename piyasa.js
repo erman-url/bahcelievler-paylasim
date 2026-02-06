@@ -67,7 +67,7 @@ const PiyasaMotoru = {
                                 <small style="color:var(--${durumClass}); font-weight:bold;">${durumText}</small>
                             </div>
                             <h4 style="margin:2px 0; font-size:0.95rem;">${urun.urun_adi}</h4>
-                            <div style="font-weight:bold; color:var(--dark); font-size:1.1rem;">${new Intl.NumberFormat('tr-TR').format(urun.fiyat)} TL</div>
+                            <div style="font-weight:bold; color:var(--dark); font-size:1.1rem;">${new Intl.NumberFormat('tr-TR').format(urun.fiyat)} TL <button onclick="uDelete('${urun.id}', 'piyasa_verileri', true)" style="color:red; background:none; border:none; font-size:12px;">Kaldır</button></div>
                             <div style="font-size:0.7rem; margin-top:4px; color:#555;">
                                 <i class="fas fa-chart-line"></i> Sapma: <span style="color:var(--${durumClass})">%${analiz.sapma}</span> 
                                 <br><i class="fas fa-store"></i> ${urun.market_adi}

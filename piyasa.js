@@ -64,10 +64,12 @@ const PiyasaMotoru = {
                         <div style="flex:1;">
                             <div style="display:flex; justify-content:space-between;">
                                 <small style="font-size:0.6rem; color:#888;">#RADAR_${urun.id.toString().slice(-4)}</small>
-                                <small style="color:var(--${durumClass}); font-weight:bold;">${durumText}</small>
+                                <button onclick="event.stopPropagation(); uDelete('${urun.id}', 'piyasa_verileri', true)" style="background:none; border:none; color:#ff4d4d; cursor:pointer; padding:0;"><i class="fas fa-trash-alt"></i></button>
                             </div>
                             <h4 style="margin:2px 0; font-size:0.95rem;">${urun.urun_adi}</h4>
-                            <div style="font-weight:bold; color:var(--dark); font-size:1.1rem;">${new Intl.NumberFormat('tr-TR').format(urun.fiyat)} TL <button onclick="uDelete('${urun.id}', 'piyasa_verileri', true)" style="color:var(--cyber-pink); b
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="font-weight:bold; color:var(--dark); font-size:1.1rem;">${new Intl.NumberFormat('tr-TR').format(urun.fiyat)} TL</div>
+                                <small style="color:var(--${durumClass}); font-weight:bold;">${durumText}</small>
                             </div>
                         </div>
                     </div>

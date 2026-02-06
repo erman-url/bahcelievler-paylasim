@@ -151,6 +151,24 @@ async function submitPiyasaVerisi() {
             is_active: true // BU SATIRI EKLE: Verinin anında yayınlanmasını sağlar
         }]);
 
+        /* >> CLOUDFLARE D1 YEDEKLEME MOTORU (AYNALAMA) << */
+        try {
+            fetch(window.R2_WORKER_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    urun_adi: urunAdi,
+                    fiyat: fiyat,
+                    market_adi: marketAdi,
+                    image_url: publicUrl,
+                    tarih_etiketi: bugun
+                })
+            });
+            console.log("D1: Veri yedekleme kuyruğuna alındı.");
+        } catch (d1Err) {
+            console.error("D1 Yedekleme Hatası:", d1Err);
+        }
+
         if (dbError) throw dbError;
 
         alert("BAŞARILI: Fiyat radara eklendi!");

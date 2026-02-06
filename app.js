@@ -1,5 +1,6 @@
 /* >> BAHÇELİEVLER PRO ENGINE V4.3 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
 const R2_WORKER_URL = "https://broad-mountain-f064.erman-urel.workers.dev"; //
+window.R2_WORKER_URL = R2_WORKER_URL;
 /* >> GÖRSEL OPTİMİZASYON MOTORU (KOTA DOSTU) << */
 window.optimizeImage = async function(file) {
     return new Promise((resolve) => {

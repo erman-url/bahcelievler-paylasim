@@ -1416,3 +1416,84 @@ button[onclick*="prepareDeleteHizmet"] {
     width: 100%;
     margin: 10px 0;
 }
+
+/* ===== YENİ MENÜ KURUMSAL DEĞİŞKENLER (REFERANS GÖRSEL) ===== */
+:root {
+  --primary-menu: #5F8FA6;       /* steel blue */
+  --primary-soft: #7FA8BC;       /* açık geçiş */
+  --icon-color: #2F6F8F;
+  --bg-menu: #F3F4F6;
+  --surface: #F8F9FB;
+  --card-menu: #FFFFFF;
+}
+
+/* ===== HEADER (SOSYAL - İLANLAR - HİZMETLER İÇİN ORTAK) ===== */
+.modern-header {
+  height: 130px;
+  background: linear-gradient(180deg, var(--primary-menu), var(--primary-soft));
+  border-bottom-left-radius: 34px;
+  border-bottom-right-radius: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px rgba(0,0,0,.12);
+  margin: -20px -15px 20px -15px; /* Sayfa paddinglerini sıfırlar */
+}
+
+.header-inner { text-align: center; color: #fff; }
+.header-title { font-size: 25px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; }
+.header-sub { margin-top: 4px; font-size: 13px; font-weight: 500; opacity: .9; }
+
+/* ===== MENÜ KARTI (LİSTE TASARIMI) ===== */
+.menu-card-modern {
+  background: var(--card-menu);
+  border-radius: 18px;
+  padding: 18px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.menu-icon-modern {
+  width: 42px; height: 42px;
+  border-radius: 14px;
+  background: #EEF4F7;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.menu-icon-modern svg { width: 22px; height: 22px; stroke: var(--icon-color); stroke-width: 2; fill: none; }
+.menu-text-modern { font-size: 16px; font-weight: 700; color: #0F172A; }
+
+/* ===== FOOTER GÜNCELLEMESİ (SVG TABANLI) ===== */
+.app-footer-nav {
+  height: 82px !important;
+  background: var(--surface) !important;
+  border-top: 1px solid #E5E7EB;
+  max-width: 600px !important;
+}
+
+.nav-item-modern {
+  display: flex; flex-direction: column; align-items: center;
+  font-size: 11px; font-weight: 700; color: #6B7280;
+  text-decoration: none; flex: 1;
+}
+
+.nav-item-modern svg { width: 22px; height: 22px; margin-bottom: 4px; stroke: #6B7280; stroke-width: 2; fill: none; }
+.nav-item-modern.active { color: var(--icon-color); }
+.nav-item-modern.active svg { stroke: var(--icon-color); }
+
+/* ORTA - İLANLAR BUTONU */
+.nav-item-modern.center { position: relative; top: -8px; }
+.nav-item-modern.center .icon-wrap {
+  width: 46px; height: 46px; border-radius: 15px;
+  background: #EEF4F7; display: flex; align-items: center; justify-content: center;
+  margin-bottom: 6px; box-shadow: 0 6px 16px rgba(47,111,143,.25);
+}
+.nav-item-modern.center svg { width: 24px; height: 24px; stroke: var(--icon-color); }

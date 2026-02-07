@@ -1444,32 +1444,50 @@ button[onclick*="prepareDeleteHizmet"] {
 .header-title { font-size: 25px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; }
 .header-sub { margin-top: 4px; font-size: 13px; font-weight: 500; opacity: .9; }
 
-/* ===== MENÜ KARTI (LİSTE TASARIMI) ===== */
-.menu-card-modern {
-  background: var(--card-menu);
-  border-radius: 18px;
-  padding: 18px 16px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 14px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.06);
-  cursor: pointer;
-  border: none;
-  width: 100%;
-  text-decoration: none;
-  color: inherit;
+/* >> MENÜ BAR NİZAM VE KUSURSUZ HİZALAMA MÜHÜRÜ << */
+.container-modern {
+    padding: 20px 16px 120px 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important; /* Kartları yatayda kesin ortalar */
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
+.menu-card-modern {
+    width: 100% !important;
+    max-width: 500px !important; /* Referans genişlik */
+    background: #FFFFFF !important;
+    border-radius: 20px !important;
+    padding: 18px 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    margin-bottom: 14px !important;
+    box-shadow: 0 6px 18px rgba(0,0,0,.06) !important;
+    border: none !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    transition: transform .15s ease !important;
+    box-sizing: border-box !important; /* Padding'in genişliği bozmasını engeller */
+}
+
+.menu-card-modern:active { transform: scale(.97) !important; }
+
+/* İkon ve Yazı Hizalaması */
 .menu-icon-modern {
-  width: 42px; height: 42px;
-  border-radius: 14px;
-  background: #EEF4F7;
-  display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0 !important; /* İkonun sıkışmasını engeller */
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 14px !important;
+    background: #EEF4F7 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .menu-icon-modern svg { width: 22px; height: 22px; stroke: var(--icon-color); stroke-width: 2; fill: none; }
-.menu-text-modern { font-size: 16px; font-weight: 700; color: #0F172A; }
+.menu-text-modern { font-size: 16px !important; font-weight: 700 !important; color: #0F172A !important; text-align: left !important; }
 
 /* ===== FOOTER GÜNCELLEMESİ (SVG TABANLI) ===== */
 .app-footer-nav {

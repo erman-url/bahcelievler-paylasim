@@ -97,26 +97,29 @@
 </div>
 </section>
 <section id="ilanlar" class="page">
-    <h1 class="cyber-header"><i class="fas fa-bullhorn"></i> İLAN PANOSU</h1>
-
-    <div style="padding: 0 15px 15px 15px;">
-        <button onclick="window.openAddAdModal()" class="cyber-submit" style="background:var(--app-blue)!important; width: 100%; border-radius: 12px; font-weight: bold;">
-            <i class="fas fa-plus-circle"></i> YENİ İLAN EKLE
-        </button>
+    <div class="modern-header">
+        <div class="header-inner">
+            <div class="header-title">İLAN PANOSU</div>
+            <div class="header-sub">Semt İçi Güvenli Alışveriş</div>
+        </div>
     </div>
-
-    <div style="margin-bottom: 20px; padding: 0 15px;">
-        <input type="text" id="ad-search-input" class="cyber-form" placeholder="🔍 İlan başlığında ara...">
+<div class="container-modern" style="padding: 15px;">
+    <div class="menu-card-modern" onclick="window.openAddAdModal()" style="background: var(--app-blue) !important; color: white !important;">
+        <div class="menu-icon-modern" style="background: rgba(255,255,255,0.2);"><svg viewBox="0 0 24 24" style="stroke: white;"><path d="M12 5v14M5 12h14"/></svg></div>
+        <div class="menu-text-modern" style="color: white;">YENİ İLAN EKLE</div>
     </div>
-
-    <div class="category-filter-container" style="padding: 0 15px;">
+    
+    <div style="width: 100%; margin-bottom: 20px;">
+        <input type="text" id="ad-search-input" class="cyber-form" placeholder="🔍 İlanlarda ara..." style="border-radius: 15px;">
+    </div>
+    <div class="category-filter-container" style="width: 100%; overflow-x: auto; white-space: nowrap; padding-bottom: 10px;">
         <button class="filter-btn active" onclick="filterAds('all', this)">TÜMÜ</button>
         <button class="filter-btn" onclick="window.filterAds('latest', this)">EN YENİ</button>
         <button class="filter-btn" onclick="filterAds('Ürün-Eşya', this)">EŞYA</button>
         <button class="filter-btn" onclick="filterAds('İş&İnsan', this)">İŞ</button>
-        <button class="filter-btn" onclick="filterAds('Araç', this)">VASITA</button>
         <button class="filter-btn" onclick="filterAds('Gayrimenkul', this)">EMLAK</button>
     </div>
+</div>
 
     <div id="ads-list" style="min-height: 200px;">
         <p style="text-align:center; padding:20px; color:#888;">İlanlar yükleniyor...</p>
@@ -483,24 +486,27 @@
         </section>
 
       <section id="hizmetler" class="page">
-    <h1><i class="fas fa-tools"></i> Yerel Hizmetler</h1>
-    
-    <div style="padding: 10px;">
-        <a href="#" class="cyber-btn-block" data-target="teklif-al-form">
-            <i class="fas fa-file-invoice-dollar"></i> 
-            <span>Teklif Al</span>
-        </a>
-
-        <a href="#" class="cyber-btn-block" data-target="hizmet-ver">
-            <i class="fas fa-hand-holding-usd"></i> 
-            <span>Hizmet Ver (İşinizi Tanıtın)</span>
-        </a>
-
-        <a href="#" class="cyber-btn-block" data-target="emlak-talep-form">
-            <i class="fas fa-home-user"></i> 
-            <span>Emlak Talebi Bırak (Ev/Dükkan Arıyorum)</span>
-        </a>
+    <div class="modern-header">
+        <div class="header-inner">
+            <div class="header-title">YEREL HİZMETLER</div>
+            <div class="header-sub">Bahçelievler Usta & Esnaf Rehberi</div>
+        </div>
     </div>
+    
+    <div class="container-modern" style="padding: 22px 16px;">
+        <div class="menu-card-modern" data-target="teklif-al-form">
+            <div class="menu-icon-modern"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <div class="menu-text-modern">Ücretsiz Teklif Al</div>
+        </div>
+    <div class="menu-card-modern" data-target="hizmet-ver">
+        <div class="menu-icon-modern"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg></div>
+        <div class="menu-text-modern">İşini Tanıt / Hizmet Ver</div>
+    </div>
+    <div class="menu-card-modern" data-target="emlak-talep-form">
+        <div class="menu-icon-modern"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11H3z"/><path d="M9 22V12h6v10"/></svg></div>
+        <div class="menu-text-modern">Emlak Talebi Bırak</div>
+    </div>
+</div>
 </section>
 
         <section id="teklif-al-form" class="page">

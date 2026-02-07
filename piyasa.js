@@ -108,6 +108,28 @@ async function submitPiyasaVerisi() {
         const fiyat = parseFloat(fiyatInput.value);
         const urunAdi = urunAdiInput.value;
         const barkod = barkodInput ? barkodInput.value.trim() : null;
+        /* >> PİYASA RADARI: VERİ DOĞRULAMA ZIRHI << */
+        
+        // 1. Ürün Adı & Barkod: Sadece harf, rakam ve boşluk (Max 25 Karakter)
+        const alfanumerikRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s]+$/;
+        
+        if (urunAdi.length > 25 || !alfanumerikRegex.test(urunAdi)) {
+            alert("HATA: Ürün adı en fazla 25 karakter olmalı ve sadece harf/rakam içermelidir.");
+            return;
+        }
+        
+        if (barkod && (barkod.length > 25 || !alfanumerikRegex.test(barkod))) {
+            alert("HATA: Barkod/Ürün kodu en fazla 25 karakter olmalı ve sadece harf/rakam içermelidir.");
+            return;
+        }
+        // 2. Fiyat Formatı ve Sınırı (Max 10.000 TL)
+        // Kullanıcı 45,95 girerse bunu 45.95'e çevirerek sisteme uyumlu hale getiririz
+        const temizFiyat = parseFloat(fiyatInput.value.replace(',', '.'));
+        
+        if (isNaN(temizFiyat) || temizFiyat <= 0 || temizFiyat > 10000) {
+            alert("HATA: Lütfen geçerli bir fiyat giriniz (Örn: 45.95). Maksimum sınır 10.000 TL'dir.");
+            return;
+        }
         const marketAdi = marketAdiInput.value;
         const pass = passInput.value;
         const deleteToken = await sha256(pass);

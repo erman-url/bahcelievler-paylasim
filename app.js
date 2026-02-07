@@ -1,6 +1,20 @@
 /* >> BAHÇELİEVLER PRO ENGINE V4.3 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
 const R2_WORKER_URL = "https://broad-mountain-f064.erman-urel.workers.dev"; //
 window.R2_WORKER_URL = R2_WORKER_URL;
+/* >> CLOUDFLARE D1 SORGU MOTORU << */
+window.fetchFromD1 = async function(sqlQuery) {
+    try {
+        const response = await fetch(`${window.R2_WORKER_URL}?action=query`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sql: sqlQuery })
+        });
+        return await response.json();
+    } catch (e) {
+        console.error("D1 Okuma Hatası:", e);
+        return null;
+    }
+};
 /* >> GÖRSEL OPTİMİZASYON MOTORU (KOTA DOSTU) << */
 window.optimizeImage = async function(file) {
     return new Promise((resolve) => {

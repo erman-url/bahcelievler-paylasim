@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 /* >> NAVİGASYON MOTORU: HİYERARŞİK TEMİZLİK V3.0 << */
 function setupNavigation() {
     // Tüm navigasyon tetikleyicilerini (menü, butonlar, widgetlar) kapsar
-    const navItems = document.querySelectorAll(".nav-item, [data-target], .cyber-btn-block, .home-widget");
+    const navItems = document.querySelectorAll(".nav-item, .nav-item-modern, .menu-card-modern, [data-target], .cyber-btn-block, .home-widget");
     
     const handleNavigation = (e) => {
         const trigger = e.target.closest("[data-target]");

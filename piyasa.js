@@ -184,14 +184,21 @@ async function submitPiyasaVerisi() {
 /* >> RENDER MOTORU (Sadece Aktifleri Gösterir Ama Tümünü Analiz Eder) << */
 async function fetchAndRenderPiyasa() {
     try {
-        const { data: tumVeriler, error } = await window.supabase
-            .from('piyasa_verileri')
-            .select('id,urun_adi,fiyat,market_adi,tarih_etiketi,image_url,is_active,created_at,barkod')
-            .order('created_at', { ascending: false });
+        /* >> CLOUDFLARE D1 OKUMA MOTORU AKTİF << */
+        let tumVeriler = await window.fetchFromD1("SELECT * FROM piyasa_verileri ORDER BY created_at DESC");
 
-        if (error) throw error;
-
-        console.log("Supabase Gelen:", tumVeriler);
+        if (tumVeriler) {
+            console.log("Veriler Cloudflare D1'den başarıyla çekildi.");
+        } else {
+            console.warn("D1 verisi alınamadı, sistem Supabase yedeğine bakıyor...");
+            const { data, error } = await window.supabase
+                .from('piyasa_verileri')
+                .select('id,urun_adi,fiyat,market_adi,tarih_etiketi,image_url,is_active,created_at,barkod')
+                .order('created_at', { ascending: false });
+            
+            if (error) throw error;
+            tumVeriler = data;
+        }
 
         if (tumVeriler) {
             // SÜPER KONTROL V2: Sadece aktif olan ve 45 günden yeni verileri listele

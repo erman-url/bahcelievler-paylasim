@@ -291,7 +291,6 @@
             <textarea id="kes-desc" maxlength="250" placeholder="Kesinti Detayı..." rows="3" required></textarea>
             <input type="password" id="kes-pass" maxlength="5" placeholder="Şifre (1 Harf + 4 Rakam)" required>
             
-            <input type="password" class="u-pass" placeholder="4 Haneli Silme Şifresi" maxlength="4" style="width:100%; margin:10px 0; text-align:center; border:2px solid #E3F2FD; border-radius:10px;">
 <button type="submit" id="kes-submit-btn" class="cyber-submit" style="background: #ffc107 !important; color: black !important;">BİLDİRİM GÖNDER</button>
         </form>
     </div>
@@ -739,7 +738,7 @@
 <div id="haber-detail-modal" class="modal" style="display:none;">
     <span class="close-detail" onclick="closeHaberModal()">&times;</span>
     <div class="modal-content cyber-card">
-        <img id="haber-modal-image" src="" style="width: 100%; height: auto; border-radius: 12px; margin-bottom: 15px;">
+        <img id="haber-modal-image" src="" onerror="this.style.display='none'" style="width: 100%; height: auto; border-radius: 12px; margin-bottom: 15px;">
         <h2 id="haber-modal-title" style="color: var(--app-blue); font-size: 1.3rem; margin-bottom: 10px;"></h2>
         <div id="haber-modal-content" style="white-space: pre-wrap; line-height: 1.6;"></div>
     </div>

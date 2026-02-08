@@ -1540,3 +1540,68 @@ button[onclick*="prepareDeleteHizmet"] {
     color: #FFFFFF !important;
     box-shadow: 0 4px 10px rgba(255, 140, 0, 0.2) !important;
 }
+
+
+/* >> KURUMSAL HOME DASHBOARD V2 << */
+#home-dashboard {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 10px 16px 120px 16px !important;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+/* Dashboard kartlarını menü kartlarıyla senkronize eder */
+.home-widget.cyber-card {
+    display: flex !important;
+    flex-direction: row !important; /* Dikey yerine Yatay dizilim */
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 14px 18px !important;
+    margin-bottom: 0 !important;
+    border-radius: 20px !important;
+    border: none !important;
+    border-left: 5px solid transparent !important; /* Dinamik renkler buradan atanacak */
+    background: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04) !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.home-widget:active { transform: scale(0.98); }
+
+.home-widget h4 {
+    margin: 0 !important;
+    font-size: 0.75rem !important;
+    font-weight: 800 !important;
+    color: #64748b !important;
+    flex-shrink: 0;
+    width: 140px; /* Başlık alanını sabitler, hizalamayı mühürler */
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.home-widget p {
+    margin: 0 !important;
+    padding-left: 12px !important;
+    border-left: 1px solid #f1f5f9;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+}
+
+/* Dashboard Özel Renk Mühürleri */
+.home-widget[data-target="duyurular"] { border-left-color: #ff007f !important; }
+.home-widget[data-target="ilanlar"] { border-left-color: #00d2ff !important; }
+.home-widget[data-target="kesinti-bildir"] { border-left-color: #ffc107 !important; }
+.home-widget[data-target="firsat-indirim"] { border-left-color: #28a745 !important; }
+.home-widget[data-target="tavsiye-et"] { border-left-color: #7c3aed !important; }
+.home-widget[data-target="sikayet-et"] { border-left-color: #ff4d4d !important; }
+.home-widget[data-target="fiyat-dedektifi"] { border-left-color: var(--cyber-pink) !important; }

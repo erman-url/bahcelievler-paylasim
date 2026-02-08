@@ -1773,3 +1773,42 @@ button[onclick*="prepareDeleteHizmet"] {
 #home .slider-container {
     margin-top: 10px !important;
 }
+
+/* >> ENTERPRISE CORPORATE STYLE V1.0 << */
+:root {
+    --primary-corp: #003366; /* Daha ağır, kurumsal lacivert */
+    --accent-corp: #e2e8f0;
+    --text-main: #334155;
+    --soft-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    background-color: #f8fafc !important; /* Kirli beyaz yerine ferah bir gri-beyaz */
+    color: var(--text-main) !important;
+}
+
+/* Sayfa Başlıklarını (Banner) Belediye Stiline Yaklaştır */
+.modern-header {
+    height: 100px !important; /* Çok devasa başlık amatör durur, küçültüyoruz */
+    background: #ffffff !important;
+    border-bottom: 2px solid var(--accent-corp) !important;
+    border-radius: 0 !important; /* Oval header bazen oyuncak gibi durur, kurumsal düz hat iyidir */
+    box-shadow: none !important;
+    margin: 0 0 20px 0 !important;
+}
+
+.header-title {
+    color: var(--primary-corp) !important;
+    font-size: 1.5rem !important;
+}
+
+.header-sub {
+    color: #64748b !important;
+}
+
+/* Dashboard Kartlarını "Clean Design" Yap */
+.home-widget-modern {
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: var(--soft-shadow) !important;
+    border-radius: 12px !important;
+}

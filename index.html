@@ -50,42 +50,42 @@
                 </div>
             </div>
 
-            <div id="home-dashboard">
-                <div class="home-widget cyber-card" data-target="duyurular" style="grid-column: span 2; border-left: 5px solid #ff007f;">
-                    <h4><i class="fas fa-bolt fa-beat"></i> SON EKLENEN DUYURULAR</h4>
-                    <p id="preview-duyuru" style="font-weight: bold; color: #ff007f;">YÜKLENİYOR...</p>
-                </div>
-
-                <div class="home-widget cyber-card" data-target="ilanlar" style="border-left: 5px solid #00d2ff;">
-                    <h4><i class="fas fa-bullhorn fa-bounce"></i> SON EKLENEN İLANLAR</h4>
-                    <p id="preview-ad" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
-                </div>
-
-                <div class="home-widget cyber-card" data-target="kesinti-bildir" style="border-left: 5px solid #ffc107;">
-                    <h4><i class="fas fa-plug fa-fade"></i> SON BİLDİRİLEN KESİNTİ</h4>
-                    <p id="preview-kesinti" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
-                </div>
-
-                <div class="home-widget cyber-card" data-target="firsat-indirim" style="border-left: 5px solid #28a745;">
-                    <h4><i class="fas fa-tags fa-beat-fade"></i> SON EKLENEN FIRSAT</h4>
-                    <p id="preview-firsat" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
-                </div>
-
-                <div class="home-widget cyber-card" data-target="tavsiye-et" style="border-left: 5px solid #ffc107;">
-                    <h4><i class="fas fa-star fa-spin-pulse"></i> SON EKLENEN TAVSİYE</h4>
-                    <p id="preview-tavsiye" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
-                </div>
-
-                <div class="home-widget cyber-card" data-target="sikayet-et" style="border-left: 5px solid #ff4d4d;">
-                    <h4><i class="fas fa-exclamation-triangle fa-shake"></i> SON SORUN BİLDİRİMİ</h4>
-                    <p id="preview-sikayet" style="font-size: 0.8rem;">YÜKLENİYOR...</p>
-                </div>
-                
-                <div class="home-widget cyber-card" data-target="fiyat-dedektifi" style="display: flex; align-items: center; gap: 12px; border-left: 5px solid var(--cyber-pink); cursor: pointer;">
-                    <div style="flex: 1; overflow: hidden;">
-                       <h4 style="margin: 0; font-size: 0.8rem;"><i class="fas fa-search-dollar fa-beat"></i> SON FİYAT RADARI</h4>
-                        <p id="preview-piyasa" style="font-size: 0.75rem; font-weight: bold; margin: 4px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Yükleniyor...</p>
+            <div id="home-dashboard" style="display: flex; flex-direction: column; gap: 10px; padding: 10px 16px 120px;">
+                <div class="home-widget-modern" data-target="duyurular" style="border-left: 5px solid #ff007f;">
+                    <div class="widget-head">
+                        <i class="fas fa-bolt"></i> <span>DUYURU</span>
                     </div>
+                    <div class="widget-body" id="preview-duyuru">Yükleniyor...</div>
+                </div>
+                <div class="home-widget-modern" data-target="ilanlar" style="border-left: 5px solid #00d2ff;">
+                    <div class="widget-head">
+                        <i class="fas fa-bullhorn"></i> <span>İLAN</span>
+                    </div>
+                    <div class="widget-body" id="preview-ad">Yükleniyor...</div>
+                </div>
+                <div class="home-widget-modern" data-target="firsat-indirim" style="border-left: 5px solid #28a745;">
+                    <div class="widget-head">
+                        <i class="fas fa-tags"></i> <span>FIRSAT</span>
+                    </div>
+                    <div class="widget-body" id="preview-firsat">Yükleniyor...</div>
+                </div>
+                <div class="home-widget-modern" data-target="fiyat-dedektifi" style="border-left: 5px solid var(--cyber-pink);">
+                    <div class="widget-head">
+                        <i class="fas fa-search-dollar"></i> <span>RADAR</span>
+                    </div>
+                    <div class="widget-body" id="preview-piyasa">Yükleniyor...</div>
+                </div>
+                <div class="home-widget-modern" data-target="kesinti-bildir" style="border-left: 5px solid #ffc107;">
+                    <div class="widget-head">
+                        <i class="fas fa-plug"></i> <span>KESİNTİ</span>
+                    </div>
+                    <div class="widget-body" id="preview-kesinti">Yükleniyor...</div>
+                </div>
+                <div class="home-widget-modern" data-target="sikayet-et" style="border-left: 5px solid #ff4d4d;">
+                    <div class="widget-head">
+                        <i class="fas fa-exclamation-triangle"></i> <span>SORUN</span>
+                    </div>
+                    <div class="widget-body" id="preview-sikayet">Yükleniyor...</div>
                 </div>
             </div>
 

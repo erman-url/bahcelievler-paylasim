@@ -1541,6 +1541,62 @@ button[onclick*="prepareDeleteHizmet"] {
     box-shadow: 0 4px 10px rgba(255, 140, 0, 0.2) !important;
 }
 
+/* >> HOME WIDGET MODERN (KOMPAKT LİSTE) << */
+.home-widget-modern {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    padding: 14px 16px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(0,0,0,0.02);
+}
+
+.home-widget-modern:active {
+    transform: scale(0.98);
+}
+
+.widget-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 110px; /* Sabit genişlik ile hizalama */
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #64748b;
+    letter-spacing: 0.5px;
+}
+
+.widget-head i {
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+    color: inherit;
+}
+
+/* İkon renklerini border rengine göre ayarlamak için */
+.home-widget-modern[style*="#ff007f"] .widget-head i { color: #ff007f; }
+.home-widget-modern[style*="#00d2ff"] .widget-head i { color: #00d2ff; }
+.home-widget-modern[style*="#28a745"] .widget-head i { color: #28a745; }
+.home-widget-modern[style*="var(--cyber-pink)"] .widget-head i { color: var(--cyber-pink); }
+.home-widget-modern[style*="#ffc107"] .widget-head i { color: #ffc107; }
+.home-widget-modern[style*="#ff4d4d"] .widget-head i { color: #ff4d4d; }
+
+.widget-body {
+    flex: 1;
+    padding-left: 12px;
+    border-left: 2px solid #f1f5f9;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 
 /* >> KURUMSAL HOME DASHBOARD V2 << */
 #home-dashboard {

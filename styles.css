@@ -10,6 +10,20 @@
     --card-shadow: 0 10px 25px rgba(0, 86, 179, 0.05);
     --card-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04); 
     --border-radius: 16px;
+    /* Merged Variables */
+    --primary-corp: #003366;
+    --accent-corp: #e2e8f0;
+    --text-main: #334155;
+    --soft-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    --nav-bg: #ffffff;
+    --nav-active: #003366;
+    --nav-inactive: #94a3b8;
+    --primary-menu: #5F8FA6;
+    --primary-soft: #7FA8BC;
+    --icon-color: #2F6F8F;
+    --bg-menu: #F3F4F6;
+    --surface: #F8F9FB;
+    --card-menu: #FFFFFF;
 }
 
 html {
@@ -155,49 +169,9 @@ h1:not(.cyber-header) i {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* SOSYAL BUTONLAR - TAM KORUMA */
-.cyber-btn-block {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-align-items: center;
-    align-items: center;
-    background: #fff;
-    color: var(--dark-text);
-    text-decoration: none;
-    padding: 18px;
-    margin-bottom: 12px;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    box-shadow: var(--card-shadow);
-    border: 1px solid #f0f5fa;
-    -webkit-transition: transform 0.2s;
-    transition: transform 0.2s;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    touch-action: manipulation;
-    cursor: pointer;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-}
-
 /* Sosyal Alan İkonu Desteği */
 [data-target="sosyal"] i::before {
     content: "\f0ac"; /* FontAwesome Globe */
-}
-
-.cyber-btn-block:active { 
-    -webkit-transform: scale(0.98);
-    transform: scale(0.98);
-}
-
-.cyber-btn-block i {
-    margin-right: 15px;
-    font-size: 1.4rem;
-    color: var(--app-blue);
-    width: 30px;
-    text-align: center;
 }
 
 /* FORM ELEMENTLERİ */
@@ -594,12 +568,6 @@ body.modal-open {
 /* BİLGİ VE RADAR */
 #info-bar { background: rgba(255, 255, 255, 0.9) !important; backdrop-filter: blur(10px); border-radius: 14px !important; border: none !important; box-shadow: var(--card-shadow) !important; }
 
-.neon-text { 
-  display: inline-block; 
-  animation: pulsate 1.5s infinite alternate; 
-}
-
-@keyframes pulsate { 100% { text-shadow: 0 0 10px var(--azure-light); } 0% { text-shadow: 0 0 2px #fff; } }
 .ad-badge { position: absolute; top: 8px; right: 8px; background: var(--app-blue); color: white; padding: 3px 8px; border-radius: 8px; font-size: 0.6rem; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
 /* >> MOBİL NAVİGASYON VE SLIDER (TAM KORUMA) << */
@@ -1409,24 +1377,7 @@ button[onclick*="prepareDeleteHizmet"] {
 #modal-image-gallery img:only-child ~ ::before, 
 #modal-image-gallery img:only-child ~ ::after { display: none !important; }
 
-.u-pass {
-    border: 2px solid #E3F2FD !important;
-    border-radius: 10px !important;
-    text-align: center;
-    width: 100%;
-    margin: 10px 0;
-}
-
 /* ===== YENİ MENÜ KURUMSAL DEĞİŞKENLER (REFERANS GÖRSEL) ===== */
-:root {
-  --primary-menu: #5F8FA6;       /* steel blue */
-  --primary-soft: #7FA8BC;       /* açık geçiş */
-  --icon-color: #2F6F8F;
-  --bg-menu: #F3F4F6;
-  --surface: #F8F9FB;
-  --card-menu: #FFFFFF;
-}
-
 /* ===== HEADER (SOSYAL - İLANLAR - HİZMETLER İÇİN ORTAK) ===== */
 .modern-header {
   height: 130px;
@@ -1775,13 +1726,6 @@ button[onclick*="prepareDeleteHizmet"] {
 }
 
 /* >> ENTERPRISE CORPORATE STYLE V1.0 << */
-:root {
-    --primary-corp: #003366; /* Daha ağır, kurumsal lacivert */
-    --accent-corp: #e2e8f0;
-    --text-main: #334155;
-    --soft-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-}
-
 body {
     background-color: #f8fafc !important; /* Kirli beyaz yerine ferah bir gri-beyaz */
     color: var(--text-main) !important;
@@ -1814,12 +1758,6 @@ body {
 }
 
 /* >> ELITE CORPORATE UI REVISION << */
-:root {
-    --nav-bg: #ffffff;
-    --nav-active: #003366;
-    --nav-inactive: #94a3b8;
-}
-
 /* 1. Footer Navigasyon: Daha Belirgin ve Pro */
 .app-footer-nav {
     background: var(--nav-bg) !important;

@@ -1515,3 +1515,28 @@ button[onclick*="prepareDeleteHizmet"] {
   margin-bottom: 6px; box-shadow: 0 6px 16px rgba(47,111,143,.25);
 }
 .nav-item-modern.center svg { width: 24px; height: 24px; stroke: var(--icon-color); }
+
+/* >> İLAN EKLE BUTONU VE FİLTRE AKTİF TURUNCU TASARIMI << */
+/* 1. Yeni İlan Ekle Kartını Turuncu Yapar */
+#ilanlar .menu-card-modern[onclick*="openAddAdModal"] {
+    background: #FF8C00 !important; /* Kurumsal Turuncu */
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.25) !important;
+}
+
+/* 2. İlan Ekle Kartı İçindeki İkon Kutusunu Beyaz Yapar */
+#ilanlar .menu-card-modern[onclick*="openAddAdModal"] .menu-icon-modern {
+    background: rgba(255, 255, 255, 0.9) !important;
+}
+
+#ilanlar .menu-card-modern[onclick*="openAddAdModal"] .menu-icon-modern svg {
+    stroke: #FF8C00 !important; /* İkon rengi turuncu */
+}
+
+/* 3. Aktif Filtre Butonunu (TÜMÜ vb.) Turuncu Yapar */
+.filter-btn.active {
+    background: #FF8C00 !important;
+    border-color: #FF8C00 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 10px rgba(255, 140, 0, 0.2) !important;
+}

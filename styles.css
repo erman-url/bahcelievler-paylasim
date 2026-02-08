@@ -1692,3 +1692,55 @@ button[onclick*="prepareDeleteHizmet"] {
     justify-content: center;
     border-radius: 8px;
 }
+
+/* >> NTV TARZI KURUMSAL ÜST NAVİGASYON BARI << */
+.news-navbar {
+    width: 100% !important;
+    background-color: #003366 !important; /* Koyu Mavi Kurumsal Renk */
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky; /* Kullanıcı deneyimi için kaydırdıkça sabit kalması daha pro durur */
+    top: 0;
+    z-index: 1000;
+}
+
+.news-navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.news-navbar-brand img {
+    height: 32px;
+    width: auto;
+}
+
+.news-navbar-title {
+    color: #ffffff !important;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.news-navbar-search {
+    color: #ffffff !important;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 8px;
+    transition: opacity 0.2s;
+}
+
+.news-navbar-search:hover {
+    opacity: 0.7;
+}
+
+/* Mevcut slider'ın barın altında kalmaması için küçük bir ayar */
+#home .slider-container {
+    margin-top: 15px !important;
+}

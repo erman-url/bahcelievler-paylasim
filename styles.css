@@ -1661,3 +1661,34 @@ button[onclick*="prepareDeleteHizmet"] {
 .home-widget[data-target="tavsiye-et"] { border-left-color: #7c3aed !important; }
 .home-widget[data-target="sikayet-et"] { border-left-color: #ff4d4d !important; }
 .home-widget[data-target="fiyat-dedektifi"] { border-left-color: var(--cyber-pink) !important; }
+
+/* >> ANA SAYFA GÜNDEM HABER: PROFESYONEL ÖZEL STİL << */
+#gundem-haber .news-header-custom {
+    all: unset; /* Tüm genel h1 stillerini bu başlık için sıfırlar */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 5px 10px 5px;
+    margin: 10px 12px;
+    border-bottom: 2px solid #edf2f7; /* Hafif bir ayraç çizgisi */
+}
+
+#gundem-haber .news-header-custom span {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #1e293b; /* Kurumsal koyu gri-mavi */
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+
+#gundem-haber .news-header-custom i {
+    color: #64748b; /* İkonu daha az dikkat çekici hale getirir */
+    font-size: 1rem;
+    background: #f1f5f9;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}

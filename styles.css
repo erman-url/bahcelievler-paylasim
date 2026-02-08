@@ -1744,3 +1744,32 @@ button[onclick*="prepareDeleteHizmet"] {
 #home .slider-container {
     margin-top: 15px !important;
 }
+
+/* >> ANA SAYFA EN ÜST KURUMSAL FORUM BARI << */
+.top-forum-bar {
+    width: 100% !important;
+    background-color: #003366 !important; /* Kurumsal Koyu Mavi */
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Metni tam ortalar */
+    padding: 0 20px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 2000; /* Her şeyin en üstünde durması için */
+}
+
+.top-forum-title {
+    color: #ffffff !important; /* Beyaz Metin */
+    font-size: 1.2rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Slider'ın barın altına girmemesi için üst marjin ayarı */
+#home .slider-container {
+    margin-top: 10px !important;
+}

@@ -1814,3 +1814,37 @@ body {
 #home .slider-container {
     margin-top: 10px !important;
 }
+
+/* >> MERKEZİ ÜST BAŞLIK (HEADER) YÖNETİM SİSTEMİ << */
+.modern-header {
+    /* 1. TEK MERKEZDEN RENK KONTROLÜ */
+    background: linear-gradient(135deg, #003366 0%, #0056b3 100%) !important; /* Koyu Lacivert Geçişli */
+    
+    /* 2. BOYUT VE ŞEKİL MÜHÜRÜ */
+    height: 120px !important;
+    border-radius: 0 0 40px 40px !important; /* Oval Alt Köşeler */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    
+    /* 3. KONUMLANDIRMA */
+    margin: -20px -15px 25px -15px !important;
+    box-shadow: 0 10px 30px rgba(0, 51, 102, 0.2) !important;
+}
+
+/* Header içindeki metinlerin beyaz ve pro görünmesi için */
+.header-title {
+    color: #ffffff !important;
+    font-size: 1.4rem !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+.header-sub {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    margin-top: 4px !important;
+}

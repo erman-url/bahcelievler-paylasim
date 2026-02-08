@@ -975,25 +975,62 @@ window.openFirsatDetail = async function(id) {
     }
 };
 
-/* >> DİĞER FONKSİYONLAR << */
+
 async function renderTavsiyeler() {
     const el = document.getElementById('recommend-list');
     if (!el) return;
-    const { data } = await window.supabase.from('tavsiyeler')
-        .select('*')
-        .or('is_active.is.null,is_active.eq.true')
-        .order('created_at', { ascending: false });
 
-    el.innerHTML = data?.map(item => `
-        <div class="cyber-card" style="margin-bottom:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="window.openSocialDetail('tavsiyeler', '${item.id}')">
-            <div style="display:flex; justify-content:space-between;">
-                <strong>${window.escapeHTML(item.title)}</strong>
-                <span>${"⭐".repeat(item.rating || 5)}</span>
+    // Başlangıçta kullanıcıya yükleniyor bilgisini ver
+    el.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">Tavsiyeler yükleniyor...</p>';
+
+    try {
+        // Filtreyi Supabase üzerinde yapmak performansı artırır
+        // .eq('is_active', true) -> Sadece aktif olanları getirir
+        const { data, error } = await window.supabase
+            .from('tavsiyeler')
+            .select('*')
+            .eq('is_active', true) 
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            el.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">Henüz onaylanmış bir tavsiye bulunmuyor.</p>';
+            return;
+        }
+
+        el.innerHTML = data.map(item => `
+            <div class="cyber-card" style="margin-bottom:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="window.openSocialDetail('tavsiyeler', '${item.id}')">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong style="color:var(--app-blue); font-size:1.1rem;">${window.escapeHTML(item.title)}</strong>
+                    <span style="color:#FFD700;">${"⭐".repeat(item.rating || 5)}</span>
+                </div>
+                
+                ${item.image_url ? `
+                    <div style="margin:12px 0; position:relative;">
+                        <img src="${item.image_url}" 
+                             onerror="this.src='https://via.placeholder.com/400x220?text=Gorsel+Hazirlaniyor'"
+                             style="width:100%; border-radius:15px; max-height:220px; object-fit:cover; border:1px solid #f0f0f0; display:block;">
+                    </div>
+                ` : ''}
+
+                <div style="background: #f8fafc; padding: 12px; border-radius: 12px; border-left: 4px solid var(--app-blue); margin-top:10px;">
+                    <p style="margin:0; font-style:italic; color:#334155; line-height:1.5; font-size:0.95rem;">
+                        "${window.escapeHTML(item.comment)}"
+                    </p>
+                </div>
+                
+                <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#94a3b8;">
+                    <span><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(item.district || 'Bahçelievler')}</span>
+                    <span><i class="far fa-calendar-alt"></i> ${new Date(item.created_at).toLocaleDateString('tr-TR')}</span>
+                </div>
             </div>
-            ${item.image_url ? `<img src="${item.image_url}" style="width:100%; border-radius:8px; margin:10px 0; max-height:200px; object-fit:cover;">` : ''}
-            <p style="margin:8px 0; font-style:italic;">"${window.escapeHTML(item.comment)}"</p>
-        </div>
-    `).join('') || "";
+        `).join('');
+
+    } catch (err) {
+        console.error("Tavsiye Hatası:", err);
+        el.innerHTML = '<p style="text-align:center; color:red; padding:20px;">Veriler çekilirken bir teknik hata oluştu.</p>';
+    }
 }
 
 async function renderSikayetler() {
@@ -2636,35 +2673,35 @@ function startRamadanCountdown() {
 document.addEventListener("DOMContentLoaded", startRamadanCountdown);
 
 window.universalSecureDelete = async function(id, tableName, isSoftDelete = false) {
-    const pass = prompt("��lemi onaylamak i�in 4 haneli silme �ifrenizi giriniz:");
+    const pass = prompt("  lemi onaylamak i in 4 haneli silme  ifrenizi giriniz:");
     if (!pass) return;
-// 1. �ifre ve Veri Kontrol�
+// 1.  ifre ve Veri Kontrol 
 const { data, error: fetchError } = await window.supabase
     .from(tableName)
     .select('delete_password')
     .eq('id', id)
     .single();
 if (fetchError || !data) {
-    alert("Veri bulunamad� veya eri�im hatas�!");
+    alert("Veri bulunamad  veya eri im hatas !");
     return;
 }
 if (data.delete_password === pass || pass === '0000') {
     let result;
     if (isSoftDelete) {
-        // Fiyat Dedektifi gibi yerler i�in Soft Delete
+        // Fiyat Dedektifi gibi yerler i in Soft Delete
         result = await window.supabase.from(tableName).update({ is_active: false }).eq('id', id);
     } else {
-        // �lanlar ve Sosyal i�in Ger�ek Silme
+        //  lanlar ve Sosyal i in Ger ek Silme
         result = await window.supabase.from(tableName).delete().eq('id', id);
     }
     if (!result.error) {
-        alert("Ba�ar�yla kald�r�ld�.");
+        alert("Ba ar yla kald r ld .");
         location.reload();
     } else {
         alert("Hata: " + result.error.message);
     }
 } else {
-    alert("Hatal� �ifre!");
+    alert("Hatal   ifre!");
 }
 };
 window.uDelete = async (id, table, isSoft = false) => {

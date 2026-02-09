@@ -881,6 +881,13 @@ async function renderFirsatlar() {
     
     // 2. HTML Onarımı: Listeyi temizle
     el.innerHTML = "";
+    try {
+        // 1. Sorgu Gücü: Tüm verileri çek (is_active filtresi kaldırıldı)
+        const { data, error } = await window.supabase.from('firsatlar')
+            .select('*')
+            .order('created_at', {ascending: false});
+        
+        if (error) throw error;
 
     el.innerHTML = data?.map(f => {
         // 3. Hata Yakalama: Tekil veri hataları listeyi bozmasın
@@ -889,6 +896,8 @@ async function renderFirsatlar() {
             const displayImg = f.image_url || getPlaceholderImage(f.link);
             const isOnline = f.category === 'Online Ürün & Kampanya';
             const borderColor = isOnline ? '#007bff' : '#28a745';
+        // 2. HTML Onarımı: Listeyi temizle
+        el.innerHTML = "";
 
             return `
             <div class="cyber-card ad-card" style="border-left: 6px solid ${borderColor}; padding: 15px;" onclick="openFirsatDetail('${f.id}')">
@@ -906,6 +915,13 @@ async function renderFirsatlar() {
                 <div style="width:100%; height:180px; background:#f9f9f9; border-radius:10px; overflow:hidden; margin-bottom:12px;">
                     <img src="${displayImg}" onerror="this.src='https://via.placeholder.com/150?text=Firsat'" style="width:100%; height:100%; object-fit:contain; padding:10px;">
                 </div>
+        el.innerHTML = data?.map(f => {
+            // 3. Hata Yakalama: Tekil veri hataları listeyi bozmasın
+            try {
+                // 4. Fallback Görsel: Resim yoksa placeholder kullan
+                const displayImg = f.image_url || getPlaceholderImage(f.link);
+                const isOnline = f.category === 'Online Ürün & Kampanya';
+                const borderColor = isOnline ? '#007bff' : '#28a745';
 
                 <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border: 1px dashed #eee;">
                     <p style="font-size:0.85rem; color:#444; line-height:1.4; margin:0;">
@@ -918,6 +934,38 @@ async function renderFirsatlar() {
             return ""; // Hatalı kartı atla
         }
     }).join('') || "<p style='text-align:center; padding:20px; color:#888;'>Henüz fırsat bulunmuyor.</p>";
+                return `
+                <div class="cyber-card ad-card" style="border-left: 6px solid ${borderColor}; padding: 15px;" onclick="openFirsatDetail('${f.id}')">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <span style="font-size:0.65rem; font-weight:bold; text-transform:uppercase; background:#f0f4f8; color:#555; padding:4px 8px; border-radius:6px;">
+                            ${window.escapeHTML(f.category)}
+                        </span>
+                        <button onclick="event.stopPropagation(); window.deleteFirsat('${f.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                    
+                    <h4 style="margin:0 0 10px 0; font-size:1.1rem; color:var(--dark-text);">${window.escapeHTML(f.title)}</h4>
+                    
+                    <div style="width:100%; height:180px; background:#f9f9f9; border-radius:10px; overflow:hidden; margin-bottom:12px;">
+                        <img src="${displayImg}" onerror="this.src='https://via.placeholder.com/150?text=Firsat'" style="width:100%; height:100%; object-fit:contain; padding:10px;">
+                    </div>
+
+                    <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border: 1px dashed #eee;">
+                        <p style="font-size:0.85rem; color:#444; line-height:1.4; margin:0;">
+                            ${window.escapeHTML(f.content)}
+                        </p>
+                    </div>
+                </div>`;
+            } catch (err) {
+                console.error("Fırsat render hatası:", err);
+                return ""; // Hatalı kartı atla
+            }
+        }).join('') || "<p style='text-align:center; padding:20px; color:#888;'>Henüz fırsat bulunmuyor.</p>";
+    } catch (err) {
+        console.error("Fırsat yükleme hatası:", err);
+        el.innerHTML = "<p style='text-align:center; padding:20px; color:red;'>Veriler yüklenirken bağlantı sorunu oluştu.</p>";
+    }
 }
 
 window.openFirsatDetail = async function(id) {
@@ -1097,6 +1145,27 @@ async function renderSikayetler() {
             <div style="display:flex; justify-content:space-between; align-items:start;">
                 <span style="font-size:0.7rem; font-weight:bold; background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px;">${window.escapeHTML(i.category)}</span>
                 ${i.district ? `<span style="font-size:0.65rem; color:#666; font-weight:bold;"><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(i.district)}</span>` : ''}
+    try {
+        const { data, error } = await window.supabase.from('sikayetler')
+            .select('*')
+            .or('is_active.is.null,is_active.eq.true')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        el.innerHTML = data?.map(i => `
+            <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff4d4d; cursor:pointer;" onclick="window.openSocialDetail('sikayetler', '${i.id}')">
+                <div style="display:flex; justify-content:space-between; align-items:start;">
+                    <span style="font-size:0.7rem; font-weight:bold; background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px;">${window.escapeHTML(i.category)}</span>
+                    ${i.district ? `<span style="font-size:0.65rem; color:#666; font-weight:bold;"><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(i.district)}</span>` : ''}
+                </div>
+                <h4 style="margin:10px 0 5px 0;">${window.escapeHTML(i.title)}</h4>
+                <p style="font-size:0.9rem; color:#444;">${window.escapeHTML(i.content)}</p>
+                <div style="display:flex; gap:5px; margin:10px 0;">
+                    ${i.image_url ? `<img src="${i.image_url}" style="width:48%; height:120px; object-fit:cover; border-radius:8px;">` : ''}
+                    ${i.image_url_2 ? `<img src="${i.image_url_2}" style="width:48%; height:120px; object-fit:cover; border-radius:8px;">` : ''}
+                </div>
+                <div style="text-align:right; font-size:0.6rem; color:#aaa;">${new Date(i.created_at).toLocaleDateString('tr-TR')}</div>
             </div>
             <h4 style="margin:10px 0 5px 0;">${window.escapeHTML(i.title)}</h4>
             <p style="font-size:0.9rem; color:#444;">${window.escapeHTML(i.content)}</p>
@@ -1107,6 +1176,11 @@ async function renderSikayetler() {
             <div style="text-align:right; font-size:0.6rem; color:#aaa;">${new Date(i.created_at).toLocaleDateString('tr-TR')}</div>
         </div>
     `).join('') || "";
+        `).join('') || "";
+    } catch (err) {
+        console.error("Şikayet yükleme hatası:", err);
+        el.innerHTML = "<p style='text-align:center; color:red;'>Veriler yüklenemedi.</p>";
+    }
 }
 
 
@@ -1193,6 +1267,23 @@ async function fetchAndRenderAds() {
     const searchInput = document.getElementById("ad-search-input");
     const searchTerm = searchInput ? searchInput.value.trim() : '';
     applyFilters(currentCategory, searchTerm);
+    try {
+        const { data, error } = await window.supabase.from('ilanlar')
+            .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, condition, warranty, district')
+            .or('is_active.is.null,is_active.eq.true')
+            .order('created_at', {ascending: false})
+            .limit(10);
+        
+        if (error) throw error;
+        allAds = data || [];
+        
+        const searchInput = document.getElementById("ad-search-input");
+        const searchTerm = searchInput ? searchInput.value.trim() : '';
+        applyFilters(currentCategory, searchTerm);
+    } catch (err) {
+        console.error("İlan yükleme hatası:", err);
+        list.innerHTML = "<div style='text-align:center; padding:20px; color:red;'>İlanlar yüklenirken bağlantı hatası oluştu.</div>";
+    }
 }
 
 window.openAdDetail = function(id) {
@@ -1449,16 +1540,26 @@ async function fetchDuyurular() {
         .from('duyurular')
         .select('*')
         .order('created_at', { ascending: false });
+    try {
+        const { data, error } = await window.supabase
+            .from('duyurular')
+            .select('*')
+            .order('created_at', { ascending: false });
 
     if (error) {
         console.error("Duyuru çekme hatası:", error.message);
         return;
     }
+        if (error) throw error;
 
     // İsim Kontrolü: Duyurular için 'baslik' ve 'icerik' öncelikli
     if (previewEl && data.length > 0) {
         previewEl.textContent = data[0].baslik || data[0].title || "Duyuru";
     }
+        // İsim Kontrolü: Duyurular için 'baslik' ve 'icerik' öncelikli
+        if (previewEl && data.length > 0) {
+            previewEl.textContent = data[0].baslik || data[0].title || "Duyuru";
+        }
 
     if (listEl) {
         listEl.innerHTML = data.map(d => {
@@ -1470,11 +1571,29 @@ async function fetchDuyurular() {
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <small style="color:#888;">${new Date(d.created_at).toLocaleDateString('tr-TR')}</small>
                     <i class="fas fa-bullhorn" style="color:#ff007f;"></i>
+        if (listEl) {
+            listEl.innerHTML = data.map(d => {
+                const baslik = d.baslik || d.title || "Duyuru";
+                const icerik = d.icerik || d.content || "";
+                const ozet = icerik.length > 120 ? icerik.substring(0, 120) + "..." : icerik;
+                return `
+                <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff007f; cursor:pointer;" onclick="openHaberDetail('${d.id}', 'duyuru')">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <small style="color:#888;">${new Date(d.created_at).toLocaleDateString('tr-TR')}</small>
+                        <i class="fas fa-bullhorn" style="color:#ff007f;"></i>
+                    </div>
+                    <h3 style="margin:10px 0 5px 0; color:var(--dark);">${window.escapeHTML(baslik)}</h3>
+                    <p style="font-size:0.9rem; color:#444; line-height:1.4;">${window.escapeHTML(ozet)}</p>
                 </div>
                 <h3 style="margin:10px 0 5px 0; color:var(--dark);">${window.escapeHTML(baslik)}</h3>
                 <p style="font-size:0.9rem; color:#444; line-height:1.4;">${window.escapeHTML(ozet)}</p>
             </div>
         `}).join('') || "<p style='text-align:center; padding:20px;'>Aktif duyuru bulunmuyor.</p>";
+            `}).join('') || "<p style='text-align:center; padding:20px;'>Aktif duyuru bulunmuyor.</p>";
+        }
+    } catch (err) {
+        console.error("Duyuru hatası:", err);
+        if (listEl) listEl.innerHTML = "<p style='text-align:center; color:red;'>Duyurular alınamadı.</p>";
     }
 }
 
@@ -1539,8 +1658,16 @@ async function setupKesintiForm() {
 async function renderKesintiler() {
     const el = document.getElementById('kesinti-list');
     if (!el) return;
+    try {
+        const { data, error } = await window.supabase.from('kesintiler').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
 
     const { data } = await window.supabase.from('kesintiler').select('*').order('created_at', { ascending: false });
+        el.innerHTML = data?.map(k => {
+            const dateObj = new Date(k.created_at);
+            // Hem Tarih Hem Saat Mührü [cite: 04-02-2026]
+            const displayDate = dateObj.toLocaleDateString('tr-TR');
+            const displayTime = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
 
     el.innerHTML = data?.map(k => {
         const dateObj = new Date(k.created_at);
@@ -1553,6 +1680,17 @@ async function renderKesintiler() {
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <strong style="color:${k.type === 'Elektrik' ? '#b8860b' : '#007bff'};">${window.escapeHTML(k.type)} Kesintisi</strong>
                 <button onclick="deleteKesinti('${k.id}')" style="background:none; border:none; color:#ccc;"><i class="fas fa-trash"></i></button>
+            return `
+            <div class="cyber-card" style="margin-bottom:12px; border-left: 5px solid ${k.type === 'Elektrik' ? '#ffc107' : k.type === 'Su' ? '#00d2ff' : '#ff4d4d'};">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong style="color:${k.type === 'Elektrik' ? '#b8860b' : '#007bff'};">${window.escapeHTML(k.type)} Kesintisi</strong>
+                    <button onclick="deleteKesinti('${k.id}')" style="background:none; border:none; color:#ccc;"><i class="fas fa-trash"></i></button>
+                </div>
+                <p style="margin:5px 0; font-weight:bold; font-size:0.9rem;"><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(k.location)}</p>
+                <p style="margin:0; font-size:0.85rem; color:#555;">${window.escapeHTML(k.description)}</p>
+                <div style="text-align:right; font-size:0.65rem; color:#999; margin-top:8px; font-weight:600;">
+                    <i class="far fa-calendar-alt"></i> ${displayDate} | <i class="far fa-clock"></i> ${displayTime}
+                </div>
             </div>
             <p style="margin:5px 0; font-weight:bold; font-size:0.9rem;"><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(k.location)}</p>
             <p style="margin:0; font-size:0.85rem; color:#555;">${window.escapeHTML(k.description)}</p>
@@ -1561,6 +1699,11 @@ async function renderKesintiler() {
             </div>
         </div>
     `}).join('') || "<p style='text-align:center;'>Şu an bildirilmiş bir kesinti yok.</p>";
+        `}).join('') || "<p style='text-align:center;'>Şu an bildirilmiş bir kesinti yok.</p>";
+    } catch (err) {
+        console.error("Kesinti yükleme hatası:", err);
+        el.innerHTML = "<p style='text-align:center; color:red;'>Veri alınamadı.</p>";
+    }
 }
 
 /* >> GÜVENLİ KESİNTİ SİLME MOTORU << */
@@ -2051,6 +2194,13 @@ window.openHizmetDetail = function(id) {
 async function renderHizmetler() {
     const el = document.getElementById('hizmet-list');
     if (!el) return;
+    try {
+        const { data, error } = await window.supabase.from('hizmetler')
+            .select('*')
+            .or('is_active.is.null,is_active.eq.true')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
 
     const { data } = await window.supabase.from('hizmetler')
         .select('*')
@@ -2063,6 +2213,17 @@ async function renderHizmetler() {
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span class="student-badge" style="background:#e8f5e9; color:#2e7d32;">${window.escapeHTML(h.category)}</span>
                 ${h.location_name ? `<small style="color:#666; font-size:0.75rem;"><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(h.location_name)}</small>` : ''}
+        el.innerHTML = data?.map(h => `
+            <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #28a745; cursor:pointer;" onclick="window.openHizmetDetail('${h.id}')">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="student-badge" style="background:#e8f5e9; color:#2e7d32;">${window.escapeHTML(h.category)}</span>
+                    ${h.location_name ? `<small style="color:#666; font-size:0.75rem;"><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(h.location_name)}</small>` : ''}
+                </div>
+                <h3 style="margin:10px 0 5px 0;">${window.escapeHTML(h.title)}</h3>
+                ${h.image_url ? `<img src="${h.image_url}" style="width:100%; border-radius:8px; margin:8px 0;">` : ''}
+                <p style="font-size:0.9rem; color:#444;">${window.escapeHTML(h.content)}</p>
+                ${h.phone ? `<div style="margin-top:8px; font-weight:bold; color:#28a745; font-size:0.9rem;"><i class="fas fa-phone"></i> ${window.escapeHTML(h.phone)}</div>` : ''}
+                ${h.website ? `<div style="margin-top:4px; font-size:0.85rem;"><a href="${h.website}" target="_blank" onclick="event.stopPropagation()" style="color:#007bff; text-decoration:none;">🌐 Web Sitesi</a></div>` : ''}
             </div>
             <h3 style="margin:10px 0 5px 0;">${window.escapeHTML(h.title)}</h3>
             ${h.image_url ? `<img src="${h.image_url}" style="width:100%; border-radius:8px; margin:8px 0;">` : ''}
@@ -2071,6 +2232,11 @@ async function renderHizmetler() {
             ${h.website ? `<div style="margin-top:4px; font-size:0.85rem;"><a href="${h.website}" target="_blank" onclick="event.stopPropagation()" style="color:#007bff; text-decoration:none;">🌐 Web Sitesi</a></div>` : ''}
         </div>
     `).join('') || "<p style='text-align:center;'>Henüz bir hizmet tanıtımı yok.</p>";
+        `).join('') || "<p style='text-align:center;'>Henüz bir hizmet tanıtımı yok.</p>";
+    } catch (err) {
+        console.error("Hizmet yükleme hatası:", err);
+        el.innerHTML = "<p style='text-align:center; color:red;'>Hizmetler yüklenemedi.</p>";
+    }
 }
 
 window.deleteHizmet = async (id, correctPass) => {

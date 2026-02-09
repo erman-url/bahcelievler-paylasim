@@ -1848,3 +1848,98 @@ body {
     font-weight: 600 !important;
     margin-top: 4px !important;
 }
+/* >> KURUMSAL ARKA PLAN LOGO MÜHÜRÜ << */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Logoyu buraya ekliyoruz */
+    background-image: url('https://www.bahcelievler.istanbul/public/site-v1/images/bg-logo.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    /* Logonun çok baskın olmaması için opaklığı düşürüyoruz */
+    opacity: 0.04; 
+    z-index: -1; /* İçeriğin en arkasında kalması için */
+    pointer-events: none; /* Tıklamaları engellememesi için */
+}
+
+/* Sayfa arka planını logoyu gösterecek şekilde şeffaflaştırıyoruz */
+body {
+    background-color: #f8fafc !important; 
+}
+
+/* >> BELEDİYE STANDARTI KURUMSAL RESTORASYON << */
+
+/* 1. Profesyonel Yazı Tipi (Bebas Neue Belediye Stili) */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+/* 2. Dinamik "Quick Links" (Hızlı İşlemler) İkon Seti */
+.home-widget-modern {
+    background: #ffffff !important;
+    border: none !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 25px rgba(0, 51, 102, 0.08) !important;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.home-widget-modern:hover {
+    transform: translateY(-8px) !important; /* Belediye sitesindeki gibi yukarı sıçrama efekti */
+    box-shadow: 0 15px 35px rgba(0, 51, 102, 0.15) !important;
+}
+
+/* 3. Belediye Sitesindeki "Gölge ve Derinlik" Mührü */
+.cyber-card, .menu-card-modern {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid rgba(0, 51, 102, 0.05) !important;
+}
+
+/* 4. Alt Navigasyon (Footer) Buton Efekti */
+.nav-item-modern {
+    transition: all 0.3s ease;
+}
+
+.nav-item-modern.active {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px rgba(0, 51, 102, 0.2));
+}
+
+/* 5. Sayfa Başlıkları İçin "Bebas Neue" Dokunuşu */
+.header-title, .top-forum-title {
+    font-family: 'Bebas Neue', cursive !important;
+    font-weight: 400 !important;
+    letter-spacing: 2px !important;
+}
+
+/* >> İLANLAR SAYFASI BOŞLUK VE HİZALAMA DÜZELTMESİ << */
+
+/* 1. Üst kapsayıcıdaki gereksiz alt boşluğu (120px) daraltıyoruz */
+.container-modern {
+    padding: 15px 16px 5px 16px !important; /* Alt boşluk 120px'den 5px'e düşürüldü */
+}
+
+/* 2. İlan listesinin üstündeki marjini ve arka plan sızıntısını temizliyoruz */
+#ads-list {
+    margin-top: -10px !important; /* Kartları filtrelerin hemen altına çeker */
+    padding-top: 0 !important;
+    background: transparent !important; /* Boşluğu belli eden farklı renk tonunu siler */
+}
+
+/* 3. Filtre butonlarının altındaki gereksiz boşluğu alıyoruz */
+.category-filter-container {
+    margin-bottom: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+/* 4. Mobil Grid Yapısını Sıkılaştır (Boşlukları belediye sitesi gibi profesyonelleştir) */
+@media screen and (max-width: 768px) {
+    #ads-list {
+        grid-template-columns: 1fr 1fr !important; 
+        column-gap: 12px !important; 
+        row-gap: 15px !important; /* İlanlar arası dikey boşluk nizamlandı */
+        padding: 10px 12px 100px 12px !important; /* Alttan nav bar payı bırakıldı */
+    }
+}

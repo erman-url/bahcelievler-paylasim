@@ -1,4 +1,9 @@
 /* >> BAHÇELİEVLER PRO ENGINE V4.3 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
+/* >> DOMAIN GUARD: YÖNLENDİRME MOTORU << */
+if (window.location.hostname !== 'localhost' && window.location.hostname !== 'www.bahcelievlerforum.com.tr') {
+    window.location.replace('https://www.bahcelievlerforum.com.tr' + window.location.pathname + window.location.search + window.location.hash);
+}
+
 const R2_WORKER_URL = "https://broad-mountain-f064.erman-urel.workers.dev"; //
 window.R2_WORKER_URL = R2_WORKER_URL;
 /* >> CLOUDFLARE D1 SORGU MOTORU << */

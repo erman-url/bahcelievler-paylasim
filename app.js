@@ -857,7 +857,10 @@ function getPlaceholderImage(link) {
 async function renderFirsatlar() {
     const el = document.getElementById('firsat-list');
     if (!el) return;
-    const { data } = await window.supabase.from('firsatlar').select('*').order('created_at', {ascending: false});
+    const { data } = await window.supabase.from('firsatlar')
+        .select('*')
+        .or('is_active.is.null,is_active.eq.true')
+        .order('created_at', {ascending: false});
     
     el.innerHTML = data?.map(f => {
         const displayImg = f.image_url || getPlaceholderImage(f.link);

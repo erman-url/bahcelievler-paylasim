@@ -125,40 +125,6 @@ body {
     text-overflow: ellipsis;
 }
 
-/* --- SAYFA ANA BAŞLIKLARI (İstenen Mavi Banner & Beyaz Yazı Stili) --- */
-h1:not(.cyber-header) {
-    font-weight: 800;
-    font-size: 1.25rem;
-    margin: 30px auto 20px auto; 
-    padding: 12px 25px;
-    color: #ffffff !important; /* İstenen Beyaz Harf Rengi */
-    letter-spacing: 1px;
-    /* İstenen İçi Mavi Banner Stili */
-    background: linear-gradient(135deg, var(--app-blue) 0%, #00d2ff 100%);
-    border-radius: 50px; /* Oval Banner Yapısı */
-    border: 2px solid #ffffff; /* Banner Çerçevesi */
-    box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
-    width: fit-content;
-    min-width: 240px;
-    text-align: center;
-    white-space: nowrap; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-transform: uppercase;
-
-    /* Stabil: mobil taşma engeli */
-    max-width: calc(100vw - 30px);
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Sayfa başlıklarındaki ikon renklerini banner içinde beyaz yapmak için ek destek */
-h1:not(.cyber-header) i {
-    color: #ffffff !important;
-    margin-right: 10px;
-}
-
 .cyber-card {
     background: #fff;
     border: 1px solid rgba(0, 86, 179, 0.08);
@@ -1725,12 +1691,6 @@ button[onclick*="prepareDeleteHizmet"] {
     margin-top: 10px !important;
 }
 
-/* >> ENTERPRISE CORPORATE STYLE V1.0 << */
-body {
-    background-color: #f8fafc !important; /* Kirli beyaz yerine ferah bir gri-beyaz */
-    color: var(--text-main) !important;
-}
-
 /* Sayfa Başlıklarını (Banner) Belediye Stiline Yaklaştır */
 .modern-header {
     height: 100px !important; /* Çok devasa başlık amatör durur, küçültüyoruz */
@@ -1867,15 +1827,7 @@ body::before {
     pointer-events: none; /* Tıklamaları engellememesi için */
 }
 
-/* Sayfa arka planını logoyu gösterecek şekilde şeffaflaştırıyoruz */
-body {
-    background-color: #f8fafc !important; 
-}
-
 /* >> BELEDİYE STANDARTI KURUMSAL RESTORASYON << */
-
-/* 1. Profesyonel Yazı Tipi (Bebas Neue Belediye Stili) */
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
 /* 2. Dinamik "Quick Links" (Hızlı İşlemler) İkon Seti */
 .home-widget-modern {
@@ -1905,13 +1857,6 @@ body {
 .nav-item-modern.active {
     transform: scale(1.1);
     filter: drop-shadow(0 0 8px rgba(0, 51, 102, 0.2));
-}
-
-/* 5. Sayfa Başlıkları İçin "Bebas Neue" Dokunuşu */
-.header-title, .top-forum-title {
-    font-family: 'Bebas Neue', cursive !important;
-    font-weight: 400 !important;
-    letter-spacing: 2px !important;
 }
 
 /* >> İLANLAR SAYFASI BOŞLUK VE HİZALAMA DÜZELTMESİ << */

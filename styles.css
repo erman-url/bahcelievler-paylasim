@@ -1834,3 +1834,27 @@ body::before {
 @keyframes shimmer {
     100% { transform: translateX(100%); }
 }
+
+/* >> KURUMSAL FOOTER VE BOŞLUK SİSTEMİ << */
+.corporate-footer {
+    width: 100%;
+    max-width: 520px; /* Dashboard genişliği ile eşitlendi */
+    margin: 40px auto 100px auto !important; /* Alt navigasyon payı dahil */
+    padding: 20px 15px;
+    text-align: center;
+    border-top: 1px solid rgba(0, 51, 102, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.footer-legal { display: flex; justify-content: center; align-items: center; gap: 10px; }
+
+.footer-legal a { color: #64748b !important; text-decoration: none; font-size: 0.8rem; font-weight: 700; transition: color 0.2s; }
+
+.footer-legal .dot { color: #cbd5e1; font-size: 1rem; }
+
+.footer-copyright { font-size: 0.75rem; color: #94a3b8; font-weight: 600; letter-spacing: 0.3px; }
+
+.footer-motto { font-size: 0.7rem; font-weight: 800; color: var(--primary-corp); opacity: 0.4; text-transform: uppercase; margin-top: 5px; }
+
+/* Mobil cihazlarda sayfa sonu boşluğunu standartlaştır */ .page { padding-bottom: 30px !important; }

@@ -1320,7 +1320,7 @@ button[onclick*="prepareDeleteHizmet"] {
 
 /* >> MENÜ BAR NİZAM VE KUSURSUZ HİZALAMA MÜHÜRÜ << */
 .container-modern {
-    padding: 20px 16px 120px 16px !important;
+    padding: 20px 16px 5px 16px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important; /* Kartları yatayda kesin ortalar */
@@ -1792,7 +1792,7 @@ body::before {
 
 /* 2. İlan listesinin üstündeki marjini ve arka plan sızıntısını temizliyoruz */
 #ads-list {
-    margin-top: -10px !important; /* Kartları filtrelerin hemen altına çeker */
+    margin-top: -20px !important; /* Kartları filtrelerin hemen altına çeker */
     padding-top: 0 !important;
     background: transparent !important; /* Boşluğu belli eden farklı renk tonunu siler */
 }

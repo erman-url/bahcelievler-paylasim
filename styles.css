@@ -1747,6 +1747,9 @@ button[onclick*="prepareDeleteHizmet"] {
     font-weight: 600 !important;
     margin-top: 4px !important;
 }
+
+/* >> YAZI TİPİ MÜHÜRÜ (İKON ÇAKIŞMASI ÖNLER) << */
+body, p, span, div:not([class*="fa-"]), h1, h2, h3, h4, button, input, textarea, select { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; }
 /* >> KURUMSAL ARKA PLAN LOGO MÜHÜRÜ << */
 body::before {
     content: "";
@@ -1807,7 +1810,7 @@ body::before {
 
 /* 2. İlan listesinin üstündeki marjini ve arka plan sızıntısını temizliyoruz */
 #ads-list {
-    margin-top: -20px !important; /* Kartları filtrelerin hemen altına çeker */
+    margin-top: -30px !important; /* Kartları filtrelerin hemen altına çeker */
     padding-top: 0 !important;
     background: transparent !important; /* Boşluğu belli eden farklı renk tonunu siler */
 }

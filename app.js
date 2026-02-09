@@ -1,15 +1,4 @@
 /* >> BAHÇELİEVLER PRO ENGINE V4.3 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
-/* >> DOMAIN GUARD: YÖNLENDİRME MOTORU << */
-
-if (
-    window.location.hostname !== "www.bahcelievlerforum.com.tr" && 
-    window.location.hostname !== "localhost" && 
-    window.location.hostname !== "127.0.0.1"
-) {
-    // Sadece yabancı bir domain (Vercel vb.) ise asıl siteye ışınla
-    window.location.replace("https://www.bahcelievlerforum.com.tr");
-}
-
 const R2_WORKER_URL = "https://broad-mountain-f064.erman-urel.workers.dev"; //
 window.R2_WORKER_URL = R2_WORKER_URL;
 /* >> CLOUDFLARE D1 SORGU MOTORU << */

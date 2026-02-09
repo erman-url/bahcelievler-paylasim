@@ -619,7 +619,7 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
 
         alert("Tavsiyeniz başarıyla panoya eklendi!");
         e.target.reset();
-        loadPortalData();
+        await renderTavsiyeler(); // Listeyi anında tazele
     } catch (err) {
         alert("Hata: " + err.message);
     } finally {

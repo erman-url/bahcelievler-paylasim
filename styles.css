@@ -1419,24 +1419,33 @@ button[onclick*="prepareDeleteHizmet"] {
 .home-widget-modern {
     display: flex;
     align-items: center;
-    background: #ffffff;
+    background: linear-gradient(145deg, #ffffff 0%, #f9fbff 100%) !important;
     padding: 14px 16px;
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 12px rgba(0, 51, 102, 0.05) !important;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: 1px solid rgba(0,0,0,0.02);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.home-widget-modern:hover {
+    transform: translateY(-6px) !important;
+    box-shadow: 0 12px 24px rgba(0, 51, 102, 0.12) !important;
+    border-color: rgba(0, 210, 255, 0.4) !important;
 }
 
 .home-widget-modern:active {
-    transform: scale(0.98);
+    transform: scale(0.96) !important;
 }
 
 .widget-head {
     display: flex;
     align-items: center;
     gap: 10px;
-    width: 110px; /* Sabit genişlik ile hizalama */
+    width: auto;
+    min-width: 40px;
     flex-shrink: 0;
     font-size: 0.75rem;
     font-weight: 800;
@@ -1445,27 +1454,33 @@ button[onclick*="prepareDeleteHizmet"] {
 }
 
 .widget-head i {
-    font-size: 1rem;
-    width: 20px;
-    text-align: center;
-    color: inherit;
+    font-size: 1.1rem !important;
+    width: 40px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 5px;
+    transition: background 0.3s;
 }
 
 /* İkon renklerini border rengine göre ayarlamak için */
-.home-widget-modern[style*="#ff007f"] .widget-head i { color: #ff007f; }
-.home-widget-modern[style*="#00d2ff"] .widget-head i { color: #00d2ff; }
-.home-widget-modern[style*="#28a745"] .widget-head i { color: #28a745; }
-.home-widget-modern[style*="var(--cyber-pink)"] .widget-head i { color: var(--cyber-pink); }
-.home-widget-modern[style*="#ffc107"] .widget-head i { color: #ffc107; }
-.home-widget-modern[style*="#ff4d4d"] .widget-head i { color: #ff4d4d; }
+.home-widget-modern[style*="#ff007f"] .widget-head i { color: #ff007f; background: rgba(255, 0, 127, 0.1); }
+.home-widget-modern[style*="#00d2ff"] .widget-head i { color: #00d2ff; background: rgba(0, 210, 255, 0.1); }
+.home-widget-modern[style*="#28a745"] .widget-head i { color: #28a745; background: rgba(40, 167, 69, 0.1); }
+.home-widget-modern[style*="var(--cyber-pink)"] .widget-head i { color: var(--cyber-pink); background: rgba(255, 0, 127, 0.1); }
+.home-widget-modern[style*="#ffc107"] .widget-head i { color: #ffc107; background: rgba(255, 193, 7, 0.15); }
+.home-widget-modern[style*="#ff4d4d"] .widget-head i { color: #ff4d4d; background: rgba(255, 77, 77, 0.1); }
 
 .widget-body {
     flex: 1;
-    padding-left: 12px;
-    border-left: 2px solid #f1f5f9;
-    font-size: 0.85rem;
+    padding-left: 10px !important;
+    border-left: none !important;
+    font-size: 0.9rem !important;
     font-weight: 700;
-    color: #1e293b;
+    color: #012a5e !important;
+    letter-spacing: -0.2px !important;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -1750,6 +1750,14 @@ button[onclick*="prepareDeleteHizmet"] {
 
 /* >> YAZI TİPİ MÜHÜRÜ (İKON ÇAKIŞMASI ÖNLER) << */
 body, p, span, div:not([class*="fa-"]), h1, h2, h3, h4, button, input, textarea, select { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; }
+
+/* >> FORM AÇIKLAMA METNİ << */
+.form-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+    text-align: center;
+}
 /* >> KURUMSAL ARKA PLAN LOGO MÜHÜRÜ << */
 body::before {
     content: "";

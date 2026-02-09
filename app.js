@@ -754,6 +754,14 @@ async function setupFirsatForm() {
         typeSelect.addEventListener("change", toggleFirsatFields);
     }
 
+    // Nickname Karakter Kontrolü (Sadece Harf, Rakam, Tire, Nokta)
+    const nickInput = document.getElementById("firsat-nickname");
+    if (nickInput) {
+        nickInput.addEventListener("input", function() {
+            this.value = this.value.replace(/[^a-zA-Z0-9.-]/g, '');
+        });
+    }
+
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
         if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ

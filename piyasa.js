@@ -173,33 +173,14 @@ async function submitPiyasaVerisi() {
             is_active: true // BU SATIRI EKLE: Verinin anında yayınlanmasını sağlar
         }]);
 
-        /* >> CLOUDFLARE D1 YEDEKLEME MOTORU (AYNALAMA) << */
-        fetch(window.R2_WORKER_URL, {
-            method: 'POST',
-            mode: 'cors', // no-cors kullanmıyoruz, veri boş gitmesin
+        /   method: 'POST',
+            mode: 'cors',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                urun_adi: urunAdi,
-                fiyat: fiyat,
-                market_adi: marketAdi,
-                image_url: publicUrl,
-                tarih_etiketi: bugun
-            })
-        })
-        .then(res => {
-            if(res.ok) console.log("D1: Veri başarıyla aynalandı.");
-            else console.error("D1 Sunucu Hatası:", res.status);
-        })
-        .catch(err => console.error("D1 Bağlantı Hatası:", err));
-
-        if (dbError) throw dbError;
-
-        alert("BAŞARILI: Fiyat radara eklendi!");
-        document.getElementById("piyasa-form").reset();
-        if (typeof loadPortalData === "function") loadPortalData(); 
-        
+            body: JSON.stringify(payload)
+        });
+        if (!res.ok) console.error("D1 Sunucu Hatası:", res.status);
     } catch (err) {
-        alert("Sistem Hatası: " + err.message);
+        console.error("D1 Bağlantı Hatası:", err);
     }
 }
 

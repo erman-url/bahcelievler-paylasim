@@ -777,6 +777,12 @@ async function setupFirsatForm() {
         const fileInput = document.getElementById("firsat-files");
         const files = fileInput.files;
 
+        // Nickname Küfür Kontrolü
+        const nicknameVal = document.getElementById("firsat-nickname").value;
+        if (nicknameVal && window.hasBadWords(nicknameVal)) {
+            return alert("Lütfen takma adınızda uygunsuz ifadeler kullanmayınız.");
+        }
+
         // Şifre Kontrolü
         const passCheck = window.validateComplexPassword(pass);
         if (passCheck) { alert(passCheck); return; }
@@ -821,6 +827,7 @@ async function setupFirsatForm() {
                 image_url_2: urls[1] || null,
                 delete_password: deleteToken,
                 type: type
+                nickname: nicknameVal || null
             };
 
             const { error } = await window.supabase.from('firsatlar').insert([payload]);
@@ -2051,14 +2058,17 @@ async function renderHizmetler() {
 window.deleteHizmet = async (id, correctPass) => {
     const userPass = prompt("Silmek için şifrenizi girin:");
     if (!userPass || !userPass.trim()) return;
+    
+    const deleteToken = await sha256(userPass.trim());
 
-    const { error } = await window.supabase
+    const { data, error } = await window.supabase
         .from('hizmetler')
         .delete()
         .eq('id', id)
-        .eq('delete_password', userPass); 
+        .eq('delete_password', deleteToken)
+        .select();
 
-    if (!error) {
+    if (data && data.length > 0) {
         alert("Hizmet başarıyla kaldırıldı.");
         loadPortalData(); // SÜPER KONTROL: Tüm portal verilerini ve dashboard'u senkronize yeniler
     } else {
@@ -2710,36 +2720,25 @@ function startRamadanCountdown() {
 document.addEventListener("DOMContentLoaded", startRamadanCountdown);
 
 window.universalSecureDelete = async function(id, tableName, isSoftDelete = false) {
-    const pass = prompt("  lemi onaylamak i in 4 haneli silme  ifrenizi giriniz:");
+    const pass = prompt("İşlemi onaylamak için 4 haneli silme şifrenizi giriniz:");
     if (!pass) return;
-// 1.  ifre ve Veri Kontrol 
-const { data, error: fetchError } = await window.supabase
-    .from(tableName)
-    .select('delete_password')
-    .eq('id', id)
-    .single();
-if (fetchError || !data) {
-    alert("Veri bulunamad  veya eri im hatas !");
-    return;
-}
-if (data.delete_password === pass || pass === '0000') {
-    let result;
-    if (isSoftDelete) {
-        // Fiyat Dedektifi gibi yerler i in Soft Delete
-        result = await window.supabase.from(tableName).update({ is_active: false }).eq('id', id);
-    } else {
-        //  lanlar ve Sosyal i in Ger ek Silme
-        result = await window.supabase.from(tableName).delete().eq('id', id);
-    }
-    if (!result.error) {
-        alert("Ba ar yla kald r ld .");
+    
+    const deleteToken = await sha256(pass.trim());
+    
+    let query = window.supabase.from(tableName);
+    
+    if (isSoftDelete) query = query.update({ is_active: false });
+    else query = query.delete();
+    
+    // Doğrudan sorguda şifre kontrolü (Güvenli Silme)
+    const { data, error } = await query.eq('id', id).eq('delete_password', deleteToken).select();
+
+    if (data && data.length > 0) {
+        alert("Başarıyla kaldırıldı.");
         location.reload();
     } else {
-        alert("Hata: " + result.error.message);
+        alert("Hata: Şifre yanlış!");
     }
-} else {
-    alert("Hatal   ifre!");
-}
 };
 window.uDelete = async (id, table, isSoft = false) => {
     const rawPass = prompt("4 Haneli Silme Şifreniz (Örn: S1571):");
@@ -2747,15 +2746,19 @@ window.uDelete = async (id, table, isSoft = false) => {
     
     // Süper Kontrol: Girilen şifre hashlenerek DB'deki hash ile karşılaştırılır
     const hashedPass = await sha256(rawPass); 
-    const { data: d } = await window.supabase.from(table).select('delete_password, delete_token').eq('id', id).single();
     
     // İlanlar tablosunda 'delete_token', diğerlerinde 'delete_password' kullanıldığı için ikisini de kontrol eder
-    const dbPass = d?.delete_password || d?.delete_token;
+    const passCol = (table === 'ilanlar') ? 'delete_token' : 'delete_password';
 
-    if (dbPass === hashedPass || rawPass === '0000') {
-        const action = isSoft ? window.supabase.from(table).update({ is_active: false }) : window.supabase.from(table).delete();
-        const { error } = await action.eq('id', id);
-        if (!error) { alert("Başarıyla kaldırıldı."); location.reload(); }
+    let query = window.supabase.from(table);
+    if (isSoft) query = query.update({ is_active: false });
+    else query = query.delete();
+
+    const { data, error } = await query.eq('id', id).eq(passCol, hashedPass).select();
+
+    if (data && data.length > 0) { 
+        alert("Başarıyla kaldırıldı."); 
+        location.reload(); 
     } else {
         alert("Hata: Şifre yanlış!");
     }

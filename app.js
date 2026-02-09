@@ -764,8 +764,6 @@ async function setupFirsatForm() {
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
-        // Süper Kontrol: Form ID parametresi eklendi
         if (isBotDetected("firsat-form") || isProcessing) return;
 
         const type = document.getElementById("firsat-type").value;
@@ -826,7 +824,7 @@ async function setupFirsatForm() {
                 image_url: urls[0] || null,
                 image_url_2: urls[1] || null,
                 delete_password: deleteToken,
-                type: type
+                type: type,
                 nickname: nicknameVal || null
             };
 
@@ -1964,10 +1962,10 @@ async function setupHizmetForm() {
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
+        if (isBotDetected("hizmet-form") || isProcessing) return;
         
         // Tek seferlik tanımlama (Redeclare hatasını önler)
         const btn = document.getElementById("hizmet-submit-btn");
-        if (isBotDetected("hizmet-form") || isProcessing) return; // BOT KONTROLÜ EKLENDİ
 
         const titleVal = document.getElementById("hizmet-firma").value.trim();
         const descVal = document.getElementById("hizmet-desc").value.trim();
@@ -2760,6 +2758,6 @@ window.uDelete = async (id, table, isSoft = false) => {
         alert("Başarıyla kaldırıldı."); 
         location.reload(); 
     } else {
-        alert("Hata: Şifre yanlış!");
+        alert("Şifre yanlış veya yetkiniz yok");
     }
 };

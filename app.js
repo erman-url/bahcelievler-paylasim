@@ -857,40 +857,51 @@ function getPlaceholderImage(link) {
 async function renderFirsatlar() {
     const el = document.getElementById('firsat-list');
     if (!el) return;
+    
+    // 1. Sorgu Gücü: Tüm verileri çek (is_active filtresi kaldırıldı)
     const { data } = await window.supabase.from('firsatlar')
         .select('*')
-        .or('is_active.is.null,is_active.eq.true')
         .order('created_at', {ascending: false});
     
+    // 2. HTML Onarımı: Listeyi temizle
+    el.innerHTML = "";
+
     el.innerHTML = data?.map(f => {
-        const displayImg = f.image_url || getPlaceholderImage(f.link);
-        const isOnline = f.category === 'Online Ürün & Kampanya';
-        const borderColor = isOnline ? '#007bff' : '#28a745';
+        // 3. Hata Yakalama: Tekil veri hataları listeyi bozmasın
+        try {
+            // 4. Fallback Görsel: Resim yoksa placeholder kullan
+            const displayImg = f.image_url || getPlaceholderImage(f.link);
+            const isOnline = f.category === 'Online Ürün & Kampanya';
+            const borderColor = isOnline ? '#007bff' : '#28a745';
 
-        return `
-        <div class="cyber-card ad-card" style="border-left: 6px solid ${borderColor}; padding: 15px;" onclick="openFirsatDetail('${f.id}')">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <span style="font-size:0.65rem; font-weight:bold; text-transform:uppercase; background:#f0f4f8; color:#555; padding:4px 8px; border-radius:6px;">
-                    ${window.escapeHTML(f.category)}
-                </span>
-                <button onclick="event.stopPropagation(); window.deleteFirsat('${f.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-            
-            <h4 style="margin:0 0 10px 0; font-size:1.1rem; color:var(--dark-text);">${window.escapeHTML(f.title)}</h4>
-            
-            <div style="width:100%; height:180px; background:#f9f9f9; border-radius:10px; overflow:hidden; margin-bottom:12px;">
-                <img src="${displayImg}" style="width:100%; height:100%; object-fit:contain; padding:10px;">
-            </div>
+            return `
+            <div class="cyber-card ad-card" style="border-left: 6px solid ${borderColor}; padding: 15px;" onclick="openFirsatDetail('${f.id}')">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span style="font-size:0.65rem; font-weight:bold; text-transform:uppercase; background:#f0f4f8; color:#555; padding:4px 8px; border-radius:6px;">
+                        ${window.escapeHTML(f.category)}
+                    </span>
+                    <button onclick="event.stopPropagation(); window.deleteFirsat('${f.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+                
+                <h4 style="margin:0 0 10px 0; font-size:1.1rem; color:var(--dark-text);">${window.escapeHTML(f.title)}</h4>
+                
+                <div style="width:100%; height:180px; background:#f9f9f9; border-radius:10px; overflow:hidden; margin-bottom:12px;">
+                    <img src="${displayImg}" onerror="this.src='https://via.placeholder.com/150?text=Firsat'" style="width:100%; height:100%; object-fit:contain; padding:10px;">
+                </div>
 
-            <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border: 1px dashed #eee;">
-                <p style="font-size:0.85rem; color:#444; line-height:1.4; margin:0;">
-                    ${window.escapeHTML(f.content)}
-                </p>
-            </div>
-        </div>`;
-    }).join('') || "";
+                <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border: 1px dashed #eee;">
+                    <p style="font-size:0.85rem; color:#444; line-height:1.4; margin:0;">
+                        ${window.escapeHTML(f.content)}
+                    </p>
+                </div>
+            </div>`;
+        } catch (err) {
+            console.error("Fırsat render hatası:", err);
+            return ""; // Hatalı kartı atla
+        }
+    }).join('') || "<p style='text-align:center; padding:20px; color:#888;'>Henüz fırsat bulunmuyor.</p>";
 }
 
 window.openFirsatDetail = async function(id) {

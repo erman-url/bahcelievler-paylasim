@@ -1001,17 +1001,19 @@ async function renderTavsiyeler() {
         const { data, error } = await window.supabase
             .from('tavsiyeler')
             .select('*')
-            .eq('is_active', true) 
             .order('created_at', { ascending: false });
 
         if (error) throw error;
 
-        if (!data || data.length === 0) {
+        const filteredData = data.filter(item => item.is_active !== false);
+        el.innerHTML = '';
+
+        if (!filteredData || filteredData.length === 0) {
             el.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">Henüz onaylanmış bir tavsiye bulunmuyor.</p>';
             return;
         }
 
-        el.innerHTML = data.map(item => `
+        el.innerHTML = filteredData.map(item => `
             <div class="cyber-card" style="margin-bottom:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="window.openSocialDetail('tavsiyeler', '${item.id}')">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <strong style="color:var(--app-blue); font-size:1.1rem;">${window.escapeHTML(item.title)}</strong>

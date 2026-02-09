@@ -1810,7 +1810,7 @@ body::before {
 
 /* 2. İlan listesinin üstündeki marjini ve arka plan sızıntısını temizliyoruz */
 #ads-list {
-    margin-top: -30px !important; /* Kartları filtrelerin hemen altına çeker */
+    margin-top: 15px !important; /* Kartları filtrelerin hemen altına çeker */
     padding-top: 0 !important;
     background: transparent !important; /* Boşluğu belli eden farklı renk tonunu siler */
 }
@@ -1857,7 +1857,7 @@ body::before {
 .corporate-footer {
     width: 100%;
     max-width: 520px; /* Dashboard genişliği ile eşitlendi */
-    margin: 40px auto 100px auto !important; /* Alt navigasyon payı dahil */
+    margin: 20px auto 15px auto !important; /* Alt navigasyon payı dahil */
     padding: 20px 15px;
     text-align: center;
     border-top: 1px solid rgba(0, 51, 102, 0.08);
@@ -1875,7 +1875,7 @@ body::before {
 
 .footer-motto { font-size: 0.7rem; font-weight: 800; color: var(--primary-corp); opacity: 0.4; text-transform: uppercase; margin-top: 5px; }
 
-/* Mobil cihazlarda sayfa sonu boşluğunu standartlaştır */ .page { padding-bottom: 30px !important; }
+/* Mobil cihazlarda sayfa sonu boşluğunu standartlaştır */ .page { padding-bottom: 10px !important; }
 
 /* >> DYNAMIC CORPORATE BUTTONS (AZURE STYLE) << */
 .home-widget-modern {

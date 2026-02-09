@@ -231,32 +231,44 @@ async function loadPortalData() {
     } catch (err) { console.error("Portal yükleme hatası:", err); }
 }
 
+/* >> PİYASA RADAR VERİLERİNİ ÇEK VE BAS << */
 async function fetchAndRenderPiyasa() {
-    let attempts = 0;
-    while (!window.PiyasaMotoru && attempts < 20) {
-        await new Promise(r => setTimeout(r, 100));
-        attempts++;
-    }
+    const container = document.getElementById('fiyat-dedektifi-listesi'); // index.html'deki gerçek ID
+    if (!container) return;
 
     try {
         const { data, error } = await window.supabase
-            .from('piyasa_verileri')
-            .select('id, urun_adi, fiyat, market_adi, tarih_etiketi, image_url, is_active, created_at')
+            .from('piyasa_verileri') // Görüntüdeki tablo adı ile eşlendi
+            .select('*')
+            .eq('is_active', true)
             .order('created_at', { ascending: false });
 
-        if (!error && data && window.PiyasaMotoru) {
-            // MÜHÜRLENDİ: Sadece aktif ve 45 günden yeni veriler listelenir.
-            const today = new Date();
-            const aktifVeriler = data.filter(u => {
-                const recordDate = new Date(u.created_at);
-                const ageInDays = (today - recordDate) / (1000 * 60 * 60 * 24);
-                return u.is_active === true && ageInDays <= 45;
-            });
+        if (error) throw error;
 
-            // Analiz için tüm veriler (data), listeleme için filtrelenmiş aktifVeriler kullanılır.
-            window.PiyasaMotoru.listeOlustur(aktifVeriler, data);
+        if (!data || data.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">Henüz radar verisi girilmemiş.</p>';
+            return;
         }
-    } catch (e) { console.error("Piyasa Motoru Çevrimdışı"); }
+
+        container.innerHTML = data.map(item => `
+            <div class="menu-card-modern" onclick="window.openRadarDetail('${item.id}')" style="border-left:5px solid var(--cyber-pink);">
+                <div style="flex:1;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong style="font-size:1.1rem; color:var(--primary-corp);">${window.escapeHTML(item.urun_adi)}</strong>
+                        <span style="background:var(--cyber-pink); color:white; padding:4px 10px; border-radius:8px; font-weight:bold;">
+                            ${item.fiyat} TL
+                        </span>
+                    </div>
+                    <div style="margin-top:8px; display:flex; gap:10px; font-size:0.8rem; color:#64748b;">
+                        <span><i class="fas fa-store"></i> ${window.escapeHTML(item.market_adi)}</span>
+                        <span><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(item.district || 'Bahçelievler')}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } catch (err) {
+        console.error("Radar hatası:", err);
+    }
 }
 
 // --- 3. SLIDER BAŞLATICI (TÜM TARAYICILARDA STABİL) ---

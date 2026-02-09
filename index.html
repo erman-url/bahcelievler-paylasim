@@ -116,15 +116,14 @@
             <div class="header-sub">Semt İçi Güvenli Alışveriş</div>
         </div>
     </div>
-<div class="container-modern" style="padding: 15px;">
+<div class="container-modern" style="padding-bottom: 5px !important;">
     <div class="menu-card-modern" onclick="window.openAddAdModal()" style="background: var(--app-blue) !important; color: white !important;">
         <div class="menu-icon-modern" style="background: rgba(255,255,255,0.2);"><svg viewBox="0 0 24 24" style="stroke: white;"><path d="M12 5v14M5 12h14"/></svg></div>
         <div class="menu-text-modern" style="color: white;">YENİ İLAN EKLE</div>
     </div>
     
-    <div style="width: 100%; margin-bottom: 20px;">
-        <input type="text" id="ad-search-input" class="cyber-form" placeholder="🔍 İlanlarda ara..." style="border-radius: 15px;">
-    </div>
+    <input type="text" id="ad-search-input" class="cyber-form" placeholder="🔍 İlanlarda ara..." style="border-radius: 15px;">
+    
     <div class="category-filter-container" style="width: 100%; overflow-x: auto; white-space: nowrap; padding-bottom: 10px;">
         <button class="filter-btn active" onclick="filterAds('all', this)">TÜMÜ</button>
         <button class="filter-btn" onclick="window.filterAds('latest', this)">EN YENİ</button>
@@ -135,7 +134,10 @@
 </div>
 
     <div id="ads-list" style="min-height: 200px;">
-        <p style="text-align:center; padding:20px; color:#888;">İlanlar yükleniyor...</p>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
     </div>
 
     <div id="add-ad-modal" class="modal" style="display:none; align-items: flex-start; overflow-y: auto; padding-top: 20px;">

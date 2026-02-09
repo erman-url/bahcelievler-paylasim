@@ -1814,30 +1814,36 @@ window.renderAds = async function(ads) {
             </div>
         `;
     } else {
-        const adsHtml = await Promise.all(ads.map(async ad => {
+        const adsHtml = await Promise.all(ads.map(async item => {
             const { count } = await window.supabase
                 .from('ilan_yorumlar')
                 .select('*', { count: 'exact', head: true })
-                .eq('ilan_id', ad.id);
+                .eq('ilan_id', item.id);
 
             const commentCount = count || 0;
-            const adDate = new Date(ad.created_at).toLocaleDateString('tr-TR');
+            const adDate = new Date(item.created_at).toLocaleDateString('tr-TR');
+            const displayImg = item.image_url || getPlaceholderImage(null);
+
             return `
-            <div class="ad-card cyber-card" onclick="openAdDetail('${ad.id}')">
-                <img src="${ad.image_url || 'https://via.placeholder.com/300'}">
-                <div style="padding: 10px;">
-                    <div style="font-weight: 800; font-size: 1.1rem; color: #212529;">${new Intl.NumberFormat('tr-TR').format(ad.price)} TL</div>
-                    <div style="font-size: 0.85rem; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 4px 0;">${window.escapeHTML(ad.title)}</div>
-                    <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #f0f0f0;">
-                        <div style="font-size: 0.75rem; color: #555; display: flex; align-items: center; gap: 4px; margin-bottom: 4px;">
-                            <i class="fas fa-map-marker-alt" style="color: #888;"></i> Bahçelievler
-                        </div>
-                        <div style="font-size: 0.65rem; color: #aaa; font-weight: 500;">
-                            ${adDate}
-                        </div>
-                        <div style="font-size: 0.7rem; color: var(--app-blue); font-weight: 700; margin-top: 3px;">
-                            <i class='far fa-comment-dots'></i> ${commentCount} Yorum
-                        </div>
+            <div class="ad-card-modern" onclick="openAdDetail('${item.id}')">
+                <div class="ad-img-wrapper">
+                    <img src="${displayImg}" onerror="this.src='https://via.placeholder.com/300?text=Resim+Yok'">
+                    <div class="floating-actions">
+                        <button class="action-btn-mini" onclick="event.stopPropagation(); openAdDetail('${item.id}')">
+                            <i class="far fa-eye" style="color:var(--app-blue);"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="ad-info-modern">
+                    <span class="ad-price-tag">${new Intl.NumberFormat('tr-TR').format(item.price)} TL</span>
+                    <h4 style="font-size:0.9rem; margin:5px 0; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${window.escapeHTML(item.title)}</h4>
+                    <div class="ad-meta-minimal">
+                        <span><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(item.district || 'Bahçelievler')}</span>
+                        ${item.warranty ? `<span style="font-size:0.7rem; color:#666;">${window.escapeHTML(item.warranty)}</span>` : ''}
+                    </div>
+                    <div style="margin-top:8px; padding-top:8px; border-top:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#aaa;">
+                        <span>${adDate}</span>
+                        <span style="color:var(--app-blue); font-weight:700;"><i class='far fa-comment-dots'></i> ${commentCount} Yorum</span>
                     </div>
                 </div>
             </div>

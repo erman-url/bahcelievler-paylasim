@@ -1829,6 +1829,9 @@ window.renderAds = async function(ads) {
                 <div class="ad-img-wrapper">
                     <img src="${displayImg}" onerror="this.src='https://via.placeholder.com/300?text=Resim+Yok'">
                     <div class="floating-actions">
+                        <button class="action-btn-mini" onclick="event.stopPropagation(); window.uDelete('${item.id}', 'ilanlar', true)" title="İlanı Sil">
+                            <i class="fas fa-trash-alt" style="color:#ff4d4d;"></i>
+                        </button>
                         <button class="action-btn-mini" onclick="event.stopPropagation(); openAdDetail('${item.id}')">
                             <i class="far fa-eye" style="color:var(--app-blue);"></i>
                         </button>

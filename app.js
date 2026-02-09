@@ -2740,24 +2740,37 @@ window.universalSecureDelete = async function(id, tableName, isSoftDelete = fals
 };
 window.uDelete = async (id, table, isSoft = false) => {
     const rawPass = prompt("4 Haneli Silme Şifreniz (Örn: S1571):");
+    const rawPass = prompt("4 Haneli Silme Şifreniz:");
     if (!rawPass) return;
     
     // Süper Kontrol: Girilen şifre hashlenerek DB'deki hash ile karşılaştırılır
     const hashedPass = await sha256(rawPass); 
     
     // İlanlar tablosunda 'delete_token', diğerlerinde 'delete_password' kullanıldığı için ikisini de kontrol eder
+    // İlanlar İstisnası: Dinamik sütun seçimi
     const passCol = (table === 'ilanlar') ? 'delete_token' : 'delete_password';
 
     let query = window.supabase.from(table);
     if (isSoft) query = query.update({ is_active: false });
     else query = query.delete();
+    
+    // Sorgu Mührü
+    if (isSoft) {
+        query = query.update({ is_active: false });
+    } else {
+        query = query.delete();
+    }
 
+    // Şifre İfşasını Durdur: Doğrudan işlem ve kontrol
     const { data, error } = await query.eq('id', id).eq(passCol, hashedPass).select();
 
+    // Başarı Kontrolü
     if (data && data.length > 0) { 
         alert("Başarıyla kaldırıldı."); 
+        alert("Başarıyla kaldırıldı"); 
         location.reload(); 
     } else {
         alert("Şifre yanlış veya yetkiniz yok");
+        alert("Şifre Yanlış!");
     }
 };

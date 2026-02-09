@@ -992,9 +992,6 @@ async function renderTavsiyeler() {
     const el = document.getElementById('recommend-list');
     if (!el) return;
 
-    // Başlangıçta kullanıcıya yükleniyor bilgisini ver
-    el.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">Tavsiyeler yükleniyor...</p>';
-
     try {
         // Filtreyi Supabase üzerinde yapmak performansı artırır
         // .eq('is_active', true) -> Sadece aktif olanları getirir
@@ -1005,15 +1002,17 @@ async function renderTavsiyeler() {
 
         if (error) throw error;
 
-        const filteredData = data.filter(item => item.is_active !== false);
+        const activeData = data?.filter(item => item.is_active !== false) || [];
+        
+        // Skeleton kartlarını temizle
         el.innerHTML = '';
 
-        if (!filteredData || filteredData.length === 0) {
+        if (!activeData || activeData.length === 0) {
             el.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">Henüz onaylanmış bir tavsiye bulunmuyor.</p>';
             return;
         }
 
-        el.innerHTML = filteredData.map(item => `
+        el.innerHTML = activeData.map(item => `
             <div class="cyber-card" style="margin-bottom:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="window.openSocialDetail('tavsiyeler', '${item.id}')">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <strong style="color:var(--app-blue); font-size:1.1rem;">${window.escapeHTML(item.title)}</strong>
@@ -1777,6 +1776,8 @@ window.renderAds = async function(ads) {
     const list = document.getElementById("ads-list");
     if (!list) return;
     
+    list.innerHTML = '';
+
     if (ads.length === 0) {
         list.innerHTML = `
             <div style="text-align: center; padding: 40px; color: #999;">

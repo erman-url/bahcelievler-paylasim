@@ -1965,3 +1965,16 @@ body {
 @keyframes shimmer {
     100% { transform: translateX(100%); }
 }
+
+/* >> MERKEZİ YAZI TİPİ (FONT) KONTROLÜ << */
+* {
+    /* Buradaki fontu değiştirdiğinde tüm siten anında değişir */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* Başlıkların kalınlık ve büyüklük ayarını korur */
+.header-title, .top-forum-title, .news-navbar-title {
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: -0.5px !important;
+}

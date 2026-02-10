@@ -2030,17 +2030,18 @@ body::before {
 
 #cookie-mini {
   position: fixed;
-  bottom: calc(env(safe-area-inset-bottom) + 90px);
+  bottom: calc(80px + env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(15, 23, 42, 0.92);
+  background: rgba(15, 23, 42, 0.95);
   color: #fff;
   font-size: 0.6rem;
   padding: 6px 12px;
   border-radius: 14px;
   display: none;
-  z-index: 10001; /* alt menünün ÜZERİNDE */
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  z-index: 2147483647; /* maksimum, menünün üstü */
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  pointer-events: auto;
 }
 
 
@@ -2073,4 +2074,9 @@ body::before {
     border-radius: 16px;
     padding: 4px 10px;
     white-space: nowrap;
+}
+
+.modal {
+  z-index: 2147483646;
+  pointer-events: auto;
 }

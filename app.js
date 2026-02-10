@@ -2878,16 +2878,14 @@ window.uDelete = async (id, table, isSoft = false) => {
 /* === Minimal Cookie Bildirimi (Stabil) === */
 
 function acceptCookies() {
-    localStorage.setItem("bf_cookie_ok", "1");
-    const el = document.getElementById("cookie-mini");
-    if (el) el.style.display = "none";
+  localStorage.setItem("cookiesAccepted", "1");
+  document.getElementById("cookie-mini").style.display = "none";
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
-    if (!localStorage.getItem("bf_cookie_ok")) {
-        const el = document.getElementById("cookie-mini");
-        if (el) el.style.display = "block";
-    }
+  if (!localStorage.getItem("cookiesAccepted")) {
+    document.getElementById("cookie-mini").style.display = "block";
+  }
 });
+
 

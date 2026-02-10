@@ -2053,3 +2053,21 @@ body::before {
     font-size: 0.7rem;
     cursor: pointer;
 }
+
+.footer-trust-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    justify-content: center;
+    margin: 8px 0;
+    font-size: 0.65rem;
+    color: #64748b;
+}
+
+.trust-badge {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 4px 10px;
+    white-space: nowrap;
+}

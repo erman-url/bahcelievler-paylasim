@@ -173,12 +173,6 @@ async function submitPiyasaVerisi() {
             is_active: true // BU SATIRI EKLE: Verinin anında yayınlanmasını sağlar
         }]);
 
-        /   method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        if (!res.ok) console.error("D1 Sunucu Hatası:", res.status);
     } catch (err) {
         console.error("D1 Bağlantı Hatası:", err);
     }

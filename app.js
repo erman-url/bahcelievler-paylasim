@@ -2884,10 +2884,10 @@ function acceptCookies() {
 }
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    const accepted = localStorage.getItem("bf_cookie_ok");
-    const bar = document.getElementById("cookie-mini");
-    if (!accepted && bar) {
-        bar.style.display = "block";
+document.addEventListener("DOMContentLoaded", () => {
+    if (!localStorage.getItem("bf_cookie_ok")) {
+        const el = document.getElementById("cookie-mini");
+        if (el) el.style.display = "block";
     }
 });
+

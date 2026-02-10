@@ -2006,3 +2006,25 @@ body::before {
 
 /* DETAY MODAL İÇİN EKSTRA */
 .detail-label { font-weight: 700; color: var(--primary-corp); margin-right: 5px; }
+
+.footer-trust-mini {
+  position: relative;
+  margin: 20px auto 80px auto;
+  padding: 10px 14px;
+  width: fit-content;
+  max-width: 90%;
+  background: #f8fafc;
+  border: 1px solid rgba(0,86,179,0.15);
+  border-radius: 40px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #0056b3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.footer-trust-mini i {
+  color: #28a745;
+}
+

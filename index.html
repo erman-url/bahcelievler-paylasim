@@ -2,18 +2,43 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Bahçelievler Forum</title>
+
+    <!-- Mobil & Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <!-- SEO Temel -->
+    <title>Bahçelievler Forum | Yerel İlan, Duyuru ve Fiyat Platformu</title>
+    <meta name="description" content="Bahçelievler’de ilanlar, mahalle duyuruları, fiyat karşılaştırmaları ve yerel paylaşımlar. Bağımsız ve kullanıcı odaklı dijital mahalle platformu.">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="https://bahcelievlerforum.com.tr/">
+
+    <!-- Open Graph / Discover -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Bahçelievler Forum">
+    <meta property="og:description" content="Bahçelievler için ilanlar, duyurular, fiyat karşılaştırmaları ve yerel paylaşımlar.">
+    <meta property="og:url" content="https://bahcelievlerforum.com.tr/">
+    <meta property="og:site_name" content="Bahçelievler Forum">
+    <meta property="og:image" content="https://bahcelievlerforum.com.tr/og-image.png">
+
+    <!-- Stil -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- İkon & Kütüphaneler -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- JS Kütüphaneleri -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Uygulama Ayarları -->
     <script>
-        (function(){
-            emailjs.init("aZK5F-nzELrvEoEtG"); 
+        (function () {
+            emailjs.init("aZK5F-nzELrvEoEtG");
         })();
-        const SUPABASE_URL = "https://ffwqqthmcelxbntvwwbp.supabase.co"; 
+
+        const SUPABASE_URL = "https://ffwqqthmcelxbntvwwbp.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_h1cDYcEWng5RFsqZ1_t86Q_ieBCvNV2";
         window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>

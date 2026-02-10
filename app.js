@@ -2879,9 +2879,10 @@ window.uDelete = async (id, table, isSoft = false) => {
 
 function acceptCookies() {
     localStorage.setItem("bf_cookie_ok", "1");
-    const bar = document.getElementById("cookie-mini");
-    if (bar) bar.style.display = "none";
+    const el = document.getElementById("cookie-mini");
+    if (el) el.style.display = "none";
 }
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const accepted = localStorage.getItem("bf_cookie_ok");

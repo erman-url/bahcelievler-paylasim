@@ -1735,6 +1735,41 @@ disclaimer: `
 
         <p><b>10. Bahçelievler Forum bir belediye uygulaması mı?</b><br>
         Hayır. Bu platform Bahçelievler sakinleri tarafından oluşturulmuş bağımsız bir mahalle rehberidir ve tamamen gönüllülük/yerel ticaret odaklı çalışır.</p>
+
+        <hr style="opacity:0.15; margin:15px 0;">
+
+        <p><b>8. Paylaşılan ilan, fiyat ve şikayetler denetleniyor mu?</b><br>
+        Paylaşımlar öncelikle otomatik güvenlik filtrelerinden (spam, küfür, bot kontrolü) geçer. Topluluk kurallarına aykırı veya şüpheli içerikler yayından kaldırılır. Platform, mahalle dayanışmasını esas alır.</p>
+
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>9. Yanlış veya yanıltıcı içerik girilirse ne olur?</b><br>
+        Yanlış fiyat, sahte ilan veya yanıltıcı paylaşımlar tespit edildiğinde içerik yayından kaldırılır. Tekrarlayan ihlallerde ilgili kullanıcının paylaşım yapması sınırlandırılabilir.</p>
+
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>10. Fiyat Dedektifi verileri resmi fiyatlar mıdır?</b><br>
+        Hayır. Fiyat Dedektifi, kullanıcıların paylaştığı etiket fotoğraflarına dayanan bilgilendirme amaçlı bir sistemdir. Marketlerin anlık fiyat değişikliği yapma hakkı saklıdır.</p>
+
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>11. Paylaşımlarım sistemde ne kadar süre saklanır?</b><br>
+        Paylaşımlar, kullanıcı tarafından silinene kadar veya uzun süre pasif kalan içerikler için sistem tarafından otomatik olarak yayından kaldırılana kadar saklanır.</p>
+
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>12. Bahçelievler Forum neden ücretsiz?</b><br>
+        Bahçelievler Forum, mahalle dayanışmasını ve yerel bilgi paylaşımını güçlendirmek amacıyla kurulmuştur. Temel kullanım ücretsizdir. İleride yalnızca isteğe bağlı tanıtım veya sponsorlu alanlar sunulabilir.</p>
+
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>13. Paylaşılan veriler reklam veya pazarlama amacıyla kullanılır mı?</b><br>
+        Hayır. Kullanıcı verileri üçüncü kişilerle satılmaz veya izinsiz paylaşılmaz. Paylaşımlar yalnızca platform içi bilgilendirme ve mahalle faydası amacıyla kullanılır.</p>
+
+        <hr style="opacity:0.1; margin:10px 0;">
+
+        <p><b>14. Platformda sahte hesaplarla paylaşım yapılabilir mi?</b><br>
+        Platformda klasik üyelik sistemi yerine içerik bazlı güvenlik yaklaşımı uygulanır. Görsel zorunluluğu, silme şifresi ve bot filtreleri sahte paylaşımları büyük ölçüde engeller.</p>
     </div>
         `,
         'contact-info': `

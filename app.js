@@ -2909,3 +2909,16 @@ document.addEventListener("DOMContentLoaded", () => {
   border-radius: 6px;
   cursor: pointer;
 }
+
+
+function acceptCookies() {
+  localStorage.setItem("bf_cookie_ok", "1");
+  document.getElementById("cookie-mini").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (!localStorage.getItem("bf_cookie_ok")) {
+    const el = document.getElementById("cookie-mini");
+    if (el) el.style.display = "block";
+  }
+});

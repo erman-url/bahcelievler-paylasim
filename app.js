@@ -1691,6 +1691,8 @@ disclaimer: `
         <p><b>6. İLGİLİ KİŞİNİN HAKLARI:</b> Kanun’un 11. maddesi kapsamında; verilerinizin işlenip işlenmediğini öğrenme, yanlış verilerin düzeltilmesini isteme ve verilerinizin silinmesini talep etme haklarınız saklıdır. Taleplerinizi "Bize Yazın" sekmesinden iletebilirsiniz.</p>
 
         <p style="font-size:0.7rem; color:#888; border-top:1px solid #eee; padding-top:10px; margin-top:10px;"><i>Bu aydınlatma metni, platformun kullanımı ile eş zamanlı olarak yürürlüğe girmiş kabul edilir.</i></p>
+
+        <p><b>Veri Saklama Süresi:</b> Platform üzerinde paylaşılan içerikler, kullanıcı tarafından silinene kadar veya en fazla <b>12 ay</b> süreyle sistemde tutulur. Uzun süre pasif kalan içerikler sistem tarafından otomatik olarak yayından kaldırılabilir.</p>
     </div>
         `,
         sss: `

@@ -2886,3 +2886,26 @@ document.addEventListener("DOMContentLoaded", () => {
         if (bar) bar.style.display = "flex";
     }
 });
+
+#cookie-mini {
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(15, 23, 42, 0.92);
+  color: #fff;
+  font-size: 0.6rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  display: none;
+  z-index: 9999;
+}
+
+#cookie-mini button {
+  margin-left: 6px;
+  background: #38bdf8;
+  border: none;
+  font-size: 0.6rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+}

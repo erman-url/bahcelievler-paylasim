@@ -2027,7 +2027,6 @@ body::before {
 .footer-trust-mini i {
   color: #28a745;
 }
-
 #cookie-bar {
     position: fixed;
     bottom: 65px;
@@ -2053,6 +2052,7 @@ body::before {
     font-size: 0.7rem;
     cursor: pointer;
 }
+
 
 .footer-trust-area {
     display: flex;

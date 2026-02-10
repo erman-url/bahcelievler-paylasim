@@ -1646,6 +1646,8 @@ disclaimer: `
 
         <p><b>2. TİCARİ İLİŞKİLER VE ALIŞVERİŞ:</b> Kullanıcılar arasında gerçekleşen ürün satışı, hizmet alımı, pazarlık veya randevularda <b>Bahçelievler Forum</b> taraf değildir. Gerçekleşebilecek maddi kayıp, kusurlu ürün, dolandırıcılık veya manevi zararlardan platformumuz hiçbir şekilde sorumlu tutulamaz. Alışverişlerinizi güvenli alanlarda yapmanız önerilir.</p>
 
+        <p><b>Kullanıcı Uyarısı:</b> Platform üzerinde yer alan ilan, paylaşım ve iletişim süreçlerinde kullanıcıların dikkatli hareket etmeleri önerilir. Bahçelievler Forum, kullanıcılar arasında gerçekleşen bireysel işlemlerde taraf değildir.</p>
+
         <p><b>3. FİYAT RADARI (DEDEKTİFİ):</b> "Fiyat Dedektifi" bölümünde paylaşılan etiket ve fiyat verileri kullanıcı beyanıdır. Marketlerin anlık fiyat değişikliği yapma hakkı saklıdır. Bu veriler bilgilendirme amaçlı olup, mağaza ile yaşanacak fiyat uyuşmazlıklarında platformumuz sorumluluk kabul etmez.</p>
 
         <p><b>4. HİZMET KALİTESİ VE TEKLİFLER:</b> "Teklif Al" sistemi üzerinden yönlendirilen esnafların iş kalitesi, zamanlaması veya fiyatlandırması üzerinde platformumuzun bir denetimi yoktur. Hizmet sağlayıcı ile kullanıcı arasındaki sözleşme serbestliği esastır; yaşanacak teknik veya hukuki ihtilaflarda platformumuz arabulucu veya taraf değildir.</p>

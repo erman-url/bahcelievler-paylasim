@@ -2841,3 +2841,15 @@ window.uDelete = async (id, table, isSoft = false) => {
         console.error("Silme Hatası:", error);
     }
 };
+
+function acceptCookies() {
+    localStorage.setItem("bf_cookie_ok", "1");
+    document.getElementById("cookie-bar").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (!localStorage.getItem("bf_cookie_ok")) {
+        const bar = document.getElementById("cookie-bar");
+        if (bar) bar.style.display = "flex";
+    }
+});

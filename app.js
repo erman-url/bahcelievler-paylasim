@@ -1783,6 +1783,26 @@ disclaimer: `
 
         <p><b>14. Platformda sahte hesaplarla paylaşım yapılabilir mi?</b><br>
         Platformda klasik üyelik sistemi yerine içerik bazlı güvenlik yaklaşımı uygulanır. Görsel zorunluluğu, silme şifresi ve bot filtreleri sahte paylaşımları büyük ölçüde engeller.</p>
+
+        <hr style="opacity:0.1; margin:10px 0;">
+        <p><b>Paylaştığım içerikleri kimler görebilir?</b><br>
+        Paylaşımlar platformu ziyaret eden kullanıcılar tarafından görüntülenebilir. Özel iletişim bilgileri paylaşılmadığı sürece kişisel veriler herkese açık hâle gelmez.</p>
+
+        <hr style="opacity:0.1; margin:10px 0;">
+        <p><b>İlanımı veya paylaşımımı nasıl silebilirim?</b><br>
+        Paylaşım sırasında belirlediğiniz silme şifresi ile içeriğinizi dilediğiniz zaman yayından kaldırabilirsiniz.</p>
+
+        <hr style="opacity:0.1; margin:10px 0;">
+        <p><b>Telefon numaram veya iletişim bilgilerim herkese açık mı?</b><br>
+        Hayır. İletişim bilgileri yalnızca kullanıcı tarafından açıkça paylaşılması hâlinde görünür olur.</p>
+
+        <hr style="opacity:0.1; margin:10px 0;">
+        <p><b>Yanlış veya kötüye kullanım içeren paylaşımlar olursa ne olur?</b><br>
+        Yanıltıcı, kötüye kullanım veya topluluk kurallarına aykırı içerikler tespit edildiğinde yayından kaldırılır.</p>
+
+        <hr style="opacity:0.1; margin:10px 0;">
+        <p><b>Bahçelievler Forum resmi bir kurum mu?</b><br>
+        Hayır. Bahçelievler Forum, mahalle dayanışmasını amaçlayan bağımsız bir yerel platformdur. Resmî kurum veya belediye sitesi değildir.</p>
     </div>
         `,
         'contact-info': `

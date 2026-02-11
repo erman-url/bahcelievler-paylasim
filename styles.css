@@ -2086,3 +2086,12 @@ body {
 .footer-trust-area .trust-badge:last-child {
     order: 3 !important;
 }
+/* ===== FOOTER MOTTO HEART STYLE ===== */
+
+.motto-heart {
+    color: #e11d48;        /* Kurumsal kırmızı */
+    margin-right: 6px;
+    font-size: 0.9rem;
+    display: inline-block;
+    transform: translateY(1px);
+}

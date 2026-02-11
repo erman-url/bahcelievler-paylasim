@@ -2031,3 +2031,40 @@ body {
     border-radius: 10px;
     margin-top: 4px;
 }
+/* ===== DESKTOP STABILIZATION RESET ===== */
+
+@media (min-width: 1024px) {
+
+    /* Body flex iptal */
+    body {
+        display: block !important;
+    }
+
+    /* Ana içerik merkezleme */
+    .page {
+        max-width: 1200px !important;
+        margin: 0 auto !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    /* Dashboard genişliği uyumlu */
+    #home-dashboard {
+        max-width: 520px !important;
+        margin: 0 auto !important;
+    }
+
+    /* Haber listesi ortalama */
+    #haber-listesi {
+        max-width: 1200px !important;
+        margin: 0 auto !important;
+    }
+
+    /* Footer ortalama */
+    .app-footer-nav {
+        max-width: 600px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+
+}

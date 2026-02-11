@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <!-- SEO Temel -->
-<title>Bahçelievler Forum | Yerel İlan, Paylaşım ve Kazanım Platformu</title>
+<title>Bahçelievler Forum | Yerel İlan, Duyuru ve Fiyat Platformu</title>
 
 <link rel="canonical" href="https://bahcelievlerforum.com.tr/">
 
@@ -23,6 +23,7 @@
 <meta property="og:url" content="https://bahcelievlerforum.com.tr/">
 <meta property="og:site_name" content="Bahçelievler Forum">
 <meta property="og:image" content="https://bahcelievlerforum.com.tr/og-image.png">
+
 
     <!-- Stil -->
     <link rel="stylesheet" href="styles.css">
@@ -48,15 +49,11 @@
 </head>
 <body>
 <section id="home" class="page active">
+
 <div class="top-forum-bar">
-    <h1 class="top-forum-title">Bahçelievler Forum</h1>
+    <div class="top-forum-title">BAHÇELİEVLER FORUM</div>
 </div>
 <div class="slider-container cyber-border">
-     <img
-  src="img/slider1.jpg"
- alt="Bahçelievler ilçesinde yerel ilanlar, fırsatlar ve duyurular"
-  style="display:none;"
->
     <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.15)), url('img/slider1.jpg');"></div>
     <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.15)), url('img/slider2.jpg');"></div>
     <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.15)), url('img/slider3.jpg');"></div>
@@ -64,26 +61,20 @@
     <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.15)), url('img/slider5.jpg');"></div>
 </div>
 
-   <div id="gundem-haber">
-    <div class="news-navbar">
-        <div class="news-navbar-brand">
-            <i class="fas fa-bars news-menu-toggle" onclick="toggleMenu()"></i>
-            <div class="news-navbar-title">GÜNDEM & HABER</div>
+    <div id="gundem-haber">
+        <div class="news-navbar">
+            <div class="news-navbar-brand">
+                <i class="fas fa-bars" style="color: white; font-size: 1.2rem; margin-right: 10px;"></i>
+                <div class="news-navbar-title">GÜNDEM & HABER</div>
+            </div>
+            <div class="news-navbar-search" onclick="document.getElementById('haber-arama-input').focus()">
+                <i class="fas fa-search"></i>
+            </div>
         </div>
-
-        <div class="news-navbar-search" onclick="document.getElementById('haber-arama-input').focus()">
-            <i class="fas fa-search"></i>
+        <div id="haber-listesi">
+            <p style="color: #888; width: 100%; text-align: center;">Haberler yükleniyor...</p>
         </div>
     </div>
-
-    <div id="haber-listesi">
-        <p style="color:#888;width:100%;text-align:center;">
-            Haberler yükleniyor...
-        </p>
-    </div>
-</div>
-
-
     
             <div id="ramadan-status" class="cyber-card" style="margin: 10px auto 15px auto; padding: 12px 20px; text-align: center; font-size: 0.95rem; font-weight: 800; color: #ffffff !important; background: linear-gradient(135deg, #0056b3 0%, #00d2ff 100%) !important; border-radius: 50px !important; border: 2px solid #ffffff; box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2); width: fit-content; min-width: 280px; display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <i class="fas fa-moon fa-beat" style="color: #ffffff;"></i>
@@ -140,17 +131,6 @@
                     <div class="widget-body" id="preview-sikayet">Yükleniyor...</div>
                 </div>
             </div>
-
-<!-- SEO METNİ (Google için statik içerik) -->
-<section class="seo-text">
-  <h2>Bahçelievler’de Yerel İlan ve Paylaşım Platformu</h2>
-  <p>
-    Bahçelievler Forum, İstanbul Bahçelievler ilçesine özel ilan, fırsat,
-    duyuru ve mahalle paylaşımlarını tek çatı altında toplayan bağımsız
-    bir yerel platformdur.
-  </p>
-</section>
-
 
 </section>
 <section id="ilanlar" class="page">
@@ -654,7 +634,9 @@
 <button type="submit" id="est-submit-btn" class="cyber-submit" style="background: var(--app-blue) !important;">TALEBİ HAVUZA GÖNDER</button>
     </form>
 </section>
-  
+
+         
+
         <section id="hizmet-ver" class="page">
             <h1 class="cyber-header">💼 ESNAF HİZMET TANITIMI</h1>
             <div class="cyber-card" style="margin: 10px; border-left: 5px solid #28a745; background: #f4fff4;">
@@ -797,8 +779,9 @@
 
 <footer class="corporate-footer">
     <div class="footer-trust-area">
-        <span class="trust-badge">🛡️ KVKK uyumlu • Güvenli Veri Kontrolü</span>
-        <span class="trust-badge">🔐 İçerik silme kontrolü sizdedir</span>
+        <span class="trust-badge">🛡️ KVKK uyumlu • Veriler satılmaz</span>
+        <span class="trust-badge">🔐 İçerik silme kontrolü kullanıcıdadır</span>
+        <span class="trust-badge">ℹ️ Resmî kurum değildir</span>
     </div>
     <div class="footer-legal">
         <a href="javascript:void(0)" onclick="openLegalModal('kvkk')">Gizlilik Politikası</a>
@@ -808,9 +791,9 @@
     <div class="footer-copyright">
         © 2026 Bahçelievler Forum • Her Hakkı Saklıdır
     </div>
-    <span class="footer-motto">
-      <span class="motto-heart">❤</span> BİRLİK'TE BAHÇELİEVLER
-    </span>
+    <div class="footer-motto">
+        Birlik'te Bahçelievler
+    </div>
 </footer>
 
   <nav class="app-footer-nav">
@@ -831,6 +814,7 @@
         <svg viewBox="0 0 24 24"><path d="M4 4h16v12H4z"/><path d="M22 6l-10 7L2 6"/></svg><span>İletişim</span>
     </a>
 </nav>
+
 
 <div id="delete-confirm-modal" class="modal" style="display:none; z-index: 9999;">
     <div class="modal-content" style="max-width: 300px; text-align: center;">
@@ -859,15 +843,5 @@
         Tamam
     </button>
 </div>
-<div class="menu-overlay" onclick="toggleMenu()"></div>
-
-<div class="side-menu" id="sideMenu">
-    <a href="#" onclick="goPage('home'); toggleMenu();">Ana</a>
-    <a href="#" onclick="goPage('sosyal'); toggleMenu();">Sosyal</a>
-    <a href="#" onclick="goPage('ilanlar'); toggleMenu();">İlanlar</a>
-    <a href="#" onclick="goPage('hizmetler'); toggleMenu();">Hizmetler</a>
-    <a href="#" onclick="goPage('iletisim'); toggleMenu();">İletişim</a>
-</div>
-
 </body>
 </html>

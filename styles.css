@@ -1900,3 +1900,59 @@ body::before {
 .menu-overlay.active {
     display: block;
 }
+/* ===== SIDE MENU ===== */
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 260px;
+    height: 100%;
+    background: #ffffff;
+    box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+    z-index: 20000;
+    transition: left 0.3s ease;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.side-menu.active {
+    left: 0;
+}
+
+.side-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 800;
+    margin-bottom: 25px;
+}
+
+.side-menu-links a {
+    display: block;
+    padding: 14px 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    color: #003366;
+    margin-bottom: 8px;
+    transition: background 0.2s;
+}
+
+.side-menu-links a:hover {
+    background: #f1f5f9;
+}
+
+/* overlay */
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 19999;
+    display: none;
+}
+
+.menu-overlay.active {
+    display: block;
+}

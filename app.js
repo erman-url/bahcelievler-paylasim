@@ -2889,3 +2889,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+function toggleMenu() {
+    document.getElementById("sideMenu").classList.toggle("active");
+    document.querySelector(".menu-overlay").classList.toggle("active");
+}

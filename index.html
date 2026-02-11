@@ -64,20 +64,26 @@
     <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.15)), url('img/slider5.jpg');"></div>
 </div>
 
-    <div id="gundem-haber">
-        <div class="news-navbar">
-            <div class="news-navbar-brand">
-                <i class="fas fa-bars" style="color: white; font-size: 1.2rem; margin-right: 10px;"></i>
-                <div class="news-navbar-title">GÜNDEM & HABER</div>
-            </div>
-            <div class="news-navbar-search" onclick="document.getElementById('haber-arama-input').focus()">
-                <i class="fas fa-search"></i>
-            </div>
+   <div id="gundem-haber">
+    <div class="news-navbar">
+        <div class="news-navbar-brand">
+            <i class="fas fa-bars news-menu-toggle" onclick="toggleMenu()"></i>
+            <div class="news-navbar-title">GÜNDEM & HABER</div>
         </div>
-        <div id="haber-listesi">
-            <p style="color: #888; width: 100%; text-align: center;">Haberler yükleniyor...</p>
+
+        <div class="news-navbar-search" onclick="document.getElementById('haber-arama-input').focus()">
+            <i class="fas fa-search"></i>
         </div>
     </div>
+
+    <div id="haber-listesi">
+        <p style="color:#888;width:100%;text-align:center;">
+            Haberler yükleniyor...
+        </p>
+    </div>
+</div>
+
+
     
             <div id="ramadan-status" class="cyber-card" style="margin: 10px auto 15px auto; padding: 12px 20px; text-align: center; font-size: 0.95rem; font-weight: 800; color: #ffffff !important; background: linear-gradient(135deg, #0056b3 0%, #00d2ff 100%) !important; border-radius: 50px !important; border: 2px solid #ffffff; box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2); width: fit-content; min-width: 280px; display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <i class="fas fa-moon fa-beat" style="color: #ffffff;"></i>
@@ -853,5 +859,15 @@
         Tamam
     </button>
 </div>
+<div class="menu-overlay" onclick="toggleMenu()"></div>
+
+<div class="side-menu" id="sideMenu">
+    <a href="#" onclick="goPage('home'); toggleMenu();">Ana</a>
+    <a href="#" onclick="goPage('sosyal'); toggleMenu();">Sosyal</a>
+    <a href="#" onclick="goPage('ilanlar'); toggleMenu();">İlanlar</a>
+    <a href="#" onclick="goPage('hizmetler'); toggleMenu();">Hizmetler</a>
+    <a href="#" onclick="goPage('iletisim'); toggleMenu();">İletişim</a>
+</div>
+
 </body>
 </html>

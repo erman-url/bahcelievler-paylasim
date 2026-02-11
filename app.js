@@ -2827,16 +2827,6 @@ function startRamadanCountdown() {
 // Uygulama yüklenince başlat
 document.addEventListener("DOMContentLoaded", startRamadanCountdown);
 
-function toggleMenu() {
-    const menu = document.getElementById("side-menu");
-    const overlay = document.getElementById("menu-overlay");
-
-    if (!menu || !overlay) return;
-
-    menu.classList.toggle("active");
-    overlay.classList.toggle("active");
-}
-
 window.universalSecureDelete = async function(id, tableName, isSoftDelete = false) {
     const pass = prompt("İşlemi onaylamak için 4 haneli silme şifrenizi giriniz:");
     if (!pass) return;
@@ -2897,3 +2887,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("cookie-mini").style.display = "block";
   }
 });
+
+function toggleMenu() {
+    const menu = document.getElementById("side-menu");
+    const overlay = document.getElementById("menu-overlay");
+
+    if (!menu || !overlay) return;
+
+    menu.classList.toggle("active");
+    overlay.classList.toggle("active");
+}

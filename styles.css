@@ -79,7 +79,7 @@ body {
 }
 
 /* Fırsat ve İletişim Formlarını Aynı Hizaya Getir */
-#firsat-form, #contact-form, .cyber-form {
+#contact-form, .cyber-form {
     width: 100% !important;
     max-width: 500px !important;
     margin: 0 auto !important;
@@ -96,9 +96,6 @@ body {
 }
 
 /* 4. Alt navigasyon barını haritanın her zaman üstünde tut */
-.app-footer-nav {
-    z-index: 99999 !important;
-}
 @-webkit-keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -342,22 +339,6 @@ body.modal-open {
 
 /* ALT MENÜ (FOOTER) - RENK MANTIĞI */
 /* Navigasyon barının haritanın üstünde kalmasını sağla */
-.app-footer-nav {
-    position: fixed;
-    bottom: 0; left: 50%;
-    width: 100%;
-    max-width: 600px;
-    background: var(--app-blue) !important; /* Her zaman kurumsal mavi */
-    display: -webkit-flex;
-    display: flex;
-    -webkit-justify-content: space-around;
-    justify-content: space-around;
-    padding: 10px 0;
-    padding-bottom: env(safe-area-inset-bottom);
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
-    transform: translateX(-50%);
-}
-
 .nav-item {
     text-decoration: none;
     color: rgba(255, 255, 255, 0.6); /* Pasif ikonlar */
@@ -412,20 +393,6 @@ body.modal-open {
 .slider-item.active-slide { 
     display: block !important;
     opacity: 1 !important;
-}
-
-#firsat-form {
-    width: 100% !important;
-    max-width: 500px !important; /* Form genişliğini sabitler */
-    margin: 0 auto 20px auto !important;
-}
-
-#firsat-list {
-    width: 100% !important;
-    max-width: 500px !important; /* Liste kartlarını form ile aynı genişliğe getirir */
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 20px !important;
 }
 
 /* Form içindeki input ve butonların tam genişlik kaplamasını sağlar */
@@ -863,16 +830,6 @@ button[onclick*="prepareDeleteHizmet"]:hover {
 /* >> FIRSAT FORMU DÜZENLEME VE HİZALAMA MÜHÜRÜ << */
 
 /* 1. Formun ana kapsayıcısını ve dikey hizalamasını mühürler */
-#firsat-form {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 15px !important; /* Elemanlar arası standart boşluk */
-    width: 100% !important;
-    max-width: 500px !important; /* Formu ilanlarla aynı genişliğe sabitler */
-    margin: 0 auto 30px auto !important; /* Alt kısımdaki kartla arayı açar */
-    padding: 0 !important;
-}
-
 /* 2. Tüm girdi alanlarını (Input, Select, Textarea) aynı hizaya getirir */
 #firsat-form .cyber-form, 
 #firsat-form input, 
@@ -898,12 +855,6 @@ button[onclick*="prepareDeleteHizmet"]:hover {
 }
 
 /* Fırsat kartlarının dikey alan sızıntısını engelle */
-#firsat-list {
-    clear: both !important;
-    display: flex !important;
-    flex-direction: column !important;
-}
-
 /* >> FIRSAT LİSTELEME GENİŞLİK VE HİZALAMA MÜHÜRÜ << */
 
 /* 2. GÖNDER butonu ve form elemanlarını standart boyuta sabitler */
@@ -1307,21 +1258,7 @@ button[onclick*="prepareDeleteHizmet"] {
 .menu-text-modern { font-size: 16px !important; font-weight: 700 !important; color: #0F172A !important; text-align: left !important; }
 
 /* ===== FOOTER GÜNCELLEMESİ (SVG TABANLI) ===== */
-.app-footer-nav {
-  height: 82px !important;
-  background: var(--surface) !important;
-  border-top: 1px solid #E5E7EB;
-  max-width: 600px !important;
-}
-
-.nav-item-modern {
-  display: flex; flex-direction: column; align-items: center;
-  font-size: 11px; font-weight: 700; color: #6B7280;
-  text-decoration: none; flex: 1;
-}
-
 .nav-item-modern svg { width: 22px; height: 22px; margin-bottom: 4px; stroke: #6B7280; stroke-width: 2; fill: none; }
-.nav-item-modern.active { color: var(--icon-color); }
 .nav-item-modern.active svg { stroke: var(--icon-color); }
 
 /* ORTA - İLANLAR BUTONU */
@@ -1619,10 +1556,6 @@ button[onclick*="prepareDeleteHizmet"] {
     box-shadow: 0 -8px 25px rgba(0,0,0,0.08) !important;
 }
 
-.nav-item-modern {
-    color: var(--nav-inactive) !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
 .nav-item-modern svg {
     stroke: var(--nav-inactive) !important;
@@ -1630,10 +1563,6 @@ button[onclick*="prepareDeleteHizmet"] {
     height: 24px !important;
 }
 
-.nav-item-modern.active {
-    color: var(--nav-active) !important;
-    transform: translateY(-4px);
-}
 
 .nav-item-modern.active svg {
     stroke: var(--nav-active) !important;

@@ -43,7 +43,7 @@ body {
     min-height: 100vh;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     color: var(--dark-text);
-    padding-bottom: 80px;
+    padding-bottom: 95px;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -55,7 +55,7 @@ body {
     width: 100% !important;
     min-height: auto !important; /* 100vh sızıntısı bitti */
     position: relative !important;
-    padding: 20px 15px 100px 15px !important;
+    padding: 20px 15px 95px 15px !important;
     box-sizing: border-box !important;
     overflow-x: hidden !important; /* Yatay kaymayı kesin olarak bitirir */
 }
@@ -698,13 +698,22 @@ body.modal-open {
         justify-content: center !important; 
         gap: 20px; 
     }
-
-    /* Alt menüyü (nav) webde ortala */
     .app-footer-nav {
         max-width: 600px;
         left: 50%;
         transform: translateX(-50%);
         border-radius: 20px 20px 0 0;
+    }
+    body {
+        display: block !important;
+    }
+    #home-dashboard {
+        max-width: 520px !important;
+        margin: 0 auto !important;
+    }
+    #haber-listesi {
+        max-width: 1200px !important;
+        margin: 0 auto !important;
     }
 }
 
@@ -1102,12 +1111,6 @@ button[onclick*="prepareDeleteHizmet"] {
     justify-content: center !important;
     }
 
-/* İçerideki metinlerin marjinlerini sıfırla ki flex gap kontrol etsin */
-.ad-info-box div, .ad-info-box p {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
 /* 5. Şikayet Görsellerini Kart İçine Hapet */
 #complaint-list img {
     width: 100% !important;
@@ -1116,15 +1119,6 @@ button[onclick*="prepareDeleteHizmet"] {
     object-fit: cover !important;
     border-radius: 10px !important;
     margin: 8px 0 !important;
-}
-
-/* Modal ana başlık ve tarih alanını İlanlar gibi sıkılaştır */
-.modal-header-meta {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 5px !important;
-    margin-bottom: 12px !important;
 }
 
 /* 4. Modal genişlik ve taşma koruması */
@@ -1151,10 +1145,8 @@ button[onclick*="prepareDeleteHizmet"] {
     padding: 16px !important;
 
     border: 2px solid #4a90e2 !important; /* Belirgin mavi çerçeve */
-    border: 2px solid #4a90e2 !important;
     border-radius: 12px !important;
     background-color: #f4f8ff !important; /* Soft azure arka plan */
-    background-color: #f4f8ff !important;
     
     color: #1f2f46 !important;
     text-align: center !important;
@@ -1165,22 +1157,6 @@ button[onclick*="prepareDeleteHizmet"] {
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important;
 }
 
-/* İçerideki metinlerin marjinlerini sıfırla ki flex gap kontrol etsin */
-.ad-info-box div, .ad-info-box p {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* 5. Şikayet Görsellerini Kart İçine Hapet */
-#complaint-list img {
-    width: 100% !important;
-    max-width: 350px !important;
-    height: 160px !important;
-    object-fit: cover !important;
-    border-radius: 10px !important;
-    margin: 8px 0 !important;
-}
-
 /* Modal ana başlık ve tarih alanını İlanlar gibi sıkılaştır */
 .modal-header-meta {
     display: flex !important;
@@ -1188,13 +1164,6 @@ button[onclick*="prepareDeleteHizmet"] {
     align-items: center !important;
     gap: 5px !important;
     margin-bottom: 12px !important;
-}
-
-/* 4. Modal genişlik ve taşma koruması */
-.modal-content {
-    max-width: 450px !important;
-    width: 92% !important;
-    padding: 15px 20px !important;
 }
 
 #modal-image-gallery { position: relative; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
@@ -1530,11 +1499,6 @@ button[onclick*="prepareDeleteHizmet"] {
     font-weight: 900;
     letter-spacing: 1px;
     text-transform: uppercase;
-}
-
-/* Slider'ın barın altına girmemesi için üst marjin ayarı */
-#home .slider-container {
-    margin-top: 10px !important;
 }
 
 .header-title {
@@ -1932,26 +1896,6 @@ body::before {
     z-index: 9999 !important;
 }
 
-/* 2. Sayfa içeriği footer altına girmesin */
-.page {
-    padding-bottom: 95px !important;
-}
-
-/* 3. Body alt boşluk sabitle */
-body {
-    padding-bottom: 95px !important;
-}
-
-/* 4. Modern nav item hizalama reset */
-.nav-item-modern {
-    flex: 1 !important;
-    text-align: center !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
 /* 5. SVG hizalama düzeltme */
 .nav-item-modern svg {
     display: block !important;
@@ -1961,35 +1905,6 @@ body {
 /* 6. Footer üstündeki trust alanı nav ile çakışmasın */
 .footer-trust-mini {
     margin-bottom: 110px !important;
-}
-/* ===== DESKTOP LAYOUT FIX ===== */
-
-@media (min-width: 1024px) {
-
-    body {
-        display: flex;
-        justify-content: center;
-        background: #d1d9e6;
-    }
-
-    .page {
-        max-width: 1200px !important;
-        margin: 0 auto !important;
-    }
-
-    .app-footer-nav {
-        max-width: 600px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        border-radius: 20px 20px 0 0 !important;
-    }
-}
-/* ===== FOOTER MODERN VISUAL UPGRADE ===== */
-
-.app-footer-nav {
-    background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%) !important;
-    border-top: 1px solid rgba(0, 86, 179, 0.15) !important;
-    box-shadow: 0 -10px 25px rgba(0, 51, 102, 0.08) !important;
 }
 
 /* İkonlar */
@@ -2030,43 +1945,6 @@ body {
     background: var(--primary-corp);
     border-radius: 10px;
     margin-top: 4px;
-}
-/* ===== DESKTOP STABILIZATION RESET ===== */
-
-@media (min-width: 1024px) {
-
-    /* Body flex iptal */
-    body {
-        display: block !important;
-    }
-
-    /* Ana içerik merkezleme */
-    .page {
-        max-width: 1200px !important;
-        margin: 0 auto !important;
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-    }
-
-    /* Dashboard genişliği uyumlu */
-    #home-dashboard {
-        max-width: 520px !important;
-        margin: 0 auto !important;
-    }
-
-    /* Haber listesi ortalama */
-    #haber-listesi {
-        max-width: 1200px !important;
-        margin: 0 auto !important;
-    }
-
-    /* Footer ortalama */
-    .app-footer-nav {
-        max-width: 600px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-    }
-
 }
 /* ===== FOOTER TRUST STACK FIX ===== */
 

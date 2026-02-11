@@ -2897,3 +2897,31 @@ function toggleMenu() {
     menu.classList.toggle("active");
     overlay.classList.toggle("active");
 }
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        const menu = document.getElementById("side-menu");
+        const overlay = document.getElementById("menu-overlay");
+        menu?.classList.remove("active");
+        overlay?.classList.remove("active");
+    }
+});
+
+window.showPage = function(pageId) {
+    document.querySelectorAll(".page").forEach(p => {
+        p.classList.remove("active");
+    });
+
+    const target = document.getElementById(pageId);
+    if (target) {
+        target.classList.add("active");
+    }
+
+    // Footer active state güncelle
+    document.querySelectorAll(".nav-item-modern").forEach(item => {
+        item.classList.remove("active");
+        if (item.dataset.target === pageId) {
+            item.classList.add("active");
+        }
+    });
+};

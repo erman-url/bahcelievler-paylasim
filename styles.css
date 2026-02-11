@@ -708,10 +708,7 @@ body.modal-open {
 
 /* 1. Merkezi Buton Kalıbı (Telegram Stili Referans) */
 .cyber-submit, 
-.edit-btn-style, 
 .delete-btn-style, 
-#modal-buy-btn,
-#modal-share-btn,
 .modal-footer button {
     width: 100% !important;
     height: 50px !important; /* Standart Yükseklik */
@@ -1851,24 +1848,6 @@ body::before {
     font-size: 0.9rem;
     display: inline-block;
     transform: translateY(1px);
-}
-
-/* ===== SIDE MENU (HAMBURGER NAVIGATION) ===== */
-
-.side-menu {
-    position: fixed;
-    top: 0;
-    left: -260px;
-    width: 240px;
-    height: 100%;
-    background: #ffffff;
-    box-shadow: 5px 0 25px rgba(0,0,0,0.08);
-    z-index: 99999;
-    padding-top: 80px;
-    transition: left 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
 }
 
 .side-menu.active {

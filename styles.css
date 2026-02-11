@@ -1962,3 +1962,72 @@ body {
 .footer-trust-mini {
     margin-bottom: 110px !important;
 }
+/* ===== DESKTOP LAYOUT FIX ===== */
+
+@media (min-width: 1024px) {
+
+    body {
+        display: flex;
+        justify-content: center;
+        background: #d1d9e6;
+    }
+
+    .page {
+        max-width: 1200px !important;
+        margin: 0 auto !important;
+    }
+
+    .app-footer-nav {
+        max-width: 600px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        border-radius: 20px 20px 0 0 !important;
+    }
+}
+/* ===== FOOTER MODERN VISUAL UPGRADE ===== */
+
+.app-footer-nav {
+    background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%) !important;
+    border-top: 1px solid rgba(0, 86, 179, 0.15) !important;
+    box-shadow: 0 -10px 25px rgba(0, 51, 102, 0.08) !important;
+}
+
+/* İkonlar */
+.nav-item-modern {
+    transition: all 0.25s ease !important;
+    color: #64748b !important;
+}
+
+/* Aktif ikon */
+.nav-item-modern.active {
+    color: var(--primary-corp) !important;
+    transform: translateY(-4px) scale(1.08) !important;
+}
+
+/* SVG stroke canlandırma */
+.nav-item-modern svg {
+    transition: all 0.25s ease !important;
+}
+
+.nav-item-modern.active svg {
+    stroke: var(--primary-corp) !important;
+    filter: drop-shadow(0 4px 8px rgba(0,51,102,0.2));
+}
+
+/* Hover efekti (desktop) */
+@media (hover: hover) {
+    .nav-item-modern:hover {
+        transform: translateY(-3px);
+        color: var(--primary-corp);
+    }
+}
+
+/* Hafif glow efekti */
+.nav-item-modern.active::after {
+    content: "";
+    width: 30px;
+    height: 4px;
+    background: var(--primary-corp);
+    border-radius: 10px;
+    margin-top: 4px;
+}

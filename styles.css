@@ -1547,7 +1547,6 @@ button[onclick*="prepareDeleteHizmet"] {
 }
 
 
-/* >> ELITE CORPORATE UI REVISION << */
 /* 1. Footer Navigasyon: Daha Belirgin ve Pro */
 .app-footer-nav {
     background: var(--nav-bg) !important;
@@ -1915,4 +1914,51 @@ body::before {
   color: #334155;
   margin: 12px 4px 10px;
   letter-spacing: 0.3px;
+}
+
+/* ===== FOOTER HARD RESET & STABILIZATION ===== */
+
+/* 1. Footer nav sabitleme */
+.app-footer-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 75px !important;
+    background: var(--nav-bg) !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    z-index: 9999 !important;
+}
+
+/* 2. Sayfa içeriği footer altına girmesin */
+.page {
+    padding-bottom: 95px !important;
+}
+
+/* 3. Body alt boşluk sabitle */
+body {
+    padding-bottom: 95px !important;
+}
+
+/* 4. Modern nav item hizalama reset */
+.nav-item-modern {
+    flex: 1 !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* 5. SVG hizalama düzeltme */
+.nav-item-modern svg {
+    display: block !important;
+    margin: 0 auto 4px auto !important;
+}
+
+/* 6. Footer üstündeki trust alanı nav ile çakışmasın */
+.footer-trust-mini {
+    margin-bottom: 110px !important;
 }

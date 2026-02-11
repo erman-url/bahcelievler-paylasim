@@ -2068,3 +2068,21 @@ body {
     }
 
 }
+/* ===== FOOTER TRUST STACK FIX ===== */
+
+.footer-trust-area {
+    display: flex !important;
+    flex-direction: column !important;   /* ALT ALTA DİZ */
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.trust-badge {
+    display: inline-block !important;
+    text-align: center !important;
+}
+
+/* "Resmi kurum değildir" her zaman en altta */
+.footer-trust-area .trust-badge:last-child {
+    order: 3 !important;
+}

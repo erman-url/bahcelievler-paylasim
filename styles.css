@@ -26,6 +26,12 @@
     --card-menu: #FFFFFF;
 }
 
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+
 html {
     background: #d1d9e6;
 }
@@ -800,7 +806,6 @@ body.modal-open {
 #comment-list div { background: #fff; padding: 10px; border-radius: 8px; margin-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
 
 /* 1. Buton Genişlik ve Hizalama Mührü */
-.modal-content { padding: 20px !important; }
 #modal-buy-btn, #modal-share-btn, .edit-btn-style, .delete-btn-style { width: 100% !important; box-sizing: border-box !important; margin-left: 0 !important; margin-right: 0 !important; height: 50px !important; display: flex !important; justify-content: center !important; align-items: center !important; }
 
 /* 2. Kırmızı Buton Görünürlük Fix */
@@ -996,14 +1001,20 @@ button[onclick*="prepareDeleteHizmet"]:hover {
 
 /* Modal içindeki metin kutusunu (fırsat içeriği) düzenler */
 .ad-info-box {
-    text-align: center !important; /* Metni ortalar */
-    background: #f8fafc !important;
-    border: 1px solid #edf2f7 !important;
-    border-radius: 15px !important;
-    padding: 20px !important;
+    max-width: 320px !important;
     width: 100% !important;
+    margin: 20px auto !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+    background-color: #f4f8ff !important;
+    border: 2px solid #4a90e2 !important;
+    color: #1f2f46 !important;
+    text-align: center !important;
+    font-size: 16px !important;
+    line-height: 1.5 !important;
     box-sizing: border-box !important;
 }
+/* Kalacak      */
 
 /* Butonlar arası boşluk ve mobil uyum */
 #modal-buy-btn, #modal-share-btn {
@@ -1201,11 +1212,11 @@ button[onclick*="prepareDeleteHizmet"] {
     font-weight: 600 !important;
 }
 
-/* >> TEK KARE KURUMSAL STİL MÜHÜRÜ << */
 /* >> SEO DOSTU KURUMSAL ÇERÇEVE MÜHÜRÜ << */
 .ad-info-wrapper {
     display: flex !important;
     justify-content: center !important;
+    }
 
 /* İçerideki metinlerin marjinlerini sıfırla ki flex gap kontrol etsin */
 .ad-info-box div, .ad-info-box p {
@@ -1419,26 +1430,26 @@ button[onclick*="prepareDeleteHizmet"] {
 .home-widget-modern {
     display: flex;
     align-items: center;
+    gap: 15px;
+    padding: 16px 20px !important;
+    border-radius: 22px !important;
     background: linear-gradient(145deg, #ffffff 0%, #f9fbff 100%) !important;
-    padding: 14px 16px;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 51, 102, 0.05) !important;
+    border: 1px solid rgba(0, 51, 102, 0.06) !important;
+    box-shadow: 0 8px 20px rgba(0, 51, 102, 0.04) !important;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    position: relative;
-    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .home-widget-modern:hover {
-    transform: translateY(-6px) !important;
-    box-shadow: 0 12px 24px rgba(0, 51, 102, 0.12) !important;
-    border-color: rgba(0, 210, 255, 0.4) !important;
+    transform: translateY(-6px) scale(1.02) !important;
+    box-shadow: 0 15px 35px rgba(0, 51, 102, 0.12) !important;
+    border-color: var(--app-blue) !important;
 }
 
 .home-widget-modern:active {
     transform: scale(0.96) !important;
 }
+/* >> KALACAK  <<<<<<<<<<<<<<<< */
 
 .widget-head {
     display: flex;
@@ -1672,12 +1683,6 @@ button[onclick*="prepareDeleteHizmet"] {
     color: #64748b !important;
 }
 
-/* Dashboard Kartlarını "Clean Design" Yap */
-.home-widget-modern {
-    border: 1px solid #e2e8f0 !important;
-    box-shadow: var(--soft-shadow) !important;
-    border-radius: 12px !important;
-}
 
 /* >> ELITE CORPORATE UI REVISION << */
 /* 1. Footer Navigasyon: Daha Belirgin ve Pro */
@@ -1716,21 +1721,22 @@ button[onclick*="prepareDeleteHizmet"] {
 
 /* >> MERKEZİ ÜST BAŞLIK (HEADER) YÖNETİM SİSTEMİ << */
 .modern-header {
-    /* 1. TEK MERKEZDEN RENK KONTROLÜ */
-    background: linear-gradient(135deg, #003366 0%, #0056b3 100%) !important; /* Koyu Lacivert Geçişli */
-    
-    /* 2. BOYUT VE ŞEKİL MÜHÜRÜ */
+    background: linear-gradient(135deg, #003366 0%, #0056b3 100%) !important;
+
     height: 120px !important;
-    border-radius: 0 0 40px 40px !important; /* Oval Alt Köşeler */
+    border-radius: 0 0 40px 40px !important;
+
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     text-align: center !important;
-    
-    /* 3. KONUMLANDIRMA */
-    margin: -20px -15px 25px -15px !important;
+
+    /* NEGATİF MARGIN KALDIRILDI */
+    margin: 0 0 25px 0 !important;
+
     box-shadow: 0 10px 30px rgba(0, 51, 102, 0.2) !important;
 }
+
 
 /* Header içindeki metinlerin beyaz ve pro görünmesi için */
 .header-title {
@@ -1777,16 +1783,6 @@ body::before {
     pointer-events: none; /* Tıklamaları engellememesi için */
 }
 
-/* >> BELEDİYE STANDARTI KURUMSAL RESTORASYON << */
-
-/* 2. Dinamik "Quick Links" (Hızlı İşlemler) İkon Seti */
-.home-widget-modern {
-    background: #ffffff !important;
-    border: none !important;
-    border-radius: 20px !important;
-    box-shadow: 0 8px 25px rgba(0, 51, 102, 0.08) !important;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-}
 
 .home-widget-modern:hover {
     transform: translateY(-8px) !important; /* Belediye sitesindeki gibi yukarı sıçrama efekti */
@@ -1886,17 +1882,7 @@ body::before {
 /* Mobil cihazlarda sayfa sonu boşluğunu standartlaştır */ .page { padding-bottom: 10px !important; }
 
 /* >> DYNAMIC CORPORATE BUTTONS (AZURE STYLE) << */
-.home-widget-modern {
-    border: 1px solid rgba(0, 51, 102, 0.06) !important;
-    background: linear-gradient(145deg, #ffffff 0%, #f9fbff 100%) !important;
-    border-radius: 22px !important;
-    padding: 16px 20px !important;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    box-shadow: 0 8px 20px rgba(0, 51, 102, 0.04) !important;
-}
+
 
 /* Üzerine gelince "canlanan" butonlar */
 .home-widget-modern:hover {
@@ -2080,3 +2066,12 @@ body::before {
   z-index: 2147483646;
   pointer-events: auto;
 }
+
+.section-live-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #334155;
+  margin: 12px 4px 10px;
+  letter-spacing: 0.3px;
+}
+

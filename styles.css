@@ -474,14 +474,6 @@ body.modal-open {
 .filter-btn.active { background: var(--app-blue); color: white; border-color: var(--app-blue); }
 
 /* GRID VE WIDGETS */
-#ads-list { 
-    display: grid !important; 
-    grid-template-columns: 1fr 1fr !important; 
-    column-gap: 16px !important; 
-    row-gap: 35px !important; /* ALT ALTA KESİN BOŞLUĞU BURADA MÜHÜRLER */
-    padding: 20px 15px !important; 
-    background: #f0f4f8 !important; /* Arka plan rengiyle kartları ayırır */
-}
 .ad-card.cyber-card { 
     background: #ffffff !important; 
     border-radius: 16px !important; 
@@ -1380,12 +1372,6 @@ button[onclick*="prepareDeleteHizmet"] {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.home-widget-modern:hover {
-    transform: translateY(-6px) scale(1.02) !important;
-    box-shadow: 0 15px 35px rgba(0, 51, 102, 0.12) !important;
-    border-color: var(--app-blue) !important;
-}
-
 .home-widget-modern:active {
     transform: scale(0.96) !important;
 }
@@ -1724,11 +1710,6 @@ body::before {
 }
 
 
-.home-widget-modern:hover {
-    transform: translateY(-8px) !important; /* Belediye sitesindeki gibi yukarı sıçrama efekti */
-    box-shadow: 0 15px 35px rgba(0, 51, 102, 0.15) !important;
-}
-
 /* 3. Belediye Sitesindeki "Gölge ve Derinlik" Mührü */
 .cyber-card, .menu-card-modern {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
@@ -1753,12 +1734,6 @@ body::before {
 }
 
 /* 2. İlan listesinin üstündeki marjini ve arka plan sızıntısını temizliyoruz */
-#ads-list {
-    margin-top: 15px !important; /* Kartları filtrelerin hemen altına çeker */
-    padding-top: 0 !important;
-    background: transparent !important; /* Boşluğu belli eden farklı renk tonunu siler */
-}
-
 /* 3. Filtre butonlarının altındaki gereksiz boşluğu alıyoruz */
 .category-filter-container {
     margin-bottom: 5px !important;

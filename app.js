@@ -2969,4 +2969,3 @@ function setupDistrictFilter() {
 
   });
 }
-

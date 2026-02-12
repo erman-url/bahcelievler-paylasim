@@ -2907,21 +2907,33 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-window.showPage = function(pageId) {
-    document.querySelectorAll(".page").forEach(p => {
-        p.classList.remove("active");
+// MAHALLE FİLTRE GERÇEK FONKSİYON
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  const districtFilter = document.getElementById("district-filter");
+
+  if (!districtFilter) return;
+
+  districtFilter.addEventListener("change", function () {
+
+    const selectedDistrict = this.value;
+    const adCards = document.querySelectorAll(".ad-card");
+
+    adCards.forEach(card => {
+
+      const adDistrict = card.getAttribute("data-district");
+
+      if (selectedDistrict === "all") {
+        card.style.display = "block";
+      } else if (adDistrict === selectedDistrict) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+
     });
 
-    const target = document.getElementById(pageId);
-    if (target) {
-        target.classList.add("active");
-    }
+  });
 
-    // Footer active state güncelle
-    document.querySelectorAll(".nav-item-modern").forEach(item => {
-        item.classList.remove("active");
-        if (item.dataset.target === pageId) {
-            item.classList.add("active");
-        }
-    });
-};
+});

@@ -212,37 +212,86 @@
   </p>
 </section>
 
-
-
 </section>
 <section id="ilanlar" class="page">
+
     <div class="modern-header">
         <div class="header-inner">
             <div class="header-title">İLAN PANOSU</div>
             <div class="header-sub">Semt İçi Güvenli Alışveriş</div>
         </div>
     </div>
-<div class="container-modern" style="padding-bottom: 5px !important;">
-    <div class="menu-card-modern" onclick="window.openAddAdModal()" style="background: var(--app-blue) !important; color: white !important;">
-        <div class="menu-icon-modern" style="background: rgba(255,255,255,0.2);"><svg viewBox="0 0 24 24" style="stroke: white;"><path d="M12 5v14M5 12h14"/></svg></div>
-        <div class="menu-text-modern" style="color: white;">YENİ İLAN EKLE</div>
+
+    <div class="container-modern" style="padding-bottom: 5px !important;">
+
+        <!-- YENİ İLAN EKLE BUTONU -->
+        <div class="menu-card-modern"
+             onclick="window.openAddAdModal()"
+             style="background: var(--app-blue) !important; color: white !important;">
+            <div class="menu-icon-modern"
+                 style="background: rgba(255,255,255,0.2);">
+                <svg viewBox="0 0 24 24" style="stroke: white;">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+            </div>
+            <div class="menu-text-modern" style="color: white;">
+                YENİ İLAN EKLE
+            </div>
+        </div>
+
+        <!-- MAHALLE FİLTRESİ -->
+        <select id="district-filter"
+                class="cyber-form"
+                style="margin-top:15px; border-radius:15px;">
+            <option value="all">📍 Tüm Mahalleler</option>
+            <option value="Zafer Mah.">Zafer Mahallesi</option>
+            <option value="Kocasinan Merkez Mah.">Kocasinan Mahallesi</option>
+            <option value="Soğanlı Mah.">Soğanlı Mahallesi</option>
+            <option value="Siyavuşpaşa Mah.">Siyavuşpaşa Mahallesi</option>
+            <option value="Bahçelievler Mah.">Bahçelievler Mahallesi</option>
+            <option value="Şirinevler Mah.">Şirinevler Mahallesi</option>
+            <option value="Hürriyet Mah.">Hürriyet Mahallesi</option>
+            <option value="Cumhuriyet Mah.">Cumhuriyet Mahallesi</option>
+            <option value="Yenibosna Merkez Mah.">Yenibosna Merkez Mahallesi</option>
+            <option value="Çobançeşme Mah.">Çobançeşme Mahallesi</option>
+            <option value="Fevzi Çakmak Mah.">Fevzi Çakmak Mahallesi</option>
+        </select>
+
     </div>
-    
-    <input type="text" id="ad-search-input" class="cyber-form" placeholder="🔍 İlanlarda ara..." style="border-radius: 15px;">
-    
-    <div class="category-filter-container" style="width: 100%; overflow-x: auto; white-space: nowrap; padding-bottom: 10px;">
+
+    <!-- ARAMA -->
+    <input type="text"
+           id="ad-search-input"
+           class="cyber-form"
+           placeholder="🔍 İlanlarda ara..."
+           style="border-radius: 15px;">
+
+    <!-- KATEGORİLER -->
+    <div class="category-filter-container"
+         style="width:100%; overflow-x:auto; white-space:nowrap; padding-bottom:10px;">
         <button class="filter-btn active" onclick="filterAds('all', this)">TÜMÜ</button>
-        <button class="filter-btn" onclick="window.filterAds('latest', this)">EN YENİ</button>
+        <button class="filter-btn" onclick="filterAds('latest', this)">EN YENİ</button>
         <button class="filter-btn" onclick="filterAds('Ürün-Eşya', this)">EŞYA</button>
         <button class="filter-btn" onclick="filterAds('İş&İnsan', this)">İŞ</button>
         <button class="filter-btn" onclick="filterAds('Gayrimenkul', this)">EMLAK</button>
     </div>
-</div><div id="ads-list" style="min-height: 200px;">
+
+    <!-- İLAN LİSTESİ -->
+    <div id="ads-list" style="min-height:200px;">
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
     </div>
+
+    <!-- MAHALLE SEO BLOĞU -->
+    <div id="mahalle-seo-text"
+         class="seo-text"
+         style="display:none; margin:40px 0 120px 0;">
+    </div>
+
+</section>
+
 
     <div id="add-ad-modal" class="modal" style="display:none; align-items: flex-start; overflow-y: auto; padding-top: 20px;">
         <span class="close-detail" onclick="window.closeAddAdModal()" style="position: sticky; float: right; margin-right: 15px;">&times;</span>

@@ -1921,7 +1921,10 @@ window.renderAds = async function(ads) {
             const displayImg = item.image_url || getPlaceholderImage(null);
 
             return `
-            <div class="ad-card-modern" onclick="openAdDetail('${item.id}')">
+            <div class="ad-card ad-card-modern" 
+     data-district="${item.district || 'Bahçelievler'}"
+     onclick="openAdDetail('${item.id}')">
+
                 <div class="ad-img-wrapper">
                     <img src="${displayImg}" onerror="this.src='https://via.placeholder.com/300?text=Resim+Yok'">
                     <div class="floating-actions">

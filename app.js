@@ -2911,11 +2911,7 @@ document.addEventListener("keydown", (e) => {
         overlay?.classList.remove("active");
     }
 });
-
 // MAHALLE FİLTRE GERÇEK FONKSİYON
-
-document.addEventListener("DOMContentLoaded", function () {
-
 function setupDistrictFilter() {
 
   const districtFilter = document.getElementById("district-filter");

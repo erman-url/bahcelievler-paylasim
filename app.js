@@ -117,6 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchLiveInfo();
     setInterval(fetchLiveInfo, 15 * 60 * 1000);
     initSlider();
+    setupDistrictFilter();
+
 
     // Deep Linking: URL Hash Kontrolü
     const hash = window.location.hash;
@@ -2914,8 +2916,9 @@ document.addEventListener("keydown", (e) => {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  const districtFilter = document.getElementById("district-filter");
+function setupDistrictFilter() {
 
+  const districtFilter = document.getElementById("district-filter");
   if (!districtFilter) return;
 
   districtFilter.addEventListener("change", function () {
@@ -2924,7 +2927,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const adCards = document.querySelectorAll(".ad-card");
 
     adCards.forEach(card => {
-
       const adDistrict = card.getAttribute("data-district");
 
       if (selectedDistrict === "all") {
@@ -2934,9 +2936,37 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         card.style.display = "none";
       }
-
     });
 
-  });
+    // ===== SEO BLOĞU =====
+    const seoBlock = document.getElementById("mahalle-seo-text");
 
-});
+    const seoTexts = {
+      "Zafer Mah.": "<h2>Zafer Mahallesi İlanları</h2><p>Zafer Mahallesi satılık eşya ve kiralık daire ilanları burada yayınlanır.</p>",
+      "Kocasinan Merkez Mah.": "<h2>Kocasinan Mahallesi İlanları</h2><p>Kocasinan Merkez Mahallesi güncel ilanları Bahçelievler Forum’da.</p>",
+      "Soğanlı Mah.": "<h2>Soğanlı Mahallesi İlanları</h2><p>Soğanlı Mahallesi emlak ve ikinci el ilanları burada listelenir.</p>",
+      "Siyavuşpaşa Mah.": "<h2>Siyavuşpaşa Mahallesi İlanları</h2><p>Siyavuşpaşa Mahallesi kiralık ve satılık ilanlar bu sayfada yer alır.</p>",
+      "Bahçelievler Mah.": "<h2>Bahçelievler Mahallesi İlanları</h2><p>Bahçelievler Mahallesi güncel mahalle içi ilan platformu.</p>",
+      "Şirinevler Mah.": "<h2>Şirinevler Mahallesi İlanları</h2><p>Şirinevler Mahallesi alışveriş ve emlak ilanları burada.</p>",
+      "Hürriyet Mah.": "<h2>Hürriyet Mahallesi İlanları</h2><p>Hürriyet Mahallesi ikinci el ve kiralık ilanlar.</p>",
+      "Cumhuriyet Mah.": "<h2>Cumhuriyet Mahallesi İlanları</h2><p>Cumhuriyet Mahallesi güncel duyuru ve ilanlar.</p>",
+      "Yenibosna Merkez Mah.": "<h2>Yenibosna Merkez Mahallesi İlanları</h2><p>Yenibosna Merkez Mahallesi emlak ve hizmet ilanları.</p>",
+      "Çobançeşme Mah.": "<h2>Çobançeşme Mahallesi İlanları</h2><p>Çobançeşme Mahallesi satılık ve kiralık ilanlar.</p>",
+      "Fevzi Çakmak Mah.": "<h2>Fevzi Çakmak Mahallesi İlanları</h2><p>Fevzi Çakmak Mahallesi güncel mahalle ilanları.</p>"
+    };
+
+    if (seoBlock) {
+      if (selectedDistrict !== "all") {
+        seoBlock.style.display = "block";
+        seoBlock.innerHTML =
+          seoTexts[selectedDistrict] ||
+          "<h2>Mahalle İlanları</h2><p>Seçilen mahalleye ait ilanlar listelenmektedir.</p>";
+      } else {
+        seoBlock.style.display = "none";
+        seoBlock.innerHTML = "";
+      }
+    }
+
+  });
+}
+

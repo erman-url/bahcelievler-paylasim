@@ -27,8 +27,9 @@
 }
 
 html, body {
-    max-width: 100%;
-    overflow-x: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
 }
 
 
@@ -56,6 +57,7 @@ body {
     min-height: auto !important; /* 100vh sızıntısı bitti */
     position: relative !important;
     padding: 20px 15px 95px 15px !important;
+    margin-left: 0 !important;
     box-sizing: border-box !important;
     overflow-x: hidden !important; /* Yatay kaymayı kesin olarak bitirir */
 }
@@ -428,7 +430,7 @@ body.modal-open {
 #ad-search-input:focus { border-color: var(--app-blue) !important; box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1); }
 .category-filter-container { display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; padding: 10px 0; margin-bottom: 15px; }
 .filter-btn { background: #fff; border: 1px solid rgba(0, 86, 179, 0.15); padding: 10px 18px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; transition: 0.3s; }
-.filter-btn.active { background: var(--app-blue); color: white; border-color: var(--app-blue); }
+
 
 /* GRID VE WIDGETS */
 .ad-card.cyber-card { 
@@ -1610,12 +1612,6 @@ body::before {
 }
 
 
-/* Başlık ve Metin Uyumu */
-.widget-body {
-    font-weight: 700 !important;
-    color: #012a5e !important;
-    font-size: 0.95rem !important;
-}
 
 /* GARDROPS STYLE VITRIN */
 #ads-list {
@@ -1850,9 +1846,6 @@ body::before {
     transform: translateY(1px);
 }
 
-.side-menu.active {
-    left: 0;
-}
 
 .side-menu a {
     text-decoration: none;
@@ -1868,37 +1861,36 @@ body::before {
     border-left-color: var(--primary-corp);
 }
 
-.menu-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 99998;
-    display: none;
-}
-
 .menu-overlay.active {
     display: block;
 }
 /* ===== SIDE MENU ===== */
 
+
 .side-menu {
     position: fixed;
     top: 0;
-    left: -280px;
+    left: 0;
     width: 260px;
     height: 100%;
     background: #ffffff;
     box-shadow: 5px 0 25px rgba(0,0,0,0.15);
     z-index: 20000;
-    transition: left 0.3s ease;
     padding: 20px;
     display: flex;
     flex-direction: column;
+
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
 }
 
 .side-menu.active {
-    left: 0;
+    transform: translateX(0);
 }
+
+
+
+
 
 .side-menu-header {
     display: flex;
@@ -1934,4 +1926,16 @@ body::before {
 
 .menu-overlay.active {
     display: block;
+}
+
+.seo-text {
+    font-size: 0.75rem;
+    color: #6b7280;
+    padding: 20px 16px 120px;
+    line-height: 1.6;
+}
+.seo-text h2 {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #334155;
 }

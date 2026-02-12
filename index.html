@@ -45,6 +45,37 @@
         const SUPABASE_ANON_KEY = "sb_publishable_h1cDYcEWng5RFsqZ1_t86Q_ieBCvNV2";
         window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://bahcelievlerforum.com.tr/#organization",
+      "name": "Bahçelievler Forum",
+      "url": "https://bahcelievlerforum.com.tr/",
+      "logo": "https://bahcelievlerforum.com.tr/og-image.png",
+      "description": "Bahçelievler ilçesine özel ilan, duyuru ve yerel paylaşım platformu.",
+      "areaServed": {
+        "@type": "AdministrativeArea",
+        "name": "Bahçelievler, İstanbul"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://bahcelievlerforum.com.tr/#website",
+      "url": "https://bahcelievlerforum.com.tr/",
+      "name": "Bahçelievler Forum",
+      "publisher": {
+        "@id": "https://bahcelievlerforum.com.tr/#organization"
+      },
+      "inLanguage": "tr-TR"
+    }
+  ]
+}
+</script>
+
+    
 </head>
 <body>
 
@@ -57,11 +88,11 @@
     </div>
 
     <div class="side-menu-links">
-        <a onclick="showPage('home'); toggleMenu();">Ana</a>
-        <a onclick="showPage('sosyal'); toggleMenu();">Sosyal</a>
-        <a onclick="showPage('ilanlar'); toggleMenu();">İlanlar</a>
-        <a onclick="showPage('hizmetler'); toggleMenu();">Hizmetler</a>
-        <a onclick="showPage('iletisim'); toggleMenu();">İletişim</a>
+ <a href="#" data-target="home" onclick="toggleMenu()">Ana</a>
+<a href="#" data-target="sosyal" onclick="toggleMenu()">Sosyal</a>
+<a href="#" data-target="ilanlar" onclick="toggleMenu()">İlanlar</a>
+<a href="#" data-target="hizmetler" onclick="toggleMenu()">Hizmetler</a>
+<a href="#" data-target="iletisim" onclick="toggleMenu()">İletişim</a>
     </div>
 </div>
 
@@ -158,13 +189,29 @@
 
 <!-- SEO METNİ (Google için statik içerik) -->
 <section class="seo-text">
-  <h2>Bahçelievler’de Yerel İlan ve Paylaşım Platformu</h2>
+  <h2>Bahçelievler İçin Yerel İlan ve Mahalle Platformu</h2>
   <p>
-    Bahçelievler Forum, İstanbul Bahçelievler ilçesine özel ilan, fırsat,
-    duyuru ve mahalle paylaşımlarını tek çatı altında toplayan bağımsız
-    bir yerel platformdur.
+    Bahçelievler Forum, İstanbul Bahçelievler ilçesine özel olarak geliştirilen
+    bağımsız bir dijital mahalle platformudur. İlçedeki ilanlar, yerel
+    duyurular, fırsatlar, fiyat karşılaştırmaları ve komşu paylaşımları tek
+    çatı altında toplanır.
+  </p>
+
+  <p>
+    Şirinevler, Soğanlı, Yenibosna, Cumhuriyet, Hürriyet ve diğer
+    Bahçelievler mahallelerinde yaşayanlar; ikinci el eşya alım-satımı,
+    hizmet arayışı, esnaf tavsiyesi ve semt içi gelişmeleri burada
+    paylaşabilir.
+  </p>
+
+  <p>
+    Platform, kullanıcı odaklıdır ve şeffaf veri yaklaşımı benimser.
+    Yerel ekonomiyi destekleyen ücretsiz ilan sistemi ve mahalle içi
+    fiyat radarı sayesinde komşular arasında güvenli bir dijital
+    iletişim ağı oluşturmayı hedefler.
   </p>
 </section>
+
 
 
 </section>
@@ -858,10 +905,7 @@
         </div>
     </div>
 </div>
-
-    <script src="piyasa.js" defer></script>
-    <script src="app.js" defer></script>
-
+   
 
 <!-- Minimal Cookie Bildirimi -->
 <div id="cookie-mini">
@@ -874,5 +918,8 @@
         Tamam
     </button>
 </div>
+
+<script src="piyasa.js" defer></script>
+<script src="app.js" defer></script>
 </body>
 </html>

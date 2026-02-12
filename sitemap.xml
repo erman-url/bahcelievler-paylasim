@@ -1,10 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- Ana Sayfa -->
   <url>
     <loc>https://bahcelievlerforum.com.tr/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+
+  <!-- Bölüm Bazlı Görünümler -->
+  <url>
+    <loc>https://bahcelievlerforum.com.tr/?view=ilanlar</loc>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://bahcelievlerforum.com.tr/?view=hizmetler</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://bahcelievlerforum.com.tr/?view=duyurular</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://bahcelievlerforum.com.tr/?view=fiyat-dedektifi</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://bahcelievlerforum.com.tr/?view=firsat-indirim</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://bahcelievlerforum.com.tr/?view=sosyal</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://bahcelievlerforum.com.tr/?view=iletisim</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 
 </urlset>

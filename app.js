@@ -2881,16 +2881,17 @@ window.uDelete = async (id, table, isSoft = false) => {
 
 /* === Minimal Cookie Bildirimi (Stabil) === */
 
+document.addEventListener("DOMContentLoaded", function () {
+    if (!localStorage.getItem("cookieAccepted")) {
+        document.getElementById("cookie-bar").style.display = "block";
+    }
+});
+
 function acceptCookies() {
-  localStorage.setItem("cookiesAccepted", "1");
-  document.getElementById("cookie-mini").style.display = "none";
+    localStorage.setItem("cookieAccepted", "true");
+    document.getElementById("cookie-bar").style.display = "none";
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (!localStorage.getItem("cookiesAccepted")) {
-    document.getElementById("cookie-mini").style.display = "block";
-  }
-});
 
 function toggleMenu() {
     const menu = document.getElementById("side-menu");

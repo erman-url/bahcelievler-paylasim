@@ -1006,12 +1006,31 @@
 </div>
    
 
-<!-- Minimal Cookie Bildirimi -->
-<div id="cookie-mini">
-  🛡️ Yalnızca zorunlu çerezler kullanıyoruz.
-  <a href="javascript:void(0)" onclick="openLegalModal('kvkk')">KVKK</a>
-  <button onclick="acceptCookies()">Onayla</button>
+<div id="cookie-bar" class="cookie-bar">
+    <div class="cookie-inner">
+        <div class="cookie-icon">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+
+        <div class="cookie-text">
+            <strong>Gizlilik Önceliğimizdir.</strong>
+            <span>
+                Bu platform yalnızca zorunlu çerezleri kullanır. 
+                Kişisel verileriniz KVKK kapsamında korunur.
+            </span>
+        </div>
+
+        <div class="cookie-actions">
+            <button onclick="openLegalModal('kvkk')" class="cookie-link">
+                Detaylar
+            </button>
+            <button onclick="acceptCookies()" class="cookie-accept">
+                Anladım
+            </button>
+        </div>
+    </div>
 </div>
+
 
 
 

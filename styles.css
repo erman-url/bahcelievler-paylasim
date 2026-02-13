@@ -2083,3 +2083,45 @@ body::before {
     font-weight: 700;
     cursor: pointer;
 }
+
+/* === MAHALLE FİLTRE PREMIUM STİL === */
+
+#district-filter {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 18px !important;
+  background: #ffffff;
+  border: 1px solid rgba(0, 86, 179, 0.12);
+  box-shadow: 0 8px 20px rgba(0, 86, 179, 0.08);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1e293b;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Hover efekti */
+#district-filter:hover {
+  border: 1px solid var(--app-blue);
+  box-shadow: 0 8px 25px rgba(0, 86, 179, 0.12);
+}
+
+/* Focus efekti (mobil için önemli) */
+#district-filter:focus {
+  border: 1px solid var(--app-blue);
+  box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.12);
+}
+
+/* Sağ ok ikonunu custom yap */
+#district-filter {
+  background-image: 
+    linear-gradient(45deg, transparent 50%, var(--app-blue) 50%),
+    linear-gradient(135deg, var(--app-blue) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) calc(50% - 3px),
+    calc(100% - 15px) calc(50% - 3px);
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}

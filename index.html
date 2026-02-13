@@ -97,15 +97,14 @@
 </div>
 
 <section id="home" class="page active">
-<div class="top-forum-bar">
+<div class="top-forum-bar">          
+
 
 <h1 class="top-forum-title">Bahçelievler Forum</h1>
 </div>
 
 <div class="slider-container cyber-border">
-     <img src="img/slider1.jpg" alt="..." width="0" height="0" loading="lazy" style="position:absolute; opacity:0;">
-
-
+    <!-- <img src="img/slider1.jpg" alt="..." width="0" height="0" loading="lazy" style="position:absolute; opacity:0;">-->
     <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.15)), url('img/slider1.jpg');"></div>
     <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.15)), url('img/slider2.jpg');"></div>
     <div class="slider-item fade" style="background-image: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.15)), url('img/slider3.jpg');"></div>
@@ -371,7 +370,7 @@
             <div class="menu-icon-modern">
                 <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L19.81 7.94l-3.75-3.75L3 17.25z"/></svg>
             </div>
-            <div class="menu-text-modern">Sorun Bildir</div>
+            <div class="menu-text-modern">Şikayetim Var</div>
         </div>
 
         <div class="menu-card-modern" data-target="kesinti-bildir">
@@ -477,7 +476,7 @@
                     <option value="4">⭐⭐⭐⭐ (İyi)</option>
                     <option value="3">⭐⭐⭐ (Başarılı)</option>
                 </select>
-                <textarea id="rec-content" maxlength="500" placeholder="Yorumunuz... (Max 500 karakter. Sadece harf, rakam ve noktalama)" required></textarea>
+                <textarea id="rec-content" maxlength="500" placeholder="Yorumunuz. (Max 500 karakter.)" required></textarea>
                 <label style="font-size: 0.75rem; color: #d32f2f; font-weight: bold; margin-top: 10px; display: block;"><i class="fas fa-camera"></i> GÖRSEL EKLEMEK ZORUNLUDUR! (Max 2 Adet, Max 5MB)</label>
                 <input type="file" id="rec-file" accept="image/*" multiple required>
                 <input type="password" id="rec-pass" placeholder="Şifre (1 Harf + 4 Rakam)" maxlength="5" required>
@@ -488,15 +487,16 @@
         </section>
 
         <section id="sikayet-et" class="page">
-            <h1 class="cyber-header">🚩 SORUN BİLDİR</h1>
+            <h1 class="cyber-header">🚩 ŞİKAYETİM VAR</h1>
     
     <div class="cyber-card" style="margin: -10px 10px 20px 10px; border-left: 5px solid #ff4d4d; background: #fff5f5; padding: 15px; text-align: center;">
         <h3 style="margin: 0; color: #c62828; font-size: 1rem;">
             <i class="fas fa-bullhorn fa-beat" style="margin-right: 8px;"></i> 
-            Bahçelievler’de Bir Sorun mu Var?
+            Şikayetinizi Paylaşın
         </h3>
         <p style="font-size: 0.85rem; color: #666; margin-top: 5px; line-height: 1.4;">
-            Mahallendeki aksaklıkları (çöp, yol, park vb.) bildir, komşularınla paylaş ve birlikte çözüm üretilmesini sağla.
+            Bahçelievler genelinde yaşanan olumsuzlukları bildirerek 
+                                            toplumsal çözüm sürecine katkı sağlayabilirsiniz.
         </p>
     </div>
 
@@ -542,7 +542,7 @@
         <section id="firsat-indirim" class="page">
             <div class="firsat-wrapper">
             <h1 class="cyber-header">🔥 FIRSAT & İNDİRİM EKLE</h1>
-            <p class="form-description">İnternette ya da çevrende gördüğün fırsatları & indirimleri paylaş, herkes faydalansın.</p>
+            <p class="form-description">İnternet ve yerel mağazalarda karşılaştığınız fırsat ve indirimleri paylaşarak topluluğa katkı sağlayın.</p>
             <form id="firsat-form" class="cyber-form">
                 <select id="firsat-type" required onchange="toggleFirsatFields()">
                     <option value="online">Online Ürün & Kampanya</option>
@@ -572,13 +572,14 @@
         <section id="fiyat-dedektifi" class="page">
             <h1 class="cyber-header">🔍 FİYAT DEDEKTİFİ</h1>
             <div class="cyber-card" style="margin-bottom:20px;">
-                <p style="padding: 0 10px 10px; text-align: center;"><i class="fas fa-camera"></i> Etiket fotoğrafı çekerek fiyat bildirin, mahalle radarını güçlendirin.</p>
+                <p style="padding: 0 10px 10px; text-align: center;"><i class="fas fa-camera"></i>Güncel etiket fiyatlarını paylaşarak
+                      Bahçelievler fiyat endeksine katkıda bulunun.</p>
                 <button onclick="document.getElementById('piyasa-form-container').scrollIntoView({behavior: 'smooth'})" class="cyber-submit" style="background:var(--app-blue)!important;">YENİ FİYAT BİLDİR</button>
             </div>
             
             <div class="cyber-card" style="margin-bottom: 20px; border-left: 5px solid var(--cyber-pink); background: #ffffff; padding: 15px;">
                 <h3 style="font-size: 0.85rem; margin-bottom: 15px; color: var(--app-blue);">
-                    <i class="fas fa-chart-line fa-beat"></i> SEMT FİYAT TRENDİ
+                    <i class="fas fa-chart-line fa-beat"></i> SEMT FİYAT ENDEKSİ
                 </h3>
                 <div style="height: 180px; width: 100%;">
                     <canvas id="enflasyonChart"></canvas>
@@ -708,12 +709,12 @@
         <section id="teklif-al-form" class="page">
             <h1 class="cyber-header">📄 ÜCRETSİZ TEKLİF AL</h1>
             <div class="cyber-card" style="margin: 10px; border-left: 5px solid #007bff; background: #f0f8ff;">
-                <h3 style="margin-top: 0; color: #007bff;"><i class="fas fa-handshake"></i> İhtiyacına En Uygun Teklifi Al!</h3>
-                <p style="font-size: 0.9rem; line-height: 1.5; color: #444;">Bahçelievler Forum aracılığıyla en uygun teklifleri size iletelim.</p>
+                <h3 style="margin-top: 0; color: #007bff;"><i class="fas fa-handshake"></i>Talebinize Uygun Teklifleri Güvenle Alın</h3>
+                <p style="font-size: 0.9rem; line-height: 1.5; color: #444;">Bahçelievler Forum üzerinden ilettiğiniz talep, ilgili hizmet sağlayıcılara aktarılır. Size en uygun teklifler doğrudan tarafınıza iletilir.</p>
             </div>
             <form id="quote-request-form" class="cyber-form">
                 <select id="quote-category" required>
-                    <option value="" disabled selected>Seçiniz...</option>
+                    <option value="" disabled selected>Hizmet Türünü Seçiniz (Zorunlu)</option>
                     <option value="Ürün & Eşya Onarımı">Ürün & Eşya Onarımı</option>
                     <option value="Ev & İşyeri Temizliği">Ev & İşyeri Temizliği</option>
                     <option value="Hasta Bakıcı & Bakım">Hasta Bakıcı & Bakım</option>
@@ -723,14 +724,14 @@
                     <option value="Özel Ders / Eğitim">Özel Ders & Eğitim</option>
                     <option value="Diğer">Diğer & Hizmet </option>
                 </select>
-                <label style="font-weight: bold; font-size: 0.85rem; margin-top: 10px; display: block; color: #d32f2f;"><i class="fas fa-camera"></i> Arıza/İş Görseli (ZORUNLU)</label>
+                <label style="font-weight: bold; font-size: 0.85rem; margin-top: 10px; display: block; color: #d32f2f;"><i class="fas fa-camera"></i> Talebin değerlendirilmesi için en az bir görsel yüklenmesi gereklidir.</label>
                 <input type="file" id="quote-file" accept="image/png, image/jpeg" required>
                 <textarea id="quote-text" maxlength="500" placeholder="İşin detaylarını yazınız..." rows="5" required></textarea>
                 <input type="email" id="quote-email" placeholder="E-posta Adresiniz (ZORUNLU: isim@mail.com)" required>
                 <div style="display:none !important; visibility:hidden !important;">
                     <input type="text" name="hp_teklif" id="hp_teklif" tabindex="-1" autocomplete="off">
                 </div>
-                <input type="password" class="u-pass" placeholder="4 Haneli Silme Şifresi" maxlength="4" style="width:100%; margin:10px 0; text-align:center; border:2px solid #E3F2FD; border-radius:10px;">
+                
 <button type="submit" id="quote-submit-btn" class="cyber-submit" style="background: #007bff !important;">TEKLİF TALEBİ GÖNDER</button>
             </form>
         </section>
@@ -788,16 +789,17 @@
             </label>
         </div>
 
-        <input type="password" class="u-pass" placeholder="4 Haneli Silme Şifresi" maxlength="4" style="width:100%; margin:10px 0; text-align:center; border:2px solid #E3F2FD; border-radius:10px;">
-<button type="submit" id="est-submit-btn" class="cyber-submit" style="background: var(--app-blue) !important;">TALEBİ HAVUZA GÖNDER</button>
+<button type="submit" id="est-submit-btn" class="cyber-submit" style="background: var(--app-blue) !important;">TALEBİ GÖNDER</button>
     </form>
 </section>
   
         <section id="hizmet-ver" class="page">
-            <h1 class="cyber-header">💼 ESNAF HİZMET TANITIMI</h1>
+            <h1 class="cyber-header">💼HİZMET TANITIM FORMU</h1>
             <div class="cyber-card" style="margin: 10px; border-left: 5px solid #28a745; background: #f4fff4;">
-                <h3 style="margin-top: 0; color: #2e7d32;"><i class="fas fa-store"></i> İşinizi Komşularınızla Büyütün!</h3>
-                <p style="font-size: 0.85rem; line-height: 1.5; color: #444;">Hizmetlerinizi ücretsiz tanıtın, mahalle sakinlerinin size ulaşmasını sağlayın.</p>
+                <h3 style="margin-top: 0; color: #2e7d32;"><i class="fas fa-store"></i> Hizmetlerinizi Yerel Toplulukla Buluşturun</h3>
+                <p style="font-size: 0.85rem; line-height: 1.5; color: #444;">Bahçelievler genelinde sunduğunuz hizmetleri dijital ortamda tanıtarak 
+                        potansiyel müşterilere güvenli ve doğrudan ulaşın. 
+                        Tanıtım kaydınız, platform denetimi sonrası yayınlanır.</p>
             </div>
            <form id="hizmet-form" class="cyber-form">
     <select id="hizmet-category" required>
@@ -846,7 +848,7 @@
         </section>
 
         <section id="duyurular" class="page">
-            <div class="cyber-header-wrapper"><h1 class="cyber-header"><i class="fas fa-bullhorn"></i> MAHALLE DUYURULARI</h1></div>
+            <div class="cyber-header-wrapper"><h1 class="cyber-header"><i class="fas fa-bullhorn"></i> SEMT DUYURULARI</h1></div>
             <div id="duyuru-list"><p style="text-align:center; padding:20px; color:#888;">Duyurular yükleniyor...</p></div>
         </section>
     

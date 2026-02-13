@@ -1697,8 +1697,7 @@ disclaimer: `
         <p style="font-size:0.7rem; color:#888; border-top:1px solid #eee; padding-top:10px; margin-top:10px;"><i>Bu aydınlatma metni, platformun kullanımı ile eş zamanlı olarak yürürlüğe girmiş kabul edilir.</i></p>
 
         <p><b>Veri Saklama Süresi:</b> Platform üzerinde paylaşılan içerikler, kullanıcı tarafından silinene kadar veya en fazla <b>12 ay</b> süreyle sistemde tutulur. Uzun süre pasif kalan içerikler sistem tarafından otomatik olarak yayından kaldırılabilir.</p>
-        <p><b>Veri Saklama Süresi:</b> Platform üzerinde paylaşılan içerikler, kullanıcı tarafından silinene kadar veya en fazla <b>12 ay</b> süreyle sistemde tutulur. Süresi dolan veya uzun süre pasif kalan içerikler otomatik olarak yayından kaldırılabilir.</p>
-
+        
         <p><b>İşlenen Veriler:</b> Paylaşımlar sırasında girilen metinler, görseller, isteğe bağlı iletişim bilgileri ve teknik erişim kayıtları işlenebilir.</p>
 
         <p><b>Veri İşleme Amacı:</b> Toplanan veriler; ilan yayınlama, fiyat bilgilendirme, mahalle duyuruları, kullanıcı taleplerinin değerlendirilmesi ve platform güvenliğinin sağlanması amacıyla kullanılır.</p>

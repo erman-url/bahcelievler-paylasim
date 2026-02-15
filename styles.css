@@ -479,7 +479,6 @@ body.modal-open {
     display: block !important;
 }
 #ad-search-input:focus { border-color: var(--app-blue) !important; box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1); }
-.category-filter-container { display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; padding: 10px 0; margin-bottom: 15px; }
 .filter-btn { background: #fff; border: 1px solid rgba(0, 86, 179, 0.15); padding: 10px 18px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; transition: 0.3s; }
 
 
@@ -542,43 +541,63 @@ body.modal-open {
 }
 
 .home-hero-pill {
-  width: min(520px, 92%);
-  background: linear-gradient(180deg, #ffffff 0%, #f4fbff 100%);
-  border: 2px solid rgba(0, 86, 179, 0.18);
-  border-radius: 22px;
-  padding: 18px 22px;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+  width: min(540px, 94%);
+  background: linear-gradient(135deg, #002b5c 0%, #004a99 50%, #007bff 100%);
+  border: none;
+  border-radius: 24px;
+  padding: 24px 24px;
   position: relative;
+  overflow: hidden;
+  z-index: 1;
+
+  box-shadow:
+      0 20px 45px rgba(0, 51, 102, 0.35),   /* Ana derinlik */
+      0 8px 20px rgba(0, 0, 0, 0.08),       /* Alt yumuşak gölge */
+      inset 0 1px 0 rgba(255,255,255,0.2);  /* İç parlama */
 }
 
+/* Işık efekti */
+.home-hero-pill::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -30%;
+  width: 160%;
+  height: 200%;
+  background: radial-gradient(
+      circle at top left,
+      rgba(255,255,255,0.18),
+      transparent 60%
+  );
+  transform: rotate(25deg);
+}
+
+/* İç çerçeve efekti */
 .home-hero-pill::after {
   content: "";
   position: absolute;
   inset: 6px;
   border-radius: 18px;
-  border: 1px solid rgba(0, 123, 255, 0.10);
+  border: 1px solid rgba(0, 123, 255, 0.12);
   pointer-events: none;
 }
 
+
 .home-hero-text {
-  display: block;
-  text-align: center;
+  color: #ffffff;
   font-weight: 900;
-  letter-spacing: 2px;
-  color: var(--app-blue);
-  font-size: clamp(18px, 4.2vw, 26px);
-  text-transform: uppercase;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.65), 0 3px 10px rgba(0,86,179,0.15);
+  font-size: clamp(20px, 5vw, 30px);
+  letter-spacing: 3px;
+  text-shadow:
+      0 2px 8px rgba(0,0,0,0.3),
+      0 0 18px rgba(0,123,255,0.4);
 }
 
 .home-hero-sub {
-  font-weight: 900;
-  color: var(--app-blue);
-  opacity: 0.9;
+  color: rgba(255,255,255,0.9);
+  font-size: 0.95rem;
   letter-spacing: 1px;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  text-align: center;
+  margin-top: 6px;
 }
 
 .home-hero-sub .dot {
@@ -1460,30 +1479,6 @@ button[onclick*="prepareDeleteHizmet"] {
     margin-top: 15px !important;
 }
 
-/* >> ANA SAYFA EN ÜST KURUMSAL FORUM BARI << */
-.top-forum-bar {
-    width: 100% !important;
-    background-color: #003366 !important; /* Kurumsal Koyu Mavi */
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Metni tam ortalar */
-    padding: 0 20px;
-    box-sizing: border-box;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    position: sticky;
-    top: 0;
-    z-index: 2000; /* Her şeyin en üstünde durması için */
-}
-
-.top-forum-title {
-    color: #ffffff !important; /* Beyaz Metin */
-    font-size: 1.2rem;
-    font-weight: 900;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
 
 /* >> MERKEZİ ÜST BAŞLIK (HEADER) YÖNETİM SİSTEMİ << */
 .modern-header {
@@ -1550,27 +1545,18 @@ body::before {
 }
 
 
-/* 3. Belediye Sitesindeki "Gölge ve Derinlik" Mührü */
-.cyber-card, .menu-card-modern {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
-    border: 1px solid rgba(0, 51, 102, 0.05) !important;
-}
-
-
 .category-filter-container {
-    margin-bottom: 5px !important;
-    padding-bottom: 5px !important;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+
+    padding: 10px 0;
+    margin-bottom: 10px; /* 5 çok az, 15 fazla — orta karar */
 }
 
-/* 4. Mobil Grid Yapısını Sıkılaştır (Boşlukları belediye sitesi gibi profesyonelleştir) */
-@media screen and (max-width: 768px) {
-    #ads-list {
-        grid-template-columns: 1fr 1fr !important; 
-        column-gap: 12px !important; 
-        row-gap: 15px !important; /* İlanlar arası dikey boşluk nizamlandı */
-        padding: 10px 12px 100px 12px !important; /* Alttan nav bar payı bırakıldı */
-    }
-}
+
 
 /* >> SKELETON LOADING ANIMATION << */
 .skeleton-card {
@@ -2124,4 +2110,132 @@ body::before {
     calc(100% - 15px) calc(50% - 3px);
   background-size: 6px 6px;
   background-repeat: no-repeat;
+}
+
+
+/* =========================================
+   SOSYAL SAYFASI – SEVİYE B PREMIUM
+========================================= */
+
+#sosyal .menu-card-modern {
+    background: linear-gradient(145deg, #ffffff 0%, #f4f8fd 100%) !important;
+    border: 1px solid rgba(0, 51, 102, 0.08) !important;
+    box-shadow: 
+        0 15px 30px rgba(0, 51, 102, 0.08),
+        inset 0 1px 0 rgba(255,255,255,0.6) !important;
+    transition: all .25s ease !important;
+}
+
+#sosyal .menu-card-modern:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 20px 35px rgba(0, 51, 102, 0.12),
+        inset 0 1px 0 rgba(255,255,255,0.8) !important;
+}
+
+/* ICON BOX BÜYÜTME */
+#sosyal .menu-icon-modern {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 18px !important;
+}
+
+/* GRADIENT RENKLER */
+
+#sosyal .menu-card-modern[data-target="duyurular"] .menu-icon-modern {
+    background: radial-gradient(circle at 30% 30%, #4da3ff, #0056b3) !important;
+}
+
+#sosyal .menu-card-modern[data-target="firsat-indirim"] .menu-icon-modern {
+    background: radial-gradient(circle at 30% 30%, #ffb347, #ff8c00) !important;
+}
+
+#sosyal .menu-card-modern[data-target="fiyat-dedektifi"] .menu-icon-modern {
+    background: radial-gradient(circle at 30% 30%, #b57edc, #6a0dad) !important;
+}
+
+#sosyal .menu-card-modern[data-target="tavsiye-et"] .menu-icon-modern {
+    background: radial-gradient(circle at 30% 30%, #5dd39e, #28a745) !important;
+}
+
+#sosyal .menu-card-modern[data-target="sikayet-et"] .menu-icon-modern {
+    background: radial-gradient(circle at 30% 30%, #ff7a7a, #ff4d4d) !important;
+}
+
+#sosyal .menu-card-modern[data-target="kesinti-bildir"] .menu-icon-modern {
+    background: radial-gradient(circle at 30% 30%, #ffe27a, #b8860b) !important;
+}
+
+/* SVG beyaz */
+#sosyal .menu-icon-modern svg {
+    stroke: #ffffff !important;
+    stroke-width: 2.4 !important;
+}
+
+/* =========================================
+   HİZMETLER SAYFASI – KURUMSAL PREMIUM
+========================================= */
+
+#hizmetler .menu-card-modern {
+    background: linear-gradient(145deg, #ffffff 0%, #f3f7fc 100%) !important;
+    border: 1px solid rgba(0, 86, 179, 0.10) !important;
+    box-shadow:
+        0 18px 35px rgba(0, 86, 179, 0.08),
+        inset 0 1px 0 rgba(255,255,255,0.7) !important;
+    transition: all .25s ease !important;
+}
+
+#hizmetler .menu-card-modern:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 25px 40px rgba(0, 86, 179, 0.14),
+        inset 0 1px 0 rgba(255,255,255,0.9) !important;
+}
+
+/* İkon Kutusu */
+#hizmetler .menu-icon-modern {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 18px !important;
+    background: radial-gradient(circle at 30% 30%, #3b82f6, #0056b3) !important;
+}
+
+/* SVG beyaz */
+#hizmetler .menu-icon-modern svg {
+    stroke: #ffffff !important;
+    stroke-width: 2.4 !important;
+}
+
+/* =========================================
+   İLETİŞİM SAYFASI – SOFT PREMIUM
+========================================= */
+
+#iletisim .contact-link-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f2fbf9 100%) !important;
+    border: 1px solid rgba(0, 150, 120, 0.12) !important;
+    box-shadow:
+        0 18px 35px rgba(0, 150, 120, 0.08),
+        inset 0 1px 0 rgba(255,255,255,0.7) !important;
+    transition: all .25s ease !important;
+}
+
+#iletisim .contact-link-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 25px 40px rgba(0, 150, 120, 0.14),
+        inset 0 1px 0 rgba(255,255,255,0.9) !important;
+}
+
+/* İKON KUTUSU */
+#iletisim .contact-link-card .menu-icon-modern {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 18px !important;
+    background: radial-gradient(circle at 30% 30%, #34d399, #009678) !important;
+}
+
+/* SVG beyaz */
+#iletisim .contact-link-card svg {
+    stroke: #ffffff !important;
+    stroke-width: 2.4 !important;
 }

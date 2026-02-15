@@ -118,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(fetchLiveInfo, 15 * 60 * 1000);
     initSlider();
     setupDistrictFilter();
+    renderTavsiyeler();
 
 
     // Deep Linking: URL Hash Kontrolü
@@ -299,7 +300,6 @@ function isBotDetected(formId) {
     const hpMap = {
         "new-ad-form": "hp_ilan",
         "recommend-form": "hp_tavsiye",
-        "complaint-form": "hp_sikayet",
         "quote-request-form": "hp_teklif",
         "piyasa-form": "hp_radar",
         "hizmet-form": "hp_hizmet",
@@ -605,16 +605,18 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
         const urls = await handleMultipleUploads(optimizedFiles);
         const deleteToken = await sha256(passVal);
 
-        const payload = {
-            title: titleVal,
-            comment: contentVal,
-            rating: ratingVal,
-            district: districtVal, // Yeni Mahalle Verisi
-            delete_password: deleteToken,
-            image_url: urls[0] || null,
-            image_url_2: urls[1] || null,
-            category: "Tavsiye"
-        };
+ const payload = {
+    title: titleVal,
+    comment: contentVal,
+    rating: ratingVal,
+    district: districtVal,
+    delete_password: deleteToken,
+    image_url: urls[0] || null,
+    image_url_2: urls[1] || null,
+    category: "Tavsiye",
+    is_active: true
+};
+
 
         const { error } = await window.supabase.from('tavsiyeler').insert([payload]);
         if (error) throw error;
@@ -1082,39 +1084,6 @@ async function renderTavsiyeler() {
     }
 }
 
-async function renderSikayetler() {
-    const el = document.getElementById('complaint-list');
-    if (!el) return;
-    try {
-        const { data, error } = await window.supabase.from('sikayetler')
-            .select('*')
-            .or('is_active.is.null,is_active.eq.true')
-            .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        
-        el.innerHTML = data?.map(i => `
-            <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff4d4d; cursor:pointer;" onclick="window.openSocialDetail('sikayetler', '${i.id}')">
-                <div style="display:flex; justify-content:space-between; align-items:start;">
-                    <span style="font-size:0.7rem; font-weight:bold; background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px;">${window.escapeHTML(i.category)}</span>
-                    ${i.district ? `<span style="font-size:0.65rem; color:#666; font-weight:bold;"><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(i.district)}</span>` : ''}
-                </div>
-                <h4 style="margin:10px 0 5px 0;">${window.escapeHTML(i.title)}</h4>
-                <p style="font-size:0.9rem; color:#444;">${window.escapeHTML(i.content)}</p>
-                <div style="display:flex; gap:5px; margin:10px 0;">
-                    ${i.image_url ? `<img src="${i.image_url}" style="width:48%; height:120px; object-fit:cover; border-radius:8px;">` : ''}
-                    ${i.image_url_2 ? `<img src="${i.image_url_2}" style="width:48%; height:120px; object-fit:cover; border-radius:8px;">` : ''}
-                </div>
-                <div style="text-align:right; font-size:0.6rem; color:#aaa;">${new Date(i.created_at).toLocaleDateString('tr-TR')}</div>
-            </div>
-        `).join('') || "";
-    } catch (err) {
-        console.error("Şikayet yükleme hatası:", err);
-        el.innerHTML = "<p style='text-align:center; color:red;'>Veriler yüklenemedi.</p>";
-    }
-}
-
-
 // FIRSAT SİLME MOTORU - TİP ÇAKALIMINI BİTİREN VERSİYON
 window.deleteFirsat = async (id) => {
     const userPass = prompt("Bu fırsatı silmek için lütfen şifrenizi girin:");
@@ -1166,24 +1135,6 @@ window.deleteTavsiye = async (id) => {
     }
 };
 
-window.deleteSikayet = async (id) => {
-    const userPass = prompt("Bu şikayeti silmek için şifrenizi girin:");
-    if (userPass === null || !userPass.trim()) return;
-    const deleteToken = await sha256(userPass.trim());
-
-    const { error } = await window.supabase
-        .from('sikayetler')
-        .delete()
-        .eq('id', id)
-        .eq('delete_password', deleteToken); 
-
-    if (!error) {
-        alert("Şikayet başarıyla kaldırıldı.");
-        loadPortalData(); // Ekranda anında yok olmasını sağlar
-    } else {
-        alert("Hata: Girdiğiniz şifre yanlış.");
-    }
-};
 
 async function fetchAndRenderAds() {
     const list = document.getElementById("ads-list");
@@ -1414,9 +1365,6 @@ if (lastPiyasa?.[0]) {
         const previewTavsiye = document.getElementById("preview-tavsiye");
         if (previewTavsiye) previewTavsiye.textContent = lastTavsiye?.[0] ? lastTavsiye[0].title : "Henüz tavsiye yok.";
 
-        const { data: lastSikayet } = await window.supabase.from('sikayetler').select('title').order('created_at', {ascending: false}).limit(1);
-        const previewSikayet = document.getElementById("preview-sikayet");
-        if (previewSikayet) previewSikayet.textContent = lastSikayet?.[0] ? lastSikayet[0].title : "Aktif bildirim yok.";
 
     } catch (err) {
         console.error("Dashboard güncelleme motoru durdu:", err.message);
@@ -1629,39 +1577,70 @@ window.showLegal = function(type) {
     const contents = {
      about: `
     <div style="text-align:left; font-size:0.9rem; line-height:1.5; color:#333;">
-        <h3 style="text-align:center; border-bottom:1px solid #eee; padding-bottom:10px;">🎓 HAKKIMIZDA</h3>
+        <h3 style="text-align:center; border-bottom:1px solid #eee; padding-bottom:10px;"> HAKKIMIZDA</h3>
         
-        <p><b>Bahçelievler Forum</b>, ilçemizin dijital dönüşümüne öncülük eden, mahalle kültürünü modern teknoloji ile birleştiren bağımsız bir yerel medya ve hizmet platformudur.</p>
+        <p><b>Bahçelievler Forum</b>, ilçemizin dijitalleşme sürecinde yerel kültürü koruyarak geleceğe taşıma hedefiyle kurulmuş bağımsız bir mahalle platformudur. Geleneksel komşuluk anlayışını modern teknolojiyle birleştirerek, semt içi iletişimi daha hızlı, güvenli ve sürdürülebilir hale getirmeyi amaçlar.</p>
 
-        <p>Amacımız; Bahçelievler sakinlerinin ilanlarını tek merkezde toplamak, yerel esnafın dijital dünyada daha görünür olmasını sağlamak ve semt içi ticareti canlandırmaktır. Platformumuz; güncel mahalle duyurularından fiyat radarına, esnaf tanıtımlarından şikayet hatlarına kadar geniş bir yelpazede hizmet sunmaktadır.</p>
+<p>Amacımız; Bahçelievler sakinlerinin ilan, duyuru ve hizmet ihtiyaçlarını tek merkezde buluşturmak, yerel esnafın dijital görünürlüğünü artırmak ve mahalle ekonomisini güçlendirmektir. Platformumuz; ikinci el ilanlardan emlak taleplerine, fiyat radarından mahalle duyurularına, tavsiye paylaşımlarından hizmet tanıtımlarına kadar geniş kapsamlı bir yerel bilgi ağı sunar.</p>
 
-        <p><b>Vizyonumuz:</b> Bahçelievler’in en kapsamlı dijital rehberi ve yerel ekonomi merkezi olmak. Kullanıcılarımıza sunduğumuz yenilikçi çözümlerle, semt içi etkileşimi en üst düzeye çıkarmayı hedefliyoruz.</p>
+<p><b>Vizyonumuz:</b> Bahçelievler’in en güvenilir dijital rehberi ve yerel ekonomi merkezi olmak. Sürekli gelişen altyapımız ve veri odaklı yaklaşımımızla, semt içi etkileşimi artıran ve sürdürülebilir bir mahalle ekosistemi oluşturan öncü bir platform olmayı hedefliyoruz.</p>
 
-        <p style="margin-top:15px; font-weight:bold; color:var(--app-blue);">Bahçelievler Forum, yerel dinamikleri teknolojiyle buluşturan bir girişim projesidir.</p>
+<p style="margin-top:15px; font-weight:bold; color:var(--app-blue);">Bahçelievler Forum, yerel değerleri teknolojiyle buluşturan ve mahalle ruhunu dijital dünyada yaşatan güçlü bir girişimdir.</p>
+
     </div>
         `,
 disclaimer: `
-    <div style="text-align:left; font-size:0.8rem; line-height:1.4; color:#333; padding:5px;">
-        <h3 style="text-align:center; color:#d32f2f; border-bottom:1px solid #eee; padding-bottom:10px;">⚖️ KULLANIM KOŞULLARI VE SORUMLULUK REDDİ</h3>
-        
-        <p><b>1. İÇERİK SORUMLULUĞU:</b> Platformda yayınlanan her türlü ilan, yorum, şikayet, tavsiye ve görselin içeriğinden doğrudan paylaşımı yapan kullanıcı sorumludur. <b>Bahçelievler Forum</b>, paylaşılan bilgilerin güncelliğini, doğruluğunu veya kalitesini garanti etmez. T.C. kanunlarına aykırı, hakaret içeren veya yanıltıcı paylaşımlardan doğacak hukuki sorumluluk tamamen kullanıcıya aittir.</p>
+    <div style="text-align:left; font-size:0.8rem; line-height:1.45; color:#333; padding:5px;">
+    <h3 style="text-align:center; color:#d32f2f; border-bottom:1px solid #eee; padding-bottom:10px;">
+        ⚖️ KULLANIM KOŞULLARI VE SORUMLULUK REDDİ BEYANI
+    </h3>
+    
+    <p><b>1. HİZMET TANIMI VE HUKUKİ STATÜ:</b> 
+    <b>Bahçelievler Forum</b>, 5651 sayılı Kanun kapsamında yer sağlayıcı niteliğinde faaliyet gösteren dijital bir platformdur. Platform; kullanıcılar tarafından oluşturulan içerikleri barındırır ve yayınlar. Yayınlanan içerikler önceden hukuki veya editoryal incelemeye tabi tutulmaz.</p>
 
-        <p><b>2. TİCARİ İLİŞKİLER VE ALIŞVERİŞ:</b> Kullanıcılar arasında gerçekleşen ürün satışı, hizmet alımı, pazarlık veya randevularda <b>Bahçelievler Forum</b> taraf değildir. Gerçekleşebilecek maddi kayıp, kusurlu ürün, dolandırıcılık veya manevi zararlardan platformumuz hiçbir şekilde sorumlu tutulamaz. Alışverişlerinizi güvenli alanlarda yapmanız önerilir.</p>
+    <p><b>2. İÇERİK SORUMLULUĞU:</b> 
+    Platformda yer alan ilan, yorum, tavsiye, şikayet, fiyat bilgisi, görsel ve diğer tüm içeriklerin hukuki ve cezai sorumluluğu tamamen içeriği paylaşan kullanıcıya aittir. 
+    <b>Bahçelievler Forum</b>, içeriklerin doğruluğunu, güncelliğini, güvenilirliğini veya hukuka uygunluğunu garanti etmez. 
+    Üçüncü kişilik haklarını ihlal eden, gerçeğe aykırı, yanıltıcı veya mevzuata aykırı içeriklerden doğabilecek tüm sonuçlar ilgili kullanıcıya aittir.</p>
 
-        <p><b>Kullanıcı Uyarısı:</b> Platform üzerinde yer alan ilan, paylaşım ve iletişim süreçlerinde kullanıcıların dikkatli hareket etmeleri önerilir. Bahçelievler Forum, kullanıcılar arasında gerçekleşen bireysel işlemlerde taraf değildir.</p>
+    <p><b>3. TİCARİ İŞLEMLER VE SÖZLEŞME İLİŞKİSİ:</b> 
+    Platform üzerinden gerçekleşen alım-satım, hizmet temini, teklif, pazarlık ve iletişim süreçlerinde <b>Bahçelievler Forum</b> taraf değildir. 
+    Kullanıcılar arasındaki işlemler tamamen bağımsızdır. 
+    Bu kapsamda oluşabilecek maddi zarar, ayıplı mal, eksik hizmet, dolandırıcılık, sözleşme ihlali veya sair ihtilaflardan platform sorumlu tutulamaz.</p>
 
-        <p><b>3. FİYAT RADARI (DEDEKTİFİ):</b> "Fiyat Dedektifi" bölümünde paylaşılan etiket ve fiyat verileri kullanıcı beyanıdır. Marketlerin anlık fiyat değişikliği yapma hakkı saklıdır. Bu veriler bilgilendirme amaçlı olup, mağaza ile yaşanacak fiyat uyuşmazlıklarında platformumuz sorumluluk kabul etmez.</p>
+    <p><b>4. FİYAT RADARI VE BİLGİ AMAÇLI İÇERİK:</b> 
+    “Fiyat Dedektifi” ve benzeri bölümlerde yer alan fiyat ve ürün bilgileri kullanıcı beyanına dayanır. 
+    Bu bilgiler ticari teklif veya taahhüt niteliği taşımaz. 
+    İşletmelerin anlık fiyat değişikliği yapma hakkı saklıdır. Fiyat farklılıklarından platform sorumlu değildir.</p>
 
-        <p><b>4. HİZMET KALİTESİ VE TEKLİFLER:</b> "Teklif Al" sistemi üzerinden yönlendirilen esnafların iş kalitesi, zamanlaması veya fiyatlandırması üzerinde platformumuzun bir denetimi yoktur. Hizmet sağlayıcı ile kullanıcı arasındaki sözleşme serbestliği esastır; yaşanacak teknik veya hukuki ihtilaflarda platformumuz arabulucu veya taraf değildir.</p>
+    <p><b>5. HİZMET SAĞLAYICILAR VE TEKLİF SİSTEMİ:</b> 
+    “Teklif Al” veya benzeri yönlendirme sistemleri yalnızca iletişim kurulmasına aracılık eder. 
+    Hizmet kalitesi, ücretlendirme, ifa süresi ve sözleşme şartları taraflar arasında belirlenir. 
+    Platform herhangi bir garanti, taahhüt veya kefalet sunmaz.</p>
 
-        <p><b>5. TELİF HAKLARI:</b> Kullanıcılar, yükledikleri görsellerin kendilerine ait olduğunu veya kullanım hakkına sahip olduklarını taahhüt ederler. Başkasına ait görsel kullanımı nedeniyle oluşabilecek telif hakkı ihlallerinden ilgili kullanıcı doğrudan sorumlu tutulacaktır.</p>
+    <p><b>6. TELİF HAKLARI VE FİKRİ MÜLKİYET:</b> 
+    Kullanıcılar yükledikleri içeriklerin kendilerine ait olduğunu veya kullanım hakkına sahip olduklarını beyan ve taahhüt eder. 
+    Telif hakkı ihlali durumunda doğabilecek hukuki sorumluluk ilgili kullanıcıya aittir. 
+    Hak sahiplerinden gelen usulüne uygun başvurular halinde içerik yayından kaldırılabilir.</p>
 
-        <p><b>6. HİZMET KESİNTİSİ:</b> Teknik güncellemeler, siber saldırılar veya servis sağlayıcı kaynaklı kesintiler nedeniyle platforma erişilememesi durumunda oluşabilecek veri kayıplarından platform yönetimi sorumlu değildir.</p>
+    <p><b>7. TEKNİK SÜREKLİLİK VE VERİ SORUMLULUĞU:</b> 
+    Platform; bakım çalışmaları, teknik arızalar, siber saldırılar, mücbir sebepler veya üçüncü taraf servis kesintileri nedeniyle oluşabilecek erişim sorunları ve veri kayıplarından sorumlu değildir. 
+    Kullanıcılar paylaştıkları içeriklerin yedeğini almakla yükümlüdür.</p>
 
-        <p><b>7. DIŞ BAĞLANTILAR:</b> Sitede yer alan üçüncü taraf linkleri (Oyunlar, ISP haritaları vb.) harici servislerdir. Bu sitelerin içeriklerinden, güvenlik politikalarından ve veri toplama pratiklerinden sorumlu değiliz.</p>
+    <p><b>8. DIŞ BAĞLANTILAR:</b> 
+    Platformda yer alan üçüncü taraf bağlantılar (harici web siteleri, servis sağlayıcılar vb.) bağımsız yapılardır. 
+    Bu sitelerin içerik, güvenlik ve veri politikalarından platform sorumlu değildir.</p>
 
-        <p style="font-size:0.7rem; color:#d32f2f; font-weight:bold; border-top:1px solid #eee; padding-top:10px; margin-top:10px;"><i>Bahçelievler Forum platformunu kullanan tüm ziyaretçiler, bu şartları peşinen kabul etmiş sayılır. Yönetim, bu metni dilediği zaman güncelleme hakkını saklı tutar.</i></p>
-    </div>
+    <p><b>9. İÇERİK KALDIRMA VE ERİŞİM ENGELLEME:</b> 
+    Mevzuata aykırı olduğu değerlendirilen veya yetkili makamlarca bildirilen içerikler, platform yönetimi tarafından kaldırılabilir. 
+    Platform, topluluk kurallarına aykırı içerikleri önceden bildirim olmaksızın yayından kaldırma hakkını saklı tutar.</p>
+
+    <p style="font-size:0.75rem; color:#d32f2f; font-weight:bold; border-top:1px solid #eee; padding-top:10px; margin-top:10px;">
+        <i>Platformu kullanan tüm ziyaretçiler, yukarıdaki koşulları okumuş ve kabul etmiş sayılır. 
+        Bahçelievler Forum, kullanım koşullarını mevzuat değişiklikleri doğrultusunda güncelleme hakkını saklı tutar.</i>
+    </p>
+</div>
+
         `,
         kvkk: `
     <div style="text-align:left; font-size:0.8rem; line-height:1.4; color:#333; padding:5px;">
@@ -1694,8 +1673,6 @@ disclaimer: `
 
         <p><b>6. İLGİLİ KİŞİNİN HAKLARI:</b> Kanun’un 11. maddesi kapsamında; verilerinizin işlenip işlenmediğini öğrenme, yanlış verilerin düzeltilmesini isteme ve verilerinizin silinmesini talep etme haklarınız saklıdır. Taleplerinizi "Bize Yazın" sekmesinden iletebilirsiniz.</p>
 
-        <p style="font-size:0.7rem; color:#888; border-top:1px solid #eee; padding-top:10px; margin-top:10px;"><i>Bu aydınlatma metni, platformun kullanımı ile eş zamanlı olarak yürürlüğe girmiş kabul edilir.</i></p>
-
         <p><b>Veri Saklama Süresi:</b> Platform üzerinde paylaşılan içerikler, kullanıcı tarafından silinene kadar veya en fazla <b>12 ay</b> süreyle sistemde tutulur. Uzun süre pasif kalan içerikler sistem tarafından otomatik olarak yayından kaldırılabilir.</p>
         
         <p><b>İşlenen Veriler:</b> Paylaşımlar sırasında girilen metinler, görseller, isteğe bağlı iletişim bilgileri ve teknik erişim kayıtları işlenebilir.</p>
@@ -1705,15 +1682,22 @@ disclaimer: `
         <p><b>Üçüncü Taraf Hizmetler:</b> Teknik altyapı kapsamında Supabase (veri tabanı) ve EmailJS (bildirim iletimi) gibi hizmet sağlayıcılar kullanılabilir. Bu hizmetler yalnızca sistemin çalışması amacıyla sınırlı erişime sahiptir.</p>
 
         <p><b>Kullanıcı Hakları:</b> Kullanıcılar, KVKK’nın 11. maddesi kapsamında kişisel verilerine ilişkin bilgi talep etme, düzeltme, silme ve işlenmesine itiraz etme haklarına sahiptir.</p>
+            
+        <p style="font-size:0.7rem; color:#888; border-top:1px solid #eee; padding-top:10px; margin-top:10px;"><i>Bu aydınlatma metni, platformun kullanımı ile eş zamanlı olarak yürürlüğe girmiş kabul edilir.</i></p>
     </div>
         `,
         sss: `
     <h3>❓ Sıkça Sorulan Sorular</h3>
     <div style="margin-top:10px; text-align:left; font-size:0.85rem; line-height:1.5;">
         
-        <p><b>1. Paylaştığım içeriği (İlan, Fırsat, Şikayet vb.) nasıl silebilirim?</b><br>
-        Paylaşım yaparken belirlediğiniz 4 haneli "Silme Şifresi" sizin anahtarınızdır. İçeriğinizin altındaki "SİL" butonuna basıp bu şifreyi girdiğinizde, verileriniz hem ekrandan hem de veri tabanımızdan kalıcı olarak silinir.</p>
-        <hr style="opacity:0.1; margin:10px 0;">
+       <p><b>1. Paylaştığım içeriği (İlan, Fırsat, Şikayet vb.) nasıl kaldırabilirim?</b><br>
+Paylaşım sırasında belirlediğiniz 4 haneli “Silme Şifresi”, içeriğiniz üzerinde işlem yapabilmeniz için güvenlik anahtarınızdır. İlgili içeriğin bulunduğu bölümde yer alan kaldırma / silme işlem alanı üzerinden bu şifreyi girerek paylaşımınızı yayından kaldırabilirsiniz. 
+
+Doğru şifre girildiğinde içerik sistemden pasif duruma alınır veya kalıcı olarak silinir ve yeniden erişilemez hale gelir. 
+
+Her sayfada işlem butonunun konumu veya adı farklılık gösterebilir. İşlem sırasında teknik bir sorun yaşarsanız veya şifrenizi hatırlamıyorsanız, “Bize Yazın” bölümünden site yönetimi ile iletişime geçebilirsiniz.</p>
+
+<hr style="opacity:0.1; margin:10px 0;">
 
         <p><b>2. Şifremi unuttum, içeriği sildirmek istiyorum?</b><br>
         Güvenlik nedeniyle şifreleri biz dahi göremiyoruz. Ancak içeriği paylaşırken kullandığınız e-posta adresi üzerinden "Bize Yazın" kısmından talep gönderirseniz, manuel kontrol sonrası silme işlemini yönetim gerçekleştirebilir.</p>
@@ -1802,8 +1786,11 @@ disclaimer: `
         Yanıltıcı, kötüye kullanım veya topluluk kurallarına aykırı içerikler tespit edildiğinde yayından kaldırılır.</p>
 
         <hr style="opacity:0.1; margin:10px 0;">
-        <p><b>Bahçelievler Forum resmi bir kurum mu?</b><br>
-        Hayır. Bahçelievler Forum, mahalle dayanışmasını amaçlayan bağımsız bir yerel platformdur. Resmî kurum veya belediye sitesi değildir.</p>
+       <p><b>Bahçelievler Forum resmi bir kurum mu?</b><br>
+Hayır. Bahçelievler Forum; mahalle dayanışmasını ve yerel bilgi paylaşımını amaçlayan bağımsız bir dijital platformdur. Herhangi bir kamu kurumu, belediye, muhtarlık, resmi kuruluş veya devlet kurumu ile kurumsal, idari ya da mali bir bağı bulunmamaktadır. 
+
+Platformda yer alan içerikler resmi kurum duyurusu niteliği taşımaz; kullanıcı paylaşımlarına veya platform içi bilgilendirmelere dayanır. Resmî açıklama ve kararlar için ilgili kamu kurumlarının kendi resmi internet siteleri ve iletişim kanalları esas alınmalıdır.</p>
+
     </div>
         `,
         'contact-info': `

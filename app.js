@@ -843,7 +843,8 @@ async function setupFirsatForm() {
                 image_url_2: urls[1] || null,
                 delete_password: deleteToken,
                 type: type,
-                nickname: nicknameVal || null
+                nickname: nicknameVal || null,
+                is_active: true
             };
 
             const { data, error } = await window.supabase

@@ -1382,6 +1382,7 @@ async function updateDashboard() {
       const { data: lastPiyasa } = await window.supabase
     .from('piyasa_verileri')
     .select('id,urun_adi,fiyat,market_adi,tarih_etiketi,image_url,is_active,created_at,barkod')
+    .eq('is_active', true)
     .order('created_at', {ascending: false})
     .limit(1);
 

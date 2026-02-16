@@ -191,6 +191,7 @@ async function fetchAndRenderPiyasa() {
             const { data, error } = await window.supabase
                 .from('piyasa_verileri')
                 .select('id,urun_adi,fiyat,market_adi,tarih_etiketi,image_url,is_active,created_at,barkod')
+                .eq('is_active', true)
                 .order('created_at', { ascending: false });
             
             if (error) throw error;

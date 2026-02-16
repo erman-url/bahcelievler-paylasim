@@ -276,7 +276,6 @@ body {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
-    overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -288,12 +287,12 @@ body {
     padding-top: 20px;
 }
 
-/* Modal açıkken ana sayfanın kaymasını da engelleyelim */
+
+/* Modal açıkken ana sayfanın kaymasını engelle */
 body.modal-open {
     overflow: hidden !important;
-    position: fixed;
-    width: 100%;
 }
+
 
 .modal-footer {
     display: flex !important;
@@ -391,25 +390,7 @@ body.modal-open {
     box-sizing: border-box;
 }
 
-/* Yeni görev: 'İlanı Kaldır' Butonu */
-#modal-delete-btn-inner {
-    background: linear-gradient(135deg, #ff4d4d, #d62828) !important;
-    color: #ffffff !important;
-    border: none !important;
 
-    height: 48px !important;
-    border-radius: 14px !important;
-
-    font-weight: 700 !important;
-    letter-spacing: 0.5px;
-
-    box-shadow: 0 8px 20px rgba(214,40,40,0.35) !important;
-}
-
-#modal-delete-btn-inner:hover {
-    background: #ff4d4d !important;
-    color: #fff;
-}
 
 
 
@@ -772,11 +753,11 @@ body.modal-open {
 }
 
 /* 1. Merkezi Buton Kalıbı (Telegram Stili Referans) */
+
 .cyber-submit, 
-.delete-btn-style, 
-.modal-footer button {
+.delete-btn-style {
     width: 100% !important;
-    height: 50px !important; /* Standart Yükseklik */
+    height: 50px !important;
     border-radius: 12px !important;
     font-size: 0.95rem !important;
     font-weight: 700 !important;
@@ -789,6 +770,9 @@ body.modal-open {
     transition: 0.3s !important;
     cursor: pointer !important;
 }
+
+
+
 /* 2. Renk Ayrıştırma Mühürleri */
 #modal-buy-btn { background: #00d2ff !important; color: #fff !important; } /* Telegram Turkuaz */
 #modal-share-btn { background: #25D366 !important; color: #fff !important; } /* WhatsApp Yeşil */
@@ -1049,13 +1033,7 @@ button[onclick*="prepareDeleteHizmet"]:hover {
     padding: 8px 12px !important;
 }
 
-/* 6. Aksiyon Butonlarını (Gönder/Kaldır) Hizalar */
-#social-detail-modal .cyber-submit {
-    height: 48px !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.5px !important;
-    border-radius: 10px !important;
-}
+
 
 #social-detail-modal button[onclick*="prepareDeleteHizmet"] {
     opacity: 0.5;
@@ -1068,15 +1046,6 @@ button[onclick*="prepareDeleteHizmet"]:hover {
     color: #ff4d4d !important;
 }
 
-/* >> TAVSİYE ANA METİN TEK KARE MÜHÜRÜ << */
-
-/* Modal içi genel sıkılaştırma */
-#social-detail-modal .modal-content {
-    padding: 15px 20px 140px 20px !important; /* Alt güvenli boşluk */
-    border-radius: 20px !important;
-    max-width: 420px !important;
-    margin-bottom: 0 !important;
-}
 
 /* 2. Başlık Alanındaki Boşlukları Sıfırlar */
 .modal-header-meta h2 {
@@ -1088,11 +1057,6 @@ button[onclick*="prepareDeleteHizmet"]:hover {
     height: 55px !important; /* Daha az yer kaplayan yazı alanı */
 }
 
-#social-detail-modal .cyber-submit {
-    height: 42px !important; /* Daha kibar buton */
-    font-size: 0.85rem !important;
-    margin-top: 5px !important;
-}
 
 /* 6. Kaldır Linkini Satır Arasına Alır */
 button[onclick*="prepareDeleteHizmet"] {
@@ -2232,19 +2196,90 @@ body::before {
     stroke-width: 2.4 !important;
 }
 
-#social-detail-modal {
-    padding-bottom: 140px !important;
-}
-
-#social-detail-modal .modal-footer {
-    position: sticky !important;
-    bottom: 0;
-    background: #ffffff;
-    padding-bottom: 20px !important;
-}
 
 #modal-delete-btn-inner:active,
 .delete-btn-style:active {
     transform: scale(0.96);
     opacity: 0.8;
 }
+
+/* =====================================================
+   TAVSİYE MODAL – GERÇEK PREMIUM
+===================================================== */
+
+.social-modal-body h2 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #1e293b;
+}
+
+
+/* =========================================
+   SOCIAL MODAL – CLEAN STRUCTURE
+========================================= */
+
+
+
+
+/* SOCIAL MODAL SCROLL İZOLASYONU */
+#social-detail-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 16px;
+    z-index: 99999;
+}
+
+.social-premium-modal {
+    width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 20px;
+}
+
+
+
+.social-modal-body {
+    margin-top: 16px;
+    text-align: center;
+}
+
+.social-delete-btn {
+    margin-top: 20px;
+    padding: 8px 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    border: none;
+    border-radius: 10px;
+
+    background: linear-gradient(135deg, #ff4d4d, #d62828);
+    color: white;
+
+    cursor: pointer;
+}
+
+/* SOCIAL GALERİ TAŞMA FIX */
+
+#social-image-gallery {
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: 18px !important;
+}
+
+#social-image-gallery img {
+    width: 100% !important;
+    display: block !important;
+}
+
+/* Eğer sosyal galeride arrow kullanıyorsan hizala */
+#social-image-gallery::before,
+#social-image-gallery::after {
+    right: 10px !important;
+}
+

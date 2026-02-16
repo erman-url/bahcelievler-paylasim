@@ -118,7 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupContactForm(); 
     setupQuoteForm(); 
     setupFirsatForm();
-    setupKesintiForm(); 
     setupHizmetForm();  
     setupEstateForm();
     setupAdSearch(); 
@@ -173,9 +172,6 @@ function setupNavigation() {
                 window.loadedModules[target] = true;
             } else if (target === 'firsatlar') {
                 renderFirsatlar();
-                window.loadedModules[target] = true;
-            } else if (target === 'kesintiler') {
-                renderKesintiler();
                 window.loadedModules[target] = true;
             } else if (target === 'hizmetler') {
                 renderHizmetler();
@@ -1379,11 +1375,6 @@ async function updateDashboard() {
         const { data: lastAd } = await window.supabase.from('ilanlar').select('title').order('created_at', {ascending: false}).limit(1);
         if (lastAd?.[0]) document.getElementById("preview-ad").textContent = lastAd[0].title;
 
-        const { data: lastKesinti } = await window.supabase.from('kesintiler').select('location, type').order('created_at', {ascending: false}).limit(1);
-        const kesintiEl = document.getElementById("preview-kesinti");
-        if (kesintiEl) {
-            kesintiEl.textContent = lastKesinti?.[0] ? `${lastKesinti[0].type}: ${lastKesinti[0].location}` : "Aktif kesinti yok.";
-        }
 
       const { data: lastPiyasa } = await window.supabase
     .from('piyasa_verileri')
@@ -1489,117 +1480,6 @@ async function fetchDuyurular() {
     }
 }
 
-/* >> KESİNTİ BİLDİRİM MOTORU V4.1 << */
-async function setupKesintiForm() {
-    const form = document.getElementById("kesinti-form");
-    if (!form) return;
-
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        if (isProcessing) return; 
-
-        const typeVal = document.getElementById("kes-type").value;
-        const providerVal = document.getElementById("kes-provider").value.trim(); // Yeni Alan
-        const districtVal = document.getElementById("kes-district").value;
-        const streetVal = document.getElementById("kes-street").value.trim();
-        const descVal = document.getElementById("kes-desc").value.trim();
-        const passVal = document.getElementById("kes-pass").value;
-
-        // >> KÜFÜR VE ARGO DENETİMİ <<
-        // Firma ismi, sokak ve detaylarda filtreleme yapılır
-        if (window.hasBadWords(descVal) || window.hasBadWords(streetVal) || window.hasBadWords(providerVal)) {
-            alert("Lütfen topluluk kurallarına uygun bir dil kullanın.");
-            return;
-        }
-        
-        const passCheck = window.validateComplexPassword(passVal);
-        if (passCheck) { alert(passCheck); return; }
-
-        const btn = document.getElementById("kes-submit-btn");
-        isProcessing = true;
-        btn.disabled = true;
-        btn.textContent = "BİLDİRİLİYOR...";
-
-        try {
-            const deleteToken = await sha256(passVal);
-            const payload = {
-                type: typeVal,
-                location: `${districtVal}, ${streetVal}`, 
-                // Firma bilgisi detayın başına kurumsal bir şekilde eklenir
-                description: `[SAĞLAYICI: ${providerVal}] - ${descVal}`,
-                delete_password: deleteToken
-            };
-
-            const { error } = await window.supabase.from('kesintiler').insert([payload]);
-            if (error) throw error;
-
-            alert("Kesinti bildirimi yayınlandı!");
-            form.reset();
-            if (typeof renderKesintiler === "function") renderKesintiler(); 
-        } catch (err) {
-            alert("Sistem Hatası: " + err.message);
-        } finally {
-            isProcessing = false;
-            btn.disabled = false;
-            btn.textContent = "BİLDİRİM GÖNDER";
-        }
-    });
-}
-
-/* >> GÜVENLİ KESİNTİ RENDER MOTORU V5.0 << */
-async function renderKesintiler() {
-    const el = document.getElementById('kesinti-list');
-    if (!el) return;
-    try {
-        const { data, error } = await window.supabase.from('kesintiler').select('*').order('created_at', { ascending: false });
-        if (error) throw error;
-
-        el.innerHTML = data?.map(k => {
-            const dateObj = new Date(k.created_at);
-            // Hem Tarih Hem Saat Mührü [cite: 04-02-2026]
-            const displayDate = dateObj.toLocaleDateString('tr-TR');
-            const displayTime = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-
-            return `
-            <div class="cyber-card" style="margin-bottom:12px; border-left: 5px solid ${k.type === 'Elektrik' ? '#ffc107' : k.type === 'Su' ? '#00d2ff' : '#ff4d4d'};">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <strong style="color:${k.type === 'Elektrik' ? '#b8860b' : '#007bff'};">${window.escapeHTML(k.type)} Kesintisi</strong>
-                    <button onclick="deleteKesinti('${k.id}')" style="background:none; border:none; color:#ccc;"><i class="fas fa-trash"></i></button>
-                </div>
-                <p style="margin:5px 0; font-weight:bold; font-size:0.9rem;"><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(k.location)}</p>
-                <p style="margin:0; font-size:0.85rem; color:#555;">${window.escapeHTML(k.description)}</p>
-                <div style="text-align:right; font-size:0.65rem; color:#999; margin-top:8px; font-weight:600;">
-                    <i class="far fa-calendar-alt"></i> ${displayDate} | <i class="far fa-clock"></i> ${displayTime}
-                </div>
-            </div>
-        `}).join('') || "<p style='text-align:center;'>Şu an bildirilmiş bir kesinti yok.</p>";
-    } catch (err) {
-        console.error("Kesinti yükleme hatası:", err);
-        el.innerHTML = "<p style='text-align:center; color:red;'>Veri alınamadı.</p>";
-    }
-}
-
-/* >> GÜVENLİ KESİNTİ SİLME MOTORU << */
-window.deleteKesinti = async (id) => {
-    const userPass = prompt("Silmek için şifre:");
-    if (!userPass) return;
-    const deleteToken = await sha256(userPass.trim());
-
-    // Şifreyi client-side karşılaştırmak yerine Supabase sorgusuna dahil ediyoruz
-    const { data, error } = await window.supabase
-        .from('kesintiler')
-        .delete()
-        .eq('id', id)
-        .eq('delete_password', deleteToken)
-        .select();
-
-    if (data && data.length > 0) {
-        alert("Bildirim başarıyla silindi.");
-        renderKesintiler();
-    } else {
-        alert("Hata: Şifre yanlış!");
-    }
-};
 
 window.showLegal = function(type) {
     if (type === 'emlak-kvkk') {
@@ -2761,46 +2641,62 @@ window.openSocialDetail = async function(table, id) {
                 : '';
         }
 
-        /* 🔥 DELETE BUTONU – SOFT DELETE */
-        if (deleteBtn) {
-            deleteBtn.onclick = async () => {
+      /* 🔥 DELETE BUTONU – STABİL HASH KONTROL */
 
-                const userPass = prompt("Silme şifrenizi girin:");
-                if (!userPass || !userPass.trim()) return;
+if (deleteBtn) {
+    deleteBtn.onclick = async () => {
 
-                const deleteToken = await sha256(userPass.trim());
+        const userPass = prompt("Silme şifrenizi girin:");
+        if (!userPass || !userPass.trim()) return;
 
-                const { data, error } = await window.supabase
-                    .from(table)
-                    .update({ is_active: false })
-                    .eq('id', id)
-                    .eq('delete_password', deleteToken)
-                    .select();
+        const deleteToken = await sha256(userPass.trim());
 
-                if (error) {
-                    console.error("Supabase Hatası:", error);
-                    alert("Sistem Hatası: " + error.message);
-                    return;
-                }
+        // 1️⃣ Önce kayıtı çek
+        const { data: record, error: fetchError } = await window.supabase
+            .from(table)
+            .select('delete_password')
+            .eq('id', id)
+            .single();
 
-                if (data && data.length > 0) {
-                    alert("İçerik kaldırıldı.");
-                    closeSocialModal();
-                    loadPortalData();
-                } else {
-                    alert("Hata: Şifre yanlış.");
-                }
-            };
+        if (fetchError || !record) {
+            alert("Kayıt bulunamadı.");
+            return;
         }
+
+        // 2️⃣ Hash karşılaştır
+        if (record.delete_password !== deleteToken) {
+            alert("Hata: Şifre yanlış.");
+            return;
+        }
+
+        // 3️⃣ Soft delete
+        const { error: updateError } = await window.supabase
+            .from(table)
+            .update({ is_active: false })
+            .eq('id', id);
+
+        if (updateError) {
+            alert("Sistem Hatası: " + updateError.message);
+            return;
+        }
+
+        alert("İçerik kaldırıldı.");
+        closeSocialModal();
+        loadPortalData();
+    };
+}
+
 
         const modal = document.getElementById("social-detail-modal");
-        if (modal) {
-            modal.style.display = "flex";
-            setTimeout(() => {
-                modal.style.visibility = "visible";
-                modal.style.opacity = "1";
-            }, 10);
-        }
+if (modal) {
+    modal.style.display = "flex";
+    document.body.classList.add("modal-open"); // 🔥 EKLENECEK
+    setTimeout(() => {
+        modal.style.visibility = "visible";
+        modal.style.opacity = "1";
+    }, 10);
+}
+
 
     } catch (err) {
         console.error("Social Detail Hatası:", err);
@@ -2853,6 +2749,7 @@ window.closeSocialModal = function() {
         modal.style.visibility = "hidden";
         setTimeout(() => { modal.style.display = "none"; }, 300);
     }
+    document.body.classList.remove("modal-open");
 };
 
 /* >> YORUM MOTORU NİHAİ MÜHÜR V4.0 << */
@@ -3130,3 +3027,4 @@ function setupDistrictFilter() {
 
   });
 }
+

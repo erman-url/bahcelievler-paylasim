@@ -1181,7 +1181,7 @@ async function fetchAndRenderAds() {
     try {
         const { data, error } = await window.supabase.from('ilanlar')
             .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, condition, warranty, district')
-            .or('is_active.is.null,is_active.eq.true')
+            .eq('is_active', true)
             .order('created_at', {ascending: false})
             .limit(10);
         
@@ -1448,7 +1448,7 @@ async function fetchDuyurular() {
         const { data, error } = await window.supabase
     .from('tavsiyeler')
     .select('*')
-    .or('is_active.is.null,is_active.eq.true')
+    .eq('is_active', true)
     .order('created_at', { ascending: false });
 
 
@@ -1546,7 +1546,7 @@ async function renderKesintiler() {
     try {
         const { data, error } = await window.supabase.from('kesintiler')
 .select('*')
-.or('is_active.is.null,is_active.eq.true')
+.eq('is_active', true)
 .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -2176,7 +2176,7 @@ async function renderHizmetler() {
     try {
         const { data, error } = await window.supabase.from('hizmetler')
             .select('*')
-            .or('is_active.is.null,is_active.eq.true')
+            .eq('is_active', true)
             .order('created_at', { ascending: false });
         
         if (error) throw error;

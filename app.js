@@ -1514,13 +1514,14 @@ async function setupKesintiForm() {
 
         try {
             const deleteToken = await sha256(passVal);
-            const payload = {
-                type: typeVal,
-                location: `${districtVal}, ${streetVal}`, 
-                // Firma bilgisi detayın başına kurumsal bir şekilde eklenir
-                description: `[SAĞLAYICI: ${providerVal}] - ${descVal}`,
-                delete_password: deleteToken
-            };
+           const payload = {
+    type: typeVal,
+    location: `${districtVal}, ${streetVal}`, 
+    description: `[SAĞLAYICI: ${providerVal}] - ${descVal}`,
+    delete_password: deleteToken,
+    is_active: true
+};
+
 
             const { error } = await window.supabase.from('kesintiler').insert([payload]);
             if (error) throw error;
@@ -1543,7 +1544,11 @@ async function renderKesintiler() {
     const el = document.getElementById('kesinti-list');
     if (!el) return;
     try {
-        const { data, error } = await window.supabase.from('kesintiler').select('*').order('created_at', { ascending: false });
+        const { data, error } = await window.supabase.from('kesintiler')
+.select('*')
+.or('is_active.is.null,is_active.eq.true')
+.order('created_at', { ascending: false });
+
         if (error) throw error;
 
         el.innerHTML = data?.map(k => {

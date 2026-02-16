@@ -1072,10 +1072,10 @@ button[onclick*="prepareDeleteHizmet"]:hover {
 
 /* Modal içi genel sıkılaştırma */
 #social-detail-modal .modal-content {
-    padding: 15px 20px !important;
+    padding: 15px 20px 140px 20px !important; /* Alt güvenli boşluk */
     border-radius: 20px !important;
     max-width: 420px !important;
-    margin-bottom: 60px !important; /* Nav bar payı optimize edildi */
+    margin-bottom: 0 !important;
 }
 
 /* 2. Başlık Alanındaki Boşlukları Sıfırlar */
@@ -2234,4 +2234,15 @@ body::before {
 #iletisim .contact-link-card svg {
     stroke: #ffffff !important;
     stroke-width: 2.4 !important;
+}
+
+#social-detail-modal {
+    padding-bottom: 140px !important;
+}
+
+#social-detail-modal .modal-footer {
+    position: sticky !important;
+    bottom: 0;
+    background: #ffffff;
+    padding-bottom: 20px !important;
 }

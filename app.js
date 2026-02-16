@@ -1550,7 +1550,7 @@ async function renderKesintiler() {
     if (!el) return;
     try {
         const { data, error } = await window.supabase.from('kesintiler')
-.select('*')
+.select('id, location, type, description, created_at')
 .eq('is_active', true)
 .order('created_at', { ascending: false });
 

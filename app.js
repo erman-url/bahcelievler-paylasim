@@ -1446,9 +1446,11 @@ async function fetchDuyurular() {
 
     try {
         const { data, error } = await window.supabase
-            .from('duyurular')
-            .select('*')
-            .order('created_at', { ascending: false });
+    .from('tavsiyeler')
+    .select('*')
+    .or('is_active.is.null,is_active.eq.true')
+    .order('created_at', { ascending: false });
+
 
         if (error) throw error;
 

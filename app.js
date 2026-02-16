@@ -128,6 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initSlider();
     setupDistrictFilter();
     renderTavsiyeler();
+    startRamadanCountdown();
 
 
     // Deep Linking: URL Hash Kontrolü

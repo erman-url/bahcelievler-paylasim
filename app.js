@@ -1,29 +1,30 @@
-document.addEventListener("DOMContentLoaded", () => {
+/* ===== TAVSİYE DELETE EVENT ===== */
 
-    const deleteBtn = document.getElementById("social-delete-btn");
+const socialDeleteBtn = document.getElementById("social-delete-btn");
 
-    if (deleteBtn) {
-        deleteBtn.addEventListener("click", async function () {
+if (socialDeleteBtn) {
 
-            const tavsiyeId = this.getAttribute("data-id");
-            if (!tavsiyeId) return;
+    socialDeleteBtn.addEventListener("click", async function () {
 
-            if (!confirm("Bu içeriği kaldırmak istiyor musunuz?")) return;
+        const tavsiyeId = this.getAttribute("data-id");
+        if (!tavsiyeId) return;
 
-            const { error } = await window.supabase
-                .from("tavsiyeler")
-                .delete()
-                .eq("id", tavsiyeId);
+        if (!confirm("Bu içeriği kaldırmak istiyor musunuz?")) return;
 
-            if (error) {
-                alert(error.message);
-                return;
-            }
+        const { error } = await window.supabase
+            .from("tavsiyeler")
+            .delete()
+            .eq("id", tavsiyeId);
 
-            alert("İçerik kaldırıldı.");
-            closeSocialModal();
-            await renderTavsiyeler();
-        });
-    }
+        if (error) {
+            alert(error.message);
+            return;
+        }
 
-});
+        alert("İçerik kaldırıldı.");
+        closeSocialModal();
+        await renderTavsiyeler();
+
+    });
+
+}

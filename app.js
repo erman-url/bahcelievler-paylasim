@@ -1369,7 +1369,11 @@ async function updateDashboard() {
         const { data: lastAd } = await window.supabase.from('ilanlar').select('title').order('created_at', {ascending: false}).limit(1);
         if (lastAd?.[0]) document.getElementById("preview-ad").textContent = lastAd[0].title;
 
-        const { data: lastKesinti } = await window.supabase.from('kesintiler').select('location, type').order('created_at', {ascending: false}).limit(1);
+        const { data: lastKesinti } = await window.supabase.from('kesintiler')
+            .select('location, type, created_at')
+            .eq('is_active', true)
+            .order('created_at', {ascending: false})
+            .limit(1);
         const kesintiEl = document.getElementById("preview-kesinti");
         if (kesintiEl) {
             kesintiEl.textContent = lastKesinti?.[0] ? `${lastKesinti[0].type}: ${lastKesinti[0].location}` : "Aktif kesinti yok.";

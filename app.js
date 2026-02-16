@@ -2687,66 +2687,126 @@ window.prepareDeleteHizmet = async function(id) {
     }
 };
 
-/* >> SOSYAL DETAY MOTORU V5.2: BAŞLIK İZOLASYONU VE HATA ONARIMI << [cite: 04-02-2026] */
+/* >> SOSYAL DETAY MOTORU – DELETE ENTEGRE STABİL << */
 window.openSocialDetail = async function(table, id) {
+
     try {
         window.currentDetailTable = table;
-        const { data: s, error } = await window.supabase.from(table).select('*').eq('id', id).single();
-        if (error || !s) return;
 
-        // 1. Modül Bazlı Dinamik Başlık Belirleme
+        const { data: s, error } = await window.supabase
+            .from(table)
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error || !s) {
+            console.error("Veri alınamadı:", error);
+            return;
+        }
+
         let moduleHeader = "";
         let headerColor = "";
-        
+
         if (table === 'hizmetler') {
             moduleHeader = "🏢 HİZMET TANITIMI";
             headerColor = "#28a745";
         } else if (table === 'sikayetler') {
-            moduleHeader = "📢 ŞİKAYET & BİLDİRİM"; // Yanlış başlık düzeltildi
+            moduleHeader = "📢 ŞİKAYET & BİLDİRİM";
             headerColor = "#ff4d4d";
         } else if (table === 'tavsiyeler') {
             moduleHeader = "⭐ KOMŞU TAVSİYESİ";
             headerColor = "#ffc107";
         }
 
-        // 2. Veri Tanımlama (HATA ÇÖZÜLDÜ: 'const' redeclare hatası mTitle ile giderildi)
-        const mTitle = s.title || "Detay"; 
-        const mContent = s.comment || s.content || ""; 
+        const mTitle = s.title || "Detay";
+        const mContent = s.comment || s.content || "";
         const mDate = new Date(s.created_at).toLocaleDateString('tr-TR');
         const mImages = [s.image_url, s.image_url_2].filter(Boolean);
 
-        // 3. HTML Enjeksiyonu
-        document.getElementById("social-modal-title").innerHTML = `
-            <div class="modal-header-meta" style="margin-bottom:15px;">
-                <span style="display:inline-block; font-weight:800; color:${headerColor}; font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;">${moduleHeader}</span>
-                <h2 style="margin:8px 0; font-size:1.4rem; color:var(--dark-text); line-height:1.2;">${window.escapeHTML(mTitle)}</h2>
-                <div style="color:#666; font-size:0.85rem; font-weight:600; margin-bottom:5px;">
-                    <i class="fas fa-tag"></i> ${window.escapeHTML(s.category || 'Genel')}
-                </div>
-                <span style="color:#aaa; font-size:0.8rem; font-weight:600;"><i class="far fa-calendar-alt"></i> ${mDate}</span>
-            </div>`;
-        
-        document.getElementById("social-modal-content").innerHTML = `
-            <div class="ad-info-wrapper">
-                <div class="ad-info-box" style="font-style:normal !important; text-align:left !important;">
-                    ${window.escapeHTML(mContent)}
-                </div>
-            </div>`;
-        
-        // Görsel Galeri
+        const titleEl = document.getElementById("social-modal-title");
+        const contentEl = document.getElementById("social-modal-content");
         const gallery = document.getElementById("social-image-gallery");
-        if (gallery) {
-            gallery.innerHTML = mImages.length > 0 
-                ? mImages.map(src => `<img src="${src}" style="width:100%; border-radius:15px; margin-bottom:12px; box-shadow:var(--card-shadow-soft);">`).join('')
-                : '<div style="height:5px;"></div>';
+        const deleteBtn = document.getElementById("social-delete-btn");
+
+        if (titleEl) {
+            titleEl.innerHTML = `
+                <div style="margin-bottom:15px;">
+                    <span style="font-weight:800; color:${headerColor}; font-size:0.8rem;">
+                        ${moduleHeader}
+                    </span>
+                    <h2 style="margin:8px 0; font-size:1.3rem;">
+                        ${window.escapeHTML(mTitle)}
+                    </h2>
+                    <span style="color:#aaa; font-size:0.8rem;">
+                        ${mDate}
+                    </span>
+                </div>
+            `;
         }
 
-        // Modalı Göster
+        if (contentEl) {
+            contentEl.innerHTML = `
+                <div style="padding:10px 0;">
+                    ${window.escapeHTML(mContent)}
+                </div>
+            `;
+        }
+
+        if (gallery) {
+            gallery.innerHTML = mImages.length > 0
+                ? mImages.map(src =>
+                    `<img src="${src}" style="width:100%; border-radius:15px; margin-bottom:10px;">`
+                ).join('')
+                : '';
+        }
+
+        /* 🔥 DELETE BUTONU – SOFT DELETE */
+        if (deleteBtn) {
+            deleteBtn.onclick = async () => {
+
+                const userPass = prompt("Silme şifrenizi girin:");
+                if (!userPass || !userPass.trim()) return;
+
+                const deleteToken = await sha256(userPass.trim());
+
+                const { data, error } = await window.supabase
+                    .from(table)
+                    .update({ is_active: false })
+                    .eq('id', id)
+                    .eq('delete_password', deleteToken)
+                    .select();
+
+                if (error) {
+                    console.error("Supabase Hatası:", error);
+                    alert("Sistem Hatası: " + error.message);
+                    return;
+                }
+
+                if (data && data.length > 0) {
+                    alert("İçerik kaldırıldı.");
+                    closeSocialModal();
+                    loadPortalData();
+                } else {
+                    alert("Hata: Şifre yanlış.");
+                }
+            };
+        }
+
         const modal = document.getElementById("social-detail-modal");
-        modal.style.display = "flex";
-        setTimeout(() => { modal.style.visibility = "visible"; modal.style.opacity = "1"; }, 10);
-    } catch (err) { console.error("Hizmet Hatası:", err); }
+        if (modal) {
+            modal.style.display = "flex";
+            setTimeout(() => {
+                modal.style.visibility = "visible";
+                modal.style.opacity = "1";
+            }, 10);
+        }
+
+    } catch (err) {
+        console.error("Social Detail Hatası:", err);
+    }
 };
+
+
 
 /* >> İZOLE YORUM KAYIT VE YÜKLEME MOTORLARI << */
 window.sendSocialComment = async function(contentId, moduleType) {

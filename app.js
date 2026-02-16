@@ -1039,32 +1039,6 @@ window.openFirsatDetail = async function(id) {
     }
 };
 
-        el.innerHTML = activeData.map(item => `
-            <div class="cyber-card" style="margin-bottom:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="window.openSocialDetail('tavsiyeler', '${item.id}')">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-    <strong style="color:var(--app-blue); font-size:1.1rem;">
-        ${window.escapeHTML(item.title)}
-    </strong>
-
-    <div style="display:flex; align-items:center; gap:10px;">
-        <span style="color:#FFD700;">
-            ${"⭐".repeat(item.rating || 5)}
-        </span>
-
-        ${
-            hasOwnerCookie(item.id)
-            ? `
-            <button onclick="event.stopPropagation(); window.deleteTavsiye('${item.id}')"
-                    style="background:none; border:none; color:#ff4d44; cursor:pointer;">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-            `
-            : ''
-        }
-    </div>
-</div>
-
-
   async function renderTavsiyeler() {
     const el = document.getElementById('recommend-list');
     if (!el) return;

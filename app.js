@@ -1118,30 +1118,25 @@ window.openFirsatDetail = async function(id) {
           
 
 
+window.deleteFirsat = async function(id) {
 
-
-// FIRSAT SİLME MOTORU - TİP ÇAKALIMINI BİTİREN VERSİYON
-window.deleteFirsat = async (id) => {
     const userPass = prompt("Bu fırsatı silmek için lütfen şifrenizi girin:");
     if (!userPass || !userPass.trim()) return;
 
-    const finalPass = String(userPass).trim();
-    const deleteToken = await sha256(finalPass);
+    const deleteToken = await sha256(userPass.trim());
 
-    const { data, error } = await window.supabase
+    const { error } = await window.supabase
         .from('firsatlar')
-            .delete()
-            .eq("id", tavsiyeId);
+        .delete()
+        .eq('id', id)
+        .eq('delete_password', deleteToken);
 
-        if (error) {
-            alert(error.message);
-            return;
-        }
+    if (error) {
+        alert("Şifre yanlış veya işlem başarısız.");
+        return;
+    }
 
-        alert("İçerik kaldırıldı.");
-        closeSocialModal();
-        await renderTavsiyeler();
+    alert("Fırsat kaldırıldı.");
+    renderFirsatlar();
+};
 
-    });
-
-}

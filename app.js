@@ -84,6 +84,15 @@ async function sha256(message) {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+function hasOwnerCookie(id) {
+    return document.cookie
+        .split('; ')
+        .some(row => row === `tavsiye_${id}=owner`);
+}
+
+
+
+
 /* >> ŞİFRE DOĞRULAMA MOTORU (YENİ) << */
 window.validateComplexPassword = function(password) {
     const errorMsg = "Şifre 1 harf ve 4 rakam olmalı (Örn: S1571). Aynı rakam 3 kez yan yana gelemez ve ardışık rakam (123) içeremez.";
@@ -574,6 +583,7 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
     if (isBotDetected("recommend-form") || isProcessing) return;
 
     const btn = e.target.querySelector('button');
+
     const titleVal = document.getElementById("rec-title").value.trim();
     const districtVal = document.getElementById("rec-district").value;
     const ratingVal = parseInt(document.getElementById("rec-rating").value);
@@ -581,17 +591,8 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
     const passVal = document.getElementById("rec-pass").value;
     const fileInput = document.getElementById("rec-file");
 
-    // 1. GÖRSEL ZORUNLULUĞU VE LİMİT KONTROLÜ
-    if (!fileInput.files || fileInput.files.length === 0) return alert("HATA: En az 1 görsel eklemek zorunludur!");
-    if (fileInput.files.length > 2) return alert("HATA: Maksimum 2 görsel seçebilirsiniz.");
-
-    // 2. SEO VE KARAKTER FİLTRESİ (Mühür: Sadece harf, rakam ve noktalama)
-    const safeRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.\,\!\?\-\:\(\)\;]+$/;
-    if (!safeRegex.test(contentVal)) return alert("HATA: Yorumda sadece harf, rakam ve temel noktalama işaretleri kullanabilirsiniz.");
-    
-    if (window.hasBadWords(titleVal) || window.hasBadWords(contentVal)) {
-        return alert("Lütfen topluluk kurallarına uygun bir dil kullanın.");
-    }
+    if (!fileInput.files || fileInput.files.length === 0)
+        return alert("HATA: En az 1 görsel eklemek zorunludur!");
 
     const passCheck = window.validateComplexPassword(passVal);
     if (passCheck) return alert(passCheck);
@@ -601,29 +602,41 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
     btn.textContent = "İŞLENİYOR...";
 
     try {
-        const optimizedFiles = await Promise.all(Array.from(fileInput.files).map(f => optimizeImage(f)));
+        const optimizedFiles = await Promise.all(
+            Array.from(fileInput.files).map(f => optimizeImage(f))
+        );
+
         const urls = await handleMultipleUploads(optimizedFiles);
         const deleteToken = await sha256(passVal);
 
- const payload = {
-    title: titleVal,
-    comment: contentVal,
-    rating: ratingVal,
-    district: districtVal,
-    delete_password: deleteToken,
-    image_url: urls[0] || null,
-    image_url_2: urls[1] || null,
-    category: "Tavsiye",
-    is_active: true
-};
+        const payload = {
+            title: titleVal,
+            comment: contentVal,
+            rating: ratingVal,
+            district: districtVal,
+            delete_password: deleteToken,
+            image_url: urls[0] || null,
+            image_url_2: urls[1] || null,
+            category: "Tavsiye",
+            is_active: true
+        };
 
+        const { data, error } = await window.supabase
+            .from('tavsiyeler')
+            .insert([payload])
+            .select();
 
-        const { error } = await window.supabase.from('tavsiyeler').insert([payload]);
         if (error) throw error;
+
+        if (data && data.length > 0) {
+            const newId = data[0].id;
+            document.cookie = `tavsiye_${newId}=owner; max-age=31536000; path=/`;
+        }
 
         alert("Tavsiyeniz başarıyla panoya eklendi!");
         e.target.reset();
-        await renderTavsiyeler(); // Listeyi anında tazele
+        await renderTavsiyeler();
+
     } catch (err) {
         alert("Hata: " + err.message);
     } finally {
@@ -632,6 +645,7 @@ document.getElementById("recommend-form")?.addEventListener("submit", async (e) 
         btn.textContent = "PAYLAŞ";
     }
 });
+
 
 
 /* >> SORUN BİLDİR MOTORU V6.0: SPAM KORUMALI << */
@@ -1025,53 +1039,92 @@ window.openFirsatDetail = async function(id) {
     }
 };
 
+        el.innerHTML = activeData.map(item => `
+            <div class="cyber-card" style="margin-bottom:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="window.openSocialDetail('tavsiyeler', '${item.id}')">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+    <strong style="color:var(--app-blue); font-size:1.1rem;">
+        ${window.escapeHTML(item.title)}
+    </strong>
 
-async function renderTavsiyeler() {
+    <div style="display:flex; align-items:center; gap:10px;">
+        <span style="color:#FFD700;">
+            ${"⭐".repeat(item.rating || 5)}
+        </span>
+
+        ${
+            hasOwnerCookie(item.id)
+            ? `
+            <button onclick="event.stopPropagation(); window.deleteTavsiye('${item.id}')"
+                    style="background:none; border:none; color:#ff4d44; cursor:pointer;">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+            `
+            : ''
+        }
+    </div>
+</div>
+
+
+  async function renderTavsiyeler() {
     const el = document.getElementById('recommend-list');
     if (!el) return;
 
     try {
-        // Filtreyi Supabase üzerinde yapmak performansı artırır
-        // .eq('is_active', true) -> Sadece aktif olanları getirir
         const { data, error } = await window.supabase
             .from('tavsiyeler')
             .select('*')
+            .eq('is_active', true)
             .order('created_at', { ascending: false });
 
         if (error) throw error;
 
-        const activeData = data?.filter(item => item.is_active !== false) || [];
-        
-        // Skeleton kartlarını temizle
         el.innerHTML = '';
 
-        if (!activeData || activeData.length === 0) {
+        if (!data || data.length === 0) {
             el.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">Henüz onaylanmış bir tavsiye bulunmuyor.</p>';
             return;
         }
 
-        el.innerHTML = activeData.map(item => `
+        el.innerHTML = data.map(item => `
             <div class="cyber-card" style="margin-bottom:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="window.openSocialDetail('tavsiyeler', '${item.id}')">
+
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <strong style="color:var(--app-blue); font-size:1.1rem;">${window.escapeHTML(item.title)}</strong>
-                    <span style="color:#FFD700;">${"⭐".repeat(item.rating || 5)}</span>
+                    <strong style="color:var(--app-blue); font-size:1.1rem;">
+                        ${window.escapeHTML(item.title)}
+                    </strong>
+
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="color:#FFD700;">
+                            ${"⭐".repeat(item.rating || 5)}
+                        </span>
+
+                        ${
+                            hasOwnerCookie(item.id)
+                            ? `
+                            <button onclick="event.stopPropagation(); window.deleteTavsiye('${item.id}')"
+                                    style="background:none; border:none; color:#ff4d44; cursor:pointer;">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            `
+                            : ''
+                        }
+                    </div>
                 </div>
-                
+
                 ${item.image_url ? `
-                    <div style="margin:12px 0; position:relative;">
-                        <img src="${item.image_url}" 
-                             onerror="this.src='https://via.placeholder.com/400x220?text=Gorsel+Hazirlaniyor'"
-                             style="width:100%; border-radius:15px; max-height:220px; object-fit:cover; border:1px solid #f0f0f0; display:block;">
+                    <div style="margin:12px 0;">
+                        <img src="${item.image_url}"
+                             style="width:100%; border-radius:15px; max-height:220px; object-fit:cover;">
                     </div>
                 ` : ''}
 
-                <div style="background: #f8fafc; padding: 12px; border-radius: 12px; border-left: 4px solid var(--app-blue); margin-top:10px;">
-                    <p style="margin:0; font-style:italic; color:#334155; line-height:1.5; font-size:0.95rem;">
+                <div style="background:#f8fafc; padding:12px; border-radius:12px; border-left:4px solid var(--app-blue); margin-top:10px;">
+                    <p style="margin:0; font-style:italic; color:#334155;">
                         "${window.escapeHTML(item.comment)}"
                     </p>
                 </div>
-                
-                <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#94a3b8;">
+
+                <div style="margin-top:10px; display:flex; justify-content:space-between; font-size:0.75rem; color:#94a3b8;">
                     <span><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(item.district || 'Bahçelievler')}</span>
                     <span><i class="far fa-calendar-alt"></i> ${new Date(item.created_at).toLocaleDateString('tr-TR')}</span>
                 </div>
@@ -1080,9 +1133,14 @@ async function renderTavsiyeler() {
 
     } catch (err) {
         console.error("Tavsiye Hatası:", err);
-        el.innerHTML = '<p style="text-align:center; color:red; padding:20px;">Veriler çekilirken bir teknik hata oluştu.</p>';
+        el.innerHTML = '<p style="text-align:center; color:red; padding:20px;">Veriler çekilirken hata oluştu.</p>';
     }
 }
+              
+          
+
+
+
 
 // FIRSAT SİLME MOTORU - TİP ÇAKALIMINI BİTİREN VERSİYON
 window.deleteFirsat = async (id) => {
@@ -1118,6 +1176,7 @@ window.deleteFirsat = async (id) => {
 window.deleteTavsiye = async (id) => {
     const userPass = prompt("Bu tavsiyeyi silmek için şifrenizi girin:");
     if (!userPass || !userPass.trim()) return;
+
     const deleteToken = await sha256(userPass.trim());
 
     const { data, error } = await window.supabase
@@ -1127,13 +1186,19 @@ window.deleteTavsiye = async (id) => {
         .eq('delete_password', deleteToken)
         .select();
 
+    if (error) {
+        alert("Sistem Hatası: " + error.message);
+        return;
+    }
+
     if (data && data.length > 0) {
         alert("Tavsiye başarıyla silindi.");
-        loadPortalData();
+        renderTavsiyeler(); // Sadece listeyi yenile (daha temiz)
     } else {
         alert("Hata: Girdiğiniz şifre yanlış.");
     }
 };
+
 
 
 async function fetchAndRenderAds() {
@@ -2174,6 +2239,9 @@ window.deleteHizmet = async (id, correctPass) => {
         alert("Hata: Şifre yanlış!");
     }
 };
+
+
+
 /* >> MERKEZİ İLAN SİLME MOTORU - RLS UYUMLU << */
 window.deleteAd = async (id) => {
     const userPass = prompt("İlanı kaldırmak için Silme Şifresini girin (Örn: S1571):");

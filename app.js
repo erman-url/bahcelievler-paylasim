@@ -1,4 +1,4 @@
-/* >> BAHÇELİEVLER PRO ENGINE V4.3 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
+/* >> BAHÇELİEVLER FORUM SON V 4.5 - %100 ARINDIRILMIŞ NİHAİ SÜRÜM << */
 const R2_WORKER_URL = "https://broad-mountain-f064.erman-urel.workers.dev"; //
 window.R2_WORKER_URL = R2_WORKER_URL;
 /* >> CLOUDFLARE D1 SORGU MOTORU << */
@@ -846,10 +846,20 @@ async function setupFirsatForm() {
                 nickname: nicknameVal || null
             };
 
-            const { error } = await window.supabase.from('firsatlar').insert([payload]);
-            if (error) throw error;
+            const { data, error } = await window.supabase
+    .from('firsatlar')
+    .insert([payload])
+    .select();
 
-            alert("Paylaşım Başarılı!");
+if (error) throw error;
+
+if (data && data.length > 0) {
+    const newId = data[0].id;
+    document.cookie = `firsat_${newId}=owner; max-age=31536000; path=/`;
+}
+
+alert("Paylaşım Başarılı!");
+
             form.reset();
             toggleFirsatFields();
             renderFirsatlar();
@@ -906,9 +916,7 @@ async function renderFirsatlar() {
                         <span style="font-size:0.65rem; font-weight:bold; text-transform:uppercase; background:#f0f4f8; color:#555; padding:4px 8px; border-radius:6px;">
                             ${window.escapeHTML(f.category)}
                         </span>
-                        <button onclick="event.stopPropagation(); window.deleteFirsat('${f.id}')" style="background:none; border:none; color:#ff4d4d; cursor:pointer;">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+                        
                     </div>
                     
                     <h4 style="margin:0 0 10px 0; font-size:1.1rem; color:var(--dark-text);">${window.escapeHTML(f.title)}</h4>
@@ -1072,16 +1080,17 @@ window.openFirsatDetail = async function(id) {
                             ${"⭐".repeat(item.rating || 5)}
                         </span>
 
-                        ${
-                            hasOwnerCookie(item.id)
-                            ? `
-                            <button onclick="event.stopPropagation(); window.deleteTavsiye('${item.id}')"
-                                    style="background:none; border:none; color:#ff4d44; cursor:pointer;">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                            `
-                            : ''
-                        }
+                ${
+    document.cookie.split('; ').some(row => row === `tavsiye_${item.id}=owner`)
+    ? `
+    <button onclick="event.stopPropagation(); window.deleteTavsiye('${item.id}')"
+            style="background:none; border:none; color:#ff4d4d; cursor:pointer;">
+        <i class="fas fa-trash-alt"></i>
+    </button>
+    `
+    : ''
+}
+
                     </div>
                 </div>
 
@@ -1921,14 +1930,14 @@ function setupAdSearch() {
     });
 }
 
-// YENİ: İlanları ekrana basan render fonksiyonu
-window.renderAds = async function(ads) {
+// 🚀 PERFORMANS OPTİMİZE EDİLMİŞ RENDER ADS
+window.renderAds = async function (ads) {
     const list = document.getElementById("ads-list");
     if (!list) return;
-    
+
     list.innerHTML = '';
 
-    if (ads.length === 0) {
+    if (!ads || ads.length === 0) {
         list.innerHTML = `
             <div style="text-align: center; padding: 40px; color: #999;">
                 <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
@@ -1936,50 +1945,97 @@ window.renderAds = async function(ads) {
                 <p style="font-size: 0.85rem; margin-top: 5px;">Farklı bir arama terimi veya kategori deneyin.</p>
             </div>
         `;
-    } else {
-        const adsHtml = await Promise.all(ads.map(async item => {
-            const { count } = await window.supabase
-                .from('ilan_yorumlar')
-                .select('*', { count: 'exact', head: true })
-                .eq('ilan_id', item.id);
+        return;
+    }
+/* 🔥 TEK SORGU İLE TÜM YORUMLARI ÇEK — OPTİMİZE VERSİYON */
 
-            const commentCount = count || 0;
-            const adDate = new Date(item.created_at).toLocaleDateString('tr-TR');
-            const displayImg = item.image_url || getPlaceholderImage(null);
+const adIds = ads.map(ad => ad.id);
+let commentCountMap = {};
 
-            return `
-            <div class="ad-card ad-card-modern" 
-     data-district="${item.district || 'Bahçelievler'}"
-     onclick="openAdDetail('${item.id}')">
+/* Eğer ilan yoksa sorgu atma */
+if (adIds.length > 0) {
 
-                <div class="ad-img-wrapper">
-                    <img src="${displayImg}" onerror="this.src='https://via.placeholder.com/300?text=Resim+Yok'">
-                    <div class="floating-actions">
-                        <button class="action-btn-mini" onclick="event.stopPropagation(); window.uDelete('${item.id}', 'ilanlar', true)" title="İlanı Sil">
-                            <i class="fas fa-trash-alt" style="color:#ff4d4d;"></i>
-                        </button>
-                        <button class="action-btn-mini" onclick="event.stopPropagation(); openAdDetail('${item.id}')">
-                            <i class="far fa-eye" style="color:var(--app-blue);"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="ad-info-modern">
-                    <span class="ad-price-tag">${new Intl.NumberFormat('tr-TR').format(item.price)} TL</span>
-                    <h4 style="font-size:0.9rem; margin:5px 0; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${window.escapeHTML(item.title)}</h4>
-                    <div class="ad-meta-minimal">
-                        <span><i class="fas fa-map-marker-alt"></i> ${window.escapeHTML(item.district || 'Bahçelievler')}</span>
-                        ${item.warranty ? `<span style="font-size:0.7rem; color:#666;">${window.escapeHTML(item.warranty)}</span>` : ''}
-                    </div>
-                    <div style="margin-top:8px; padding-top:8px; border-top:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#aaa;">
-                        <span>${adDate}</span>
-                        <span style="color:var(--app-blue); font-weight:700;"><i class='far fa-comment-dots'></i> ${commentCount} Yorum</span>
-                    </div>
+    const { data: commentData, error } = await window.supabase
+        .from('ilan_yorumlar')
+        .select('ilan_id')
+        .in('ilan_id', adIds)
+        .eq('is_active', true);
+
+    if (error) {
+        console.error("Yorum sayısı çekilirken hata:", error);
+    }
+
+    if (!error && commentData && commentData.length > 0) {
+        commentData.forEach(item => {
+            commentCountMap[item.ilan_id] =
+                (commentCountMap[item.ilan_id] || 0) + 1;
+        });
+    }
+}
+
+    /* 🔥 HTML ÜRETİM */
+    const adsHtml = ads.map(item => {
+
+        const commentCount = commentCountMap[item.id] || 0;
+        const adDate = new Date(item.created_at).toLocaleDateString('tr-TR');
+        const displayImg = item.image_url || getPlaceholderImage(null);
+
+        return `
+        <div class="ad-card ad-card-modern" 
+            data-district="${item.district || 'Bahçelievler'}"
+            onclick="openAdDetail('${item.id}')">
+
+            <div class="ad-img-wrapper">
+                <img src="${displayImg}" 
+                     onerror="this.src='https://via.placeholder.com/300?text=Resim+Yok'">
+                <div class="floating-actions">
+                    <button class="action-btn-mini" 
+                        onclick="event.stopPropagation(); window.uDelete('${item.id}', 'ilanlar', true)" 
+                        title="İlanı Sil">
+                        <i class="fas fa-trash-alt" style="color:#ff4d4d;"></i>
+                    </button>
+                    <button class="action-btn-mini" 
+                        onclick="event.stopPropagation(); openAdDetail('${item.id}')">
+                        <i class="far fa-eye" style="color:var(--app-blue);"></i>
+                    </button>
                 </div>
             </div>
-        `}));
-        list.innerHTML = adsHtml.join('');
-    }
+
+            <div class="ad-info-modern">
+                <span class="ad-price-tag">
+                    ${new Intl.NumberFormat('tr-TR').format(item.price)} TL
+                </span>
+
+                <h4 style="font-size:0.9rem; margin:5px 0; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    ${window.escapeHTML(item.title)}
+                </h4>
+
+                <div class="ad-meta-minimal">
+                    <span>
+                        <i class="fas fa-map-marker-alt"></i> 
+                        ${window.escapeHTML(item.district || 'Bahçelievler')}
+                    </span>
+                    ${item.warranty ? 
+                        `<span style="font-size:0.7rem; color:#666;">
+                            ${window.escapeHTML(item.warranty)}
+                        </span>` 
+                        : ''}
+                </div>
+
+                <div style="margin-top:8px; padding-top:8px; border-top:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#aaa;">
+                    <span>${adDate}</span>
+                    <span style="color:var(--app-blue); font-weight:700;">
+                        <i class='far fa-comment-dots'></i> ${commentCount} Yorum
+                    </span>
+                </div>
+            </div>
+        </div>
+        `;
+    });
+
+    list.innerHTML = adsHtml.join('');
 };
+
 
 /* >> TÜRKÇE KARAKTER UYUMLU FİLTRE MOTORU << */
 async function applyFilters(category, searchTerm) {
@@ -2329,16 +2385,14 @@ window.scrollToIlanForm = function() {
 
 window.openAddAdModal = function() {
     const modal = document.getElementById('add-ad-modal');
-    if (modal) {
-        modal.style.display = 'flex';
-        setTimeout(() => {
-            modal.style.visibility = 'visible';
-            modal.style.opacity = '1';
-        }, 10);
-    }
-    document.getElementById('add-ad-modal').style.display = 'block';
+    if (!modal) return;
+
+    modal.style.display = 'flex';
+    modal.style.visibility = 'visible';
+    modal.style.opacity = '1';
     document.body.style.overflow = 'hidden';
 };
+
 
 window.closeAddAdModal = function() {
     const modal = document.getElementById('add-ad-modal');
@@ -2907,18 +2961,39 @@ window.uDelete = async (id, table, isSoft = false) => {
         console.error("Silme Hatası:", error);
     }
 };
-
-/* === Minimal Cookie Bildirimi (Stabil) === */
+/* === Minimal Cookie Bildirimi (Stabil + Güvenli) === */
 
 document.addEventListener("DOMContentLoaded", function () {
-    if (!localStorage.getItem("cookieAccepted")) {
-        document.getElementById("cookie-bar").style.display = "block";
+    const bar = document.getElementById("cookie-bar");
+    if (!bar) return;
+
+    const accepted = localStorage.getItem("cookieAccepted");
+
+    if (!accepted) {
+        bar.style.display = "block";
+        bar.style.opacity = "0";
+        bar.style.transition = "opacity 0.3s ease";
+
+        // küçük delay ile fade-in
+        setTimeout(() => {
+            bar.style.opacity = "1";
+        }, 50);
+    } else {
+        bar.style.display = "none";
     }
 });
 
 function acceptCookies() {
     localStorage.setItem("cookieAccepted", "true");
-    document.getElementById("cookie-bar").style.display = "none";
+
+    const bar = document.getElementById("cookie-bar");
+    if (!bar) return;
+
+    bar.style.opacity = "0";
+
+    setTimeout(() => {
+        bar.style.display = "none";
+    }, 300);
 }
 
 

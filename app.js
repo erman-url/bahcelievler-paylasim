@@ -240,6 +240,8 @@ async function loadPortalData() {
             fetchHaberler(), // Haber Motoru Başlatıldı
         ]);
 
+        await renderKesintiler();
+
         updateDashboard();
     } catch (err) { console.error("Portal yükleme hatası:", err); }
 }

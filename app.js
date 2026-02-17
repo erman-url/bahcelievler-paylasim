@@ -908,7 +908,7 @@ async function renderFirsatlar() {
                 const borderColor = isOnline ? '#007bff' : '#28a745';
 
                 return `
-                <div class="cyber-card ad-card" style="border-left: 6px solid ${borderColor}; padding: 15px;" onclick="openFirsatDetail('${f.id}')">
+                <div class="cyber-card firsat-card" style="border-left: 6px solid ${borderColor}; padding: 15px;" onclick="openFirsatDetail('${f.id}')">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                         <span style="font-size:0.65rem; font-weight:bold; text-transform:uppercase; background:#f0f4f8; color:#555; padding:4px 8px; border-radius:6px;">
                             ${window.escapeHTML(f.category)}
@@ -1398,12 +1398,32 @@ if (lastPiyasa?.[0]) {
             }
         }
 
-        const { data: lastFirsat } = await window.supabase.from('firsatlar').select('title').order('created_at', {ascending: false}).limit(1);
-        if (lastFirsat?.[0]) document.getElementById("preview-firsat").textContent = lastFirsat[0].title;
+      const { data: lastFirsat } = await window.supabase
+    .from('firsatlar')
+    .select('title')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+    .limit(1);
 
-        const { data: lastTavsiye } = await window.supabase.from('tavsiyeler').select('title').order('created_at', {ascending: false}).limit(1);
-        const previewTavsiye = document.getElementById("preview-tavsiye");
-        if (previewTavsiye) previewTavsiye.textContent = lastTavsiye?.[0] ? lastTavsiye[0].title : "Henüz tavsiye yok.";
+const previewFirsat = document.getElementById("preview-firsat");
+if (previewFirsat)
+    previewFirsat.textContent = lastFirsat?.[0]
+        ? lastFirsat[0].title
+        : "Henüz fırsat yok.";
+
+const { data: lastTavsiye } = await window.supabase
+    .from('tavsiyeler')
+    .select('title')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+    .limit(1);
+
+const previewTavsiye = document.getElementById("preview-tavsiye");
+if (previewTavsiye)
+    previewTavsiye.textContent = lastTavsiye?.[0]
+        ? lastTavsiye[0].title
+        : "Henüz tavsiye yok.";
+
 
 
     } catch (err) {

@@ -1415,7 +1415,6 @@ function showSlides() {
     window.sliderTimeout = setTimeout(showSlides, 4000);
 }
 
-/* >> DUYURU MOTORU: RESMİ BİLGİ AKIŞI << */
 /* >> DUYURU MOTORU: SADECE RESMİ DUYURULAR TABLOSU << */
 async function fetchDuyurular() {
     const previewEl = document.getElementById('preview-duyuru'); 
@@ -1989,7 +1988,8 @@ window.searchOnMap = function() {
     if (!query) return alert("Lütfen aramak istediğiniz usta türünü yazın.");
     
     const mapIframe = document.getElementById('target-map');
-    const freeSearchUrl = `https://www.google.com/search?q=https://maps.google.com/maps%3Fq%3D${encodeURIComponent(query)}+Bahçelievler+İstanbul&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+    // Template literal düzeltildi:
+    const freeSearchUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}+Bahçelievler+İstanbul&t=&z=14&ie=UTF8&iwloc=&output=embed`;
     
     mapIframe.src = freeSearchUrl;
 };

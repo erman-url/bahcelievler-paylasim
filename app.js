@@ -170,10 +170,11 @@ function setupNavigation() {
             } else if (target === 'sikayet-hatti') {
                 renderSikayetler();
                 window.loadedModules[target] = true;
-            } else if (target === 'firsatlar') {
-                renderFirsatlar();
-                window.loadedModules[target] = true;
-            } else if (target === 'hizmetler') {
+            } else if (target === 'firsat-indirim') {
+    renderFirsatlar();
+    window.loadedModules[target] = true;
+}
+ else if (target === 'hizmetler') {
                 renderHizmetler();
                 window.loadedModules[target] = true;
             }
@@ -1467,9 +1468,11 @@ async function fetchDuyurular() {
 
     try {
         const { data, error } = await window.supabase
-            .from('duyurular')
-            .select('*')
-            .order('created_at', { ascending: false });
+    .from('firsatlar')
+    .select('*')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false });
+
 
         if (error) throw error;
 

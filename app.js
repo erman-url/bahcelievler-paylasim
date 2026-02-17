@@ -57,7 +57,7 @@ window.escapeHTML = function(str) {
             '<': '&lt;',
             '>': '&gt;',
             '"': '&quot;',
-            "'": '&#039;'
+            "'": '&#39;'
         }[m];
     });
 };
@@ -3076,3 +3076,8 @@ function setupDistrictFilter() {
    });
 
 }
+
+// Sayfa yüklendiğinde filtreyi başlat
+document.addEventListener("DOMContentLoaded", () => {
+    setupDistrictFilter();
+});

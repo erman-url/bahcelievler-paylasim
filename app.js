@@ -1462,46 +1462,69 @@ function showSlides() {
 }
 
 /* >> DUYURU MOTORU: RESMİ BİLGİ AKIŞI << */
+/* >> DUYURU MOTORU: SADECE RESMİ DUYURULAR TABLOSU << */
 async function fetchDuyurular() {
     const previewEl = document.getElementById('preview-duyuru'); 
     const listEl = document.getElementById('duyuru-list'); 
 
     try {
         const { data, error } = await window.supabase
-    .from('firsatlar')
-    .select('*')
-    .eq('is_active', true)
-    .order('created_at', { ascending: false });
-
+            .from('duyurular')   // ✅ SADECE DUYURULAR
+            .select('*')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false });
 
         if (error) throw error;
 
-        // İsim Kontrolü: Duyurular için 'baslik' ve 'icerik' öncelikli
-        if (previewEl && data.length > 0) {
-            previewEl.textContent = data[0].baslik || data[0].title || "Duyuru";
+        if (!data || data.length === 0) {
+            if (previewEl) previewEl.textContent = "Aktif duyuru yok.";
+            if (listEl) listEl.innerHTML = "<p style='text-align:center; padding:20px;'>Aktif duyuru bulunmuyor.</p>";
+            return;
+        }
+
+        if (previewEl) {
+            previewEl.textContent = data[0].baslik || "Duyuru";
         }
 
         if (listEl) {
             listEl.innerHTML = data.map(d => {
-                const baslik = d.baslik || d.title || "Duyuru";
-                const icerik = d.icerik || d.content || "";
-                const ozet = icerik.length > 120 ? icerik.substring(0, 120) + "..." : icerik;
+                const baslik = d.baslik || d.title || d.baslik_text || "Başlık Yok";
+                const icerik = d.icerik || "";
+                const ozet = icerik.length > 120 
+                    ? icerik.substring(0, 120) + "..." 
+                    : icerik;
+
                 return `
-                <div class="cyber-card" style="margin-bottom:15px; border-left: 5px solid #ff007f; cursor:pointer;" onclick="openHaberDetail('${d.id}', 'duyuru')">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <small style="color:#888;">${new Date(d.created_at).toLocaleDateString('tr-TR')}</small>
+                <div class="cyber-card" 
+                     style="margin-bottom:15px; border-left: 5px solid #ff007f; cursor:pointer;" 
+                     onclick="openHaberDetail('${d.id}', 'duyuru')">
+
+                    <div style="display:flex; justify-content:space-between;">
+                        <small style="color:#888;">
+                            ${new Date(d.created_at).toLocaleDateString('tr-TR')}
+                        </small>
                         <i class="fas fa-bullhorn" style="color:#ff007f;"></i>
                     </div>
-                    <h3 style="margin:10px 0 5px 0; color:var(--dark);">${window.escapeHTML(baslik)}</h3>
-                    <p style="font-size:0.9rem; color:#444; line-height:1.4;">${window.escapeHTML(ozet)}</p>
+
+                    <h3 style="margin:10px 0 5px 0;">
+                        ${window.escapeHTML(baslik)}
+                    </h3>
+
+                    <p style="font-size:0.9rem; color:#444;">
+                        ${window.escapeHTML(ozet)}
+                    </p>
                 </div>
-            `}).join('') || "<p style='text-align:center; padding:20px;'>Aktif duyuru bulunmuyor.</p>";
+                `;
+            }).join('');
         }
+
     } catch (err) {
         console.error("Duyuru hatası:", err);
-        if (listEl) listEl.innerHTML = "<p style='text-align:center; color:red;'>Duyurular alınamadı.</p>";
+        if (listEl)
+            listEl.innerHTML = "<p style='text-align:center; color:red;'>Duyurular alınamadı.</p>";
     }
 }
+
 
 
 window.showLegal = function(type) {

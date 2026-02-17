@@ -3073,7 +3073,6 @@ function setupDistrictFilter() {
       }
     }
 
-  });
+  
 
-};
-}
+  }

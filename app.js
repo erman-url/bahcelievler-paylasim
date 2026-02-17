@@ -1781,8 +1781,16 @@ async function fetchLiveInfo() {
         const wRes = await fetch("https://api.open-meteo.com/v1/forecast?latitude=41.00&longitude=28.84&current_weather=true");
         const wData = await wRes.json();
         const temp = Math.round(wData.current_weather.temperature);
-        document.getElementById("weather-temp").textContent = `Bahçelievler: ${temp}°C`;
-    } catch (e) { document.getElementById("weather-temp").textContent = "Hava: --"; }
+        const weatherEl = document.getElementById("weather-temp");
+if (weatherEl) {
+    weatherEl.textContent = `Bahçelievler: ${temp}°C`;
+}
+
+   } catch (e) {
+    const weatherEl = document.getElementById("weather-temp");
+    if (weatherEl) weatherEl.textContent = "Hava: --";
+}
+
 
     try {
         const simpleRes = await fetch("https://open.er-api.com/v6/latest/USD");
@@ -2220,34 +2228,69 @@ window.closeRadarModal = () => {
 };
 
 /* >> VERİ TOPLAMA ODAKLI SİLME (SOFT DELETE) - STABİLİZE EDİLDİ << */
+/* >> RADAR SOFT DELETE – RLS & HASH KONTROLLÜ NİHAİ SÜRÜM << */
 window.softDeleteRadar = async (id) => {
-    const userPass = prompt("İlanı kaldırmak için şifrenizi giriniz (1 Harf + 4 Rakam)");
+
+    const userPass = prompt("İlanı kaldırmak için şifrenizi giriniz (Örn: S1571)");
     if (!userPass || !userPass.trim()) return;
 
-    const finalPass = String(userPass).trim();
+    const finalPass = userPass.trim();
+
+    // 1️⃣ Format kontrolü
+    const passCheck = window.validateComplexPassword(finalPass);
+    if (passCheck) {
+        alert(passCheck);
+        return;
+    }
+
     const deleteToken = await sha256(finalPass);
 
-    // Şifre Formatı Kontrolü (Mühür)
-    const passCheck = window.validateComplexPassword(finalPass);
-    if (passCheck) { alert(passCheck); return; }
+    // 2️⃣ Önce kayıt var mı kontrol et
+    const { data: record, error: fetchError } = await window.supabase
+        .from('piyasa_verileri')
+        .select('delete_password')
+        .eq('id', id)
+        .single();
 
-    const { data, error } = await window.supabase
+    if (fetchError || !record) {
+        alert("Kayıt bulunamadı veya erişim engellendi.");
+        console.error(fetchError);
+        return;
+    }
+
+    // 3️⃣ Hash karşılaştır
+    if (record.delete_password !== deleteToken) {
+        alert("Hata: Şifre yanlış!");
+        return;
+    }
+
+    // 4️⃣ Soft delete (is_active = false)
+    const { error: updateError } = await window.supabase
         .from('piyasa_verileri')
         .update({ is_active: false })
-        .eq('id', id)
-        .eq('delete_password', deleteToken)
-        .select();
+        .eq('id', id);
 
-    if (error) {
-        alert("Sistem Hatası: " + error.message);
-    } else if (data && data.length > 0) {
-        alert("Radar panodan kaldırıldı (Veri analiz için saklandı).");
-        if (typeof window.closeRadarModal === "function") window.closeRadarModal();
-        if (typeof loadPortalData === "function") loadPortalData(); 
-    } else {
-        alert("Hata: Şifre yanlış!");
+    if (updateError) {
+        alert("Update hatası: " + updateError.message);
+        console.error(updateError);
+        return;
+    }
+
+    alert("Radar kaldırıldı (veri analiz için saklandı).");
+
+    if (typeof window.closeRadarModal === "function") {
+        window.closeRadarModal();
+    }
+
+    if (typeof fetchAndRenderPiyasa === "function") {
+        fetchAndRenderPiyasa();
+    }
+
+    if (typeof loadPortalData === "function") {
+        loadPortalData();
     }
 };
+
 
 function validateTC(tc) {
     if (tc.length !== 11 || isNaN(tc) || tc[0] === '0' || /^(\d)\1{10}$/.test(tc)) return false;

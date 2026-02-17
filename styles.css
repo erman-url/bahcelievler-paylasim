@@ -2283,3 +2283,51 @@ body::before {
 #social-detail-modal .modal-content {
     margin: 0 auto !important;
 }
+
+/* =====================================================
+   RADAR MODAL – İÇ ÇERÇEVE TEMİZLİK
+===================================================== */
+
+/* Dış kutu sade */
+#radar-detail-modal .ad-info-box {
+    background: #f8fafc !important;
+    border: 1px solid rgba(0,86,179,0.12) !important;
+    border-radius: 16px !important;
+    box-shadow: none !important;
+    padding: 18px !important;
+    margin: 18px auto !important;
+}
+
+/* İçte tekrar ad-info-box varsa border kaldır */
+#radar-detail-modal .ad-info-box .ad-info-box {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#radar-detail-modal .ad-info-box p {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0 !important;
+    font-weight: 600;
+    color: #334155;
+}
+
+#radar-detail-modal .ad-info-box strong {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* =====================================================
+   RADAR MODAL – DESKTOP STABILIZE
+===================================================== */
+
+#radar-detail-modal .modal-content {
+    width: 100% !important;
+    max-width: 520px !important;
+    margin: 0 auto !important;
+    border-radius: 24px !important;
+}

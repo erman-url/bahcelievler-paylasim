@@ -1948,17 +1948,22 @@ if (adIds.length > 0) {
 };
 
 
-/* >> TÜRKÇE KARAKTER UYUMLU FİLTRE MOTORU << */
-async function applyFilters(category, searchTerm) {
+/* >> GELİŞMİŞ MERKEZİ FİLTRE MOTORU << */
+async function applyFilters(category, searchTerm, district = currentDistrict) {
     let filtered = allAds.filter(ad => {
+        // 1. Kategori Kontrolü
         const matchesCategory = category === 'all' || ad.category === category;
-        // toLocaleLowerCase('tr-TR') kullanarak Türkçe karakter sorununu mühürlüyoruz
+        
+        // 2. Mahalle Kontrolü
+        const matchesDistrict = district === 'all' || ad.district === district;
+        
+        // 3. Arama Terimi Kontrolü (Türkçe Karakter Duyarlı)
         const searchLower = (searchTerm || "").toLocaleLowerCase('tr-TR');
         const adTitleLower = (ad.title || "").toLocaleLowerCase('tr-TR');
         const adContentLower = (ad.content || "").toLocaleLowerCase('tr-TR');
-        
         const matchesSearch = adTitleLower.includes(searchLower) || adContentLower.includes(searchLower);
-        return matchesCategory && matchesSearch;
+        
+        return matchesCategory && matchesDistrict && matchesSearch;
     });
     
     renderAds(filtered);
@@ -3023,26 +3028,29 @@ document.addEventListener("keydown", (e) => {
 });
 // MAHALLE FİLTRE GERÇEK FONKSİYON
 function setupDistrictFilter() {
+    const districtFilter = document.getElementById("district-filter");
+    if (!districtFilter) return;
 
-  const districtFilter = document.getElementById("district-filter");
-  if (!districtFilter) return;
+    districtFilter.addEventListener("change", function () {
+        currentDistrict = this.value; // Global değişkeni güncelle
+        const searchInput = document.getElementById("ad-search-input");
+        const searchTerm = searchInput ? searchInput.value.trim() : '';
+        
+        // Merkezi filtreyi çağır
+        applyFilters(currentCategory, searchTerm, currentDistrict);
 
-  districtFilter.addEventListener("change", function () {
-
-    const selectedDistrict = this.value;
-    const adCards = document.querySelectorAll(".ad-card");
-
-    adCards.forEach(card => {
-      const adDistrict = card.getAttribute("data-district");
-
-      if (selectedDistrict === "all") {
-        card.style.display = "block";
-      } else if (adDistrict === selectedDistrict) {
-        card.style.display = "block";
-      } else {
-        card.style.display = "none";
-      }
+        // SEO Metinlerini Güncelle (Mevcut mantığın kalabilir)
+        const seoBlock = document.getElementById("mahalle-seo-text");
+        if (seoBlock) {
+            if (currentDistrict !== "all") {
+                seoBlock.style.display = "block";
+                seoBlock.innerHTML = `<h2>${currentDistrict} İlanları</h2><p>${currentDistrict} güncel mahalle ilanları platformumuzda.</p>`;
+            } else {
+                seoBlock.style.display = "none";
+            }
+        }
     });
+}
 
     // ===== SEO BLOĞU =====
     const seoBlock = document.getElementById("mahalle-seo-text");

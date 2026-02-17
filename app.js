@@ -884,63 +884,8 @@ function getPlaceholderImage(link) {
     }
 }
 
-/* >> YENİLENMİŞ FIRSAT RENDER MOTORU << */
-async function renderFirsatlar() {
-    const el = document.getElementById('firsat-list');
-    if (!el) return;
-    
-    try {
-        // 1. Sorgu Gücü: Tüm verileri çek (is_active filtresi kaldırıldı)
-        const { data, error } = await window.supabase.from('firsatlar')
-            .select('*')
-.eq('is_active', true)
-.order('created_at', {ascending: false});
 
-        
-        if (error) throw error;
 
-        // 2. HTML Onarımı: Listeyi temizle
-        el.innerHTML = "";
-
-        el.innerHTML = data?.map(f => {
-            // 3. Hata Yakalama: Tekil veri hataları listeyi bozmasın
-            try {
-                // 4. Fallback Görsel: Resim yoksa placeholder kullan
-                const displayImg = f.image_url || getPlaceholderImage(f.link);
-                const isOnline = f.category === 'Online Ürün & Kampanya';
-                const borderColor = isOnline ? '#007bff' : '#28a745';
-
-                return `
-                <div class="cyber-card firsat-card" style="border-left: 6px solid ${borderColor}; padding: 15px;" onclick="openFirsatDetail('${f.id}')">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                        <span style="font-size:0.65rem; font-weight:bold; text-transform:uppercase; background:#f0f4f8; color:#555; padding:4px 8px; border-radius:6px;">
-                            ${window.escapeHTML(f.category)}
-                        </span>
-                        
-                    </div>
-                    
-                    <h4 style="margin:0 0 10px 0; font-size:1.1rem; color:var(--dark-text);">${window.escapeHTML(f.title)}</h4>
-                    
-                    <div style="width:100%; height:180px; background:#f9f9f9; border-radius:10px; overflow:hidden; margin-bottom:12px;">
-                        <img src="${displayImg}" onerror="this.src='https://via.placeholder.com/150?text=Firsat'" style="width:100%; height:100%; object-fit:contain; padding:10px;">
-                    </div>
-
-                    <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border: 1px dashed #eee;">
-                        <p style="font-size:0.85rem; color:#444; line-height:1.4; margin:0;">
-                            ${window.escapeHTML(f.content)}
-                        </p>
-                    </div>
-                </div>`;
-            } catch (err) {
-                console.error("Fırsat render hatası:", err);
-                return ""; // Hatalı kartı atla
-            }
-        }).join('') || "<p style='text-align:center; padding:20px; color:#888;'>Henüz fırsat bulunmuyor.</p>";
-    } catch (err) {
-        console.error("Fırsat yükleme hatası:", err);
-        el.innerHTML = "<p style='text-align:center; padding:20px; color:red;'>Veriler yüklenirken bağlantı sorunu oluştu.</p>";
-    }
-}
 
 window.openFirsatDetail = async function(id) {
     try {
@@ -1130,30 +1075,28 @@ window.deleteFirsat = async (id) => {
     const userPass = prompt("Bu fırsatı silmek için lütfen şifrenizi girin:");
     if (!userPass || !userPass.trim()) return;
 
-    const finalPass = String(userPass).trim();
-    const deleteToken = await sha256(finalPass);
+    const deleteToken = await sha256(userPass.trim());
 
     const { data, error } = await window.supabase
         .from('firsatlar')
-        .delete()
+        .update({ is_active: false })
         .eq('id', id)
         .eq('delete_password', deleteToken)
         .select();
 
     if (error) {
-        console.error("Supabase Hatası:", error);
         alert("Sistem Hatası: " + error.message);
         return;
     }
 
     if (data && data.length > 0) {
-        alert("Fırsat başarıyla silindi.");
-        if (typeof loadPortalData === "function") loadPortalData();
+        alert("Fırsat kaldırıldı.");
+        renderFirsatlar();
     } else {
         alert("Hata: Şifre yanlış!");
-        console.warn("Eşleşme yok. DB'deki değer ile girilen şifrenin hash'i uyuşmuyor.");
     }
 };
+
 
 // TAVSİYE SİLME MOTORU
 window.deleteTavsiye = async (id) => {
@@ -1164,7 +1107,7 @@ window.deleteTavsiye = async (id) => {
 
     const { data, error } = await window.supabase
         .from('tavsiyeler')
-        .delete()
+        .update({ is_active: false })
         .eq('id', id)
         .eq('delete_password', deleteToken)
         .select();
@@ -1175,12 +1118,13 @@ window.deleteTavsiye = async (id) => {
     }
 
     if (data && data.length > 0) {
-        alert("Tavsiye başarıyla silindi.");
-        renderTavsiyeler(); // Sadece listeyi yenile (daha temiz)
+        alert("Tavsiye kaldırıldı.");
+        renderTavsiyeler();
     } else {
         alert("Hata: Girdiğiniz şifre yanlış.");
     }
 };
+
 
 
 
@@ -1375,15 +1319,23 @@ if (modalElement) {
 
 async function updateDashboard() {
     try {
-        const { data: lastAd } = await window.supabase.from('ilanlar').select('title').order('created_at', {ascending: false}).limit(1);
+        const { data: lastAd } = await window.supabase
+    .from('ilanlar')
+    .select('title')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+    .limit(1);
+
         if (lastAd?.[0]) document.getElementById("preview-ad").textContent = lastAd[0].title;
 
 
       const { data: lastPiyasa } = await window.supabase
-    .from('piyasa_verileri')
-    .select('id,urun_adi,fiyat,market_adi,tarih_etiketi,image_url,is_active,created_at,barkod')
-    .order('created_at', {ascending: false})
-    .limit(1);
+  .from('piyasa_verileri')
+.select('id,urun_adi,fiyat,market_adi,tarih_etiketi,image_url,is_active,created_at,barkod')
+.eq('is_active', true)
+.order('created_at', {ascending: false})
+.limit(1);
+
 
 if (lastPiyasa?.[0]) {
             const previewPiyasa = document.getElementById("preview-piyasa");
@@ -1797,7 +1749,8 @@ function setupContactForm() {
     
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        if (isBotDetected() || isProcessing) return; // BOT KONTROLÜ EKLENDİ
+        if (isBotDetected("contact-form") || isProcessing) return;
+                                                                       // BOT KONTROLÜ EKLENDİ
         
         const btn = document.getElementById("contact-submit-btn");
         isProcessing = true;
@@ -1842,15 +1795,31 @@ if (weatherEl) {
 
 
     try {
-        const simpleRes = await fetch("https://open.er-api.com/v6/latest/USD");
-        const sData = await simpleRes.json();
-        
+    const simpleRes = await fetch("https://open.er-api.com/v6/latest/USD");
+    const sData = await simpleRes.json();
+
+    if (sData && sData.rates && sData.rates.TRY && sData.rates.EUR) {
+
         const usdToTry = (sData.rates.TRY).toFixed(2);
         const eurToTry = (sData.rates.TRY / sData.rates.EUR).toFixed(2);
 
-        document.getElementById("usd-rate").textContent = usdToTry + " ₺";
-        document.getElementById("eur-rate").textContent = eurToTry + " ₺";
-    } catch (e) { console.error("Kur çekilemedi"); }
+        const usdEl = document.getElementById("usd-rate");
+        const eurEl = document.getElementById("eur-rate");
+
+        if (usdEl) usdEl.textContent = usdToTry + " ₺";
+        if (eurEl) eurEl.textContent = eurToTry + " ₺";
+    }
+
+} catch (e) {
+    console.error("Kur çekilemedi:", e);
+
+    const usdEl = document.getElementById("usd-rate");
+    const eurEl = document.getElementById("eur-rate");
+
+    if (usdEl) usdEl.textContent = "-- ₺";
+    if (eurEl) eurEl.textContent = "-- ₺";
+}
+
 }
 
 function setupAdSearch() {
@@ -2183,7 +2152,17 @@ async function renderHizmetler() {
                 ${h.image_url ? `<img src="${h.image_url}" style="width:100%; border-radius:8px; margin:8px 0;">` : ''}
                 <p style="font-size:0.9rem; color:#444;">${window.escapeHTML(h.content)}</p>
                 ${h.phone ? `<div style="margin-top:8px; font-weight:bold; color:#28a745; font-size:0.9rem;"><i class="fas fa-phone"></i> ${window.escapeHTML(h.phone)}</div>` : ''}
-                ${h.website ? `<div style="margin-top:4px; font-size:0.85rem;"><a href="${h.website}" target="_blank" onclick="event.stopPropagation()" style="color:#007bff; text-decoration:none;">🌐 Web Sitesi</a></div>` : ''}
+            ${h.website && /^https?:\/\//i.test(h.website) ? `
+<div style="margin-top:4px; font-size:0.85rem;">
+<a href="${window.escapeHTML(h.website)}"
+   target="_blank"
+   rel="noopener noreferrer"
+   onclick="event.stopPropagation()"
+   style="color:#007bff; text-decoration:none;">
+🌐 Web Sitesi
+</a>
+</div>` : ''}
+
             </div>
         `).join('') || "<p style='text-align:center;'>Henüz bir hizmet tanıtımı yok.</p>";
     } catch (err) {
@@ -2200,7 +2179,7 @@ window.deleteHizmet = async (id, correctPass) => {
 
     const { data, error } = await window.supabase
         .from('hizmetler')
-        .delete()
+        .update({ is_active: false })
         .eq('id', id)
         .eq('delete_password', deleteToken)
         .select();
@@ -2264,14 +2243,15 @@ window.openRadarDetail = async function(id) {
     // 3. Silme Butonunu Bağla
     document.getElementById("radar-delete-btn").onclick = () => window.softDeleteRadar(urun.id);
     // 4. Modalı Fiziksel Olarak Tetikle
-    const modal = document.getElementById("radar-detail-modal");
+   const modal = document.getElementById("radar-detail-modal");
+if (modal) {
     modal.style.display = "flex";
     setTimeout(() => { 
         modal.style.visibility = "visible";
         modal.style.opacity = "1"; 
     }, 10);
-} catch (err) { console.error("Radar Hatası:", err); }
-};
+}
+
 
 window.closeRadarModal = () => {
     const modal = document.getElementById("radar-detail-modal");
@@ -2300,35 +2280,23 @@ window.softDeleteRadar = async (id) => {
     const deleteToken = await sha256(finalPass);
 
     // 2️⃣ Önce kayıt var mı kontrol et
-    const { data: record, error: fetchError } = await window.supabase
-        .from('piyasa_verileri')
-        .select('delete_password')
-        .eq('id', id)
-        .single();
+const { data: deleted, error: delError } = await window.supabase
+    .from('piyasa_verileri')
+    .update({ is_active: false })
+    .eq('id', id)
+    .eq('delete_password', deleteToken)
+    .select();
 
-    if (fetchError || !record) {
-        alert("Kayıt bulunamadı veya erişim engellendi.");
-        console.error(fetchError);
-        return;
-    }
+if (delError) {
+    alert("Sistem Hatası: " + delError.message);
+    return;
+}
 
-    // 3️⃣ Hash karşılaştır
-    if (record.delete_password !== deleteToken) {
-        alert("Hata: Şifre yanlış!");
-        return;
-    }
+if (!deleted || deleted.length === 0) {
+    alert("Hata: Şifre yanlış.");
+    return;
+}
 
-    // 4️⃣ Soft delete (is_active = false)
-    const { error: updateError } = await window.supabase
-        .from('piyasa_verileri')
-        .update({ is_active: false })
-        .eq('id', id);
-
-    if (updateError) {
-        alert("Update hatası: " + updateError.message);
-        console.error(updateError);
-        return;
-    }
 
     alert("Radar kaldırıldı (veri analiz için saklandı).");
 
@@ -2749,32 +2717,20 @@ if (deleteBtn) {
 
         const deleteToken = await sha256(userPass.trim());
 
-        // 1️⃣ Önce kayıtı çek
-        const { data: record, error: fetchError } = await window.supabase
-            .from(table)
-            .select('delete_password')
-            .eq('id', id)
-            .single();
-
-        if (fetchError || !record) {
-            alert("Kayıt bulunamadı.");
-            return;
-        }
-
-        // 2️⃣ Hash karşılaştır
-        if (record.delete_password !== deleteToken) {
-            alert("Hata: Şifre yanlış.");
-            return;
-        }
-
-        // 3️⃣ Soft delete
-        const { error: updateError } = await window.supabase
+        const { data, error } = await window.supabase
             .from(table)
             .update({ is_active: false })
-            .eq('id', id);
+            .eq('id', id)
+            .eq('delete_password', deleteToken)
+            .select();
 
-        if (updateError) {
-            alert("Sistem Hatası: " + updateError.message);
+        if (error) {
+            alert("Sistem Hatası: " + error.message);
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            alert("Hata: Şifre yanlış!");
             return;
         }
 
@@ -2783,6 +2739,10 @@ if (deleteBtn) {
         loadPortalData();
     };
 }
+
+
+
+
 
 
         const modal = document.getElementById("social-detail-modal");
@@ -2970,53 +2930,43 @@ function startRamadanCountdown() {
 // Uygulama yüklenince başlat
 document.addEventListener("DOMContentLoaded", startRamadanCountdown);
 
-window.universalSecureDelete = async function(id, tableName, isSoftDelete = false) {
-    const pass = prompt("İşlemi onaylamak için 4 haneli silme şifrenizi giriniz:");
-    if (!pass) return;
-    
-    const deleteToken = await sha256(pass.trim());
-    
-    let query = window.supabase.from(tableName);
-    
-    if (isSoftDelete) query = query.update({ is_active: false });
-    else query = query.delete();
-    
-    // Doğrudan sorguda şifre kontrolü (Güvenli Silme)
-    const { data, error } = await query.eq('id', id).eq('delete_password', deleteToken).select();
 
-    if (data && data.length > 0) {
-        alert("Başarıyla kaldırıldı.");
-        location.reload();
-    } else {
-        alert("Hata: Şifre yanlış!");
-    }
-};
-window.uDelete = async (id, table, isSoft = false) => {
-    const rawPass = prompt("Silme Şifreniz (4 Hane):");
-    if (!rawPass) return;
+
+
+window.uDelete = async (id, table) => {
+
+    const rawPass = prompt("Silme Şifreniz:");
+    if (!rawPass || !rawPass.trim()) return;
+
     const hashedPass = await sha256(rawPass.trim());
-    const passCol = (table === 'ilanlar') ? 'delete_token' : 'delete_password';
-    let query = window.supabase.from(table);
-    if (isSoft) { // Soft Delete (is_active: false yapar) 
-        query = query.update({ is_active: false }); 
-    } else { // Gerçek Silme 
-        query = query.delete(); 
-    }
 
-    // GÜVENLİK MÜHRÜ: Sadece ID ve Şifre aynı anda eşleşirse işlem yap
-    const { data, error, status } = await query
+    const passCol = (table === 'ilanlar')
+        ? 'delete_token'
+        : 'delete_password';
+
+    const { data, error } = await window.supabase
+        .from(table)
+        .update({ is_active: false })
         .eq('id', id)
         .eq(passCol, hashedPass)
         .select();
-    // Supabase RLS veya Query sonucu kontrolü
-    if (!error && data && data.length > 0) {
-        alert("Başarıyla kaldırıldı.");
-        location.reload(); 
-    } else {
-        alert("Hata: Şifre yanlış veya işlem yetkiniz yok!");
-        console.error("Silme Hatası:", error);
+
+    if (error) {
+        alert("Sistem Hatası: " + error.message);
+        return;
     }
+
+    if (!data || data.length === 0) {
+        alert("Hata: Şifre yanlış!");
+        return;
+    }
+
+    alert("İçerik kaldırıldı.");
+    loadPortalData();
 };
+
+
+
 /* === Minimal Cookie Bildirimi (Stabil + Güvenli) === */
 
 document.addEventListener("DOMContentLoaded", function () {

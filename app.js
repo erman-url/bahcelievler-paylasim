@@ -893,7 +893,9 @@ async function renderFirsatlar() {
         // 1. Sorgu Gücü: Tüm verileri çek (is_active filtresi kaldırıldı)
         const { data, error } = await window.supabase.from('firsatlar')
             .select('*')
-            .order('created_at', {ascending: false});
+.eq('is_active', true)
+.order('created_at', {ascending: false});
+
         
         if (error) throw error;
 
@@ -1483,13 +1485,14 @@ async function fetchDuyurular() {
         }
 
         if (previewEl) {
-            previewEl.textContent = data[0].baslik || "Duyuru";
+            previewEl.textContent = data[0].title || "Duyuru";
+
         }
 
         if (listEl) {
             listEl.innerHTML = data.map(d => {
-                const baslik = d.baslik || d.title || d.baslik_text || "Başlık Yok";
-                const icerik = d.icerik || "";
+                const baslik = d.title || "Başlık Yok";
+               const icerik = d.content || "";
                 const ozet = icerik.length > 120 
                     ? icerik.substring(0, 120) + "..." 
                     : icerik;
@@ -1882,36 +1885,41 @@ window.renderAds = async function (ads) {
         `;
         return;
     }
-/* 🔥 TEK SORGU İLE TÜM YORUMLARI ÇEK — OPTİMİZE VERSİYON */
+
+
+/* 🔥 YORUM SAYISI ENTEGRE – STABİL TEK SORGU */
 
 const adIds = ads.map(ad => ad.id);
-let commentCountMap = {};
 
-/* Eğer ilan yoksa sorgu atma */
+let enrichedAds = ads;
+
 if (adIds.length > 0) {
-
-    const { data: commentData, error } = await window.supabase
-        .from('ilan_yorumlar')
-        .select('ilan_id')
-        .in('ilan_id', adIds)
-        .eq('is_active', true);
+    const { data: enriched, error } = await window.supabase
+        .from('ilanlar')
+        .select(`
+            id,
+            ilan_yorumlar(count)
+        `)
+        .in('id', adIds);
 
     if (error) {
         console.error("Yorum sayısı çekilirken hata:", error);
-    }
-
-    if (!error && commentData && commentData.length > 0) {
-        commentData.forEach(item => {
-            commentCountMap[item.ilan_id] =
-                (commentCountMap[item.ilan_id] || 0) + 1;
+    } else if (enriched) {
+        enrichedAds = ads.map(ad => {
+            const match = enriched.find(e => e.id === ad.id);
+            return {
+                ...ad,
+                comment_count: match?.ilan_yorumlar?.[0]?.count || 0
+            };
         });
     }
 }
 
-    /* 🔥 HTML ÜRETİM */
-    const adsHtml = ads.map(item => {
 
-        const commentCount = commentCountMap[item.id] || 0;
+    /* 🔥 HTML ÜRETİM */
+    const adsHtml = enrichedAds.map(item => {
+
+        const commentCount = item.comment_count || 0;
         const adDate = new Date(item.created_at).toLocaleDateString('tr-TR');
         const displayImg = item.image_url || getPlaceholderImage(null);
 
@@ -2366,14 +2374,15 @@ window.openAddAdModal = function() {
 
 window.closeAddAdModal = function() {
     const modal = document.getElementById('add-ad-modal');
-    if (modal) {
-        modal.style.opacity = '0';
-        modal.style.visibility = 'hidden';
-        setTimeout(() => { modal.style.display = 'none'; }, 300);
-    }
-    document.getElementById('add-ad-modal').style.display = 'none';
+    if (!modal) return;
+
+    modal.style.opacity = '0';
+    modal.style.visibility = 'hidden';
+    setTimeout(() => { modal.style.display = 'none'; }, 300);
+
     document.body.style.overflow = 'auto';
 };
+
 
 /* >> HABER MOTORU (GÜNDEM & HABER) << */
 async function fetchHaberler() {

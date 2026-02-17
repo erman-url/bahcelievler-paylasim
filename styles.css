@@ -1111,13 +1111,14 @@ button[onclick*="prepareDeleteHizmet"] {
     margin: 8px 0 !important;
 }
 
-/* 4. Modal genişlik ve taşma koruması */
-.modal-content {
+/* 4. Modal genişlik ve taşma koruması – SADECE İLAN MODAL */
+#ad-detail-modal .modal-content {
     max-width: 450px !important;
     width: 100% !important;
     padding: 15px 20px !important;
     margin-top: 20px !important;
 }
+
 
 .ad-info-box {
     max-width: 340px !important;
@@ -2215,31 +2216,27 @@ body::before {
 }
 
 
-/* =========================================
-   SOCIAL MODAL – CLEAN STRUCTURE
-========================================= */
 
 
-
-
-/* SOCIAL MODAL SCROLL İZOLASYONU */
+/* SOCIAL MODAL – STABLE CENTER FIX */
 #social-detail-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.65);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 16px;
-    z-index: 99999;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(0,0,0,0.85) !important;
 }
 
-.social-premium-modal {
+
+
+#social-detail-modal .social-premium-modal {
     width: 100%;
     max-width: 420px;
-    max-height: 90vh;
+    max-height: 88vh;
+
     overflow-y: auto;
-    border-radius: 20px;
+    background: #ffffff;
+    border-radius: 22px;
+
+    box-shadow: 0 25px 60px rgba(0,0,0,0.35);
 }
 
 
@@ -2283,3 +2280,6 @@ body::before {
     right: 10px !important;
 }
 
+#social-detail-modal .modal-content {
+    margin: 0 auto !important;
+}

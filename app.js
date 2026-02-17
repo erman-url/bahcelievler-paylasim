@@ -3075,4 +3075,5 @@ function setupDistrictFilter() {
 
   });
 
+};
 }

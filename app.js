@@ -441,140 +441,131 @@ window.handleAdEdit = async function(ad) {
 
 function setupForms() {
     const adForm = document.getElementById("new-ad-form");
-    if (adForm) {
-        adForm.addEventListener("submit", async e => {
-            e.preventDefault();
-            if (isBotDetected("new-ad-form") || isProcessing) return;
+    if (!adForm) return;
 
-            const titleVal = document.getElementById("ad-title").value;
-            const priceVal = document.getElementById("ad-price").value;
-            const contentVal = document.getElementById("ad-content").value;
+    adForm.addEventListener("submit", async e => {
+        e.preventDefault();
+        if (isBotDetected("new-ad-form") || isProcessing) return;
 
-            // >> KÜFÜR KONTROLÜ <<
-            if (window.hasBadWords(titleVal) || window.hasBadWords(contentVal)) {
-                alert('Lütfen topluluk kurallarına uygun bir dil kullanın.');
-                return;
-            }
+        const titleVal = document.getElementById("ad-title").value.trim();
+        const priceVal = document.getElementById("ad-price").value.trim();
+        const contentVal = document.getElementById("ad-content").value.trim();
 
-            const fileInput = document.getElementById("ads-files");
-            
-            // Düzenleme modundaysak mevcut resimleri hafızaya al
-            let existingImages = {};
-            if (editingAdId) {
-                const ad = allAds.find(a => a.id == editingAdId);
-                if (ad) {
-                    existingImages = {
-                        image_url: ad.image_url,
-                        image_url_2: ad.image_url_2,
-                        image_url_3: ad.image_url_3
-                    };
-                }
-            }
+        if (window.hasBadWords(titleVal) || window.hasBadWords(contentVal)) {
+            alert("Lütfen topluluk kurallarına uygun bir dil kullanın.");
+            return;
+        }
 
-            if (!editingAdId && (!fileInput.files || fileInput.files.length === 0)) {
-                alert("HATA: İlan yayınlamak için en az 1 adet fotoğraf yüklemek zorunludur!");
-                return;
-            }
-            
-            if (fileInput.files.length > 4) {
-                alert("HATA: En fazla 4 adet fotoğraf seçebilirsiniz.");
-                return;
-            }
-            
-            if (contentVal.length > 350) {
-                alert("HATA: Açıklama 350 karakteri geçemez.");
-                return;
-            }
-            
-            const safeRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.\,\!\?\-\:\(\)\;\/]+$/;
-            if (!safeRegex.test(contentVal)) {
-                alert("HATA: Açıklamada geçersiz karakterler var.");
-                return;
-            }
-            
-            const titleRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$/;
-            if (titleVal.length > 25 || !titleRegex.test(titleVal)) {
-                alert("HATA: Başlık max 25 karakter olmalı.");
-                return;
-            }
+        const fileInput = document.getElementById("ads-files");
 
-            // SÜPER KONTROL: Şifreleme ve Token Motoru Devrede
-            const passInput = document.getElementById("ad-tc-no");
-            const rawPass = passInput.value.trim(); 
-            
-            const passCheck = window.validateComplexPassword(rawPass);
-            if (passCheck) {
-                alert(passCheck);
-                return;
-            }
-
-            // 2. Token (Silme yetkisi için gizli anahtar - İşlem Güvenliği)
-            const deleteToken = await sha256(rawPass);
-
-            const btn = document.getElementById("ad-submit-button");
-            isProcessing = true;
-            btn.disabled = true;
-            btn.textContent = "YAYINLA...";
-
-            try {
-                let urls = [];
-                // Sadece yeni dosya seçildiyse yükleme yap
-                if (fileInput.files.length > 0) {
-                    const rawFiles = Array.from(fileInput.files);
-                    const optimizedFiles = await Promise.all(rawFiles.map(file => optimizeImage(file)));
-                    urls = await handleMultipleUploads(optimizedFiles);
-                }
-
-                // Veri objesini hazırla
-                const adData = {
-                    title: titleVal,
-                    price: priceVal,
-                    category: document.getElementById("ad-category").value,
-                    district: document.getElementById("ad-district").value,
-                    condition: document.getElementById("ad-condition")?.value || '2.el',
-                    warranty: document.getElementById("ad-warranty")?.value || 'Yok',
-                    telegram_username: document.getElementById("ad-telegram")?.value || '',
-                    content: contentVal,
-                    contact: document.getElementById("ad-contact").value,
-                    delete_token: deleteToken,
-                    is_active: true,
-                    // Yeni resim yoksa mevcut (existingImages) linklerini kullan
-                    image_url: urls[0] || existingImages.image_url || null,
-                    image_url_2: urls[1] || existingImages.image_url_2 || null,
-                    image_url_3: urls[2] || existingImages.image_url_3 || null
+        let existingImages = {};
+        if (editingAdId) {
+            const ad = allAds.find(a => a.id == editingAdId);
+            if (ad) {
+                existingImages = {
+                    image_url: ad.image_url,
+                    image_url_2: ad.image_url_2,
+                    image_url_3: ad.image_url_3
                 };
-
-                let error;
-                if (editingAdId) {
-                    // GÜNCELLEME MODU
-                    const response = await window.supabase.from('ilanlar').update(adData).eq('id', editingAdId);
-                    error = response.error;
-                    if (!error) {
-                        alert("İlan başarıyla güncellendi!");
-                    }
-                } else {
-                    // YENİ İLAN MODU
-                    const response = await window.supabase.from('ilanlar').insert([adData]);
-                    error = response.error;
-                    if (!error) alert("İlan yayınlandı!");
-                }
-
-                if (error) throw error;
-                
-                adForm.reset();
-                loadPortalData();
-                window.closeAddAdModal();
-            } catch (err) {
-                alert("Hata: " + err.message);
-            } finally {
-                isProcessing = false;
-                btn.disabled = false;
-                btn.textContent = "YAYINLA";
-                editingAdId = null;
             }
-        }); 
-    }
+        }
+
+        if (!editingAdId && (!fileInput.files || fileInput.files.length === 0)) {
+            alert("En az 1 fotoğraf zorunludur.");
+            return;
+        }
+
+        if (fileInput.files.length > 4) {
+            alert("En fazla 4 fotoğraf seçebilirsiniz.");
+            return;
+        }
+
+        if (contentVal.length > 350) {
+            alert("Açıklama 350 karakteri geçemez.");
+            return;
+        }
+
+        const titleRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\-\s]+$/;
+        if (titleVal.length > 25 || !titleRegex.test(titleVal)) {
+            alert("Başlık max 25 karakter olmalı.");
+            return;
+        }
+
+        const passInput = document.getElementById("ad-tc-no");
+        const rawPass = passInput.value.trim();
+
+        const passCheck = window.validateComplexPassword(rawPass);
+        if (passCheck) {
+            alert(passCheck);
+            return;
+        }
+
+        const deleteToken = await sha256(rawPass);
+
+        const btn = document.getElementById("ad-submit-button");
+        isProcessing = true;
+        btn.disabled = true;
+        btn.textContent = "YAYINLANIYOR...";
+
+        try {
+
+            let urls = [];
+            if (fileInput.files.length > 0) {
+                const rawFiles = Array.from(fileInput.files);
+                const optimizedFiles = await Promise.all(
+                    rawFiles.map(file => optimizeImage(file))
+                );
+                urls = await handleMultipleUploads(optimizedFiles);
+            }
+
+            const adData = {
+                id: editingAdId || null,
+                title: titleVal,
+                price: priceVal,
+                category: document.getElementById("ad-category").value,
+                district: document.getElementById("ad-district").value,
+                condition: document.getElementById("ad-condition")?.value || "2.el",
+                warranty: document.getElementById("ad-warranty")?.value || "Yok",
+                telegram_username: document.getElementById("ad-telegram")?.value || "",
+                content: contentVal,
+                contact: document.getElementById("ad-contact").value,
+                delete_token: deleteToken,
+                image_url: urls[0] || existingImages.image_url || null,
+                image_url_2: urls[1] || existingImages.image_url_2 || null,
+                image_url_3: urls[2] || existingImages.image_url_3 || null
+            };
+
+            const endpoint = editingAdId ? "/ilan-ekle?mode=update" : "/ilan-ekle";
+
+            const res = await fetch(`${R2_WORKER_URL}${endpoint}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(adData)
+            });
+
+            const result = await res.json();
+
+            if (!res.ok) {
+                throw new Error(result.error || "D1 kayıt hatası");
+            }
+
+            alert(editingAdId ? "İlan güncellendi!" : "İlan yayınlandı!");
+
+            adForm.reset();
+            loadPortalData();
+            window.closeAddAdModal();
+
+        } catch (err) {
+            alert("Hata: " + err.message);
+        } finally {
+            isProcessing = false;
+            btn.disabled = false;
+            btn.textContent = "YAYINLA";
+            editingAdId = null;
+        }
+    });
 }
+
 
 /* >> TAVSİYE KAYIT MOTORU V5.0 - SÜPER KONTROL << */
 document.getElementById("recommend-form")?.addEventListener("submit", async (e) => {

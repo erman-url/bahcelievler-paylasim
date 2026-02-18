@@ -1469,8 +1469,9 @@ async function fetchDuyurular() {
                     </p>
                 </div>
                 `;
-            }).join('');
-        }
+            }).join(''); 
+        } 
+    
 
     } catch (err) {
         console.error("Duyuru hatası:", err);

@@ -277,8 +277,9 @@ async function fetchAndRenderPiyasa() {
         `).join('');
     } catch (err) {
         console.error("Radar hatası:", err);
-    }
-}
+    } 
+}       
+
 
 // --- 3. SLIDER BAŞLATICI (TÜM TARAYICILARDA STABİL) ---
 function initSlider() {

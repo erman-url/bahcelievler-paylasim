@@ -1905,31 +1905,6 @@ window.renderAds = async function (ads) {
     }
 
 
-/* 🔥 YORUM SAYISI ENTEGRE – STABİL TEK SORGU */
-let enrichedAds = ads;
-
-const { data: commentsData, error: commentError } = await window.supabase
-    .from('ilan_yorumlar')
-    .select('ilan_id')
-    .eq('is_approved', true);
-
-if (commentError) {
-    console.error("Yorum sayısı çekilirken hata:", commentError);
-} else if (commentsData) {
-
-    const commentMap = {};
-
-    commentsData.forEach(c => {
-        commentMap[c.ilan_id] = (commentMap[c.ilan_id] || 0) + 1;
-    });
-
-    enrichedAds = ads.map(ad => ({
-        ...ad,
-        comment_count: commentMap[String(ad.id)] || 0
-    }));
-}
-
-
     /* 🔥 HTML ÜRETİM */
     const adsHtml = enrichedAds.map(item => {
 
@@ -1982,7 +1957,7 @@ if (commentError) {
                 <div style="margin-top:8px; padding-top:8px; border-top:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#aaa;">
                     <span>${adDate}</span>
                     <span style="color:var(--app-blue); font-weight:700;">
-                        <i class='far fa-comment-dots'></i> ${commentCount} Yorum
+                       
                     </span>
                 </div>
             </div>
@@ -2855,37 +2830,6 @@ window.closeSocialModal = function() {
     document.body.classList.remove("modal-open");
 };
 
-/* >> YORUM MOTORU NİHAİ MÜHÜR V4.0 << */
-
-window.loadComments = async function(contentId, moduleType = 'ilan') {
-    const list = document.getElementById("comment-list");
-    if (!list || !contentId) return;
-
-    list.innerHTML = '<p style="color:#888; text-align:center; font-size:0.8rem;">Denetleniyor...</p>';
-
-    const { data, error } = await window.supabase
-        .from('ilan_yorumlar')
-        .select('*')
-        .eq('ilan_id', String(contentId)) // ID tipi mühürlendi
-        .eq('module_type', moduleType)     // Modül tipi mühürlendi
-        .eq('is_approved', true)           // Sadece onaylılar [cite: 19-01-2026]
-        .order('created_at', { ascending: true });
-
-    if (error || !data || data.length === 0) {
-        list.innerHTML = '<p style="color:#999; text-align:center; font-size:0.8rem;">Henüz onaylı yorum yok.</p>';
-        return;
-    }
-
-    list.innerHTML = data.map(c => `
-        <div style="margin-bottom:12px; padding:10px; background:#fff; border-radius:10px; border-bottom:1px solid #eee; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <strong style="color:var(--app-blue); font-size:0.8rem;">${window.escapeHTML(c.nickname)}</strong>
-                <span style="font-size:0.65rem; color:#aaa;">${new Date(c.created_at).toLocaleString('tr-TR')}</span>
-            </div>
-            <p style="margin:5px 0 0 0; font-size:0.85rem; color:#444; line-height:1.4;">${window.escapeHTML(c.mesaj)}</p>
-        </div>
-    `).join('');
-};
 
 /* >> GELİŞMİŞ TAKMA AD DENETİM MOTORU V5.0 << */
 window.sendComment = async function(moduleType = 'ilan') {

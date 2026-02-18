@@ -2196,31 +2196,41 @@ window.deleteHizmet = async (id, correctPass) => {
 
 
 
-/* >> MERKEZİ İLAN SİLME MOTORU - RLS UYUMLU << */
+/* >> MERKEZİ İLAN SİLME MOTORU - D1 UYUMLU << */
 window.deleteAd = async (id) => {
+
     const userPass = prompt("İlanı kaldırmak için Silme Şifresini girin (Örn: S1571):");
     if (!userPass || !userPass.trim()) return;
-    
-    const rawInput = userPass.trim();
-    const tokenHash = await sha256(rawInput);
 
-    const { data, error } = await window.supabase
-        .from('ilanlar')
-        .update({ is_active: false })
-        .eq('id', id)
-        .eq('delete_token', tokenHash)
-        .select();
+    try {
 
-    if (error) {
-        alert("Sistem Hatası: " + error.message);
-    } else if (data && data.length > 0) {
+        const tokenHash = await sha256(userPass.trim());
+
+        const res = await fetch(`${R2_WORKER_URL}/ilan-sil`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                id: id,
+                delete_token: tokenHash
+            })
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+            throw new Error(result.error || "Silme işlemi başarısız");
+        }
+
         alert("İlan başarıyla kaldırıldı.");
-        if (typeof closeModal === "function") closeModal(); 
-        loadPortalData(); 
-    } else {
-        alert("Hata: Şifre yanlış veya bu ilanı silme yetkiniz yok.");
+
+        if (typeof closeModal === "function") closeModal();
+        loadPortalData();
+
+    } catch (err) {
+        alert("Hata: " + err.message);
     }
 };
+
 
 /* >> RADAR ÖZEL MODAL MOTORU << */
 window.openRadarDetail = async function(id) {

@@ -1170,24 +1170,30 @@ window.deleteTavsiye = async (id) => {
 async function fetchAndRenderAds() {
     const list = document.getElementById("ads-list");
     if (!list) return;
+
     try {
-        const { data, error } = await window.supabase.from('ilanlar')
-            .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, condition, warranty, district')
-            .or('is_active.is.null,is_active.eq.true')
-            .order('created_at', {ascending: false})
-            .limit(10);
-        
-        if (error) throw error;
+
+        const res = await fetch("https://broad-mountain-f064.erman-urel.workers.dev/ilanlar");
+
+        if (!res.ok) {
+            throw new Error("D1 ilanlar alınamadı");
+        }
+
+        const data = await res.json();
+
         allAds = data || [];
-        
+
         const searchInput = document.getElementById("ad-search-input");
         const searchTerm = searchInput ? searchInput.value.trim() : '';
+
         applyFilters(currentCategory, searchTerm);
+
     } catch (err) {
-        console.error("İlan yükleme hatası:", err);
+        console.error("D1 ilan yükleme hatası:", err);
         list.innerHTML = "<div style='text-align:center; padding:20px; color:red;'>İlanlar yüklenirken bağlantı hatası oluştu.</div>";
     }
 }
+
 
 window.openAdDetail = function(id) {
     const ad = allAds.find(a => a.id == id);

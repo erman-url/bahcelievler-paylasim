@@ -411,33 +411,50 @@ async function handleMultipleUploads(files) {
 }
 
 window.handleAdEdit = async function(ad) {
+
     const pass = prompt("İlanı düzenlemek için şifrenizi girin:");
-    if (!pass) return;
-    
+    if (!pass || !pass.trim()) return;
+
     const hash = await sha256(pass.trim());
-    const { data } = await window.supabase.from('ilanlar').select('id').eq('id', ad.id).eq('delete_token', hash);
-    
-    if (data && data.length > 0) {
+
+    try {
+
+        // D1 doğrulama
+        const res = await fetch(`${R2_WORKER_URL}/ilanlar`);
+        const ads = await res.json();
+
+        const matched = ads.find(a => 
+            a.id == ad.id && a.delete_token === hash
+        );
+
+        if (!matched) {
+            alert("Hata: Şifre yanlış!");
+            return;
+        }
+
         editingAdId = ad.id;
-        
+
         document.getElementById("ad-title").value = ad.title;
         document.getElementById("ad-price").value = ad.price;
-        document.getElementById("ad-content").value = ad.content;
+        document.getElementById("ad-content").value = ad.content || '';
         document.getElementById("ad-category").value = ad.category;
         document.getElementById("ad-district").value = ad.district || 'Bahçelievler';
-        document.getElementById("ad-contact").value = ad.contact;
-        if(document.getElementById("ad-condition")) document.getElementById("ad-condition").value = ad.condition || '2.el';
-        if(document.getElementById("ad-warranty")) document.getElementById("ad-warranty").value = ad.warranty || 'Yok';
-        if(document.getElementById("ad-telegram")) document.getElementById("ad-telegram").value = ad.telegram_username || '';
+        document.getElementById("ad-contact").value = ad.contact || '';
+        document.getElementById("ad-condition").value = ad.condition || '2.el';
+        document.getElementById("ad-warranty").value = ad.warranty || 'Yok';
+        document.getElementById("ad-telegram").value = ad.telegram_username || '';
         document.getElementById("ad-tc-no").value = pass.trim();
-        
+
         closeModal();
         window.scrollToIlanForm();
-        alert("Düzenleme modu aktif. Bilgileri güncelleyip 'YAYINLA' butonuna basınız.");
-    } else {
-        alert("Hata: Şifre yanlış!");
+
+        alert("Düzenleme modu aktif.");
+
+    } catch (err) {
+        alert("Sistem hatası: " + err.message);
     }
 };
+
 
 function setupForms() {
     const adForm = document.getElementById("new-ad-form");
@@ -1341,104 +1358,106 @@ if (modalElement) {
             closeModal();
         }
     }, { passive: false });
-}
-
-async function updateDashboard() {
+}async function updateDashboard() {
     try {
-        const { data: lastAd } = await window.supabase
-    .from('ilanlar')
-    .select('title')
-    .eq('is_active', true)
-    .order('created_at', { ascending: false })
-    .limit(1);
 
-        if (lastAd?.[0]) document.getElementById("preview-ad").textContent = lastAd[0].title;
+        /* ======================================================
+           1️⃣ SON İLAN → D1 (Cloudflare Worker)
+        ====================================================== */
+
+        try {
+            const res = await fetch(`${R2_WORKER_URL}/ilanlar`);
+            if (res.ok) {
+                const ads = await res.json();
+                const previewAd = document.getElementById("preview-ad");
+
+                if (previewAd) {
+                    previewAd.textContent =
+                        (ads && ads.length > 0)
+                            ? ads[0].title
+                            : "Henüz ilan yok.";
+                }
+            }
+        } catch (err) {
+            console.error("D1 ilan preview hatası:", err.message);
+        }
 
 
-      const { data: lastPiyasa } = await window.supabase
-  .from('piyasa_verileri')
-.select('id,urun_adi,fiyat,market_adi,tarih_etiketi,image_url,is_active,created_at,barkod')
-.eq('is_active', true)
-.order('created_at', {ascending: false})
-.limit(1);
+        /* ======================================================
+           2️⃣ SON PİYASA → Supabase (Şimdilik Aynı)
+        ====================================================== */
 
+        const { data: lastPiyasa } = await window.supabase
+            .from('piyasa_verileri')
+            .select('id,urun_adi,fiyat,market_adi,tarih_etiketi,image_url,is_active,created_at,barkod')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false })
+            .limit(1);
 
-if (lastPiyasa?.[0]) {
+        if (lastPiyasa?.[0]) {
             const previewPiyasa = document.getElementById("preview-piyasa");
+
             if (previewPiyasa) {
-                // Yazıyı güncelle ve ortala
-                previewPiyasa.innerHTML = `${window.escapeHTML(lastPiyasa[0].urun_adi)}<br><span style="color:var(--cyber-pink);">${window.escapeHTML(String(lastPiyasa[0].fiyat))} TL</span> <small style="color:#888;">@${window.escapeHTML(lastPiyasa[0].market_adi)}</small>`;
+                previewPiyasa.innerHTML =
+                    `${window.escapeHTML(lastPiyasa[0].urun_adi)}<br>
+                    <span style="color:var(--cyber-pink);">
+                        ${window.escapeHTML(String(lastPiyasa[0].fiyat))} TL
+                    </span>
+                    <small style="color:#888;">
+                        @${window.escapeHTML(lastPiyasa[0].market_adi)}
+                    </small>`;
+
                 previewPiyasa.style.width = "100%";
                 previewPiyasa.style.textAlign = "center";
             }
 
-            // SÜPER KONTROL: index.html'deki GERÇEK ID'yi hedefliyoruz
-            const actualImg = document.getElementById("piyasa-img"); 
-            if (actualImg) {
-                actualImg.remove(); // Kareyi HTML'den söküp atar
-            }
+            const actualImg = document.getElementById("piyasa-img");
+            if (actualImg) actualImg.remove();
         }
 
-      const { data: lastFirsat } = await window.supabase
-    .from('firsatlar')
-    .select('title')
-    .eq('is_active', true)
-    .order('created_at', { ascending: false })
-    .limit(1);
 
-const previewFirsat = document.getElementById("preview-firsat");
-if (previewFirsat)
-    previewFirsat.textContent = lastFirsat?.[0]
-        ? lastFirsat[0].title
-        : "Henüz fırsat yok.";
+        /* ======================================================
+           3️⃣ SON FIRSAT → Supabase
+        ====================================================== */
 
-const { data: lastTavsiye } = await window.supabase
-    .from('tavsiyeler')
-    .select('title')
-    .eq('is_active', true)
-    .order('created_at', { ascending: false })
-    .limit(1);
+        const { data: lastFirsat } = await window.supabase
+            .from('firsatlar')
+            .select('title')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false })
+            .limit(1);
 
-const previewTavsiye = document.getElementById("preview-tavsiye");
-if (previewTavsiye)
-    previewTavsiye.textContent = lastTavsiye?.[0]
-        ? lastTavsiye[0].title
-        : "Henüz tavsiye yok.";
+        const previewFirsat = document.getElementById("preview-firsat");
+        if (previewFirsat) {
+            previewFirsat.textContent =
+                lastFirsat?.[0]
+                    ? lastFirsat[0].title
+                    : "Henüz fırsat yok.";
+        }
 
 
+        /* ======================================================
+           4️⃣ SON TAVSİYE → Supabase
+        ====================================================== */
+
+        const { data: lastTavsiye } = await window.supabase
+            .from('tavsiyeler')
+            .select('title')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+        const previewTavsiye = document.getElementById("preview-tavsiye");
+        if (previewTavsiye) {
+            previewTavsiye.textContent =
+                lastTavsiye?.[0]
+                    ? lastTavsiye[0].title
+                    : "Henüz tavsiye yok.";
+        }
 
     } catch (err) {
         console.error("Dashboard güncelleme motoru durdu:", err.message);
     }
-}
-
-function showSlides() {
-    let slides = document.getElementsByClassName("slider-item");
-    if (!slides || slides.length === 0) return;
-    
-    // 3. Mevcut tüm aktif sınıfları ve görünürlüğü sıfırla
-    for (let i = 0; i < slides.length; i++) {
-        slides[i].classList.remove("active-slide");
-        slides[i].style.display = "none";
-    }
-    
-    // 4. İndeks kontrolü
-    if (slideIndex >= slides.length) slideIndex = 0;
-    
-    const currentSlide = slides[slideIndex];
-    if (currentSlide) {
-        // 5. Önce blok akışına al, sonra reflow tetikle
-        currentSlide.style.display = "block";
-        
-        // Görselin siyah kalmasını önleyen kritik teknik mühür (Reflow)
-        void currentSlide.offsetWidth; 
-        
-        currentSlide.classList.add("active-slide");
-    }
-    
-    slideIndex++;
-    // 6. Bir sonraki geçişi mühürle
-    window.sliderTimeout = setTimeout(showSlides, 4000);
 }
 
 /* >> DUYURU MOTORU: SADECE RESMİ DUYURULAR TABLOSU << */

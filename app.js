@@ -967,17 +967,7 @@ window.openFirsatDetail = async function(id) {
             buyBtn.after(shareBtn);
         }
 
-        // Yorum Butonu Ayarı (Fırsat Modu)
-        const commentBtn = document.querySelector('#comment-section button');
-        if(commentBtn) {
-            commentBtn.setAttribute('onclick', "window.sendComment('firsat')");
-            commentBtn.innerHTML = '<i class="fas fa-paper-plane"></i> ONAYA GÖNDER';
-        }
-        
-        const cList = document.getElementById("comment-list");
-        if(cList) {
-            cList.innerHTML = `<div style="text-align:center; margin:10px 0;"><button onclick="window.loadComments('${f.id}', 'firsat')" style="background:none; border:none; color:var(--app-blue); font-weight:bold; cursor:pointer; text-decoration:underline; font-size:0.9rem;"><i class="far fa-comments"></i> Yorumları Göster</button></div>`;
-        }
+       
 
         // Modalı ekranda göster
         const modal = document.getElementById("ad-detail-modal");
@@ -1204,12 +1194,7 @@ window.openAdDetail = function(id) {
     if (!ad) return;
     window.currentAdId = ad.id;
 
-    // Yorum Butonu Ayarı (İlan Modu)
-    const commentBtn = document.querySelector('#comment-section button');
-    if(commentBtn) {
-        commentBtn.setAttribute('onclick', "window.sendComment('ilan')");
-        commentBtn.innerHTML = '<i class="fas fa-paper-plane"></i> YORUMU GÖNDER';
-    }
+ 
 
     document.body.style.overflow = 'hidden'; // Arka plan kaydırmasını engelle
 
@@ -1280,11 +1265,6 @@ window.openAdDetail = function(id) {
         buyBtn.after(shareBtn);
     }
 
-    // >> YORUM SİSTEMİ ENTEGRASYONU (LAZY LOAD) <<
-    const cList = document.getElementById("comment-list");
-    if(cList) {
-        cList.innerHTML = `<div style="text-align:center; margin:10px 0;"><button onclick="window.loadComments('${ad.id}', 'ilan')" style="background:none; border:none; color:var(--app-blue); font-weight:bold; cursor:pointer; text-decoration:underline; font-size:0.9rem;"><i class="far fa-comments"></i> Yorumları Göster</button></div>`;
-    }
 
     // MODERN DÜZENLEME BUTONU VE GÜVENLİ YERLEŞİM
     const editBtn = document.createElement('button');
@@ -1906,9 +1886,8 @@ window.renderAds = async function (ads) {
 
 
     /* 🔥 HTML ÜRETİM */
-    const adsHtml = enrichedAds.map(item => {
+    const adsHtml = ads.map(item => {
 
-        const commentCount = item.comment_count || 0;
         const adDate = new Date(item.created_at).toLocaleDateString('tr-TR');
         const displayImg = item.image_url || getPlaceholderImage(null);
 
@@ -2783,42 +2762,8 @@ if (modal) {
 
 
 
-/* >> İZOLE YORUM KAYIT VE YÜKLEME MOTORLARI << */
-window.sendSocialComment = async function(contentId, moduleType) {
-    const nick = document.getElementById("social-comment-nick").value.trim();
-    const text = document.getElementById("social-comment-text").value.trim();
-    
-    if(!nick || !text) return alert("Lütfen boş alan bırakmayın.");
 
-    const { error } = await window.supabase.from('ilan_yorumlar').insert([{ 
-        ilan_id: String(contentId), 
-        nickname: nick, 
-        mesaj: text,
-        module_type: moduleType, // 'tavsiyeler' olarak mühürlenir
-        is_approved: false 
-    }]);
 
-    if (!error) {
-        alert("Yorumunuz onaya gönderildi.");
-        document.getElementById("social-comment-text").value = "";
-    }
-};
-
-window.loadSocialComments = async function(contentId, moduleType) {
-    const list = document.getElementById("social-comment-list");
-    const { data } = await window.supabase.from('ilan_yorumlar')
-        .select('*').eq('ilan_id', String(contentId)).eq('module_type', moduleType).eq('is_approved', true);
-
-    list.innerHTML = data?.map(c => `
-        <div style="background:#f8fafc; padding:10px; border-radius:10px; margin-bottom:8px; border:1px solid #eee;">
-            <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:5px;">
-                <b style="color:var(--app-blue);">${window.escapeHTML(c.nickname)}</b>
-                <span style="color:#aaa;">${new Date(c.created_at).toLocaleDateString('tr-TR')}</span>
-            </div>
-            <p style="margin:0; font-size:0.85rem; color:#444;">${window.escapeHTML(c.mesaj)}</p>
-        </div>
-    `).join('') || '<p style="color:#aaa; text-align:center; font-size:0.8rem;">İlk yorumu sen yap!</p>';
-};
 
 window.closeSocialModal = function() {
     const modal = document.getElementById("social-detail-modal");
@@ -2830,67 +2775,6 @@ window.closeSocialModal = function() {
     document.body.classList.remove("modal-open");
 };
 
-
-/* >> GELİŞMİŞ TAKMA AD DENETİM MOTORU V5.0 << */
-window.sendComment = async function(moduleType = 'ilan') {
-    const nickEl = document.getElementById("comment-nick");
-    const textEl = document.getElementById("comment-text");
-    if (!nickEl || !textEl) return;
-
-    const nick = nickEl.value.trim();
-    const text = textEl.value.trim();
-    const rawId = (moduleType === 'ilan') ? window.currentAdId : window.currentFirsatId;
-
-    // --- TAKMA AD (NICKNAME) VALIDASYONU ---
-    
-    // 1. Temel Yapı: 3-10 Karakter, Sadece Harf ve Rakam
-    const basicRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ]{3,10}$/;
-    
-    // 2. Sadece Rakam Kontrolü (En az bir harf olmalı)
-    const isOnlyNumber = /^\d+$/.test(nick);
-    
-    // 3. Ardışık Tekrar Kontrolü (Aynı karakter 3 kez yan yana gelemez)
-    const hasTripleChar = /(.)\1{2,}/.test(nick);
-
-    if (!basicRegex.test(nick)) {
-        alert("HATA: Takma ad 3-10 karakter olmalı ve sadece harf/rakam içermelidir.");
-        return;
-    }
-    if (isOnlyNumber) {
-        alert("HATA: Takma ad sadece rakamlardan oluşamaz, en az bir harf içermelidir.");
-        return;
-    }
-    if (hasTripleChar) {
-        alert("HATA: Aynı karakteri 2 kereden fazla üst üste yazamazsınız (Örn: aaa veya 111 yasaktır).");
-        return;
-    }
-
-    // --- YORUM METNİ VALIDASYONU ---
-    const textRegex = /^[a-zA-Z0-9çĞİıÖşüÇğİıÖŞÜ\s\.\,\!\?\-\:\(\)\;]+$/;
-    if (text.length > 150 || !textRegex.test(text)) {
-        alert("HATA: Yorum 150 karakteri geçemez veya geçersiz karakter içeriyor.");
-        return;
-    }
-
-    if (!rawId) return alert("Hata: İçerik kimliği bulunamadı.");
-
-    // DB KAYIT İŞLEMİ (Mühürlü Yapı)
-    const { error } = await window.supabase.from('ilan_yorumlar').insert([{ 
-        ilan_id: String(rawId), 
-        nickname: nick, 
-        mesaj: text,
-        module_type: moduleType,
-        is_approved: false 
-    }]);
-
-    if (!error) {
-        alert("Yorumunuz onaya gönderildi.");
-        textEl.value = "";
-        nickEl.value = "";
-    } else {
-        alert("Sistem Hatası: " + error.message);
-    }
-};
 
 /* >> MİNİMAL RAMAZAN SAYACI << */
 function startRamadanCountdown() {

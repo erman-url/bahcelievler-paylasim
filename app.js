@@ -1171,12 +1171,11 @@ async function fetchAndRenderAds() {
     const list = document.getElementById("ads-list");
     if (!list) return;
     try {
-       const { data, error } = await window.supabase.from('ilanlar')
-    .select('id, created_at, title, price, image_url, district, warranty')
-    .or('is_active.is.null,is_active.eq.true')
-    .order('created_at', { ascending: false })
-    .limit(10);
-
+        const { data, error } = await window.supabase.from('ilanlar')
+            .select('id, created_at, title, price, category, content, contact, image_url, image_url_2, image_url_3, telegram_username, condition, warranty, district')
+            .or('is_active.is.null,is_active.eq.true')
+            .order('created_at', {ascending: false})
+            .limit(10);
         
         if (error) throw error;
         allAds = data || [];

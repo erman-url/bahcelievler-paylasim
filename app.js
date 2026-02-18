@@ -3079,11 +3079,11 @@ function setupDistrictFilter() {
         seoBlock.style.display = "none";
         seoBlock.innerHTML = "";
       }
-    }
+    
 
-   });
+  };
 
-}
+
 
 // Sayfa yüklendiğinde filtreyi başlat
 document.addEventListener("DOMContentLoaded", () => {

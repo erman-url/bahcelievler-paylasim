@@ -3058,4 +3058,4 @@ document.addEventListener("DOMContentLoaded", () => {
     setupDistrictFilter();
 });
 
-}
+    }

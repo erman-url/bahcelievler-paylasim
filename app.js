@@ -3056,3 +3056,4 @@ function setupDistrictFilter() {
 document.addEventListener("DOMContentLoaded", () => {
     setupDistrictFilter();
 });
+}

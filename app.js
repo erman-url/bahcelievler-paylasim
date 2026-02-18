@@ -2230,53 +2230,60 @@ window.deleteAd = async (id) => {
 /* >> RADAR ÖZEL MODAL MOTORU << */
 window.openRadarDetail = async function(id) {
     try {
-        // 1. Mükerrer .from() hatası temizlendi
         const { data: urun, error } = await window.supabase
             .from('piyasa_verileri')
             .select('*')
             .eq('id', id)
             .single();
-    if (error || !urun) return;
-    // 2. HTML Elementlerini Güvenli Doldur
-    document.getElementById("radar-title").textContent = urun.urun_adi;
-    document.getElementById("radar-price").textContent = urun.fiyat + " TL";
-    document.getElementById("radar-image-gallery").innerHTML = `<img src="${urun.image_url}" style="width:100%; border-radius:12px;">`;
-    
-    document.getElementById("radar-info-content").innerHTML = `
-    <div class="ad-info-box">
-        <p style="margin-bottom:8px; display:flex; align-items:center; gap:8px;"><strong><i class="fas fa-store"></i> Market:</strong> ${window.escapeHTML(urun.market_adi)}</p>
-        <p style="margin:0; display:flex; align-items:center; gap:8px;"><strong><i class="fas fa-calendar-alt"></i> Tarih:</strong> ${urun.tarih_etiketi || 'Belirtilmedi'}</p>
-    </div>`;
-    // 3. Silme Butonunu Bağla
-    document.getElementById("radar-delete-btn").onclick = () => window.softDeleteRadar(urun.id);
-    // 4. Modalı Fiziksel Olarak Tetikle
-   const modal = document.getElementById("radar-detail-modal");
-if (modal) {
-    modal.style.display = "flex";
-    setTimeout(() => { 
-        modal.style.visibility = "visible";
-        modal.style.opacity = "1"; 
-    }, 10);
-}
 
+        if (error || !urun) return;
 
-window.closeRadarModal = () => {
+        document.getElementById("radar-title").textContent = urun.urun_adi;
+        document.getElementById("radar-price").textContent = urun.fiyat + " TL";
+        document.getElementById("radar-image-gallery").innerHTML =
+            `<img src="${urun.image_url}" style="width:100%; border-radius:12px;">`;
+
+        document.getElementById("radar-info-content").innerHTML = `
+            <div class="ad-info-box">
+                <p><strong>Market:</strong> ${window.escapeHTML(urun.market_adi)}</p>
+                <p><strong>Tarih:</strong> ${urun.tarih_etiketi || 'Belirtilmedi'}</p>
+            </div>`;
+
+        document.getElementById("radar-delete-btn").onclick =
+            () => window.softDeleteRadar(urun.id);
+
+        const modal = document.getElementById("radar-detail-modal");
+        if (modal) {
+            modal.style.display = "flex";
+            setTimeout(() => {
+                modal.style.visibility = "visible";
+                modal.style.opacity = "1";
+            }, 10);
+        }
+
+    } catch (err) {
+        console.error("Radar detay hatası:", err);
+    }
+};
+
+/* >> RADAR MODAL KAPATMA << */
+window.closeRadarModal = function() {
     const modal = document.getElementById("radar-detail-modal");
     if (modal) {
         modal.style.opacity = "0";
+        modal.style.visibility = "hidden";
         setTimeout(() => { modal.style.display = "none"; }, 200);
     }
 };
 
-/* >> RADAR SOFT DELETE – RLS & HASH KONTROLLÜ NİHAİ SÜRÜM << */
-window.softDeleteRadar = async (id) => {
+/* >> RADAR SOFT DELETE << */
+window.softDeleteRadar = async function(id) {
 
     const userPass = prompt("İlanı kaldırmak için şifrenizi giriniz (Örn: S1571)");
     if (!userPass || !userPass.trim()) return;
 
     const finalPass = userPass.trim();
 
-    // 1️⃣ Format kontrolü
     const passCheck = window.validateComplexPassword(finalPass);
     if (passCheck) {
         alert(passCheck);
@@ -2285,38 +2292,26 @@ window.softDeleteRadar = async (id) => {
 
     const deleteToken = await sha256(finalPass);
 
-    // 2️⃣ Önce kayıt var mı kontrol et
-const { data: deleted, error: delError } = await window.supabase
-    .from('piyasa_verileri')
-    .update({ is_active: false })
-    .eq('id', id)
-    .eq('delete_password', deleteToken)
-    .select();
+    const { data, error } = await window.supabase
+        .from('piyasa_verileri')
+        .update({ is_active: false })
+        .eq('id', id)
+        .eq('delete_password', deleteToken)
+        .select();
 
-if (delError) {
-    alert("Sistem Hatası: " + delError.message);
-    return;
-}
-
-if (!deleted || deleted.length === 0) {
-    alert("Hata: Şifre yanlış.");
-    return;
-}
-
-
-    alert("Radar kaldırıldı (veri analiz için saklandı).");
-
-    if (typeof window.closeRadarModal === "function") {
-        window.closeRadarModal();
+    if (error) {
+        alert("Sistem Hatası: " + error.message);
+        return;
     }
 
-    if (typeof fetchAndRenderPiyasa === "function") {
-        fetchAndRenderPiyasa();
+    if (!data || data.length === 0) {
+        alert("Hata: Şifre yanlış.");
+        return;
     }
 
-    if (typeof loadPortalData === "function") {
-        loadPortalData();
-    }
+    alert("Radar kaldırıldı.");
+    window.closeRadarModal();
+    fetchAndRenderPiyasa();
 };
 
 
@@ -3057,5 +3052,3 @@ function setupDistrictFilter() {
 document.addEventListener("DOMContentLoaded", () => {
     setupDistrictFilter();
 });
-
-    }

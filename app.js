@@ -1068,7 +1068,54 @@ window.openFirsatDetail = async function(id) {
 }
               
           
+/* >> FIRSAT LİSTELEME MOTORU << */
+async function renderFirsatlar() {
+    const el = document.getElementById('firsat-list');
+    if (!el) return;
 
+    try {
+        const { data, error } = await window.supabase
+            .from('firsatlar')
+            .select('*')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            el.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">Henüz aktif fırsat bulunmuyor.</p>';
+            return;
+        }
+
+        el.innerHTML = data.map(f => `
+            <div class="cyber-card"
+                 style="margin-bottom:15px; border-left:5px solid #ff9800; cursor:pointer;"
+                 onclick="window.openFirsatDetail('${f.id}')">
+
+                <h3 style="margin:0 0 8px 0;">
+                    ${window.escapeHTML(f.title)}
+                </h3>
+
+                ${f.image_url ? `
+                    <img src="${f.image_url}"
+                         style="width:100%; border-radius:12px; margin-bottom:8px;">
+                ` : ''}
+
+                <p style="font-size:0.9rem; color:#444;">
+                    ${window.escapeHTML((f.content || '').substring(0,120))}...
+                </p>
+
+                <small style="color:#999;">
+                    ${new Date(f.created_at).toLocaleDateString('tr-TR')}
+                </small>
+            </div>
+        `).join('');
+
+    } catch (err) {
+        console.error("Fırsat yükleme hatası:", err);
+        el.innerHTML = '<p style="text-align:center; color:red;">Fırsatlar yüklenemedi.</p>';
+    }
+}
 
 
 

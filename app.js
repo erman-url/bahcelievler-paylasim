@@ -72,6 +72,7 @@ let editingAdId = null;
 let allAds = [];
 let isProcessing = false;
 let currentCategory = 'all'; 
+let currentDistrict = 'all';
 window.currentAdId = null;
 window.currentFirsatId = null;
 window.loadedModules = {};

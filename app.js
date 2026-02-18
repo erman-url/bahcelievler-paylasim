@@ -1906,31 +1906,27 @@ window.renderAds = async function (ads) {
 
 
 /* 🔥 YORUM SAYISI ENTEGRE – STABİL TEK SORGU */
-
-const adIds = ads.map(ad => ad.id);
-
 let enrichedAds = ads;
 
-if (adIds.length > 0) {
-    const { data: enriched, error } = await window.supabase
-        .from('ilanlar')
-        .select(`
-            id,
-            ilan_yorumlar(count)
-        `)
-        .in('id', adIds);
+const { data: commentsData, error: commentError } = await window.supabase
+    .from('ilan_yorumlar')
+    .select('ilan_id')
+    .eq('is_approved', true);
 
-    if (error) {
-        console.error("Yorum sayısı çekilirken hata:", error);
-    } else if (enriched) {
-        enrichedAds = ads.map(ad => {
-            const match = enriched.find(e => e.id === ad.id);
-            return {
-                ...ad,
-                comment_count: match?.ilan_yorumlar?.[0]?.count || 0
-            };
-        });
-    }
+if (commentError) {
+    console.error("Yorum sayısı çekilirken hata:", commentError);
+} else if (commentsData) {
+
+    const commentMap = {};
+
+    commentsData.forEach(c => {
+        commentMap[c.ilan_id] = (commentMap[c.ilan_id] || 0) + 1;
+    });
+
+    enrichedAds = ads.map(ad => ({
+        ...ad,
+        comment_count: commentMap[String(ad.id)] || 0
+    }));
 }
 
 
